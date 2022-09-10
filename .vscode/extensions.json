@@ -1,0 +1,17 @@
+{
+    "recommendations": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-typescript-tslint-plugin",
+        "astro-build.astro-vscode",
+        "formulahendry.auto-close-tag",
+        "formulahendry.auto-rename-tag",
+        "usernamehw.errorlens",
+        "dsznajder.es7-react-js-snippets",
+        "csstools.postcss",
+        "pranaygp.vscode-css-peek",
+        "GitHub.vscode-pull-request-github",
+        "VisualStudioExptTeam.vscodeintellicode",
+        "bradlc.vscode-tailwindcss",
+    ]
+}

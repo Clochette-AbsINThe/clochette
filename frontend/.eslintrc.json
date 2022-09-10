@@ -1,0 +1,92 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "plugin:react/recommended",
+        "standard-with-typescript",
+        "plugin:astro/recommended"
+    ],
+    "overrides": [
+        {
+            // Define the configuration for `.astro` file.
+            "files": [
+                "*.astro"
+            ],
+            // Allows Astro components to be parsed.
+            "parser": "astro-eslint-parser",
+            // Parse the script in `.astro` as TypeScript by adding the following configuration.
+            // It's the setting you need when using TypeScript.
+            "parserOptions": {
+                "parser": "@typescript-eslint/parser",
+                "extraFileExtensions": [
+                    ".astro"
+                ]
+            },
+            "rules": {
+                "react/react-in-jsx-scope": "off",
+                "no-tabs": "off",
+                "react/no-unknown-property": "off"
+                // override/add rules settings here, such as:
+                // "astro/no-set-html-directive": "error"
+            }
+        }
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module",
+        "project": "./frontend/tsconfig.json"
+    },
+    "plugins": [
+        "react"
+    ],
+    "rules": {
+        "indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "no-use-before-define": [
+            "error",
+            {
+                "functions": false
+            }
+        ],
+        "no-plusplus": [
+            "error",
+            {
+                "allowForLoopAfterthoughts": true
+            }
+        ],
+        "max-len": [
+            "off"
+        ],
+        "eqeqeq": [
+            "off"
+        ],
+        "no-console": [
+            "warn",
+            {
+                "allow": [
+                    "warn",
+                    "error"
+                ]
+            }
+        ],
+        "space-before-function-paren": "off",
+        "@typescript-eslint/space-before-function-paren": [
+            "off"
+        ],
+        "@typescript-eslint/indent": [
+            "error",
+            4,
+            {
+                "SwitchCase": 1
+            }
+        ],
+        "@typescript-eslint/triple-slash-reference": "off"
+    }
+}
