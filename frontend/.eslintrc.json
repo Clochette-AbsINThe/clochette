@@ -26,7 +26,7 @@
             },
             "rules": {
                 "react/react-in-jsx-scope": "off",
-                "no-tabs": "off",
+                //"no-tabs": "off",
                 "react/no-unknown-property": "off"
                 // override/add rules settings here, such as:
                 // "astro/no-set-html-directive": "error"
@@ -64,9 +64,6 @@
         "max-len": [
             "off"
         ],
-        "eqeqeq": [
-            "off"
-        ],
         "no-console": [
             "warn",
             {
@@ -87,6 +84,15 @@
                 "SwitchCase": 1
             }
         ],
-        "@typescript-eslint/triple-slash-reference": "off"
+        "@typescript-eslint/triple-slash-reference": "off",
+        "react/react-in-jsx-scope": "off",
+        "semi": [
+            "error",
+            "always"
+        ],
+        "@typescript-eslint/semi": [
+            "error",
+            "always"
+        ]
     }
 }
