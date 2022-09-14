@@ -17,6 +17,9 @@
       ],
       "@styles/*": [
         "src/styles/*"
+      ],
+      "@include/*": [
+        "src/layouts/include/*"
       ]
     }
   }

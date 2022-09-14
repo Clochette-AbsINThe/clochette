@@ -1,38 +1,24 @@
 ---
 // Component Imports
-import Counter from '@components/Counter'
-import '@styles/base.scss'
+import Counter from '@components/Counter';
+import Base from '@layouts/base.astro';
+import '@styles/base.scss';
 const someProps = {
     count: 0
+};
+
+const header = {
+    title: 'Home',
+    description: 'This is the home page'
 };
 
 // Full Astro Component Syntax:
 // https://docs.astro.build/core-concepts/astro-components/
 ---
 
-<html lang="fr">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width" />
-        <meta name="generator" content={Astro.generator} />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <style>
-            html,
-			body {
-				font-family: system-ui;
-				margin: 0;
-			}
-			body {
-				padding: 2rem;
-			}
-        </style>
-    </head>
-    <body>
-        <main>
-            <div class="h-screen"></div>
-            <Counter {...someProps} client:visible>
-                <h1 class="text-8xl text-red-400">Hello, React!</h1>
-            </Counter>
-        </main>
-    </body>
-</html>
+<Base head={header}>
+    <!-- <div class="h-screen"></div> -->
+    <Counter {...someProps} client:load>
+        <h1 class="text-8xl text-red-400">Hello, React!</h1>
+    </Counter>
+</Base>
