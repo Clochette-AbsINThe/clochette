@@ -1,0 +1,12 @@
+---
+
+import ItemCount from '@components/ItemCount';
+import Base from '@layouts/base.astro';
+const item = {
+    name: 'Bière rouge',
+    price: 2.5
+};
+---
+<Base head={{ title: 'Transaction', description: '' }}>
+    <ItemCount {...item} client:visible/>
+</Base>
