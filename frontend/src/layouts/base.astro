@@ -22,16 +22,16 @@ const {
         <meta name='description' content={description} />
 
         <link rel='alternate' type='application/rss+xml' href='/rss.xml' />
-        <link rel='icon' type='image/x-icon' href='/favicon.ico' />
-        <script src="../assets/darkMode.js"></script>
+        <link rel='icon' type='image/x-icon' href='../favicon.svg' />
     </head>
     <body class='bg-gray-100 text-slate-900 dark:bg-slate-900 dark:text-gray-100 flex flex-col min-h-screen'>
-        <Navbar />
+        <Navbar client:load/>
 
         <main class='flex-grow'>
             <slot></slot>
         </main>
 
         <Footer />
+        <script src="../assets/darkMode.js"></script>
     </body>
 </html>

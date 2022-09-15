@@ -1,14 +1,16 @@
-if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-    document.documentElement.classList.add('dark');
-} else {
+const theme = (() => {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+        return localStorage.getItem('theme');
+    }
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
+    }
+    return 'light';
+})();
+
+if (theme === 'light') {
     document.documentElement.classList.remove('dark');
+} else {
+    document.documentElement.classList.add('dark');
 }
-
-// Whenever the user explicitly chooses light mode
-localStorage.theme = 'light';
-
-// Whenever the user explicitly chooses dark mode
-localStorage.theme = 'dark';
-
-// Whenever the user explicitly chooses to respect the OS preference
-localStorage.removeItem('theme');
+window.localStorage.setItem('theme', theme);
