@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './DarkMode.scss';
 
 const themes = ['light', 'dark'];
 
