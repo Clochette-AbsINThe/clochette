@@ -8,7 +8,7 @@ const navitems = {
     Contact: '/contact'
 };
 
-export function Navbar(): JSX.Element {
+export default function Navbar(): JSX.Element {
     return (
         <header className="flex">
             <h1 className="text-4xl text-green-700 font-bold p-4">Clochette</h1>
