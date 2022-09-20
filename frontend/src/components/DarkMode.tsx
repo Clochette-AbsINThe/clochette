@@ -30,11 +30,10 @@ const icons = [
 ];
 
 export function DarkMode(): JSX.Element {
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState(document.documentElement.classList.contains('dark') ? 'dark' : 'light');
 
     useEffect(() => {
         const root = document.documentElement;
-        setTheme(localStorage.getItem('theme') ?? 'light');
         if (theme === 'light') {
             root.classList.remove('dark');
         } else {
