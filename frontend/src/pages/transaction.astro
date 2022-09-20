@@ -1,8 +1,10 @@
 ---
 import Base from '@layouts/base.astro';
 import Glass from '@components/Glass';
+import TransactionSwitch from '@components/TransactionSwitch';
 ---
 <Base head={{ title: 'Transaction', description: '' }}>
+    <TransactionSwitch client:visible/>
     <div class="grid-cols-3 flex-grow grid gap-x-2">
         <Glass client:visible/>
     </div>
