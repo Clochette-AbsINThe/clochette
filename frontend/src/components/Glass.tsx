@@ -20,6 +20,12 @@ const items: ItemCountProps[] = [
     }
 ];
 
+const verreItem: ItemCountProps = {
+    name: 'Verre',
+    price: 1,
+    image: '/EcoCup.png'
+};
+
 export default function Glass(): JSX.Element {
     const [verre, setVerre] = useState(items.map(() => 0));
 
@@ -32,8 +38,8 @@ export default function Glass(): JSX.Element {
             {items.map((item, i) => (
                 <ItemCount key={i} id={i} name={item.name} price={item.price} onValueChange={onValueChange} />
             ))}
-            <div className='flex flex-col grow justify-end'>
-                <ItemCount name="Verre" price={1} value={verre.reduce((a, b) => a + b, 0)} image={'/EcoCup.png'} />
+            <div className='flex flex-col grow justify-end mt-[5rem]'>
+                <ItemCount name={verreItem.name} price={verreItem.price} value={verre.reduce((a, b) => a + b, 0)} image={verreItem.image} />
             </div>
         </div>
     );
