@@ -1,5 +1,3 @@
-import { DarkMode } from '@components/DarkMode';
-
 const navitems = {
     Home: '/',
     Stocks: '/stocks',
@@ -8,14 +6,18 @@ const navitems = {
     Contact: '/contact'
 };
 
-export default function Navbar(): JSX.Element {
+interface NavbarProps {
+    children: JSX.Element
+};
+
+export default function Navbar({ children }: NavbarProps): JSX.Element {
     return (
         <header className="flex">
             <h1 className="text-4xl text-green-700 font-bold p-4">Clochette</h1>
             <div className="flex p-2 justify-evenly flex-grow self-center">
                 {Object.entries(navitems).map(([name, link]) => <NavbarItem key={name} name={name} link={link} />)}
             </div>
-            <DarkMode />
+            {children}
             <div className="justify-center self-center mr-4">
                 <button className="bg-green-700 text-white font-bold py-2 px-4 rounded">Login</button>
             </div>
