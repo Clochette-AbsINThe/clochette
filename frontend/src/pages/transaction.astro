@@ -1,26 +1,9 @@
 ---
-
-import { ItemCount, ItemCountProps } from '@components/ItemCount';
 import Base from '@layouts/base.astro';
-const items: Array<ItemCountProps> = [
-    {
-        name: 'Item 1',
-        price: 10
-    },
-    {
-        name: 'Item 2',
-        price: 20
-    },
-    {
-        name: 'Item 3',
-        price: 30
-    }
-];
+import Glass from '@components/Glass';
 ---
 <Base head={{ title: 'Transaction', description: '' }}>
-    {items.map((item) => (
-        // eslint-disable-next-line react/jsx-key
-        <ItemCount {...item} client:visible/>
-    ))}
-    <ItemCount name="Item 4" price={40} client:visible/>
+    <div class="grid-cols-3 flex-grow grid gap-x-2">
+        <Glass client:visible/>
+    </div>
 </Base>
