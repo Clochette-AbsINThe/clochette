@@ -27,12 +27,12 @@ const verreItem: ItemCountProps = {
 };
 
 export default function Glass(): JSX.Element {
-    const [boissons, setBoissons] = useState(items.map(() => 0));
+    const [nbBoissons, setNbBoissons] = useState(items.map(() => 0));
     const [nbVerres, setNbVerres] = useState(0);
-    const [total, setTotal] = useState(0);
+    const [subTotal, setSubTotal] = useState(0);
 
     function onValueChange(value: number, key: number): void {
-        setBoissons(boissons.map((v, i) => (i === key ? value : v)));
+        setNbBoissons(nbBoissons.map((v, i) => (i === key ? value : v)));
     }
 
     function onVerreChange(value: number): void {
@@ -40,20 +40,20 @@ export default function Glass(): JSX.Element {
     }
 
     useEffect(() => {
-        setTotal(boissons.reduce((acc, v, i) => acc + v * items[i].price, 0) + (boissons.reduce((a, b) => a + b, 0) + nbVerres) * verreItem.price);
-    }, [boissons, nbVerres]);
+        setSubTotal(nbBoissons.reduce((acc, v, i) => acc + v * items[i].price, 0) + (nbBoissons.reduce((a, b) => a + b, 0) + nbVerres) * verreItem.price);
+    }, [nbBoissons, nbVerres]);
 
     useEffect(() => {
-        console.log('Total: ', total);
-    }, [total]);
+        console.log('Total: ', subTotal);
+    }, [subTotal]);
 
     return (
         <div className="h-full flex flex-col border-2 rounded border-gray-800 dark:border-gray-300">
             {items.map((item, i) => (
-                <ItemCount key={i} id={i} name={item.name} price={item.price} onValueChange={onValueChange} />
+                <ItemCount key={item.name} id={i} name={item.name} price={item.price} onValueChange={onValueChange} />
             ))}
             <div className='flex flex-col grow justify-end mt-[5rem]'>
-                <ItemCount name={verreItem.name} price={verreItem.price} value={boissons.reduce((a, b) => a + b, 0)} image={verreItem.image} onValueChange={onVerreChange} />
+                <ItemCount key={verreItem.name} name={verreItem.name} price={verreItem.price} value={nbBoissons.reduce((a, b) => a + b, 0)} image={verreItem.image} onValueChange={onVerreChange} />
             </div>
         </div>
     );
