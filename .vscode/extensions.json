@@ -2,7 +2,6 @@
     "recommendations": [
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
-        "ms-vscode.vscode-typescript-tslint-plugin",
         "astro-build.astro-vscode",
         "formulahendry.auto-close-tag",
         "formulahendry.auto-rename-tag",
