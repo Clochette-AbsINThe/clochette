@@ -1,0 +1,4 @@
+**/*.tsx
+*.json
+README.md
+*.config.*

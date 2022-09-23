@@ -6,7 +6,7 @@
     "extends": [
         "plugin:react/recommended",
         "standard-with-typescript",
-        "plugin:astro/recommended"
+        "plugin:astro/all"
     ],
     "overrides": [
         {
@@ -26,10 +26,8 @@
             },
             "rules": {
                 "react/react-in-jsx-scope": "off",
-                //"no-tabs": "off",
-                "react/no-unknown-property": "off"
-                // override/add rules settings here, such as:
-                // "astro/no-set-html-directive": "error",
+                "react/no-unknown-property": "off",
+                "no-multiple-empty-lines": "off"
             }
         }
     ],
@@ -93,6 +91,12 @@
         "@typescript-eslint/semi": [
             "error",
             "always"
-        ]
+        ],
+        "no-multiple-empty-lines": "off"
+    },
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
     }
 }

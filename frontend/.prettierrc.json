@@ -1,0 +1,22 @@
+{
+    "semi": true,
+    "singleQuote": true,
+    "tabWidth": 4,
+    "trailingComma": "none",
+    "jsxSingleQuote": true,
+    "bracketSameLine": true,
+    "useTabs": false,
+    "vueIndentScriptAndStyle": true,
+    "endOfLine": "auto",
+    "plugins": [
+        "./node_modules/prettier-plugin-astro"
+    ],
+    "overrides": [
+        {
+            "files": "*.astro",
+            "options": {
+                "parser": "astro"
+            }
+        }
+    ]
+}
