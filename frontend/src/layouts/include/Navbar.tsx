@@ -1,9 +1,7 @@
 const navitems = {
     Home: '/',
     Stocks: '/stocks',
-    Payments: '/payments',
-    About: '/about',
-    Contact: '/contact'
+    Transaction: '/transaction'
 };
 
 interface NavbarProps {
@@ -14,7 +12,7 @@ export default function Navbar({ children }: NavbarProps): JSX.Element {
     return (
         <header className="flex">
             <h1 className="text-4xl text-green-700 font-bold p-4">Clochette</h1>
-            <div className="flex p-2 justify-evenly flex-grow self-center">
+            <div className="flex p-2 justify-start flex-grow self-center h-full">
                 {Object.entries(navitems).map(([name, link]) => <NavbarItem key={name} name={name} link={link} />)}
             </div>
             {children}
@@ -27,7 +25,7 @@ export default function Navbar({ children }: NavbarProps): JSX.Element {
 
 function NavbarItem(props: { name: string, link: string }): JSX.Element {
     return (
-        <div className="text-xl hover:text-2xl hover:underline">
+        <div className="text-xl hover:text-2xl hover:underline mx-6">
             <a href={props.link}>{props.name}</a>
         </div>
     );
