@@ -2,6 +2,8 @@ import React, { useEffect } from 'react';
 import TransactionSwitch, { TransactionEnum } from '@components/TransactionSwitch';
 import Glass from '@components/Glass';
 import type { ItemCountProps } from '@components/ItemCount';
+import Popup from 'reactjs-popup';
+import PopupWindows from '@components/PopupWindows';
 
 const items: ItemCountProps[] = [
     {
@@ -45,6 +47,8 @@ export default function Transaction(): JSX.Element {
         setTotalPrice(0);
     }, [transactionType]);
 
+
+
     function renderTransaction(): JSX.Element {
         if (transactionType === TransactionEnum.Vente) {
             return (
@@ -66,7 +70,22 @@ export default function Transaction(): JSX.Element {
         <>
             <TransactionSwitch changeTransactionType={changeTransactionType} />
             {renderTransaction()}
-            <div className='flex justify-end mr-7 text-3xl mt-3'>Total price : {totalPrice}€</div>
+            <div className='flex justify-end mt-3'>
+                <div className='text-2xl font-bold mr-8'>Total: {totalPrice}€</div>
+                <Popup trigger={<button className='bg-green-700 text-white font-bold py-2 px-4 rounded'>Valider</button>} modal>
+                    {(close) => {
+                        return (
+                            <PopupWindows close={close}>
+                                <div className='flex flex-col'>
+                                    <div className='text-2xl font-bold'>Total: {totalPrice}€</div>
+                                </div>
+                            </PopupWindows>
+                        );
+                    }
+                    }
+                </Popup>
+            </div>
+
         </>
     );
 };

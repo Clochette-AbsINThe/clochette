@@ -19,7 +19,8 @@
         "astro": "^1.2.1",
         "astro-compress": "^1.0.8",
         "react": "^18.1.0",
-        "react-dom": "^18.1.0"
+        "react-dom": "^18.1.0",
+        "reactjs-popup": "^2.0.5"
     },
     "devDependencies": {
         "@typescript-eslint/eslint-plugin": "^5.36.2",
