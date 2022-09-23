@@ -6,7 +6,9 @@ app = FastAPI(
     openapi_url="/openapi.json",
 )
 
-api_router = APIRouter()
+api_router = APIRouter(
+    prefix="/api",
+)
 
 
 @api_router.get("/", status_code=200)

@@ -1,0 +1,20 @@
+#version: "1.0.0"
+services:
+  frontend:
+    depends_on:
+      - backend
+    build:
+      context: ..
+      dockerfile: ./docker/frontend/Dockerfile
+    container_name: clochette-frontend
+    ports:
+     - "443:443"
+     - "80:80"
+
+  backend:
+    build:
+      context: ..
+      dockerfile: ./docker/backend/Dockerfile
+    container_name: clochette-backend
+    ports:
+     - "8080:80"
