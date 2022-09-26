@@ -1,4 +1,5 @@
 #version: "1.0.0"
+version: '1.0.0'
 services:
   frontend:
     depends_on:
@@ -12,9 +13,22 @@ services:
      - "80:80"
 
   backend:
+    depends_on:
+      - db
     build:
       context: ..
       dockerfile: ./docker/backend/Dockerfile
     container_name: clochette-backend
     ports:
      - "8080:80"
+
+  db:
+    container_name: clochette-db
+    image: postgres:14.5-alpine
+    ports:
+     - "5432:5432"
+    volumes:
+      - ./db/volumes:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=some_really_weird_password
+      - POSTGRES_DB=clochette
