@@ -1,4 +1,6 @@
-**/*.tsx
+*.tsx
 *.json
 README.md
 *.config.*
+dist/
+*.ts
