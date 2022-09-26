@@ -1,13 +1,15 @@
 from fastapi import FastAPI, APIRouter
 
+from app.core.config import settings
+
 
 app = FastAPI(
     title="Clochette API",
-    openapi_url="/openapi.json",
+    openapi_url="/{prefix}/openapi.json".format(prefix=settings.API_V1_PREFIX),
 )
 
 api_router = APIRouter(
-    prefix="/api",
+    prefix=settings.API_V1_PREFIX,
 )
 
 
