@@ -20,7 +20,13 @@
             ],
             "@include/*": [
                 "src/layouts/include/*"
-            ]
+            ],
+            "@hooks/*": [
+                "src/hooks/*"
+            ],
+            "@proxies/*": [
+                "src/proxies/*"
+            ],
         }
     }
 }
