@@ -6,7 +6,7 @@ export enum TransactionEnum {
 }
 
 interface TransactionSwitchProps {
-    changeTransactionType?: (type: TransactionEnum) => void
+    changeTransactionType: (type: TransactionEnum) => void
 }
 
 export default function TransactionSwitch(props: TransactionSwitchProps): JSX.Element {
