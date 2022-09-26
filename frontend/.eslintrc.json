@@ -27,7 +27,8 @@
             "rules": {
                 "react/react-in-jsx-scope": "off",
                 "react/no-unknown-property": "off",
-                "no-multiple-empty-lines": "off"
+                "no-multiple-empty-lines": "off",
+                "astro/jsx-a11y/anchor-is-valid": "off"
             }
         }
     ],
@@ -92,7 +93,8 @@
             "error",
             "always"
         ],
-        "no-multiple-empty-lines": "off"
+        "no-multiple-empty-lines": "off",
+        "@typescript-eslint/strict-boolean-expressions": "off"
     },
     "settings": {
         "react": {
