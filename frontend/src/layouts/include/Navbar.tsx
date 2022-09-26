@@ -1,24 +1,33 @@
+import { DarkMode } from '@components/DarkMode';
+
 const navitems = {
     Home: '/',
     Stocks: '/stocks',
     Transaction: '/transaction'
 };
 
-interface NavbarProps {
-    children: JSX.Element
-};
-
-export default function Navbar({ children }: NavbarProps): JSX.Element {
+export default function Navbar(): JSX.Element {
+    const loginClick = (): void => {
+        window.location.href = '/login';
+    };
     return (
         <header className="flex">
             <h1 className="text-4xl text-green-700 font-bold p-4">Clochette</h1>
-            <div className="flex p-2 justify-start flex-grow self-center h-full">
-                {Object.entries(navitems).map(([name, link]) => <NavbarItem key={name} name={name} link={link} />)}
-            </div>
-            {children}
-            <div className="justify-center self-center mr-4">
-                <button className="bg-green-700 text-white font-bold py-2 px-4 rounded">Login</button>
-            </div>
+            {window.innerWidth > 768
+                ? (
+                    <>
+                        <div className="flex p-2 justify-start flex-grow self-center h-full">
+                            {Object.entries(navitems).map(([name, link]) => <NavbarItem key={name} name={name} link={link} />)}
+                        </div>
+                        <DarkMode />
+                        <div className="justify-center self-center mr-4">
+                            <button className="bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={loginClick}>Login</button>
+                        </div>
+                    </>
+                )
+                : (<div className="flex flex-grow justify-end">
+                    <DarkMode />
+                </div>)}
         </header>
     );
 }
