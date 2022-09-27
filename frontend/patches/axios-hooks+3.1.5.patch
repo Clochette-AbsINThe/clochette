@@ -1,0 +1,384 @@
+diff --git a/node_modules/axios-hooks/cjs/index.js b/node_modules/axios-hooks/cjs/index.js
+deleted file mode 100644
+index 3ca4b83..0000000
+--- a/node_modules/axios-hooks/cjs/index.js
++++ /dev/null
+@@ -1,354 +0,0 @@
+-"use strict";
+-
+-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+-
+-exports.__esModule = true;
+-exports.loadCache = exports["default"] = exports.configure = exports.clearCache = exports.__ssrPromises = void 0;
+-exports.makeUseAxios = makeUseAxios;
+-exports.serializeCache = exports.resetConfigure = void 0;
+-
+-var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"));
+-
+-var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
+-
+-var _extends3 = _interopRequireDefault(require("@babel/runtime/helpers/extends"));
+-
+-var _react = _interopRequireDefault(require("react"));
+-
+-var _axios = _interopRequireDefault(require("axios"));
+-
+-var _lruCache = _interopRequireDefault(require("lru-cache"));
+-
+-var _lite = require("dequal/lite");
+-
+-var actions = {
+-  REQUEST_START: 'REQUEST_START',
+-  REQUEST_END: 'REQUEST_END'
+-};
+-var DEFAULT_OPTIONS = {
+-  manual: false,
+-  useCache: true,
+-  ssr: true,
+-  autoCancel: true
+-};
+-var useAxios = makeUseAxios();
+-var __ssrPromises = useAxios.__ssrPromises,
+-    resetConfigure = useAxios.resetConfigure,
+-    configure = useAxios.configure,
+-    loadCache = useAxios.loadCache,
+-    serializeCache = useAxios.serializeCache,
+-    clearCache = useAxios.clearCache;
+-exports.clearCache = clearCache;
+-exports.serializeCache = serializeCache;
+-exports.loadCache = loadCache;
+-exports.configure = configure;
+-exports.resetConfigure = resetConfigure;
+-exports.__ssrPromises = __ssrPromises;
+-var _default = useAxios;
+-exports["default"] = _default;
+-
+-function isReactEvent(obj) {
+-  return obj && obj.nativeEvent && obj.nativeEvent instanceof Event;
+-}
+-
+-function createCacheKey(config) {
+-  var cleanedConfig = (0, _extends3["default"])({}, config);
+-  delete cleanedConfig.cancelToken;
+-  return JSON.stringify(cleanedConfig);
+-}
+-
+-function configToObject(config) {
+-  if (typeof config === 'string') {
+-    return {
+-      url: config
+-    };
+-  }
+-
+-  return Object.assign({}, config);
+-}
+-
+-function makeUseAxios(configureOptions) {
+-  var cache;
+-  var axiosInstance;
+-  var defaultOptions;
+-  var __ssrPromises = [];
+-
+-  function resetConfigure() {
+-    cache = new _lruCache["default"]();
+-    axiosInstance = _axios["default"];
+-    defaultOptions = DEFAULT_OPTIONS;
+-  }
+-
+-  function configure(options) {
+-    if (options === void 0) {
+-      options = {};
+-    }
+-
+-    if (options.axios !== undefined) {
+-      axiosInstance = options.axios;
+-    }
+-
+-    if (options.cache !== undefined) {
+-      cache = options.cache;
+-    }
+-
+-    if (options.defaultOptions !== undefined) {
+-      defaultOptions = (0, _extends3["default"])({}, DEFAULT_OPTIONS, options.defaultOptions);
+-    }
+-  }
+-
+-  resetConfigure();
+-  configure(configureOptions);
+-
+-  function loadCache(data) {
+-    cache.load(data);
+-  }
+-
+-  function serializeCache() {
+-    return _serializeCache.apply(this, arguments);
+-  }
+-
+-  function _serializeCache() {
+-    _serializeCache = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee() {
+-      var ssrPromisesCopy;
+-      return _regenerator["default"].wrap(function _callee$(_context) {
+-        while (1) {
+-          switch (_context.prev = _context.next) {
+-            case 0:
+-              ssrPromisesCopy = [].concat(__ssrPromises);
+-              __ssrPromises.length = 0;
+-              _context.next = 4;
+-              return Promise.all(ssrPromisesCopy);
+-
+-            case 4:
+-              return _context.abrupt("return", cache.dump());
+-
+-            case 5:
+-            case "end":
+-              return _context.stop();
+-          }
+-        }
+-      }, _callee);
+-    }));
+-    return _serializeCache.apply(this, arguments);
+-  }
+-
+-  function clearCache() {
+-    cache.reset();
+-  }
+-
+-  return Object.assign(useAxios, {
+-    __ssrPromises: __ssrPromises,
+-    resetConfigure: resetConfigure,
+-    configure: configure,
+-    loadCache: loadCache,
+-    serializeCache: serializeCache,
+-    clearCache: clearCache
+-  });
+-
+-  function tryStoreInCache(config, response) {
+-    if (!cache) {
+-      return;
+-    }
+-
+-    var cacheKey = createCacheKey(config);
+-    var responseForCache = (0, _extends3["default"])({}, response);
+-    delete responseForCache.config;
+-    delete responseForCache.request;
+-    cache.set(cacheKey, responseForCache);
+-  }
+-
+-  function createInitialState(config, options) {
+-    var response = !options.manual && tryGetFromCache(config, options);
+-    return (0, _extends3["default"])({
+-      loading: !options.manual && !response,
+-      error: null
+-    }, response ? {
+-      data: response.data,
+-      response: response
+-    } : null);
+-  }
+-
+-  function reducer(state, action) {
+-    var _extends2;
+-
+-    switch (action.type) {
+-      case actions.REQUEST_START:
+-        return (0, _extends3["default"])({}, state, {
+-          loading: true,
+-          error: null
+-        });
+-
+-      case actions.REQUEST_END:
+-        return (0, _extends3["default"])({}, state, {
+-          loading: false
+-        }, action.error ? {} : {
+-          data: action.payload.data,
+-          error: null
+-        }, (_extends2 = {}, _extends2[action.error ? 'error' : 'response'] = action.payload, _extends2));
+-    }
+-  }
+-
+-  function tryGetFromCache(config, options, dispatch) {
+-    if (!cache || !options.useCache) {
+-      return;
+-    }
+-
+-    var cacheKey = createCacheKey(config);
+-    var response = cache.get(cacheKey);
+-
+-    if (response && dispatch) {
+-      dispatch({
+-        type: actions.REQUEST_END,
+-        payload: response
+-      });
+-    }
+-
+-    return response;
+-  }
+-
+-  function executeRequest(_x, _x2) {
+-    return _executeRequest.apply(this, arguments);
+-  }
+-
+-  function _executeRequest() {
+-    _executeRequest = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee2(config, dispatch) {
+-      var response;
+-      return _regenerator["default"].wrap(function _callee2$(_context2) {
+-        while (1) {
+-          switch (_context2.prev = _context2.next) {
+-            case 0:
+-              _context2.prev = 0;
+-              dispatch({
+-                type: actions.REQUEST_START
+-              });
+-              _context2.next = 4;
+-              return axiosInstance(config);
+-
+-            case 4:
+-              response = _context2.sent;
+-              tryStoreInCache(config, response);
+-              dispatch({
+-                type: actions.REQUEST_END,
+-                payload: response
+-              });
+-              return _context2.abrupt("return", response);
+-
+-            case 10:
+-              _context2.prev = 10;
+-              _context2.t0 = _context2["catch"](0);
+-
+-              if (!_axios["default"].isCancel(_context2.t0)) {
+-                dispatch({
+-                  type: actions.REQUEST_END,
+-                  payload: _context2.t0,
+-                  error: true
+-                });
+-              }
+-
+-              throw _context2.t0;
+-
+-            case 14:
+-            case "end":
+-              return _context2.stop();
+-          }
+-        }
+-      }, _callee2, null, [[0, 10]]);
+-    }));
+-    return _executeRequest.apply(this, arguments);
+-  }
+-
+-  function request(_x3, _x4, _x5) {
+-    return _request.apply(this, arguments);
+-  }
+-
+-  function _request() {
+-    _request = (0, _asyncToGenerator2["default"])( /*#__PURE__*/_regenerator["default"].mark(function _callee3(config, options, dispatch) {
+-      return _regenerator["default"].wrap(function _callee3$(_context3) {
+-        while (1) {
+-          switch (_context3.prev = _context3.next) {
+-            case 0:
+-              return _context3.abrupt("return", tryGetFromCache(config, options, dispatch) || executeRequest(config, dispatch));
+-
+-            case 1:
+-            case "end":
+-              return _context3.stop();
+-          }
+-        }
+-      }, _callee3);
+-    }));
+-    return _request.apply(this, arguments);
+-  }
+-
+-  function useAxios(_config, _options) {
+-    var config = _react["default"].useMemo(function () {
+-      return configToObject(_config);
+-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
+-    useDeepCompareMemoize(_config));
+-
+-    var options = _react["default"].useMemo(function () {
+-      return (0, _extends3["default"])({}, defaultOptions, _options);
+-    }, // eslint-disable-next-line react-hooks/exhaustive-deps
+-    useDeepCompareMemoize(_options));
+-
+-    var cancelSourceRef = _react["default"].useRef();
+-
+-    var _React$useReducer = _react["default"].useReducer(reducer, createInitialState(config, options)),
+-        state = _React$useReducer[0],
+-        dispatch = _React$useReducer[1];
+-
+-    if (typeof window === 'undefined' && options.ssr && !options.manual) {
+-      useAxios.__ssrPromises.push(axiosInstance(config));
+-    }
+-
+-    var cancelOutstandingRequest = _react["default"].useCallback(function () {
+-      if (cancelSourceRef.current) {
+-        cancelSourceRef.current.cancel();
+-      }
+-    }, []);
+-
+-    var withCancelToken = _react["default"].useCallback(function (config) {
+-      if (options.autoCancel) {
+-        cancelOutstandingRequest();
+-      }
+-
+-      cancelSourceRef.current = _axios["default"].CancelToken.source();
+-      config.cancelToken = cancelSourceRef.current.token;
+-      return config;
+-    }, [cancelOutstandingRequest, options.autoCancel]);
+-
+-    _react["default"].useEffect(function () {
+-      if (!options.manual) {
+-        request(withCancelToken(config), options, dispatch)["catch"](function () {});
+-      }
+-
+-      return function () {
+-        if (options.autoCancel) {
+-          cancelOutstandingRequest();
+-        }
+-      };
+-    }, [config, options, withCancelToken, cancelOutstandingRequest]);
+-
+-    var refetch = _react["default"].useCallback(function (configOverride, options) {
+-      configOverride = configToObject(configOverride);
+-      return request(withCancelToken((0, _extends3["default"])({}, config, isReactEvent(configOverride) ? null : configOverride)), (0, _extends3["default"])({
+-        useCache: false
+-      }, options), dispatch);
+-    }, [config, withCancelToken]);
+-
+-    return [state, refetch, cancelOutstandingRequest];
+-  }
+-}
+-
+-function useDeepCompareMemoize(value) {
+-  var ref = _react["default"].useRef();
+-
+-  var signalRef = _react["default"].useRef(0);
+-
+-  if (!(0, _lite.dequal)(value, ref.current)) {
+-    ref.current = value;
+-    signalRef.current += 1;
+-  }
+-
+-  return [signalRef.current];
+-}
+\ No newline at end of file
+diff --git a/node_modules/axios-hooks/package.json b/node_modules/axios-hooks/package.json
+index 33b681a..df58744 100644
+--- a/node_modules/axios-hooks/package.json
++++ b/node_modules/axios-hooks/package.json
+@@ -12,16 +12,14 @@
+   "homepage": "https://github.com/simoneb/axios-hooks",
+   "repository": "simoneb/axios-hooks",
+   "bugs": "https://github.com/simoneb/axios-hooks/issues",
+-  "main": "cjs/index.js",
+-  "module": "es/index.js",
++  "main": "es/index.js",
++  "type": "module",
+   "types": "src/index.d.ts",
+   "files": [
+-    "cjs/",
+     "es/",
+     "src/"
+   ],
+   "scripts": {
+-    "build:commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir cjs",
+     "build:es": "babel src --out-dir es",
+     "build": "run-p build:*",
+     "clean": "rimraf cjs es",
