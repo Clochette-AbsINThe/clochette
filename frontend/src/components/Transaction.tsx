@@ -1,40 +1,64 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+
 import TransactionSwitch, { TransactionEnum } from '@components/TransactionSwitch';
 import Sale from '@components/Sale';
 import PopupWindows from '@components/PopupWindows';
+
 import { getBoissons } from '@proxies/getBoissons';
 import { getConsommables } from '@proxies/getConsommables';
 import { getHorsStocks } from '@proxies/getHorsStocks';
 
-export interface ItemTypes {
-    id: number
-    name: string
-    price: number
-    value: number
-    image?: string
-    isGlass?: boolean
-}
+import type { ItemTypes } from '@types';
 
+/**
+ * This component is in charge of displaying the transaction page.
+ * @returns JSX.Element
+ */
 export default function Transaction(): JSX.Element {
-    const [transactionType, setTransactionType] = React.useState(TransactionEnum.Vente);
+    /**
+     * This state is in charge of storing the transaction type.
+     */
+    const [transactionType, setTransactionType] = useState(TransactionEnum.Vente);
 
+    /**
+     * This state is in charge of storing the items for the boissons sale.
+     */
     const [itemsBoissons, setItemsBoissons] = useState<ItemTypes[]>([]);
     const { getData: getDataGlass, loading: loadingGlass } = getBoissons(setItemsBoissons);
 
+    /**
+     * This state is in charge of storing the items for the consommables sale.
+     */
     const [itemsConsommable, setItemsConsommable] = useState<ItemTypes[]>([]);
     const { getData: getDataConsommables, loading: loadingConsommable } = getConsommables(setItemsConsommable);
 
+    /**
+     * This state is in charge of storing the items for the hors stock sale.
+     */
     const [itemsHorsStock, setItemsHorsStock] = useState<ItemTypes[]>([]);
     const { getData: getDataHorsStock, loading: loadingHorsStock } = getHorsStocks(setItemsHorsStock);
 
-    const allItems = [...itemsBoissons, ...itemsConsommable, ...itemsHorsStock];
+    /**
+     * An array whit all the items.
+     * @type {ItemTypes[]}
+    */
+    const allItems: ItemTypes[] = [...itemsBoissons, ...itemsConsommable, ...itemsHorsStock];
 
-    const [totalPrice, setTotalPrice] = React.useState(0);
+    /**
+     * This state is in charge of storing the total price.
+     */
+    const [totalPrice, setTotalPrice] = useState(0);
 
+    /**
+     * Update the total price when the array of items change.
+    */
     useEffect(() => {
         setTotalPrice(allItems.reduce((acc, item) => acc + (item.value * item.price), 0));
     }, [allItems]);
 
+    /**
+     * Update the API request when the transaction type change.
+    */
     useEffect(() => {
         setTotalPrice(0);
         if (transactionType === TransactionEnum.Vente) {
@@ -44,10 +68,18 @@ export default function Transaction(): JSX.Element {
         }
     }, [transactionType]);
 
+    /**
+     * This handler is in charge of changing the transaction type.
+     * @param type chnage the transaction type
+     */
     function handleChangeTransactionType(type: TransactionEnum): void {
         setTransactionType(type);
     };
 
+    /**
+     * Render the main content of the transaction page, where all the items are displayed.
+     * @returns JSX.Element
+     */
     function renderTransaction(): JSX.Element {
         if (transactionType === TransactionEnum.Vente) {
             return (
@@ -76,6 +108,10 @@ export default function Transaction(): JSX.Element {
         }
     };
 
+    /**
+     * Render the recap that is displayed in the popup window.
+     * @returns JSX.Element
+     */
     function renderRecap(): JSX.Element {
         return (
             <div className='flex flex-col mx-4 my-3 flex-grow'>
