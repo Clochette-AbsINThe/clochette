@@ -1,14 +1,11 @@
-export interface ItemCountProps {
-    id: number // As to be unique
-    name: string
-    price: number
+import { getIcon } from '@styles/utils';
+import type { ItemTypes } from '@types';
+
+export interface ItemCountProps extends ItemTypes {
     onValueChange: (value: number, key: number) => void
-    value: number
-    image?: string
-    isGlass?: boolean
 }
 
-export function ItemCount(props: ItemCountProps): JSX.Element {
+export default function ItemCount(props: ItemCountProps): JSX.Element {
     const resetHandler = (): void => {
         props.onValueChange(0, props.id);
     };
@@ -23,13 +20,8 @@ export function ItemCount(props: ItemCountProps): JSX.Element {
 
     return (
         <div className="flex m-4 items-center h-max rounded-xl bg-[#70707016] p-3 md:max-w-[33vw] max-w-full flex-wrap">
-            <div className="flex flex-grow">
-                <button onClick={resetHandler}>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-12 h-12 color-red">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-                {props.image && <img src={props.image} alt="beer" className="w-12 h-12" />}
+            <div className="flex flex-grow-[10] items-center">
+                {props.icon && getIcon(props.icon, 'w-10 h-10 dark:text-white ml-2 text-black')}
                 <h1 className='grow lg:text-3xl mx-5 text-xl'>{props.name}</h1>
                 <h1 className='mr-6 text-2xl'>{props.price}€</h1>
             </div>
@@ -47,6 +39,11 @@ export function ItemCount(props: ItemCountProps): JSX.Element {
                         </svg>
                     </button>
                 </div>
+                <button onClick={resetHandler} className='ml-3'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-12 h-12 text-gray-600">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
         </div>
     );
