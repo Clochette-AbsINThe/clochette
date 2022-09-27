@@ -1,4 +1,4 @@
-import type { ItemTypes } from '@components/Transaction';
+import type { ItemTypes } from '@types';
 import useAxios from 'axios-hooks';
 
 interface GetHorsStocksType {

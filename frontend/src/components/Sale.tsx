@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { ItemCount } from '@components/ItemCount';
-import type { ItemTypes } from '@components/Transaction';
-import Loader from './Loader';
+import ItemCount from '@components/ItemCount';
+import Loader from '@components/Loader';
+import type { ItemTypes } from '@types';
 
 interface SaleProps {
     items: ItemTypes[]
@@ -53,7 +53,7 @@ export default function Sale(props: SaleProps): JSX.Element {
                     props.items.map((item) => (
                         (item.isGlass?.valueOf() === true)
                             ? (<div className='flex flex-col grow justify-end' key={item.id}>
-                                <ItemCount key={item.id} id={item.id} name={item.name} price={item.price} onValueChange={onValueChange} value={item.value} image={item.image} />
+                                <ItemCount key={item.id} id={item.id} name={item.name} price={item.price} onValueChange={onValueChange} value={item.value} icon={item.icon} />
                             </div>)
                             : (<ItemCount
                                 key={item.id}
@@ -62,7 +62,7 @@ export default function Sale(props: SaleProps): JSX.Element {
                                 price={item.price}
                                 onValueChange={onValueChange}
                                 value={item.value}
-                                image={item.image}
+                                icon={item.icon}
                             />)
                     ))
                 )}

@@ -27,6 +27,9 @@
             "@proxies/*": [
                 "src/proxies/*"
             ],
+            "@types": [
+                "src/types/types"
+            ],
         }
     }
 }
