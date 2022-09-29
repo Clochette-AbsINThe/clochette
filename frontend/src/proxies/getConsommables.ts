@@ -1,9 +1,11 @@
 import type { ItemTypes } from '@types';
+import type { AxiosError } from 'axios';
 import useAxios from 'axios-hooks';
 
 interface GetConsommablesType {
     getData: () => void
     loading: boolean
+    error?: AxiosError | null
 }
 
 export function getConsommables(setItem: (value: ItemTypes[]) => void): GetConsommablesType {
@@ -27,7 +29,8 @@ export function getConsommables(setItem: (value: ItemTypes[]) => void): GetConso
 
     return {
         getData,
-        loading
+        loading,
+        error
     };
 }
 

@@ -1,9 +1,11 @@
 import type { ItemTypes } from '@types';
+import type { AxiosError } from 'axios';
 import useAxios from 'axios-hooks';
 
 interface GetHorsStocksType {
     getData: () => void
     loading: boolean
+    error?: AxiosError | null
 }
 
 export function getHorsStocks(setItem: (value: ItemTypes[]) => void): GetHorsStocksType {
@@ -26,6 +28,7 @@ export function getHorsStocks(setItem: (value: ItemTypes[]) => void): GetHorsSto
     };
     return {
         getData,
-        loading
+        loading,
+        error
     };
 }

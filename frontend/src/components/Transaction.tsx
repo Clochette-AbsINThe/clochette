@@ -24,19 +24,19 @@ export default function Transaction(): JSX.Element {
      * This state is in charge of storing the items for the boissons sale.
      */
     const [itemsBoissons, setItemsBoissons] = useState<ItemTypes[]>([]);
-    const { getData: getDataGlass, loading: loadingGlass } = getBoissons(setItemsBoissons);
+    const { getData: getDataGlass, loading: loadingGlass, error: errorGlass } = getBoissons(setItemsBoissons);
 
     /**
      * This state is in charge of storing the items for the consommables sale.
      */
     const [itemsConsommable, setItemsConsommable] = useState<ItemTypes[]>([]);
-    const { getData: getDataConsommables, loading: loadingConsommable } = getConsommables(setItemsConsommable);
+    const { getData: getDataConsommables, loading: loadingConsommable, error: erroConsommable } = getConsommables(setItemsConsommable);
 
     /**
      * This state is in charge of storing the items for the hors stock sale.
      */
     const [itemsHorsStock, setItemsHorsStock] = useState<ItemTypes[]>([]);
-    const { getData: getDataHorsStock, loading: loadingHorsStock } = getHorsStocks(setItemsHorsStock);
+    const { getData: getDataHorsStock, loading: loadingHorsStock, error: errorHorsStock } = getHorsStocks(setItemsHorsStock);
 
     /**
      * An array whit all the items.
@@ -88,16 +88,19 @@ export default function Transaction(): JSX.Element {
                         items={itemsBoissons}
                         changeSubTotal={(setItemsBoissons)}
                         loading={loadingGlass}
+                        error={errorGlass}
                     />
                     <Sale
                         items={itemsConsommable}
                         changeSubTotal={setItemsConsommable}
                         loading={loadingConsommable}
+                        error={erroConsommable}
                     />
                     <Sale
                         items={itemsHorsStock}
                         changeSubTotal={setItemsHorsStock}
                         loading={loadingHorsStock}
+                        error={errorHorsStock}
                     />
                 </div>
             );

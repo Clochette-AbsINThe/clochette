@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import ItemCount from '@components/ItemCount';
 import Loader from '@components/Loader';
 import type { ItemTypes } from '@types';
+import type { AxiosError } from 'axios';
 
 interface SaleProps {
     items: ItemTypes[]
     changeSubTotal: (nbItems: ItemTypes[]) => void
     loading: boolean
+    error: AxiosError | null | undefined
 }
 
 export default function Sale(props: SaleProps): JSX.Element {
@@ -47,25 +49,18 @@ export default function Sale(props: SaleProps): JSX.Element {
 
     return (
         <div className="h-full flex flex-col border-2 rounded border-gray-800 dark:border-gray-300">
-            {props.loading
-                ? (<Loader />)
+            {props.loading && <Loader />}
+            {props.error && <div className="text-red-500 text-center text-3xl">{props.error.message}</div>}
+            {props.items.map((item) => (item.isGlass?.valueOf() === true)
+                ? (
+                    <div className='flex flex-col grow justify-end' key={item.id}>
+                        <ItemCount {...item} onValueChange={onValueChange} />
+                    </div>
+                )
                 : (
-                    props.items.map((item) => (
-                        (item.isGlass?.valueOf() === true)
-                            ? (<div className='flex flex-col grow justify-end' key={item.id}>
-                                <ItemCount key={item.id} id={item.id} name={item.name} price={item.price} onValueChange={onValueChange} value={item.value} icon={item.icon} />
-                            </div>)
-                            : (<ItemCount
-                                key={item.id}
-                                id={item.id}
-                                name={item.name}
-                                price={item.price}
-                                onValueChange={onValueChange}
-                                value={item.value}
-                                icon={item.icon}
-                            />)
-                    ))
-                )}
+                    <ItemCount {...item} onValueChange={onValueChange} />
+                )
+            )}
         </div>
     );
 }
