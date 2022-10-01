@@ -1,11 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 
-SQLALCHEMY_DATABASE_URI = "sqlite:///example.db"
+from app.core.config import settings
 
 
 engine = create_engine(
-    SQLALCHEMY_DATABASE_URI,
+    settings.SQLALCHEMY_DATABASE_URI,
     connect_args={
         "check_same_thread": False # required for sqlite
     }
