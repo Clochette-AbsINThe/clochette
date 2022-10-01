@@ -15,7 +15,7 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
-    SQLALCHEMY_DATABASE_URI: str | None = ""
+    SQLALCHEMY_DATABASE_URI: str | None = "postgresql://clochette:some_really_weird_password@db"
 
     class Config:
         case_sensitive = True
