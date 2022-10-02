@@ -22,4 +22,4 @@ def root() -> dict:
 
 
 app.include_router(api_router)
-app.include_router(api_v1_router)
+app.include_router(api_v1_router, prefix=settings.API_V1_PREFIX)
