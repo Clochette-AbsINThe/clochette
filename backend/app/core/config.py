@@ -1,5 +1,6 @@
 from pydantic import AnyHttpUrl, BaseSettings, EmailStr, validator
 
+import os
 
 class Settings(BaseSettings):
     API_V1_PREFIX: str = "/api/v1"
@@ -15,7 +16,19 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
-    SQLALCHEMY_DATABASE_URI: str | None = "postgresql://clochette:some_really_weird_password@db"
+    POSTGRES_HOST = os.environ.get('POSTGRES_HOST')
+    POSTGRES_PORT = os.environ.get('POSTGRES_PORT')
+    POSTGRES_DB = os.environ.get('POSTGRES_DB')
+    POSTGRES_USER = os.environ.get('POSTGRES_USER')
+    POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+    
+    SQLALCHEMY_DATABASE_URI: str | None = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
+        user=POSTGRES_USER,
+        password=POSTGRES_PASSWORD,
+        host=POSTGRES_HOST,
+        port=POSTGRES_PORT,
+        db=POSTGRES_DB
+    )
 
     class Config:
         case_sensitive = True
