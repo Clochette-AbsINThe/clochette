@@ -1,5 +1,4 @@
 #version: "1.0.0"
-version: '1.0.0'
 services:
   frontend:
     depends_on:
@@ -9,26 +8,38 @@ services:
       dockerfile: ./docker/frontend/Dockerfile
     container_name: clochette-frontend
     ports:
-     - "443:443"
-     - "80:80"
+      - "443:443"
+      - "80:80"
 
   backend:
     depends_on:
-      - db
+      - database
     build:
       context: ..
       dockerfile: ./docker/backend/Dockerfile
     container_name: clochette-backend
     ports:
-     - "8080:80"
-
-  db:
-    container_name: clochette-db
-    image: postgres:14.5-alpine
-    ports:
-     - "5432:5432"
-    volumes:
-      - ./db/volumes:/var/lib/postgresql/data
+      - "8080:80"
+    command:
+      - /bin/bash
+      - -c
+      - |
+        alembic revision --autogenerate
+        alembic upgrade head
+        uvicorn app.main:app --host 0.0.0.0 --port 80
     environment:
-      - POSTGRES_PASSWORD=some_really_weird_password
+      - POSTGRES_HOST=clochette-db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=clochette
+      - POSTGRES_USER=clochette
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+  
+  database:
+    image: postgres:14.5-alpine
+    container_name: clochette-db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=clochette
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - POSTGRES_DB=clochette
