@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Query
+from typing import Any
 
 from app.crud.crud_drink import drink as drinks
 from app.dependencies import get_db
@@ -8,8 +9,16 @@ from app.schemas import drink as drink_schema
 router = APIRouter()
 
 
+@router.get("/search", response_model=drink_schema.DrinkSearchResults)
+async def search_drinks(*, query: str | None = Query(None, min_length=3), limit: int | None = 10, db=Depends(get_db)) -> dict:
+    drinks_found = drinks.read_multi(db, limit=limit)
+    if not query:
+        return {"results": drinks_found}
+    results = filter(lambda drink_found: query.lower() in drink_found.name.lower(), drinks_found)
+    return {"results": list(results)}
+
 @router.get("/{drink_id}", response_model=drink_schema.Drink)
-async def read_drink(drink_id: int, db=Depends(get_db)):
+async def read_drink(drink_id: int, db=Depends(get_db)) -> Any:
     drink = drinks.read(db, drink_id)
     if drink is None:
         raise HTTPException(status_code=404, detail="Drink not found")
@@ -22,7 +31,7 @@ async def read_drinks(db=Depends(get_db)):
 
 
 @router.post("/", response_model=drink_schema.Drink)
-async def create_drink(drink: drink_schema.DrinkCreate, db=Depends(get_db)):
+async def create_drink(drink: drink_schema.DrinkCreate, db=Depends(get_db)) -> dict:
     #if drinks.read(db, drink.id):
     #    raise HTTPException(status_code=400, detail="Drink already exists")
     return drinks.create(db, obj_in=drink)
