@@ -18,3 +18,7 @@ class Drink(DrinkBase):
 
     class Config:
         orm_mode = True
+
+
+class DrinkSearchResults(BaseModel):
+    results: list[Drink]
