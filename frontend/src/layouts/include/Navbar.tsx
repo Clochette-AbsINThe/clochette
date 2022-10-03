@@ -1,4 +1,5 @@
 import { DarkMode } from '@components/DarkMode';
+import useWindowSize from '@hooks/useWindowSize';
 
 const navitems = {
     Home: '/',
@@ -7,13 +8,12 @@ const navitems = {
 };
 
 export default function Navbar(): JSX.Element {
-    const loginClick = (): void => {
-        window.location.href = '/login';
-    };
+    const dimension = useWindowSize();
+
     return (
         <header className="flex">
             <h1 className="text-4xl text-green-700 font-bold p-4">Clochette</h1>
-            {window.innerWidth > 768
+            {dimension.width > 768
                 ? (
                     <>
                         <div className="flex p-2 justify-start flex-grow self-center h-full">
@@ -21,7 +21,7 @@ export default function Navbar(): JSX.Element {
                         </div>
                         <DarkMode />
                         <div className="justify-center self-center mr-4">
-                            <button className="bg-green-700 text-white font-bold py-2 px-4 rounded" onClick={loginClick}>Login</button>
+                            <a className="bg-green-700 text-white font-bold py-2 px-4 rounded" href='/login'>Login</a>
                         </div>
                     </>
                 )
