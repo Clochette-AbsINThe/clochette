@@ -4,7 +4,7 @@ import Loader from '@components/Loader';
 import type { ItemTypes } from '@types';
 import type { AxiosError } from 'axios';
 
-interface SaleProps {
+export interface SaleProps {
     items: ItemTypes[]
     changeSubTotal: (nbItems: ItemTypes[]) => void
     loading: boolean
@@ -14,17 +14,11 @@ interface SaleProps {
 export default function Sale(props: SaleProps): JSX.Element {
     const [items, setItems] = useState<ItemTypes[]>(props.items);
 
-    useEffect(() => {
-        if (props.items.toString() !== items.toString()) {
-            setItems(props.items);
-        }
-    }, [props.items]);
-
     function onValueChange(_value: number, _id: number): void {
         // Get the item where isGlass property is equal to true
         const itemGlass = props.items.find((item) => item.isGlass?.valueOf() === true) ?? { id: -1, name: '', price: 0, isGlass: false };
-        const item = items.find((item) => item.id === _id) ?? null;
-        const increment = _value - (item ?? { value: 0 }).value;
+        const item = items.find((item) => item.id === _id) as ItemTypes;
+        const increment = _value - item.value;
         const newNbItems = items.map((item) => {
             if (item.id === _id) {
                 return {
@@ -47,18 +41,22 @@ export default function Sale(props: SaleProps): JSX.Element {
         props.changeSubTotal(items);
     }, [items]);
 
+    useEffect(() => {
+        setItems(props.items);
+    }, [props.items]);
+
     return (
         <div className="h-full flex flex-col border-2 rounded border-gray-800 dark:border-gray-300">
             {props.loading && <Loader />}
             {props.error && <div className="text-red-500 text-center text-3xl">{props.error.message}</div>}
             {props.items.map((item) => (item.isGlass?.valueOf() === true)
                 ? (
-                    <div className='flex flex-col grow justify-end' key={item.id}>
+                    <div className='flex flex-col grow justify-end' key={item.id} aria-label='glass-div'>
                         <ItemCount {...item} onValueChange={onValueChange} />
                     </div>
                 )
                 : (
-                    <ItemCount {...item} onValueChange={onValueChange} />
+                    <ItemCount {...item} onValueChange={onValueChange} key={item.id} />
                 )
             )}
         </div>
