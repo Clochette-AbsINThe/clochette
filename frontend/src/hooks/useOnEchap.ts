@@ -3,7 +3,9 @@ import React from 'react';
 export default function useOnEchap(handler: any): void {
     React.useEffect(() => {
         const listener = (event: KeyboardEvent): void => {
-            handler(event);
+            if (event.key === 'Escape') {
+                handler(event);
+            }
         };
         window.addEventListener('keydown', listener);
 
