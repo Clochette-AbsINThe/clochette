@@ -1,30 +1,22 @@
 import type { ItemTypes } from '@types';
-import type { AxiosError } from 'axios';
-import useAxios from 'axios-hooks';
+import useAxios from '@hooks/useAxios';
+import BaseUrl, { IProxy } from './Config';
 
-interface GetHorsStocksType {
-    getData: () => void
-    loading: boolean
-    error?: AxiosError | null
-}
 
-export function getHorsStocks(setItem: (value: ItemTypes[]) => void): GetHorsStocksType {
-    const [{ error, loading }, get] = useAxios<ItemTypes[]>('https://clochette.dev/api/hors-stocks', { manual: true });
+export function getHorsStocks(setItem: (value: ItemTypes[]) => void): IProxy {
+    const [{ error, loading }, get] = useAxios<ItemTypes[]>(`${BaseUrl}/hors-stocks`);
 
     const getDataAsync = async (): Promise<void> => {
-        const { data, status } = (await get());
-        if (status === 200) {
-            data.forEach((item) => {
-                item.value = 0;
-            });
-            setItem(data);
-        } else {
-            console.error(error);
-        }
+        setItem([]);
+        const { data } = (await get());
+        data.forEach((item) => {
+            item.value = 0;
+        });
+        setItem(data);
     };
 
     const getData = (): void => {
-        void getDataAsync();
+        getDataAsync().catch(() => { });
     };
     return {
         getData,
