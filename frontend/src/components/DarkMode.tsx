@@ -41,7 +41,7 @@ export function DarkMode(): JSX.Element {
         }
     }, [theme]);
     return (
-        <div className='flex items-center justify-center bg-[#70707016] rounded-full m-4 mr-10'>
+        <div className='flex items-center justify-center bg-[#70707016] rounded-full m-4 mr-10' aria-label='darkMode'>
             {themes.map((t, i) => {
                 const icon = icons[i];
                 const checked = t === theme;
@@ -57,13 +57,7 @@ export function DarkMode(): JSX.Element {
                             aria-label={themeLabel}
                             className={'hidden'}
                             onChange={() => {
-                                const matchesDarkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-                                if ((matchesDarkTheme && t === 'dark') || (!matchesDarkTheme && t === 'light')) {
-                                    localStorage.removeItem('theme');
-                                } else {
-                                    localStorage.setItem('theme', t);
-                                }
+                                localStorage.setItem('theme', t);
                                 setTheme(t);
                             }}
                         />
