@@ -1,33 +1,25 @@
 import type { ItemTypes } from '@types';
-import type { AxiosError } from 'axios';
-import useAxios from 'axios-hooks';
+import useAxios from '@hooks/useAxios';
+import BaseUrl, { IProxy } from './Config';
 
-interface GetBoissonsType {
-    getData: () => void
-    loading: boolean
-    error?: AxiosError | null
-}
 
-export function getBoissons(setItem: (value: ItemTypes[]) => void): GetBoissonsType {
-    const [{ error: boissonsError, loading: boissonsLoading }, boissonsGetData] = useAxios<ItemTypes[]>('https://clochette.dev/api/boissons', { manual: true });
-    const [{ error: verreError, loading: verreLoading }, verreGetData] = useAxios<ItemTypes>('https://clochette.dev/api/verre', { manual: true });
+export function getBoissons(setItem: (value: ItemTypes[]) => void): IProxy {
+    const [{ error: boissonsError, loading: boissonsLoading }, boissonsGetData] = useAxios<ItemTypes[]>(`${BaseUrl}/boissons`);
+    const [{ error: verreError, loading: verreLoading }, verreGetData] = useAxios<ItemTypes>(`${BaseUrl}/verre`);
 
     const getDataAsync = async (): Promise<void> => {
-        const { data: boissonsData, status: boissonStatus } = (await boissonsGetData());
-        const { data: verreData, status: verreStatus } = (await verreGetData());
-        if (boissonStatus === 200 && verreStatus === 200) {
-            const value = [...boissonsData, verreData];
-            value.forEach((item) => {
-                item.value = 0;
-            });
-            setItem(value);
-        } else {
-            console.warn(boissonsError?.message, verreError?.message);
-        }
+        setItem([]);
+        const { data: boissonsData } = (await boissonsGetData());
+        const { data: verreData } = (await verreGetData());
+        const value = [...boissonsData, verreData];
+        value.forEach((item) => {
+            item.value = 0;
+        });
+        setItem(value);
     };
 
     const getData = (): void => {
-        void getDataAsync();
+        getDataAsync().catch(() => { });
     };
 
     return {
