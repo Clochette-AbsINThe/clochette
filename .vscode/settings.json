@@ -6,5 +6,10 @@
         "typescript", // Enable .ts
         "typescriptreact" // Enable .tsx
     ],
-    "astro.typescript.diagnostics.enabled": true
+    "astro.typescript.diagnostics.enabled": true,
+    "files.exclude": {
+        "**/.git": true,
+        "frontend/node_modules/": false,
+    },
+    "jest.jestCommandLine": "frontend/node_modules/.bin/jest"
 }
