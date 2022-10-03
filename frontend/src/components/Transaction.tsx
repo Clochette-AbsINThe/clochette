@@ -23,8 +23,8 @@ export default function Transaction(): JSX.Element {
     /**
      * This state is in charge of storing the items for the boissons sale.
      */
-    const [itemsBoissons, setItemsBoissons] = useState<ItemTypes[]>([]);
-    const { getData: getDataGlass, loading: loadingGlass, error: errorGlass } = getBoissons(setItemsBoissons);
+    const [itemsBoisson, setItemsBoisson] = useState<ItemTypes[]>([]);
+    const { getData: getDataBoissons, loading: loadingBoisson, error: errorBoisson } = getBoissons(setItemsBoisson);
 
     /**
      * This state is in charge of storing the items for the consommables sale.
@@ -42,7 +42,7 @@ export default function Transaction(): JSX.Element {
      * An array whit all the items.
      * @type {ItemTypes[]}
     */
-    const allItems: ItemTypes[] = [...itemsBoissons, ...itemsConsommable, ...itemsHorsStock];
+    const allItems: ItemTypes[] = [...itemsBoisson, ...itemsConsommable, ...itemsHorsStock];
 
     /**
      * This state is in charge of storing the total price.
@@ -60,9 +60,8 @@ export default function Transaction(): JSX.Element {
      * Update the API request when the transaction type change.
     */
     useEffect(() => {
-        setTotalPrice(0);
         if (transactionType === TransactionEnum.Vente) {
-            getDataGlass();
+            getDataBoissons();
             getDataConsommables();
             getDataHorsStock();
         }
@@ -83,12 +82,12 @@ export default function Transaction(): JSX.Element {
     function renderTransaction(): JSX.Element {
         if (transactionType === TransactionEnum.Vente) {
             return (
-                <div className="md:grid-cols-3 flex-grow grid gap-2 grid-cols-1">
+                <div className="md:grid-cols-3 flex-grow grid gap-2 grid-cols-1" aria-label='window-vente'>
                     <Sale
-                        items={itemsBoissons}
-                        changeSubTotal={(setItemsBoissons)}
-                        loading={loadingGlass}
-                        error={errorGlass}
+                        items={itemsBoisson}
+                        changeSubTotal={setItemsBoisson}
+                        loading={loadingBoisson}
+                        error={errorBoisson}
                     />
                     <Sale
                         items={itemsConsommable}
@@ -106,7 +105,7 @@ export default function Transaction(): JSX.Element {
             );
         } else {
             return (
-                <div className="flex-grow">ACHAT</div>
+                <div className="flex-grow" aria-label='window-achat'>ACHAT</div>
             );
         }
     };
@@ -144,14 +143,14 @@ export default function Transaction(): JSX.Element {
             <TransactionSwitch changeTransactionType={handleChangeTransactionType} />
             {renderTransaction()}
             <div className='flex justify-end mt-3'>
-                <div className='text-2xl font-bold mr-8'>Total: {totalPrice}€</div>
+                <div className='text-2xl font-bold mr-8' aria-label='total-price'>Total: {totalPrice}€</div>
 
                 <PopupWindows trigger={{ className: 'bg-green-700 text-white font-bold py-2 px-4 rounded', content: 'Valider' }}>
                     <div className='flex flex-col flex-grow'>
                         <div className='text-3xl font-bold pb-2 border-b-2 border-neutral-400'>Récapitulatif de la commande :</div>
                         {renderRecap()}
                         <div className='flex pt-3 self-end'>
-                            <div className='text-2xl font-bold mr-8'>Total: {totalPrice}€</div>
+                            <div className='text-2xl font-bold mr-8' aria-label='total-price'>Total: {totalPrice}€</div>
                             <button className='bg-green-700 text-white font-bold py-2 px-4 rounded'>Valider</button>
                         </div>
                     </div>
