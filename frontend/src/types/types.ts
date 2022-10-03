@@ -2,7 +2,7 @@ import type { IconName } from '@styles/utils';
 
 
 export interface ItemTypes {
-    id: number
+    readonly id: number
     name: string
     price: number
     isGlass?: boolean
