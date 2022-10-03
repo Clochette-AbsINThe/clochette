@@ -1,10 +1,6 @@
 ---
 // Component Imports
-import Counter from '@components/Counter';
 import Base from '@layouts/base.astro';
-const someProps = {
-    count: 0
-};
 
 const header = {
     title: 'Home',
@@ -15,9 +11,4 @@ const header = {
 // https://docs.astro.build/core-concepts/astro-components/
 ---
 
-<Base head={header}>
-    <!-- <div class="h-screen"></div> -->
-    <Counter {...someProps} client:load>
-        <h1 class='text-8xl text-red-400'>Hello, React!</h1>
-    </Counter>
-</Base>
+<Base head={header} />
