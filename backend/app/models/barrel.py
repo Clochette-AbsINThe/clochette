@@ -13,4 +13,5 @@ class Barrel(Base):
     is_mounted = Column(Boolean, nullable=False)
     empty = Column(Boolean, nullable=False)
 
+    drink = relationship("Drink", back_populates="barrels")
     transaction = relationship("Transaction", back_populates="barrels")
