@@ -12,3 +12,4 @@ class OutOfStock(Base):
     item = relationship("OutOfStockItem", back_populates="outofstocks")
 
     transaction_id = Column(Integer, ForeignKey("transaction.id"))
+    transaction = relationship("Transaction", back_populates="outofstocks")

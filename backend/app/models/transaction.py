@@ -26,3 +26,4 @@ class Transaction(Base):
 
     barrels = relationship("Barrel", back_populates="transaction")
     glasses = relationship("Glass", back_populates="transaction")
+    outofstocks = relationship("OutOfStock", back_populates="transaction")
