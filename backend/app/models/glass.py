@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, Float, ForeignKey
+from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
 
@@ -8,3 +9,5 @@ class Glass(Base):
     transaction_id = Column(Integer, ForeignKey("transaction.id"))
     barrel_id = Column(Integer, ForeignKey("barrel.id"))
     price = Column(Float, nullable=False)
+
+    transaction = relationship("Transaction", back_populates="glasses")

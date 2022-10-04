@@ -1,6 +1,7 @@
 import enum
 
 from sqlalchemy import Boolean, Column, DateTime, Enum, Integer, Float, ForeignKey
+from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
 
@@ -20,3 +21,5 @@ class Transaction(Base):
     payment_method = Column(Enum(PaymentMethod), nullable=False)
     amount = Column(Float, nullable=False)
     sale = Column(Boolean, nullable=False) # True means selling, False means buying
+
+    glasses = relationship("Glass", back_populates="transaction")
