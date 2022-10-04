@@ -10,6 +10,7 @@ class Consumable(Base):
     buying_price = Column(Float, nullable=False)
 
     consumable_item_id = Column(Integer, ForeignKey("consumableitem.id"))
+    consumable_item = relationship("ConsumableItem", back_populates="consumables")
 
     stock_id = Column(Integer, ForeignKey("stock.id"))
 
