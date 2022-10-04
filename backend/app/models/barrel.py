@@ -14,4 +14,5 @@ class Barrel(Base):
     empty = Column(Boolean, nullable=False)
 
     drink = relationship("Drink", back_populates="barrels")
+    stock = relationship("Stock", back_populates="barrels")
     transaction = relationship("Transaction", back_populates="barrels")
