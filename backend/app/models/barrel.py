@@ -1,4 +1,5 @@
 from sqlalchemy import Boolean, Column, Integer, Float, ForeignKey
+from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
 
@@ -11,3 +12,5 @@ class Barrel(Base):
     price = Column(Float, nullable=False)
     is_mounted = Column(Boolean, nullable=False)
     empty = Column(Boolean, nullable=False)
+
+    transaction = relationship("Transaction", back_populates="barrels")

@@ -22,4 +22,5 @@ class Transaction(Base):
     amount = Column(Float, nullable=False)
     sale = Column(Boolean, nullable=False) # True means selling, False means buying
 
+    barrels = relationship("Barrel", back_populates="transaction")
     glasses = relationship("Glass", back_populates="transaction")
