@@ -1,5 +1,5 @@
-from ast import For
 from sqlalchemy import Column, Integer, Float, ForeignKey
+from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
 
@@ -14,5 +14,7 @@ class Consumable(Base):
     stock_id = Column(Integer, ForeignKey("stock.id"))
 
     transaction_id_purchase = Column(Integer, ForeignKey("transaction.id"))
+    transaction_purchase = relationship("Transaction", back_populates="consumables_purchase")
 
     transaction_id_sale = Column(Integer, ForeignKey("transaction.id"))
+    transaction_sale = relationship("Transaction", back_populates="consumables_sale")

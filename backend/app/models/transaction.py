@@ -25,5 +25,7 @@ class Transaction(Base):
     treasury = relationship("Treasury", back_populates="transactions")
 
     barrels = relationship("Barrel", back_populates="transaction")
+    consumables_purchase = relationship("Consumable", back_populates="transaction_purchase")
+    consumables_sale = relationship("Consumable", back_populates="transaction_sale")
     glasses = relationship("Glass", back_populates="transaction")
     outofstocks = relationship("OutOfStock", back_populates="transaction")
