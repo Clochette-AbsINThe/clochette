@@ -21,7 +21,7 @@ export default function Navbar(): JSX.Element {
                         </div>
                         <DarkMode />
                         <div className="justify-center self-center mr-4">
-                            <a className="bg-green-700 text-white font-bold py-2 px-4 rounded" href='/login'>Login</a>
+                            <a className="btn-primary" href='/login'>Login</a>
                         </div>
                     </>
                 )
