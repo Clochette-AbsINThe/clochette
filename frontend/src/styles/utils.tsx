@@ -1,4 +1,4 @@
-// Icons
+import type { IconName } from '@types';
 
 interface IconProps {
     className: string
@@ -43,7 +43,6 @@ const SoftIcon = (props: IconProps): JSX.Element => {
 
 const BarrelIcon = (props: IconProps): JSX.Element => {
     return (
-
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.467 8.467" className={props.className} stroke="none" fill="currentColor" aria-label='icon' data-testid='Barrel'>
             <g>
                 <path d="M-128.027 387.92v2.576h.264v-2.576zm-2.383-1.69v1.059h.266v-1.059zm2.383 0v1.059h.264v-1.059z" overflow="visible" transform="translate(133.32 -384.974)" />
@@ -56,9 +55,16 @@ const BarrelIcon = (props: IconProps): JSX.Element => {
     );
 };
 
-// Geter for the icons
+const MiscIcon = (props: IconProps): JSX.Element => {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor" className={props.className} data-testid='Misc'>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M21 7.5l-9-5.25L3 7.5m18 0l-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+        </svg>
+    );
+};
 
-export type IconName = null | 'Glass' | 'Beer' | 'Food' | 'Soft' | 'Barrel';
+
+// Geter for the icons
 
 export function getIcon(name: IconName, className: string): JSX.Element {
     switch (name) {
@@ -72,8 +78,8 @@ export function getIcon(name: IconName, className: string): JSX.Element {
             return <SoftIcon className={className} />;
         case 'Barrel':
             return <BarrelIcon className={className} />;
-        default:
-            return <></>;
+        case 'Misc':
+            return <MiscIcon className={className} />;
     }
 }
 
