@@ -1,6 +1,5 @@
-import { useState } from 'react';
-
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import { useState } from 'react';
 
 interface ResponseValues<T> {
     loading: boolean
@@ -20,7 +19,7 @@ export default function useAxios<T>(url: string, _config?: AxiosRequestConfig): 
         setLoading(true);
         setError(null);
         try {
-            const response = await axios(url, config);
+            const response = await axios(url, { ...config, ..._config });
             setResponse(response);
             return response;
         } catch (error: any) {
