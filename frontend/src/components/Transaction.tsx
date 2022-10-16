@@ -1,48 +1,23 @@
 import { useEffect, useState } from 'react';
 
-import TransactionSwitch, { TransactionEnum } from '@components/TransactionSwitch';
-import Sale from '@components/Sale';
+import BuyPage from '@components/BuyPage';
 import PopupWindows from '@components/PopupWindows';
+import SalePage from '@components/SalePage';
+import TransactionSwitch, { TransactionEnum } from '@components/TransactionSwitch';
 
-import { getBoissons } from '@proxies/getBoissons';
-import { getConsommables } from '@proxies/getConsommables';
-import { getHorsStocks } from '@proxies/getHorsStocks';
+import { postNewBuyTransaction } from '@proxies/BuyPageProxies';
+import { postNewSellTransaction } from '@proxies/SalePageProxies';
 
-import type { ItemTypes } from '@types';
+import type { ItemBuy, ItemSell, PaymentMethod } from '@types';
 
 /**
  * This component is in charge of displaying the transaction page.
- * @returns JSX.Element
  */
 export default function Transaction(): JSX.Element {
     /**
      * This state is in charge of storing the transaction type.
      */
-    const [transactionType, setTransactionType] = useState(TransactionEnum.Vente);
-
-    /**
-     * This state is in charge of storing the items for the boissons sale.
-     */
-    const [itemsBoisson, setItemsBoisson] = useState<ItemTypes[]>([]);
-    const { getData: getDataBoissons, loading: loadingBoisson, error: errorBoisson } = getBoissons(setItemsBoisson);
-
-    /**
-     * This state is in charge of storing the items for the consommables sale.
-     */
-    const [itemsConsommable, setItemsConsommable] = useState<ItemTypes[]>([]);
-    const { getData: getDataConsommables, loading: loadingConsommable, error: erroConsommable } = getConsommables(setItemsConsommable);
-
-    /**
-     * This state is in charge of storing the items for the hors stock sale.
-     */
-    const [itemsHorsStock, setItemsHorsStock] = useState<ItemTypes[]>([]);
-    const { getData: getDataHorsStock, loading: loadingHorsStock, error: errorHorsStock } = getHorsStocks(setItemsHorsStock);
-
-    /**
-     * An array whit all the items.
-     * @type {ItemTypes[]}
-    */
-    const allItems: ItemTypes[] = [...itemsBoisson, ...itemsConsommable, ...itemsHorsStock];
+    const [transactionType, setTransactionType] = useState(TransactionEnum.Achat);
 
     /**
      * This state is in charge of storing the total price.
@@ -50,108 +25,135 @@ export default function Transaction(): JSX.Element {
     const [totalPrice, setTotalPrice] = useState(0);
 
     /**
-     * Update the total price when the array of items change.
+     * An array whit all the items.
     */
-    useEffect(() => {
-        setTotalPrice(allItems.reduce((acc, item) => acc + (item.value * item.price), 0));
-    }, [allItems]);
+    const [selectedItemsSell, setSelectedItemsSell] = useState<ItemSell[]>([]);
+    const [selectedItemsBuy, setSelectedItemsBuy] = useState<ItemBuy[]>([]);
 
     /**
-     * Update the API request when the transaction type change.
-    */
+     * This state is in charge of storing the payment method.
+     */
+    const [paymentMethod] = useState<PaymentMethod>('CB');
+
+    /**
+     * This state is in charge of storing the open state of the popup window.
+     */
+    const [popupWindowOpen, setPopupWindowOpen] = useState(false);
+
+    /**
+     * Those functions is in charge of handling the submit of the transaction.
+     */
+    const [newBuyTransaction, { loading: loadingBuy }] = postNewBuyTransaction();
+    const [newSellTransaction, { loading: loadingSell }] = postNewSellTransaction();
+
+    /**
+     * Update the total price when the selected items change.
+     */
     useEffect(() => {
-        if (transactionType === TransactionEnum.Vente) {
-            getDataBoissons();
-            getDataConsommables();
-            getDataHorsStock();
+        if (transactionType === TransactionEnum.Achat) {
+            setTotalPrice(selectedItemsBuy.reduce((acc, item) => acc + (item.quantity * item.item.unitPrice), 0));
+        } else {
+            setTotalPrice(selectedItemsSell.reduce((acc, item) => acc + (item.quantity * item.item.sellPrice), 0));
         }
-    }, [transactionType]);
+    }, [transactionType, selectedItemsBuy, selectedItemsSell]);
 
     /**
      * This handler is in charge of changing the transaction type.
-     * @param type chnage the transaction type
+     * @param type change the transaction type
      */
-    function handleChangeTransactionType(type: TransactionEnum): void {
+    const handleChangeTransactionType = (type: TransactionEnum): void => {
         setTransactionType(type);
     };
 
     /**
+     * This handler is in charge of submitting the transaction.
+     */
+    const handlePostData = (): void => {
+        setPopupWindowOpen(false);
+        if (loadingBuy || loadingSell) return;
+        if (transactionType === TransactionEnum.Achat) {
+            if (selectedItemsBuy.length > 0) {
+                newBuyTransaction({ transactionItems: selectedItemsBuy, paymentMethod, totalPrice });
+            }
+        } else {
+            if (selectedItemsSell.length > 0) {
+                newSellTransaction({ transactionItems: selectedItemsSell, paymentMethod, totalPrice });
+            }
+        }
+    };
+
+    /**
      * Render the main content of the transaction page, where all the items are displayed.
-     * @returns JSX.Element
      */
     function renderTransaction(): JSX.Element {
         if (transactionType === TransactionEnum.Vente) {
             return (
-                <div className="md:grid-cols-3 flex-grow grid gap-2 grid-cols-1" aria-label='window-vente'>
-                    <Sale
-                        items={itemsBoisson}
-                        changeSubTotal={setItemsBoisson}
-                        loading={loadingBoisson}
-                        error={errorBoisson}
-                    />
-                    <Sale
-                        items={itemsConsommable}
-                        changeSubTotal={setItemsConsommable}
-                        loading={loadingConsommable}
-                        error={erroConsommable}
-                    />
-                    <Sale
-                        items={itemsHorsStock}
-                        changeSubTotal={setItemsHorsStock}
-                        loading={loadingHorsStock}
-                        error={errorHorsStock}
-                    />
-                </div>
+                <SalePage setItems={setSelectedItemsSell} />
             );
         } else {
             return (
-                <div className="flex-grow" aria-label='window-achat'>ACHAT</div>
+                <BuyPage changeSelectedItems={setSelectedItemsBuy} selectedItems={selectedItemsBuy} />
             );
         }
     };
 
     /**
      * Render the recap that is displayed in the popup window.
-     * @returns JSX.Element
      */
     function renderRecap(): JSX.Element {
-        return (
-            <div className='flex flex-col mx-4 my-3 flex-grow'>
-                {
-                    allItems.sort((a, b) => b.price * b.value - a.price * a.value).map((item) => {
-                        if (item.value > 0) {
+        if (transactionType === TransactionEnum.Vente) {
+            return (
+                <div className='flex flex-col mx-4 my-3 flex-grow'>
+                    {
+                        selectedItemsSell.sort((a, b) => b.item.sellPrice * b.quantity - a.item.sellPrice * a.quantity).map((item) => {
                             return (
-                                <li className='text-2xl flex justify-between mb-2 border-b border-b-orange-300' key={item.name}>
+                                <li className='text-2xl flex justify-between mb-2 border-b border-b-gray-300' key={item.item.name}>
                                     <div className='flex'>
-                                        <div className='mr-2'>{item.value}</div>
-                                        <div>{item.name}</div>
+                                        <div className='mr-2'>{item.quantity}</div>
+                                        <div>{item.item.name}</div>
                                     </div>
-                                    <div>{item.value * item.price}€</div>
+                                    <div>{item.quantity * item.item.sellPrice}€</div>
                                 </li>
                             );
-                        } else {
-                            return null;
-                        }
-                    })
-                }
-            </div>
-        );
+                        })
+                    }
+                </div>
+            );
+        } else {
+            return (
+                <div className='flex flex-col mx-4 my-3 flex-grow'>
+                    {
+                        selectedItemsBuy.map((item) => {
+                            return (
+                                <li className='text-2xl flex justify-between mb-2 border-b border-b-gray-300' key={item.item.name + item.table}>
+                                    <div className='flex'>
+                                        <div className='mr-2'>{item.quantity}</div>
+                                        <div>{item.item.name}</div>
+                                    </div>
+                                    <div>{item.quantity * item.item.unitPrice}€</div>
+                                </li>
+                            );
+                        })
+                    }
+                </div>
+            );
+        }
     }
 
     return (
         <>
-            <TransactionSwitch changeTransactionType={handleChangeTransactionType} />
+            <TransactionSwitch changeTransactionType={handleChangeTransactionType} startTransactionType={transactionType} />
             {renderTransaction()}
             <div className='flex justify-end mt-3'>
                 <div className='text-2xl font-bold mr-8' aria-label='total-price'>Total: {totalPrice}€</div>
 
-                <PopupWindows trigger={{ className: 'bg-green-700 text-white font-bold py-2 px-4 rounded', content: 'Valider' }}>
+                <PopupWindows trigger={{ className: 'btn-primary', content: 'Valider' }} onOpen={popupWindowOpen} callback={(state) => setPopupWindowOpen(state)}>
                     <div className='flex flex-col flex-grow'>
                         <div className='text-3xl font-bold pb-2 border-b-2 border-neutral-400'>Récapitulatif de la commande :</div>
                         {renderRecap()}
                         <div className='flex pt-3 self-end'>
                             <div className='text-2xl font-bold mr-8' aria-label='total-price'>Total: {totalPrice}€</div>
-                            <button className='bg-green-700 text-white font-bold py-2 px-4 rounded'>Valider</button>
+                            <button className='btn-primary' onClick={handlePostData}>Valider</button>
                         </div>
                     </div>
                 </PopupWindows>
