@@ -7,10 +7,11 @@ export enum TransactionEnum {
 
 interface TransactionSwitchProps {
     changeTransactionType: (type: TransactionEnum) => void
+    startTransactionType: TransactionEnum
 }
 
 export default function TransactionSwitch(props: TransactionSwitchProps): JSX.Element {
-    const [transaction, setTransaction] = useState(TransactionEnum.Vente);
+    const [transaction, setTransaction] = useState(props.startTransactionType);
 
     function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
         setTransaction(e.target.value === 'Achat' ? TransactionEnum.Achat : TransactionEnum.Vente);
@@ -19,6 +20,10 @@ export default function TransactionSwitch(props: TransactionSwitchProps): JSX.El
     useEffect(() => {
         props.changeTransactionType?.(transaction);
     }, [transaction]);
+
+    useEffect(() => {
+        setTransaction(props.startTransactionType);
+    }, [props.startTransactionType]);
 
     return (
         <div className="flex items-center justify-center mb-4">
