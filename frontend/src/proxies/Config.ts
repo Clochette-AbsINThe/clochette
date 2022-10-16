@@ -4,8 +4,9 @@ const BaseURL = 'https://clochette.dev/api/v1';
 
 export default BaseURL;
 
-export interface IProxy {
-    getData: () => void
-    loading: boolean
-    error?: AxiosError | null
-}
+export type IProxy = [
+    (data?: any) => void,
+    {
+        loading: boolean
+        error?: AxiosError | null
+    }];
