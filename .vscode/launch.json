@@ -6,6 +6,23 @@
       "name": "Development server",
       "request": "launch",
       "type": "node-terminal"
+    },
+    {
+      "type": "node",
+      "name": "vscode-jest-tests.v2",
+      "request": "launch",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "program": "/home/samug/ProjetPerso/clochette/frontend/node_modules/.bin/jest",
+      "cwd": "/home/samug/ProjetPerso/clochette/frontend/",
+      "args": [
+        "--runInBand",
+        "--watchAll=false",
+        "--config",
+        "/home/samug/ProjetPerso/clochette/frontend/jest.config.ts",
+        "--testTimeout",
+        "100000",
+      ]
     }
   ]
 }

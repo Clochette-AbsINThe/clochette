@@ -13,12 +13,10 @@ const config: Config = {
         '^@types': '<rootDir>/src/types/types.ts'
     },
     testEnvironment: 'jsdom',
-    setupFilesAfterEnv: ['<rootDir>/src/setupTests.ts'],
-    collectCoverage: false,
+    setupFilesAfterEnv: ['<rootDir>/tests/setupTests.ts'],
+    collectCoverage: true,
     collectCoverageFrom: [
-        '<rootDir>/src/**/*.tsx',
-        '<rootDir>/src/hooks/*.ts',
-        '<rootDir>/src/proxies/*.ts'
+        '<rootDir>/src/**/*.{ts,tsx}'
     ],
     coverageDirectory: 'coverage'
 };

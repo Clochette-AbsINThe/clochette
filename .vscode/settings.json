@@ -9,7 +9,14 @@
     "astro.typescript.diagnostics.enabled": true,
     "files.exclude": {
         "**/.git": true,
-        "frontend/node_modules/": false,
+        "frontend/node_modules/": true,
     },
-    "jest.jestCommandLine": "frontend/node_modules/.bin/jest"
+    "jest.coverageColors": {
+        "covered": "rgba(9, 156, 65, 0.1)",
+        "uncovered": "rgba(121, 31, 10, 0.1)",
+        "partially-covered": "rgba(235, 198, 52, 0.1)",
+    },
+    "jest.rootPath": "frontend",
+    "jest.debugMode": true,
+    "jest.jestCommandLine": "npm run test --"
 }
