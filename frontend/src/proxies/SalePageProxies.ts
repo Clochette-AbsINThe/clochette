@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import useAxios from '@hooks/useAxios';
-import BaseUrl, { IProxy } from '@proxies/Config';
+import type { IProxy, IProxyPost } from '@proxies/Config';
 import type { APIItem, Consumable, Glass, ItemSell, ItemTransactionResponse, OutOfStock, OutOfStockItemSell, PaymentMethod, Transaction } from '@types';
+import type { AxiosResponse } from 'axios';
 
 /**
  * This function is used to fill glass column in the sale page
@@ -9,8 +10,8 @@ import type { APIItem, Consumable, Glass, ItemSell, ItemTransactionResponse, Out
  * @returns A function to make the API call and the loading and error state
  */
 export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStock>>) => void): IProxy {
-    const [{ error, loading }, getGlass] = useAxios<Glass[]>(`${BaseUrl}/Glass`);
-    const [, outOfStockGet] = useAxios<OutOfStockItemSell[]>(`${BaseUrl}/OutOfStock/Sell`);
+    const [{ error, loading: loading1 }, getGlass] = useAxios<Glass[]>('/Glass');
+    const [{ loading: loading2 }, outOfStockGet] = useAxios<OutOfStockItemSell[]>('/OutOfStockItem/Sell');
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
@@ -33,7 +34,6 @@ export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStock>>) 
                 ...EcoCup,
                 fkID: EcoCup.id as number,
                 id: undefined,
-                icon: 'Glass',
                 unitPrice: EcoCup.sellPrice
             }
         });
@@ -44,7 +44,7 @@ export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStock>>) 
         getDataAsync().catch(() => { });
     };
 
-    return [getData, { loading, error }];
+    return [getData, { loading: loading1 || loading2, error }];
 }
 
 /**
@@ -53,7 +53,7 @@ export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStock>>) 
  * @returns A function to make the API call and the loading and error state
  */
 export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStock>>) => void): IProxy {
-    const [{ error, loading }, get] = useAxios<OutOfStockItemSell[]>(`${BaseUrl}/OutOfStock/Sell`);
+    const [{ error, loading }, get] = useAxios<OutOfStockItemSell[]>('/OutOfStockItem/Sell');
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
@@ -65,7 +65,6 @@ export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStock>>) => v
                 ...item,
                 fkID: item.id as number,
                 id: undefined,
-                icon: 'Glass',
                 unitPrice: item.sellPrice
             }
         }));
@@ -85,7 +84,7 @@ export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStock>>) => v
  * @returns A function to make the API call and the loading and error state
  */
 export function getConsumables(setItem: (value: Array<APIItem<Consumable>>) => void): IProxy {
-    const [{ error, loading }, get] = useAxios<Consumable[]>(`${BaseUrl}/Consumable`);
+    const [{ error, loading }, get] = useAxios<Consumable[]>('/Consumable');
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
@@ -109,13 +108,10 @@ export function getConsumables(setItem: (value: Array<APIItem<Consumable>>) => v
  * This function is used to create a new Sale transaction
  * @returns A function to make the API call and the loading state
  */
-export function postNewSellTransaction(): IProxy {
-    const [{ loading: loading1 }, postTransaction] = useAxios<Transaction<ItemTransactionResponse>>(`${BaseUrl}/Transaction/Sale`, { method: 'POST' });
-    const [{ loading: loading2 }, postOutOfStock] = useAxios<OutOfStockItemSell>(`${BaseUrl}/OutOfStockItem/Sell`, { method: 'POST' });
+export function postNewSellTransaction(callback?: (data: AxiosResponse<Transaction<ItemTransactionResponse>, any>) => void): IProxyPost<ItemSell[]> {
+    const [{ loading, error }, postTransaction] = useAxios<Transaction<ItemTransactionResponse>>('/Transaction/Sell', { method: 'POST' });
 
-    const loading = loading1 || loading2;
-
-    const postDataAsync = async (transactionItems: ItemSell[], paymentMethod: PaymentMethod, totalPrice: number): Promise<void> => {
+    const postDataAsync = async (transactionItems: ItemSell[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): Promise<void> => {
         const newItems: ItemSell[] = [];
         for (let i = 0; i < transactionItems.length; i++) {
             const item = transactionItems[i];
@@ -138,15 +134,10 @@ export function postNewSellTransaction(): IProxy {
                     });
                     break;
                 case 'outofstock': {
-                    let fkID = item.item.fkID;
-                    if (item.item.fkID === -1) {
-                        const dataRes = (await postOutOfStock({ data: { name: item.item.name, icon: item.item.icon, sellPrice: item.item.sellPrice } })).data;
-                        fkID = dataRes.id as number;
-                    }
                     newItems.push({
                         ...item,
                         item: {
-                            fkID,
+                            fkID: item.item.fkID,
                             unitPrice: item.item.sellPrice
                         } as OutOfStock
                     });
@@ -156,19 +147,19 @@ export function postNewSellTransaction(): IProxy {
         }
 
         const data: Transaction<ItemSell> = {
-            dateTime: new Date(),
+            dateTime: date.toISOString(),
             sale: true,
             paymentMethod,
             totalPrice,
             items: newItems
         };
-        console.log(data);
-        await postTransaction({ data });
+        const response = (await postTransaction({ data }));
+        callback?.(response);
     };
 
-    const postData = (data: { transactionItems: ItemSell[], paymentMethod: PaymentMethod, totalPrice: number }): void => {
-        postDataAsync(data.transactionItems, data.paymentMethod, data.totalPrice).catch(() => { });
+    const postData = (transactionItems: ItemSell[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): void => {
+        postDataAsync(transactionItems, paymentMethod, totalPrice, date).catch(() => { });
     };
 
-    return [postData, { loading }];
+    return [postData, { loading, error }];
 }
