@@ -9,6 +9,13 @@ interface ResponseValues<T> {
 
 type UseAxiosResult<T> = [ResponseValues<T>, (_config?: AxiosRequestConfig) => Promise<AxiosResponse<T>>];
 
+const API = axios.create({
+    baseURL: 'https://clochette.dev/api/v1',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+});
+
 
 export default function useAxios<T>(url: string, _config?: AxiosRequestConfig): UseAxiosResult<T> {
     const [loading, setLoading] = useState<boolean>(false);
@@ -19,7 +26,7 @@ export default function useAxios<T>(url: string, _config?: AxiosRequestConfig): 
         setLoading(true);
         setError(null);
         try {
-            const response = await axios(url, { ...config, ..._config });
+            const response = await API.request({ ..._config, ...config, url });
             setResponse(response);
             return response;
         } catch (error: any) {

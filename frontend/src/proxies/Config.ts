@@ -1,12 +1,19 @@
+import type { PaymentMethod } from '@types';
 import type { AxiosError } from 'axios';
 
-const BaseURL = 'https://clochette.dev/api/v1';
-
-export default BaseURL;
-
 export type IProxy = [
-    (data?: any) => void,
+    () => void,
     {
         loading: boolean
         error?: AxiosError | null
-    }];
+    }
+];
+
+export type IProxyPost<T> = [
+    (transactionItems: T, paymentMethod: PaymentMethod, totalPrice: number, date: Date) => void,
+    {
+        loading: boolean
+        error?: AxiosError | null
+    }
+];
+
