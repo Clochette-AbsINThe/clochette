@@ -73,11 +73,11 @@ export default function Transaction(): JSX.Element {
         if (loadingBuy || loadingSell) return;
         if (transactionType === TransactionEnum.Achat) {
             if (selectedItemsBuy.length > 0) {
-                newBuyTransaction({ transactionItems: selectedItemsBuy, paymentMethod, totalPrice });
+                newBuyTransaction(selectedItemsBuy, paymentMethod, totalPrice, new Date());
             }
         } else {
             if (selectedItemsSell.length > 0) {
-                newSellTransaction({ transactionItems: selectedItemsSell, paymentMethod, totalPrice });
+                newSellTransaction(selectedItemsSell, paymentMethod, totalPrice, new Date());
             }
         }
     };
@@ -153,7 +153,7 @@ export default function Transaction(): JSX.Element {
                         {renderRecap()}
                         <div className='flex pt-3 self-end'>
                             <div className='text-2xl font-bold mr-8' aria-label='total-price'>Total: {totalPrice}€</div>
-                            <button className='btn-primary' onClick={handlePostData}>Valider</button>
+                            <button className='btn-primary' onClick={handlePostData}>Valider le paiment</button>
                         </div>
                     </div>
                 </PopupWindows>
