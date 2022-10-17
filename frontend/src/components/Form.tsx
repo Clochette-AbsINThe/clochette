@@ -60,15 +60,15 @@ export default function Form(props: FormProps): JSX.Element {
                     <div className='text-2xl'>Type de produit :</div>
                     <div className="flex items-center justify-between flex-wrap space-y-2">
                         <div className='flex space-x-4 items-center'>
-                            <input type="radio" name="icon" id='Food' className='checkbox' onChange={() => setIcon('Food')} />
+                            <input type="radio" name="icon" id='Food' className='checkbox' onChange={() => setIcon('Food')} defaultChecked={icon === 'Food'} aria-label='icon-food' />
                             <label htmlFor="Food">{getIcon('Food', 'w-10 h-10 dark:text-white text-black')}</label>
                         </div>
                         <div className='flex space-x-4 items-center'>
-                            <input type="radio" name="icon" id='Soft' className='checkbox' onChange={() => setIcon('Soft')} />
+                            <input type="radio" name="icon" id='Soft' className='checkbox' onChange={() => setIcon('Soft')} defaultChecked={icon === 'Soft'} aria-label='icon-soft' />
                             <label htmlFor="Soft">{getIcon('Soft', 'w-10 h-10 dark:text-white text-black')}</label>
                         </div>
                         <div className='flex space-x-4 items-center'>
-                            <input type="radio" name="icon" id='Misc' className='checkbox' onChange={() => setIcon('Misc')} defaultChecked />
+                            <input type="radio" name="icon" id='Misc' className='checkbox' onChange={() => setIcon('Misc')} defaultChecked={icon === 'Misc'} aria-label='icon-misc' />
                             <label htmlFor='Misc'>{getIcon('Misc', 'w-10 h-10 dark:text-white text-black')}</label>
                         </div>
                     </div>
@@ -92,6 +92,7 @@ export default function Form(props: FormProps): JSX.Element {
                     type='text'
                     id='name'
                     name='name'
+                    aria-label='name'
                     className='input w-64'
                     value={name}
                     onChange={(e) => setName(e.target.value)}
@@ -105,79 +106,89 @@ export default function Form(props: FormProps): JSX.Element {
                     type='number'
                     id='quantity'
                     name='quantity'
+                    aria-label='quantity'
                     className='input w-32'
                     value={isNaN(quantity) ? '' : quantity}
                     onChange={(e) => setQuantity(e.target.value === '' ? NaN : (parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 1))}
                     onBlur={() => setQuantity(isNaN(quantity) ? 1 : quantity)}
                 />
             </div>
-            <div className='flex flex-col'>
-                <div className='text-2xl mb-2'>Prix d&apos;achat :</div>
-                <div className='flex items-center justify-between flex-wrap space-y-2'>
-                    <div className="flex items-center space-x-4">
-                        <input
-                            type="radio"
-                            name="price"
-                            id="unitPriceSelected"
-                            defaultChecked
-                            onChange={() => setPriceSelected('price_unit')}
-                            className='checkbox'
-                        />
-                        <label htmlFor='unitPrice'>Prix à l&apos;unité :</label>
-                        <input
-                            type='number'
-                            id='unitPrice'
-                            name='unitPrice'
-                            className='input w-24'
-                            step={0.01}
-                            disabled={priceSelected === 'price_total'}
-                            onChange={(e) => setUnitPrice(e.target.value === '' ? NaN : (Number(e.target.value) > 0 ? Number(e.target.value) : 0))}
-                            value={isNaN(unitPrice) ? '' : unitPrice}
-                            onBlur={() => setUnitPrice(isNaN(unitPrice) ? 0 : unitPrice)}
-                        />
-                        <span>€</span>
+            {props.item.item.unitPrice !== undefined && (
+                <div className='flex flex-col'>
+                    <div className='text-2xl mb-2'>Prix d&apos;achat :</div>
+                    <div className='flex items-center justify-between flex-wrap space-y-2'>
+                        <div className="flex items-center space-x-4">
+                            <input
+                                type="radio"
+                                name="price"
+                                id="unitPriceSelected"
+                                aria-label='unitPriceSelected'
+                                defaultChecked
+                                onChange={() => setPriceSelected('price_unit')}
+                                className='checkbox'
+                            />
+                            <label htmlFor='unitPrice'>Prix à l&apos;unité :</label>
+                            <input
+                                type='number'
+                                id='unitPrice'
+                                name='unitPrice'
+                                aria-label='unitPrice'
+                                className='input w-24'
+                                step={0.01}
+                                disabled={priceSelected === 'price_total'}
+                                onChange={(e) => setUnitPrice(e.target.value === '' ? NaN : (Number(e.target.value) > 0 ? Number(e.target.value) : 0))}
+                                value={isNaN(unitPrice) ? '' : unitPrice}
+                                onBlur={() => setUnitPrice(isNaN(unitPrice) ? 0 : unitPrice)}
+                            />
+                            <span>€</span>
+                        </div>
+                        <div className="flex items-center space-x-4">
+                            <input
+                                type="radio"
+                                name="price"
+                                id="totalPriceSelected"
+                                aria-label='totalPriceSelected'
+                                onChange={() => setPriceSelected('price_total')}
+                                className='checkbox'
+                            />
+                            <label htmlFor='totalPrice'>Prix total :</label>
+                            <input
+                                type='number'
+                                id='totalPrice'
+                                name='totalPrice'
+                                aria-label='totalPrice'
+                                className='input w-24'
+                                step={0.01}
+                                disabled={priceSelected === 'price_unit'}
+                                onChange={(e) => setTotalPrice(e.target.value === '' ? NaN : (Number(e.target.value) > 0 ? Number(e.target.value) : 0))}
+                                value={isNaN(totalPrice) ? '' : totalPrice}
+                                onBlur={() => setTotalPrice(isNaN(totalPrice) ? 0 : totalPrice)}
+                            />
+                            <span>€</span>
+                        </div>
                     </div>
-                    <div className="flex items-center space-x-4">
-                        <input
-                            type="radio"
-                            name="price"
-                            id="totalPriceSelected"
-                            onChange={() => setPriceSelected('price_total')}
-                            className='checkbox'
-                        />
-                        <label htmlFor='totalPrice'>Prix total :</label>
+                </div>
+            )}
+            {props.item.item.sellPrice !== undefined && (
+                <div className='flex flex-col'>
+                    <div className='text-2xl mb-2'>Prix de vente :</div>
+                    <div className='flex items-center space-x-4'>
+                        <label htmlFor='sellPrice'>Prix de vente : {props.item.table === 'barrel' && '(Sans le prix de l\'écocup)'}</label>
                         <input
                             type='number'
-                            id='totalPrice'
-                            name='totalPrice'
+                            id='sellPrice'
+                            name='sellPrice'
+                            aria-label='sellPrice'
                             className='input w-24'
                             step={0.01}
-                            disabled={priceSelected === 'price_unit'}
-                            onChange={(e) => setTotalPrice(e.target.value === '' ? NaN : (Number(e.target.value) > 0 ? Number(e.target.value) : 0))}
-                            value={isNaN(totalPrice) ? '' : totalPrice}
-                            onBlur={() => setUnitPrice(isNaN(totalPrice) ? 0 : totalPrice)}
+                            onChange={(e) => setSellPrice(e.target.value === '' ? NaN : (Number(e.target.value) > 0 ? Number(e.target.value) : 0))}
+                            value={isNaN(sellPrice) ? '' : sellPrice}
+                            onBlur={() => setSellPrice(isNaN(sellPrice) ? 0 : sellPrice)}
                         />
                         <span>€</span>
                     </div>
                 </div>
-            </div>
-            {props.item.table !== 'outofstock' && (<div className='flex flex-col'>
-                <div className='text-2xl mb-2'>Prix de vente :</div>
-                <div className='flex items-center space-x-4'>
-                    <label htmlFor='sellPrice'>Prix de vente : {props.item.table === 'barrel' && '(Sans le prix de l\'écocup)'}</label>
-                    <input
-                        type='number'
-                        id='sellPrice'
-                        name='sellPrice'
-                        className='input w-24'
-                        step={0.01}
-                        onChange={(e) => setSellPrice(e.target.value === '' ? NaN : (Number(e.target.value) > 0 ? Number(e.target.value) : 0))}
-                        value={isNaN(sellPrice) ? '' : sellPrice}
-                        onBlur={() => setSellPrice(isNaN(sellPrice) ? 0 : sellPrice)}
-                    />
-                    <span>€</span>
-                </div>
-            </div>)}
+            )}
             {renderIconChoice()}
             <div className="grow"></div>
             <div className='flex flex-col'>
@@ -187,7 +198,7 @@ export default function Form(props: FormProps): JSX.Element {
                     {(props.item.table !== 'outofstock') && <li>Vente à {sellPrice} € l&apos;unité</li>}
                 </ul>
             </div>
-            <button type='submit' className='btn-primary'>Envoyer</button>
+            <button type='submit' className='btn-primary' role='submit'>Envoyer</button>
         </form>
     );
 }
