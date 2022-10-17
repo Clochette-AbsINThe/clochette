@@ -21,9 +21,7 @@ export default function PopupWindows(props: PopupWindowsProps): JSX.Element {
      */
     function open(): void {
         setIsOpen(true);
-        if (props.callback) {
-            props.callback(true);
-        }
+        props.callback?.(true);
     };
 
     /**
@@ -31,9 +29,7 @@ export default function PopupWindows(props: PopupWindowsProps): JSX.Element {
      */
     function close(): void {
         setIsOpen(false);
-        if (props.callback) {
-            props.callback(false);
-        }
+        props.callback?.(false);
     };
 
     useOnEchap(close);
