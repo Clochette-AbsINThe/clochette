@@ -97,7 +97,7 @@ export type ItemTransactionResponse = APIItem<Barrel | Glass | OutOfStock | Cons
 // Transaction --> post // Ajoute une nouvelle transaction dans la base de données
 export interface Transaction<T> {
     readonly id?: number
-    dateTime: Date
+    dateTime: string
     totalPrice: number
     sale: boolean // true = vente, false = achat
     paymentMethod: PaymentMethod
