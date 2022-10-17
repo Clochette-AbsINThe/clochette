@@ -91,7 +91,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
     };
 
     /**
-     * Thios function is closed when the modal is closed to update the popUp states.
+     * This function is closed when the modal is closed to update the popUp states.
      */
     const closePopUp = (): void => {
         setPopUp(false);
@@ -164,7 +164,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                                     <h1 className='mr-6 text-2xl'>1€</h1>
                                 </div>
                                 <div className="flex flex-grow justify-end self-center cursor-pointer">
-                                    <button onClick={() => handleModal(ecoCup, 'outofstock')}>
+                                    <button onClick={() => handleModal(ecoCup, 'outofstock')} aria-label='add-ecocup'>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor" className="w-10 h-10">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
@@ -201,7 +201,7 @@ export function RecapItem(props: RecapItemProps): JSX.Element {
             <div className="flex flex-grow-[10] items-start">
                 {getIcon(item.item.icon, 'w-10 h-10 dark:text-white mr-2 text-black')}
                 <h1 className='grow lg:text-3xl mx-5 text-xl'>{item.item.name}</h1>
-                <button onClick={() => handleModalEdit(item)} className='btn-primary'>Edit</button>
+                <button onClick={() => handleModalEdit(item)} className='btn-primary' aria-label='edit'>Edit</button>
             </div>
             <div className="flex flex-grow">
                 <h1 className='mr-6 text-xl'>Nombre: {item.quantity}</h1>
@@ -218,7 +218,7 @@ export function RecapItem(props: RecapItemProps): JSX.Element {
  * @param table The table it belongs to
  * @returns A item suitable for the buy
  */
-function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, table: TableData): ItemBuy {
+export function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, table: TableData): ItemBuy {
     switch (table) {
         case 'barrel':
             return {
