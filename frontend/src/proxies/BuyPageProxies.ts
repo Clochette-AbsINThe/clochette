@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import useAxios from '@hooks/useAxios';
-import BaseUrl, { IProxy } from '@proxies/Config';
-import type { Barrel, Consumable, ConsumableItem, Drink, ItemBuy, OutOfStock, OutOfStockItemBuy, PaymentMethod, Transaction } from '@types';
+import type { IProxy, IProxyPost } from '@proxies/Config';
+import type { Barrel, Consumable, ConsumableItem, Drink, ItemBuy, ItemTransactionResponse, OutOfStock, OutOfStockItemBuy, PaymentMethod, Transaction } from '@types';
+import type { AxiosResponse } from 'axios';
 
 /**
  * This function is used to retrieve the EcoCup item
@@ -9,7 +10,7 @@ import type { Barrel, Consumable, ConsumableItem, Drink, ItemBuy, OutOfStock, Ou
  * @returns A function to make the API call and the loading and error state
  */
 export function getEcoCup(setItems: (item?: OutOfStockItemBuy) => void): IProxy {
-    const [{ loading, error }, get] = useAxios<OutOfStockItemBuy[]>(`${BaseUrl}/OutOfStock/Buy`);
+    const [{ loading, error }, get] = useAxios<OutOfStockItemBuy[]>('/OutOfStockItem/Buy');
 
     const getDataAsync = async (): Promise<void> => {
         setItems();
@@ -32,7 +33,7 @@ export function getEcoCup(setItems: (item?: OutOfStockItemBuy) => void): IProxy 
  * @returns A function to make the API call and the loading and error state
  */
 export function getDrinks(setItems: (items: Drink[]) => void): IProxy {
-    const [{ loading, error }, get] = useAxios<Drink[]>(`${BaseUrl}/drink`);
+    const [{ loading, error }, get] = useAxios<Drink[]>('/drink');
 
     const getDataAsync = async (): Promise<void> => {
         setItems([]);
@@ -56,7 +57,7 @@ export function getDrinks(setItems: (items: Drink[]) => void): IProxy {
  * @returns A function to make the API call and the loading and error state
  */
 export function getConsumables(setItems: (items: ConsumableItem[]) => void): IProxy {
-    const [{ loading, error }, get] = useAxios<ConsumableItem[]>(`${BaseUrl}/ConsumableItem`);
+    const [{ loading, error }, get] = useAxios<ConsumableItem[]>('/ConsumableItem');
 
     const getDataAsync = async (): Promise<void> => {
         setItems([]);
@@ -77,7 +78,7 @@ export function getConsumables(setItems: (items: ConsumableItem[]) => void): IPr
  * @returns A function to make the API call and the loading and error state
  */
 export function getOutOfStocks(setItems: (items: OutOfStockItemBuy[]) => void): IProxy {
-    const [{ loading, error }, get] = useAxios<OutOfStockItemBuy[]>(`${BaseUrl}/OutOfStock/Buy`);
+    const [{ loading, error }, get] = useAxios<OutOfStockItemBuy[]>('/OutOfStockItem/Buy');
 
     const getDataAsync = async (): Promise<void> => {
         setItems([]);
@@ -97,15 +98,16 @@ export function getOutOfStocks(setItems: (items: OutOfStockItemBuy[]) => void): 
  * This function is used to create a new Buy transaction
  * @returns A function to make the API call and the loading state
  */
-export function postNewBuyTransaction(): IProxy {
-    const [{ loading: loading1 }, postTransaction] = useAxios<ItemBuy>(`${BaseUrl}/Transaction/Buy`, { method: 'POST' });
-    const [{ loading: loading2 }, postOutOfStock] = useAxios<OutOfStockItemBuy>(`${BaseUrl}/OutOfStockItem/Buy`, { method: 'POST' });
-    const [{ loading: loading3 }, postConsumable] = useAxios<ConsumableItem>(`${BaseUrl}/ConsumableItem`, { method: 'POST' });
-    const [{ loading: loading4 }, postDrink] = useAxios<Drink>(`${BaseUrl}/drink`, { method: 'POST' });
+export function postNewBuyTransaction(callback?: (data: AxiosResponse<Transaction<ItemTransactionResponse>, any>) => void): IProxyPost<ItemBuy[]> {
+    const [{ loading: loading1, error: error1 }, postTransaction] = useAxios<Transaction<ItemBuy>>('/Transaction/Buy', { method: 'POST' });
+    const [{ loading: loading2, error: error2 }, postOutOfStock] = useAxios<OutOfStockItemBuy>('/OutOfStockItem/Buy', { method: 'POST' });
+    const [{ loading: loading3, error: error3 }, postConsumable] = useAxios<ConsumableItem>('/ConsumableItem', { method: 'POST' });
+    const [{ loading: loading4, error: error4 }, postDrink] = useAxios<Drink>('/drink', { method: 'POST' });
 
     const loading = loading1 || loading2 || loading3 || loading4;
+    const error = error1 ?? error2 ?? error3 ?? error4;
 
-    const postDataAsync = async (transactionItems: ItemBuy[], paymentMethod: PaymentMethod, totalPrice: number): Promise<void> => {
+    const postDataAsync = async (transactionItems: ItemBuy[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): Promise<void> => {
         const newItems: ItemBuy[] = [];
         for (let i = 0; i < transactionItems.length; i++) {
             const item = transactionItems[i];
@@ -165,19 +167,19 @@ export function postNewBuyTransaction(): IProxy {
 
 
         const data: Transaction<ItemBuy> = {
-            dateTime: new Date(),
+            dateTime: date.toISOString(),
             sale: false,
             paymentMethod,
             totalPrice,
             items: newItems
         };
-        console.log(data);
-        await postTransaction({ data });
+        const response = (await postTransaction({ data }));
+        callback?.(response);
     };
 
-    const postData = (data: { transactionItems: ItemBuy[], paymentMethod: PaymentMethod, totalPrice: number }): void => {
-        postDataAsync(data.transactionItems, data.paymentMethod, data.totalPrice).catch((err) => { console.error(err); });
+    const postData = (transactionItems: ItemBuy[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): void => {
+        postDataAsync(transactionItems, paymentMethod, totalPrice, date).catch(() => { });
     };
 
-    return [postData, { loading }];
+    return [postData, { loading, error }];
 }
