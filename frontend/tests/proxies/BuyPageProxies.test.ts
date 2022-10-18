@@ -90,6 +90,8 @@ const data = {
             quantity: 1,
             item: {
                 fkID: 1,
+                name: 'Pizza',
+                icon: 'Food',
                 unitPrice: 1,
                 sellPrice: 5,
                 empty: false
@@ -100,6 +102,8 @@ const data = {
             quantity: 1,
             item: {
                 fkID: 10,
+                name: 'NewConsumable',
+                icon: 'Misc',
                 unitPrice: 1,
                 sellPrice: 4,
                 empty: false
@@ -110,8 +114,10 @@ const data = {
             quantity: 1,
             item: {
                 fkID: 11,
+                name: 'Rouge',
                 unitPrice: 50,
                 sellPrice: 2,
+                icon: 'Barrel',
                 isMounted: false,
                 empty: false
             }
@@ -121,8 +127,10 @@ const data = {
             quantity: 1,
             item: {
                 fkID: 10,
+                name: 'NewDrink',
                 unitPrice: 50,
                 sellPrice: 2,
+                icon: 'Barrel',
                 isMounted: false,
                 empty: false
             }
@@ -132,7 +140,10 @@ const data = {
             quantity: 1,
             item: {
                 fkID: 21,
-                unitPrice: 1
+                name: 'EcoCup',
+                icon: 'Glass',
+                unitPrice: 1,
+                sellPrice: 1
             }
         },
         {
@@ -140,7 +151,10 @@ const data = {
             quantity: 1,
             item: {
                 fkID: 10,
-                unitPrice: 1
+                name: 'NewOutOfStock',
+                icon: 'Misc',
+                unitPrice: 1,
+                sellPrice: 1
             }
         }
     ]

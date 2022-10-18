@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyPost } from '@proxies/Config';
-import type { APIItem, Consumable, Glass, ItemSell, ItemTransactionResponse, OutOfStock, OutOfStockItemSell, PaymentMethod, Transaction } from '@types';
+import type { APIItem, Consumable, Glass, ItemSell, ItemTransactionResponse, OutOfStockItemSell, OutOfStockSell, PaymentMethod, Transaction } from '@types';
 import type { AxiosResponse } from 'axios';
 
 /**
@@ -9,7 +9,7 @@ import type { AxiosResponse } from 'axios';
  * @param setItem The setter of the state of the item
  * @returns A function to make the API call and the loading and error state
  */
-export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStock>>) => void): IProxy {
+export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStockSell>>) => void): IProxy {
     const [{ error, loading: loading1 }, getGlass] = useAxios<Glass[]>('/Glass');
     const [{ loading: loading2 }, outOfStockGet] = useAxios<OutOfStockItemSell[]>('/OutOfStockItem/Sell');
 
@@ -17,26 +17,26 @@ export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStock>>) 
         setItem([]);
         const { data: dataGlass } = (await getGlass());
         const { data: dataOutOfStock } = (await outOfStockGet());
-        const newItem: Array<APIItem<Glass | OutOfStock>> = dataGlass.map((item) => ({
+        const newItem: Array<APIItem<Glass | OutOfStockSell>> = dataGlass.map((item) => ({
             table: 'glass',
             quantity: 0,
             item: {
                 ...item,
-                icon: 'Beer',
-                unitPrice: item.sellPrice
+                icon: 'Beer'
             }
         }));
         const EcoCup = dataOutOfStock.find((item) => item.name === 'EcoCup') as OutOfStockItemSell;
-        newItem.push({
+        const OutOfStockItem: APIItem<OutOfStockSell> = {
             table: 'outofstock',
             quantity: 0,
             item: {
                 ...EcoCup,
-                fkID: EcoCup.id as number,
-                id: undefined,
-                unitPrice: EcoCup.sellPrice
+                fkID: EcoCup.id as number
             }
-        });
+        };
+        delete OutOfStockItem.item.id;
+
+        newItem.push(OutOfStockItem);
         setItem(newItem);
     };
 
@@ -52,22 +52,21 @@ export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStock>>) 
  * @param setItem The setter of the state of the item
  * @returns A function to make the API call and the loading and error state
  */
-export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStock>>) => void): IProxy {
+export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStockSell>>) => void): IProxy {
     const [{ error, loading }, get] = useAxios<OutOfStockItemSell[]>('/OutOfStockItem/Sell');
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
         const { data } = (await get());
-        const newItem: Array<APIItem<OutOfStock>> = data.map((item) => ({
+        const newItem: Array<APIItem<OutOfStockSell>> = data.map((item) => ({
             table: 'outofstock',
             quantity: 0,
             item: {
                 ...item,
-                fkID: item.id as number,
-                id: undefined,
-                unitPrice: item.sellPrice
+                fkID: item.id as number
             }
         }));
+        newItem.forEach((item) => delete item.item.id);
         setItem(newItem.filter((item) => item.item.name !== 'EcoCup'));
     };
 
@@ -117,30 +116,19 @@ export function postNewSellTransaction(callback?: (data: AxiosResponse<Transacti
             const item = transactionItems[i];
             switch (item.table) {
                 case 'glass':
-                    newItems.push({
-                        ...item,
-                        item: {
-                            fkID: item.item.fkID
-                        } as Glass
-                    });
+                    newItems.push(item);
                     break;
                 case 'consumable':
                     newItems.push({
                         ...item,
                         item: {
-                            id: item.item.id,
+                            ...item.item,
                             empty: true
                         } as Consumable
                     });
                     break;
                 case 'outofstock': {
-                    newItems.push({
-                        ...item,
-                        item: {
-                            fkID: item.item.fkID,
-                            unitPrice: item.item.sellPrice
-                        } as OutOfStock
-                    });
+                    newItems.push(item);
                     break;
                 }
             }
@@ -153,6 +141,7 @@ export function postNewSellTransaction(callback?: (data: AxiosResponse<Transacti
             totalPrice,
             items: newItems
         };
+        console.log(data);
         const response = (await postTransaction({ data }));
         callback?.(response);
     };

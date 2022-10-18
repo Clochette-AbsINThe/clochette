@@ -35,7 +35,7 @@ describe('createNewItem tests', () => {
         });
     });
 
-    test('create a new item of type OutOfStock', async () => {
+    test('create a new item of type OutOfStockBuy', async () => {
         const newItem = createNewItem({ id: 1, name: 'OutOfStock 1', icon: 'Food' }, 'outofstock');
         expect(newItem).toEqual({
             table: 'outofstock',
@@ -44,7 +44,6 @@ describe('createNewItem tests', () => {
                 fkID: 1,
                 name: 'OutOfStock 1',
                 unitPrice: 0,
-                sellPrice: undefined,
                 icon: 'Food'
             }
         });
@@ -59,7 +58,6 @@ describe('createNewItem tests', () => {
                 fkID: 0,
                 name: 'EcoCup',
                 unitPrice: 1,
-                sellPrice: undefined,
                 icon: 'Glass'
             }
         });

@@ -36,7 +36,6 @@ const transactionItems: ItemSell[] = [
             fkID: 21,
             name: 'EcoCup',
             icon: 'Glass',
-            unitPrice: 1,
             sellPrice: 1
         }
     }
@@ -53,24 +52,32 @@ const data = {
             quantity: 1,
             item: {
                 id: 0,
+                fkID: 1,
+                name: 'Pizza',
+                icon: 'Food',
+                unitPrice: 1,
+                sellPrice: 5,
                 empty: true
             }
         },
         {
             table: 'glass',
             quantity: 1,
-            item:
-            {
-                fkID: 11
+            item: {
+                fkID: 11,
+                name: 'boisson 1',
+                sellPrice: 2,
+                icon: 'Beer'
             }
         },
         {
             table: 'outofstock',
             quantity: 1,
-            item:
-            {
+            item: {
                 fkID: 21,
-                unitPrice: 1
+                name: 'EcoCup',
+                icon: 'Glass',
+                sellPrice: 1
             }
         }
     ]
@@ -92,8 +99,7 @@ test('getGlasses', async () => {
                 fKID: 1,
                 name: 'boisson 1',
                 sellPrice: 2,
-                icon: 'Beer',
-                unitPrice: 2
+                icon: 'Beer'
             }
         },
         {
@@ -103,20 +109,17 @@ test('getGlasses', async () => {
                 fKID: 2,
                 name: 'boisson 2',
                 sellPrice: 2,
-                icon: 'Beer',
-                unitPrice: 2
+                icon: 'Beer'
             }
         },
         {
             table: 'outofstock',
             quantity: 0,
             item: {
-                id: undefined,
                 name: 'EcoCup',
                 sellPrice: 1,
                 icon: 'Glass',
-                fkID: 0,
-                unitPrice: 1
+                fkID: 0
             }
         }
     ]);
@@ -149,12 +152,10 @@ test('getOutOfStocks', async () => {
             table: 'outofstock',
             quantity: 0,
             item: {
-                id: undefined,
                 name: 'Planchette Charcuterie',
                 sellPrice: 5,
                 icon: 'Food',
-                fkID: 1,
-                unitPrice: 5
+                fkID: 1
             }
         }
     ]);

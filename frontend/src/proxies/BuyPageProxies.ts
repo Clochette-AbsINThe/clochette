@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyPost } from '@proxies/Config';
-import type { Barrel, Consumable, ConsumableItem, Drink, ItemBuy, ItemTransactionResponse, OutOfStock, OutOfStockItemBuy, PaymentMethod, Transaction } from '@types';
+import type { Barrel, Consumable, ConsumableItem, Drink, ItemBuy, ItemTransactionResponse, OutOfStockItemBuy, PaymentMethod, Transaction } from '@types';
 import type { AxiosResponse } from 'axios';
 
 /**
@@ -33,7 +33,7 @@ export function getEcoCup(setItems: (item?: OutOfStockItemBuy) => void): IProxy 
  * @returns A function to make the API call and the loading and error state
  */
 export function getDrinks(setItems: (items: Drink[]) => void): IProxy {
-    const [{ loading, error }, get] = useAxios<Drink[]>('/drink');
+    const [{ loading, error }, get] = useAxios<Drink[]>('/drink/');
 
     const getDataAsync = async (): Promise<void> => {
         setItems([]);
@@ -102,7 +102,7 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<Transactio
     const [{ loading: loading1, error: error1 }, postTransaction] = useAxios<Transaction<ItemBuy>>('/Transaction/Buy', { method: 'POST' });
     const [{ loading: loading2, error: error2 }, postOutOfStock] = useAxios<OutOfStockItemBuy>('/OutOfStockItem/Buy', { method: 'POST' });
     const [{ loading: loading3, error: error3 }, postConsumable] = useAxios<ConsumableItem>('/ConsumableItem', { method: 'POST' });
-    const [{ loading: loading4, error: error4 }, postDrink] = useAxios<Drink>('/drink', { method: 'POST' });
+    const [{ loading: loading4, error: error4 }, postDrink] = useAxios<Drink>('/drink/', { method: 'POST' });
 
     const loading = loading1 || loading2 || loading3 || loading4;
     const error = error1 ?? error2 ?? error3 ?? error4;
@@ -121,14 +121,13 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<Transactio
                     newItems.push({
                         ...item,
                         item: {
-                            fkID,
-                            unitPrice: item.item.unitPrice
-                        } as OutOfStock
+                            ...item.item,
+                            fkID
+                        }
                     });
                     break;
                 }
                 case 'consumable': {
-                    let fkID = item.item.fkID;
                     if (item.item.fkID === -1) {
                         const dataRes = (await postConsumable({ data: { name: item.item.name, icon: item.item.icon } })).data;
                         fkID = dataRes.id as number;
@@ -136,16 +135,13 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<Transactio
                     newItems.push({
                         ...item,
                         item: {
-                            fkID,
-                            unitPrice: item.item.unitPrice,
-                            sellPrice: item.item.sellPrice,
-                            empty: false
+                            ...item.item,
+                            fkID
                         } as Consumable
                     });
                     break;
                 }
                 case 'barrel': {
-                    let fkID = item.item.fkID;
                     if (item.item.fkID === -1) {
                         const dataRes = (await postDrink({ data: { name: item.item.name } })).data;
                         fkID = dataRes.id as number;
@@ -153,11 +149,8 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<Transactio
                     newItems.push({
                         ...item,
                         item: {
-                            fkID,
-                            unitPrice: item.item.unitPrice,
-                            sellPrice: item.item.sellPrice,
-                            isMounted: false,
-                            empty: false
+                            ...item.item,
+                            fkID
                         } as Barrel
                     });
                     break;
@@ -173,6 +166,7 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<Transactio
             totalPrice,
             items: newItems
         };
+        console.log(data);
         const response = (await postTransaction({ data }));
         callback?.(response);
     };

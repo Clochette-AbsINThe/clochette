@@ -71,15 +71,24 @@ export interface Consumable {
 }
 
 
-// OutOfStock --> get
+// OutOfStock/Buy --> get
 // Pas de post car on n'ajoute un verre qu'avec une transaction
-export interface OutOfStock {
-    readonly id?: number
-    readonly fkID: number //* OutOfStockItemBuy['id'] | OutOfStockItemSell['id']
+export interface OutOfStockBuy {
+    id?: number
+    readonly fkID: number //* OutOfStockItemBuy['id']
     name: string
     icon: IconName
     unitPrice: number
-    sellPrice: number //! Pas dans la réponse de l'API
+}
+
+// OutOfStock/Sell --> get
+// Pas de post car on n'ajoute un verre qu'avec une transaction
+export interface OutOfStockSell {
+    id?: number
+    readonly fkID: number //* OutOfStockItemSell['id']
+    name: string
+    icon: IconName
+    sellPrice: number
 }
 
 export interface APIItem<ItemType> {
@@ -88,10 +97,10 @@ export interface APIItem<ItemType> {
     item: ItemType
 }
 
-export type ItemSell = APIItem<Glass | OutOfStock | Consumable>;
-export type ItemBuy = APIItem<Barrel | OutOfStock | Consumable>;
+export type ItemSell = APIItem<Glass | OutOfStockSell | Consumable>;
+export type ItemBuy = APIItem<Barrel | OutOfStockBuy | Consumable>;
 
-export type ItemTransactionResponse = APIItem<Barrel | Glass | OutOfStock | Consumable>;
+export type ItemTransactionResponse = APIItem<Barrel | Glass | OutOfStockSell | OutOfStockBuy | Consumable>;
 
 // Transaction --> get
 // Transaction --> post // Ajoute une nouvelle transaction dans la base de données

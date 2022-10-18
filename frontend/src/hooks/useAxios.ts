@@ -12,10 +12,10 @@ type UseAxiosResult<T> = [ResponseValues<T>, (_config?: AxiosRequestConfig) => P
 const API = axios.create({
     baseURL: 'https://clochette.dev/api/v1',
     headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
     }
 });
-
 
 export default function useAxios<T>(url: string, _config?: AxiosRequestConfig): UseAxiosResult<T> {
     const [loading, setLoading] = useState<boolean>(false);
