@@ -16,7 +16,7 @@ class Consumable(Base):
     stock = relationship("Stock", back_populates="consumables")
 
     transaction_id_purchase = Column(Integer, ForeignKey("transaction.id"))
-    transaction_purchase = relationship("Transaction", back_populates="consumables_purchase")
+    #transaction_purchase = relationship("Transaction", back_populates="consumables_purchase")
 
     transaction_id_sale = Column(Integer, ForeignKey("transaction.id"))
-    transaction_sale = relationship("Transaction", back_populates="consumables_sale")
+    #transaction_sale = relationship("Transaction", back_populates="consumables_sale")

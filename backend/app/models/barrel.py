@@ -19,4 +19,4 @@ class Barrel(Base):
     transaction_id = Column(Integer, ForeignKey("transaction.id"))
     transaction = relationship("Transaction", back_populates="barrels")
 
-    glasses = relationship("Drink", back_populates="barrel")
+    glasses = relationship("Glass", back_populates="barrel")

@@ -16,9 +16,3 @@ class Account(Base):
     promotion_year = Column(Integer, nullable=False)
     staff_name = Column(String(256), nullable=False)
     is_inducted = Column(Boolean, nullable=False)
-    transactions = relationship(
-        "Transaction",
-        cascade="all,delete-orphan",
-        back_populates="account",
-        uselist=True,
-    )
