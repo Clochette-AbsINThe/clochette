@@ -3,12 +3,12 @@ from pydantic import BaseModel
 
 
 class IconName(str, Enum):
-    glass = 'glass'
-    beer = 'beer'
-    food = 'food'
-    soft = 'soft'
-    barrel = 'barrel'
-    misc = 'misc'
+    glass = 'Glass'
+    beer = 'Beer'
+    food = 'Food'
+    soft = 'Soft'
+    barrel = 'Barrel'
+    misc = 'Misc'
 
 class ConsumableItemBase(BaseModel):
     name: str

@@ -7,12 +7,12 @@ from app.db.base_class import Base
 
 
 class IconName(str, enum.Enum):
-    glass = 'glass'
-    beer = 'beer'
-    food = 'food'
-    soft = 'soft'
-    barrel = 'barrel'
-    misc = 'misc'
+    glass = 'Glass'
+    beer = 'Beer'
+    food = 'Food'
+    soft = 'Soft'
+    barrel = 'Barrel'
+    misc = 'Misc'
 
 
 class ConsumableItem(Base):
