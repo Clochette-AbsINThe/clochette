@@ -18,7 +18,7 @@
 
 @layer components {
     .btn-primary {
-        @apply text-white rounded-lg py-2 px-4 text-center bg-green-700 hover:bg-green-800;
+        @apply text-white rounded-lg py-2 px-4 text-center bg-green-700 hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-green-800;
     }
 
     .input {

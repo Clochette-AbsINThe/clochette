@@ -64,7 +64,11 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
         getDataHorsStocks();
         getDataConsommables();
         getDataEcoCup();
-    }, []);
+    }, [props.selectedItems]);
+
+    useEffect(() => {
+        setSelectedItems([]);
+    }, [props.selectedItems]);
 
     useEffect(() => {
         props.changeSelectedItems(selectedItems);
@@ -205,7 +209,7 @@ export function RecapItem(props: RecapItemProps): JSX.Element {
             </div>
             <div className="flex flex-grow">
                 <h1 className='mr-6 text-xl'>Nombre: {item.quantity}</h1>
-                <h1 className='mr-6 text-xl'>Prix total: {item.item.unitPrice * item.quantity}€</h1>
+                <h1 className='mr-6 text-xl'>Prix total: {Number((item.item.unitPrice * item.quantity).toFixed(2))}€</h1>
                 {item.item.sellPrice !== undefined && <h1 className='mr-6 text-xl'>Prix vente: {item.item.sellPrice}€</h1>}
             </div>
         </div>
@@ -238,7 +242,6 @@ export function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, 
                     fkID: item.id as number,
                     name: item.name,
                     unitPrice: (item.name === 'EcoCup' ? 1 : 0),
-                    sellPrice: undefined as unknown as number,
                     icon: (item as OutOfStockItemBuy).icon
                 },
                 quantity: 1,

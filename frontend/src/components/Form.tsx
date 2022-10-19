@@ -21,7 +21,7 @@ export default function Form(props: FormProps): JSX.Element {
      */
     useEffect(() => {
         if (priceSelected === 'price_unit') {
-            setTotalPrice(unitPrice * quantity);
+            setTotalPrice(Number((unitPrice * quantity).toFixed(2)));
         } else {
             setUnitPrice(Number((totalPrice / quantity).toFixed(2)));
         }
@@ -195,7 +195,7 @@ export default function Form(props: FormProps): JSX.Element {
                 <div className='text-2xl mb-2'>Récapitulatif :</div>
                 <ul className='list-disc pl-6'>
                     <li>Achat {isNaN(quantity) ? '' : quantity} {name} pour {isNaN(totalPrice) ? '' : totalPrice} €.</li>
-                    {(props.item.table !== 'outofstock') && <li>Vente à {sellPrice} € l&apos;unité</li>}
+                    {(props.item.item.sellPrice !== undefined) && <li>Vente à {sellPrice} € l&apos;unité</li>}
                 </ul>
             </div>
             <button type='submit' className='btn-primary' role='submit'>Envoyer</button>

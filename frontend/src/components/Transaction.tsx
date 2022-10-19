@@ -51,9 +51,9 @@ export default function Transaction(): JSX.Element {
      */
     useEffect(() => {
         if (transactionType === TransactionEnum.Achat) {
-            setTotalPrice(selectedItemsBuy.reduce((acc, item) => acc + (item.quantity * item.item.unitPrice), 0));
+            setTotalPrice(selectedItemsBuy.reduce((acc, item) => acc + Number((item.quantity * item.item.unitPrice).toFixed(2)), 0));
         } else {
-            setTotalPrice(selectedItemsSell.reduce((acc, item) => acc + (item.quantity * item.item.sellPrice), 0));
+            setTotalPrice(selectedItemsSell.reduce((acc, item) => acc + Number((item.quantity * item.item.sellPrice).toFixed(2)), 0));
         }
     }, [transactionType, selectedItemsBuy, selectedItemsSell]);
 
@@ -69,11 +69,11 @@ export default function Transaction(): JSX.Element {
      * This handler is in charge of submitting the transaction.
      */
     const handlePostData = (): void => {
-        setPopupWindowOpen(false);
         if (loadingBuy || loadingSell) return;
         if (transactionType === TransactionEnum.Achat) {
             if (selectedItemsBuy.length > 0) {
                 newBuyTransaction(selectedItemsBuy, paymentMethod, totalPrice, new Date());
+                setSelectedItemsBuy([]);
             }
         } else {
             if (selectedItemsSell.length > 0) {
@@ -112,7 +112,7 @@ export default function Transaction(): JSX.Element {
                                         <div className='mr-2'>{item.quantity}</div>
                                         <div>{item.item.name}</div>
                                     </div>
-                                    <div>{item.quantity * item.item.sellPrice}€</div>
+                                    <div>{Number((item.quantity * item.item.sellPrice).toFixed(2))}€</div>
                                 </li>
                             );
                         })
@@ -130,7 +130,7 @@ export default function Transaction(): JSX.Element {
                                         <div className='mr-2'>{item.quantity}</div>
                                         <div>{item.item.name}</div>
                                     </div>
-                                    <div>{item.quantity * item.item.unitPrice}€</div>
+                                    <div>{Number((item.quantity * item.item.unitPrice).toFixed(2))}€</div>
                                 </li>
                             );
                         })
@@ -153,7 +153,7 @@ export default function Transaction(): JSX.Element {
                         {renderRecap()}
                         <div className='flex pt-3 self-end'>
                             <div className='text-2xl font-bold mr-8' aria-label='total-price'>Total: {totalPrice}€</div>
-                            <button className='btn-primary' onClick={handlePostData}>Valider le paiment</button>
+                            <button className='btn-primary' onClick={handlePostData} disabled={loadingBuy || loadingSell}>Valider le paiment</button>
                         </div>
                     </div>
                 </PopupWindows>
