@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException
 from typing import Any
 
 from app.crud.crud_consumable_item import consumable_item as consumable_items
