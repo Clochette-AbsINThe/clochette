@@ -1,18 +1,8 @@
-import enum
-
 from sqlalchemy import Column, Enum, Integer, String
 from sqlalchemy.orm import relationship
 
+from app.core.types import IconName
 from app.db.base_class import Base
-
-
-class IconName(str, enum.Enum):
-    glass = 'Glass'
-    beer = 'Beer'
-    food = 'Food'
-    soft = 'Soft'
-    barrel = 'Barrel'
-    misc = 'Misc'
 
 
 class ConsumableItem(Base):

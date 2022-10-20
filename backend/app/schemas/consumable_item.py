@@ -1,14 +1,7 @@
-from enum import Enum
 from pydantic import BaseModel
 
+from app.core.types import IconName
 
-class IconName(str, Enum):
-    glass = 'Glass'
-    beer = 'Beer'
-    food = 'Food'
-    soft = 'Soft'
-    barrel = 'Barrel'
-    misc = 'Misc'
 
 class ConsumableItemBase(BaseModel):
     name: str
