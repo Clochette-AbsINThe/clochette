@@ -1,7 +1,7 @@
-import BuyPage, { createNewItem, RecapItem } from '@components/BuyPage';
+import BuyPage, { createNewItem, RecapItem, updateFkID } from '@components/BuyPage';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import type { ItemBuy } from '@types';
+import type { ConsumableItem, Drink, ItemBuy, OutOfStockItemBuy } from '@types';
 import { rest } from 'msw';
 import { act } from 'react-dom/test-utils';
 import { server } from '../setupTests';
@@ -12,6 +12,18 @@ const item: ItemBuy = {
     item: {
         fkID: 0,
         name: 'Consumable 1',
+        unitPrice: 0,
+        sellPrice: 0,
+        icon: 'Food'
+    }
+};
+
+const item2: ItemBuy = {
+    table: 'consumable',
+    quantity: 1,
+    item: {
+        fkID: -1,
+        name: 'Consumable 2',
         unitPrice: 0,
         sellPrice: 0,
         icon: 'Food'
@@ -80,16 +92,17 @@ describe('createNewItem tests', () => {
 });
 
 test('RecapItem renders', async () => {
-    const handleModal = jest.fn();
-    render(<RecapItem item={item} handleModalEdit={handleModal} />);
+    const handleModalEdit = jest.fn();
+    const handleModalDelete = jest.fn();
+    render(<RecapItem item={item} handleModalEdit={handleModalEdit} handleRemoveItem={handleModalDelete} />);
     expect(screen.getByText('Consumable 1')).toBeInTheDocument();
     await userEvent.click(screen.getByLabelText('edit'));
-    expect(handleModal).toHaveBeenCalled();
+    expect(handleModalEdit).toHaveBeenCalled();
 });
 
 test('BuyPage renders', async () => {
     const changeSelectedItems = jest.fn();
-    render(<BuyPage changeSelectedItems={changeSelectedItems} selectedItems={[item]} />);
+    render(<BuyPage changeSelectedItems={changeSelectedItems} selectedItems={[item, item2]} />);
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
     });
@@ -103,6 +116,9 @@ test('BuyPage renders', async () => {
     await userEvent.keyboard('{Escape}');
     await userEvent.click(screen.getAllByLabelText('edit')[0]);
     await userEvent.click(screen.getByRole('submit'));
+    expect(changeSelectedItems).toHaveBeenCalled();
+
+    await userEvent.click(screen.getAllByLabelText('delete')[0]);
     expect(changeSelectedItems).toHaveBeenCalled();
 });
 
@@ -118,4 +134,22 @@ test('EcoCup error', async () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
     });
     expect(screen.getByText('Erreur lors du chargement de l\'écocup')).toBeInTheDocument();
+});
+
+test('updateFkID', async () => {
+    const barrels: Drink[] = [{ id: 0, name: 'Boisson 1', icon: 'Barrel' }, { id: 1, name: 'Boisson 2', icon: 'Barrel' }];
+    const consommables: ConsumableItem[] = [{ id: 0, name: 'Consommable 1', icon: 'Food' }, { id: 1, name: 'Consumable 2', icon: 'Food' }];
+    const outOfStock: OutOfStockItemBuy[] = [{ id: 0, name: 'OutOfStock 1', icon: 'Food' }, { id: 1, name: 'OutOfStock 2', icon: 'Food' }];
+    const ecoCup: OutOfStockItemBuy = { id: 0, name: 'EcoCup', icon: 'Glass' };
+
+    const selectedItems = [item, item2];
+
+    const newSelectedItems = updateFkID(barrels, consommables, outOfStock, ecoCup, selectedItems);
+    expect(newSelectedItems).toEqual([item, {
+        ...item2,
+        item: {
+            ...item2.item,
+            fkID: 1
+        }
+    }]);
 });
