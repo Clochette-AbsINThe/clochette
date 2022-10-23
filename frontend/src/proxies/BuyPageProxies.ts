@@ -1,8 +1,9 @@
+/* eslint-disable n/no-callback-literal */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import useAxios from '@hooks/useAxios';
-import type { IProxy, IProxyPost } from '@proxies/Config';
-import type { Barrel, Consumable, ConsumableItem, Drink, ItemBuy, ItemTransactionResponse, OutOfStockItemBuy, PaymentMethod, Transaction } from '@types';
-import type { AxiosResponse } from 'axios';
+import type { IProxy, IProxyPostTransaction } from '@proxies/Config';
+import type { Barrel, Consumable, ConsumableItem, Drink, ItemBuy, OutOfStockItemBuy, PaymentMethod, TransactionType } from '@types';
+import type { AxiosError, AxiosResponse } from 'axios';
 
 /**
  * This function is used to retrieve the EcoCup item
@@ -57,7 +58,7 @@ export function getDrinks(setItems: (items: Drink[]) => void): IProxy {
  * @returns A function to make the API call and the loading and error state
  */
 export function getConsumables(setItems: (items: ConsumableItem[]) => void): IProxy {
-    const [{ loading, error }, get] = useAxios<ConsumableItem[]>('/ConsumableItem');
+    const [{ loading, error }, get] = useAxios<ConsumableItem[]>('/consumable_item/');
 
     const getDataAsync = async (): Promise<void> => {
         setItems([]);
@@ -98,10 +99,10 @@ export function getOutOfStocks(setItems: (items: OutOfStockItemBuy[]) => void): 
  * This function is used to create a new Buy transaction
  * @returns A function to make the API call and the loading state
  */
-export function postNewBuyTransaction(callback?: (data: AxiosResponse<Transaction<ItemTransactionResponse>, any>) => void): IProxyPost<ItemBuy[]> {
-    const [{ loading: loading1, error: error1 }, postTransaction] = useAxios<Transaction<ItemBuy>>('/Transaction/Buy', { method: 'POST' });
+export function postNewBuyTransaction(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPostTransaction<ItemBuy[]> {
+    const [{ loading: loading1, error: error1 }, postTransaction] = useAxios<TransactionType<ItemBuy>>('/Transaction/Buy', { method: 'POST' });
     const [{ loading: loading2, error: error2 }, postOutOfStock] = useAxios<OutOfStockItemBuy>('/OutOfStockItem/Buy', { method: 'POST' });
-    const [{ loading: loading3, error: error3 }, postConsumable] = useAxios<ConsumableItem>('/ConsumableItem', { method: 'POST' });
+    const [{ loading: loading3, error: error3 }, postConsumable] = useAxios<ConsumableItem>('/consumable_item/', { method: 'POST' });
     const [{ loading: loading4, error: error4 }, postDrink] = useAxios<Drink>('/drink/', { method: 'POST' });
 
     const loading = loading1 || loading2 || loading3 || loading4;
@@ -159,20 +160,19 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<Transactio
         };
 
 
-        const data: Transaction<ItemBuy> = {
+        const data: TransactionType<ItemBuy> = {
             dateTime: date.toISOString(),
             sale: false,
             paymentMethod,
             totalPrice,
             items: newItems
         };
-        console.log(data);
         const response = (await postTransaction({ data }));
         callback?.(response);
     };
 
     const postData = (transactionItems: ItemBuy[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): void => {
-        postDataAsync(transactionItems, paymentMethod, totalPrice, date).catch(() => { });
+        postDataAsync(transactionItems, paymentMethod, totalPrice, date).catch((err: AxiosError) => { callback?.(err.response as AxiosResponse<unknown, any>); });
     };
 
     return [postData, { loading, error }];
