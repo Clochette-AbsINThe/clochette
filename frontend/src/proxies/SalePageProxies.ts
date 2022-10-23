@@ -1,8 +1,9 @@
+/* eslint-disable n/no-callback-literal */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import useAxios from '@hooks/useAxios';
-import type { IProxy, IProxyPost } from '@proxies/Config';
-import type { APIItem, Consumable, Glass, ItemSell, ItemTransactionResponse, OutOfStockItemSell, OutOfStockSell, PaymentMethod, Transaction } from '@types';
-import type { AxiosResponse } from 'axios';
+import type { IProxy, IProxyPostTransaction } from '@proxies/Config';
+import type { APIItem, Consumable, Glass, ItemSell, ItemTransactionResponse, OutOfStockItemSell, OutOfStockSell, PaymentMethod, TransactionType } from '@types';
+import type { AxiosError, AxiosResponse } from 'axios';
 
 /**
  * This function is used to fill glass column in the sale page
@@ -107,8 +108,8 @@ export function getConsumables(setItem: (value: Array<APIItem<Consumable>>) => v
  * This function is used to create a new Sale transaction
  * @returns A function to make the API call and the loading state
  */
-export function postNewSellTransaction(callback?: (data: AxiosResponse<Transaction<ItemTransactionResponse>, any>) => void): IProxyPost<ItemSell[]> {
-    const [{ loading, error }, postTransaction] = useAxios<Transaction<ItemTransactionResponse>>('/Transaction/Sell', { method: 'POST' });
+export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPostTransaction<ItemSell[]> {
+    const [{ loading, error }, postTransaction] = useAxios<TransactionType<ItemTransactionResponse>>('/Transaction/Sell', { method: 'POST' });
 
     const postDataAsync = async (transactionItems: ItemSell[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): Promise<void> => {
         const newItems: ItemSell[] = [];
@@ -134,20 +135,19 @@ export function postNewSellTransaction(callback?: (data: AxiosResponse<Transacti
             }
         }
 
-        const data: Transaction<ItemSell> = {
+        const data: TransactionType<ItemSell> = {
             dateTime: date.toISOString(),
             sale: true,
             paymentMethod,
             totalPrice,
             items: newItems
         };
-        console.log(data);
         const response = (await postTransaction({ data }));
         callback?.(response);
     };
 
     const postData = (transactionItems: ItemSell[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): void => {
-        postDataAsync(transactionItems, paymentMethod, totalPrice, date).catch(() => { });
+        postDataAsync(transactionItems, paymentMethod, totalPrice, date).catch((err: AxiosError) => { callback?.(err.response as AxiosResponse<unknown, any>); });
     };
 
     return [postData, { loading, error }];
