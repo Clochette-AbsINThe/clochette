@@ -79,6 +79,7 @@ export interface OutOfStockBuy {
     name: string
     icon: IconName
     unitPrice: number
+    sellPrice?: number //! Pas dans la réponse de l'API
 }
 
 // OutOfStock/Sell --> get
@@ -104,7 +105,7 @@ export type ItemTransactionResponse = APIItem<Barrel | Glass | OutOfStockSell | 
 
 // Transaction --> get
 // Transaction --> post // Ajoute une nouvelle transaction dans la base de données
-export interface Transaction<T> {
+export interface TransactionType<T> {
     readonly id?: number
     dateTime: string
     totalPrice: number
