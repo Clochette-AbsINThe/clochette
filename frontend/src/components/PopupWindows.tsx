@@ -50,9 +50,9 @@ export default function PopupWindows(props: PopupWindowsProps): JSX.Element {
      * Focus the first input when the popup is open.
      */
     useEffect(() => {
-        if (isOpen && ref.current) {
-            (ref.current.children[0] as HTMLButtonElement).focus();
-        }
+        if (!isOpen) return;
+        const submit = document.querySelector('#submit-btn') as HTMLButtonElement;
+        if (submit) submit.focus();
     }, [isOpen]);
 
     function renderContent(): JSX.Element {
