@@ -56,23 +56,29 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
      */
     const [selectedItems, setSelectedItems] = useState<ItemBuy[]>(props.selectedItems);
 
-    /**
-     * Initialization of the data, by calling the proxies.
-     */
-    useEffect(() => {
+    const makeApiCalls = (): void => {
         getDataFuts();
         getDataHorsStocks();
         getDataConsommables();
         getDataEcoCup();
-    }, [props.selectedItems]);
+    };
+
+    /**
+     * Initialization of the data, by calling the proxies.
+     */
+    useEffect(() => {
+        makeApiCalls();
+    }, []);
 
     useEffect(() => {
-        setSelectedItems([]);
-    }, [props.selectedItems]);
+        if (loadingFuts || loadingExtras || loadingConsommable || loadingEcoCup) return;
+        const updatedItems = updateFkID(barrels, consommables, outOfStocks, ecoCup, selectedItems);
+        props.changeSelectedItems(updatedItems);
+    }, [barrels, consommables, outOfStocks, ecoCup]);
 
     useEffect(() => {
-        props.changeSelectedItems(selectedItems);
-    }, [selectedItems]);
+        setSelectedItems(props.selectedItems);
+    }, [props.selectedItems]);
 
     /**
      * This function is in charge of handling the click on adding a new item.
@@ -108,19 +114,25 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
      */
     const onSubmit = (data: ItemBuy): void => {
         closePopUp();
-        const sameItem = selectedItems.find((item) => item.item.fkID === data.item.fkID && item.table === data.table);
+        const newItems = [];
+        const sameItem = selectedItems.find((item) => item.item.name === data.item.name && item.table === data.table);
         if (sameItem) {
-            const newItems = selectedItems.map((item) => {
+            selectedItems.forEach((item) => {
                 if (item === sameItem) {
-                    return data;
+                    newItems.push(data);
                 } else {
-                    return item;
+                    newItems.push(data);
                 }
             });
-            setSelectedItems(newItems);
         } else {
-            setSelectedItems([...selectedItems, data]);
+            newItems.push(...selectedItems, data);
         }
+        props.changeSelectedItems(updateFkID(barrels, consommables, outOfStocks, ecoCup, newItems));
+    };
+
+    const handleRemoveItem = (item: ItemBuy): void => {
+        const newItems = selectedItems.filter((selectedItem) => selectedItem !== item);
+        props.changeSelectedItems(updateFkID(barrels, consommables, outOfStocks, ecoCup, newItems));
     };
 
     return (
@@ -161,7 +173,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                         {errorEcoCup && <p className='text-red-500'>Erreur lors du chargement de l&apos;écocup</p>}
                         {loadingEcoCup && <Loader />}
                         {ecoCup &&
-                            <div className="flex m-4 items-center h-max rounded-xl bg-[#70707016] p-3 md:max-w-[33vw] max-w-full flex-wrap">
+                            <div className="flex m-4 items-center h-max rounded-xl bg-[#70707016] p-3 md:max-w-[33vw] shadow-md max-w-full flex-wrap">
                                 <div className="flex flex-grow-[10] items-center">
                                     {ecoCup.icon && getIcon(ecoCup.icon, 'w-10 h-10 dark:text-white ml-2 text-black')}
                                     <h1 className='grow lg:text-3xl mx-5 text-xl'>{ecoCup.name}</h1>
@@ -180,7 +192,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                 </div>
                 <div className='col-span-2 border-2 rounded border-gray-800 dark:border-gray-300 p-1'>
                     <h1 className='text-2xl font-bold'>Récapitulatif :</h1>
-                    {selectedItems.map((item, index) => <RecapItem key={index} handleModalEdit={handleModalEdit} item={item} />)}
+                    {selectedItems.map((item, index) => <RecapItem key={index} handleModalEdit={handleModalEdit} item={item} handleRemoveItem={handleRemoveItem} />)}
                 </div>
             </div>
             {popUpItem &&
@@ -196,23 +208,27 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
 interface RecapItemProps {
     item: ItemBuy
     handleModalEdit: (item: ItemBuy) => void
+    handleRemoveItem: (item: ItemBuy) => void
 };
 
 export function RecapItem(props: RecapItemProps): JSX.Element {
-    const { item, handleModalEdit } = props;
+    const { item, handleModalEdit, handleRemoveItem } = props;
     return (
         <div className="flex m-4 justify-center h-max rounded-xl bg-[#70707016] p-3 md:max-w-[66vw] max-w-full flex-wrap flex-col" key={item.item.name}>
-            <div className="flex flex-grow-[10] items-start">
+            <div className="flex flex-grow-[10] items-start flex-wrap space-y-2">
                 {getIcon(item.item.icon, 'w-10 h-10 dark:text-white mr-2 text-black')}
                 <h1 className='grow lg:text-3xl mx-5 text-xl'>{item.item.name}</h1>
-                <button onClick={() => handleModalEdit(item)} className='btn-primary' aria-label='edit'>Edit</button>
+                <div className='flex self-end space-x-5'>
+                    <button onClick={() => handleModalEdit(item)} className='btn-primary' aria-label='edit'>Edit</button>
+                    <button onClick={() => handleRemoveItem(item)} className='btn-danger ml-5' aria-label='delete'>Delete</button>
+                </div>
             </div>
-            <div className="flex flex-grow">
+            <div className="flex flex-grow flex-wrap">
                 <h1 className='mr-6 text-xl'>Nombre: {item.quantity}</h1>
                 <h1 className='mr-6 text-xl'>Prix total: {Number((item.item.unitPrice * item.quantity).toFixed(2))}€</h1>
                 {item.item.sellPrice !== undefined && <h1 className='mr-6 text-xl'>Prix vente: {item.item.sellPrice}€</h1>}
             </div>
-        </div>
+        </div >
     );
 }
 
@@ -260,4 +276,26 @@ export function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, 
                 table: 'consumable'
             };
     }
+}
+
+export function updateFkID(barrels: Drink[], consommables: ConsumableItem[], outOfStocks: OutOfStockItemBuy[], ecoCup: OutOfStockItemBuy | undefined, selectedItems: ItemBuy[]): ItemBuy[] {
+    if (ecoCup === undefined) return selectedItems;
+    const fakeBarrels = barrels.map((barrel) => createNewItem(barrel, 'barrel'));
+    const fakeConsommables = consommables.map((consommable) => createNewItem(consommable, 'consumable'));
+    const fakeOutOfStocks = outOfStocks.map((outOfStock) => createNewItem(outOfStock, 'outofstock'));
+    const fakeEcoCup = createNewItem(ecoCup, 'outofstock');
+    const allItems = [...fakeBarrels, ...fakeConsommables, ...fakeOutOfStocks, fakeEcoCup];
+    return selectedItems.map((item) => {
+        const newItem = allItems.find((i) => i.item.name === item.item.name && i.table === item.table && item.item.fkID === -1);
+        if (newItem) {
+            return {
+                ...item,
+                item: {
+                    ...item.item,
+                    fkID: newItem.item.fkID
+                }
+            };
+        }
+        return item;
+    });
 }

@@ -1,6 +1,6 @@
 import SaleCol from '@components/SaleCol';
 import { getConsumables, getGlasses, getOutOfStocks } from '@proxies/SalePageProxies';
-import type { APIItem, Consumable, Glass, ItemSell, OutOfStock } from '@types';
+import type { APIItem, Consumable, Glass, ItemSell, OutOfStockSell } from '@types';
 import { useEffect, useState } from 'react';
 
 interface SalePageProps {
@@ -11,7 +11,7 @@ export default function SalePage(props: SalePageProps): JSX.Element {
     /**
     * This state is in charge of storing the items for the glasses sale.
     */
-    const [itemsGlass, setItemsGlass] = useState<Array<APIItem<Glass | OutOfStock>>>([]);
+    const [itemsGlass, setItemsGlass] = useState<Array<APIItem<Glass | OutOfStockSell>>>([]);
     const [getDataBoissons, { loading: loadingBoisson, error: errorBoisson }] = getGlasses(setItemsGlass);
 
     /**
@@ -23,16 +23,20 @@ export default function SalePage(props: SalePageProps): JSX.Element {
     /**
      * This state is in charge of storing the items for the out of stocks sale.
      */
-    const [itemsOutOfStocks, setItemsOutOfStocks] = useState<Array<APIItem<OutOfStock>>>([]);
+    const [itemsOutOfStocks, setItemsOutOfStocks] = useState<Array<APIItem<OutOfStockSell>>>([]);
     const [getDataHorsStock, { loading: loadingHorsStock, error: errorHorsStock }] = getOutOfStocks(setItemsOutOfStocks);
+
+    const makeApiCalls = (): void => {
+        getDataBoissons();
+        getDataConsommables();
+        getDataHorsStock();
+    };
 
     /**
      * Make all the api calls to get the items at first render.
      */
     useEffect(() => {
-        getDataBoissons();
-        getDataConsommables();
-        getDataHorsStock();
+        makeApiCalls();
     }, []);
 
     /**

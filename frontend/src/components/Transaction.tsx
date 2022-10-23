@@ -9,6 +9,8 @@ import { postNewBuyTransaction } from '@proxies/BuyPageProxies';
 import { postNewSellTransaction } from '@proxies/SalePageProxies';
 
 import type { ItemBuy, ItemSell, PaymentMethod } from '@types';
+import type { AxiosResponse } from 'axios';
+import toast, { Toaster } from 'react-hot-toast';
 
 /**
  * This component is in charge of displaying the transaction page.
@@ -43,8 +45,27 @@ export default function Transaction(): JSX.Element {
     /**
      * Those functions is in charge of handling the submit of the transaction.
      */
-    const [newBuyTransaction, { loading: loadingBuy }] = postNewBuyTransaction();
-    const [newSellTransaction, { loading: loadingSell }] = postNewSellTransaction();
+    const [newBuyTransaction, { loading: loadingBuy }] = postNewBuyTransaction(callbackPost);
+    const [newSellTransaction, { loading: loadingSell }] = postNewSellTransaction(callbackPost);
+    const [reRender, setReRender] = useState<-1 | 1>(1);
+
+
+    function callbackPost(data: AxiosResponse<any, any>): void {
+        if (data.status === 200) {
+            toast.success('Transaction effectuée avec succès');
+            setPopupWindowOpen(false);
+            setReRender((reRender * -1) as -1 | 1);
+            if (transactionType === TransactionEnum.Achat) {
+                setSelectedItemsBuy([]);
+            }
+        } else {
+            const err = `Error ${data.status}: ${data.data.detail as string} on ${(data.config.baseURL as string) + (data.config.url as string)} with ${(data.config.method as string).toUpperCase()}`;
+            toast.error(err);
+            if (transactionType === TransactionEnum.Achat) {
+                setReRender((reRender * -1) as -1 | 1);
+            }
+        }
+    }
 
     /**
      * Update the total price when the selected items change.
@@ -69,11 +90,9 @@ export default function Transaction(): JSX.Element {
      * This handler is in charge of submitting the transaction.
      */
     const handlePostData = (): void => {
-        if (loadingBuy || loadingSell) return;
         if (transactionType === TransactionEnum.Achat) {
             if (selectedItemsBuy.length > 0) {
                 newBuyTransaction(selectedItemsBuy, paymentMethod, totalPrice, new Date());
-                setSelectedItemsBuy([]);
             }
         } else {
             if (selectedItemsSell.length > 0) {
@@ -88,11 +107,11 @@ export default function Transaction(): JSX.Element {
     function renderTransaction(): JSX.Element {
         if (transactionType === TransactionEnum.Vente) {
             return (
-                <SalePage setItems={setSelectedItemsSell} />
+                <SalePage setItems={setSelectedItemsSell} key={reRender} />
             );
         } else {
             return (
-                <BuyPage changeSelectedItems={setSelectedItemsBuy} selectedItems={selectedItemsBuy} />
+                <BuyPage changeSelectedItems={setSelectedItemsBuy} selectedItems={selectedItemsBuy} key={reRender} />
             );
         }
     };
@@ -142,6 +161,7 @@ export default function Transaction(): JSX.Element {
 
     return (
         <>
+            <Toaster position='bottom-left' toastOptions={{ style: { maxWidth: 500 } }} />
             <TransactionSwitch changeTransactionType={handleChangeTransactionType} startTransactionType={transactionType} />
             {renderTransaction()}
             <div className='flex justify-end mt-3'>
@@ -153,7 +173,7 @@ export default function Transaction(): JSX.Element {
                         {renderRecap()}
                         <div className='flex pt-3 self-end'>
                             <div className='text-2xl font-bold mr-8' aria-label='total-price'>Total: {totalPrice}€</div>
-                            <button className='btn-primary' onClick={handlePostData} disabled={loadingBuy || loadingSell}>Valider le paiment</button>
+                            <button id='submit-btn' className='btn-primary' onClick={handlePostData} disabled={loadingBuy || loadingSell}>Valider le paiment</button>
                         </div>
                     </div>
                 </PopupWindows>
