@@ -23,7 +23,7 @@ test('Verify total for SalePage', async () => {
     render(<Transaction />);
     await userEvent.click(screen.getByLabelText('Vente'));
     await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 400));
+        await new Promise((resolve) => setTimeout(resolve, 200));
     });
     expect(screen.getByText('failed', { exact: false })).toBeInTheDocument();
     const total = screen.getByLabelText('total-price');
@@ -32,6 +32,7 @@ test('Verify total for SalePage', async () => {
     const minus = screen.queryAllByLabelText('minus');
     await userEvent.click(screen.getByLabelText('button-popup'));
     await userEvent.click(screen.getByText('Valider le paiment'));
+    await userEvent.keyboard('{Escape}');
     await act(async () => {
         await userEvent.click(plus[0]);
         await userEvent.click(minus[1]);
@@ -48,12 +49,17 @@ test('Verify total for SalePage', async () => {
     expect(total).toHaveTextContent('Total: 5€');
     await userEvent.click(screen.getByLabelText('button-popup'));
     await userEvent.click(screen.getByText('Valider le paiment'));
+    await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+    });
+    expect(screen.getByText('Transaction effectuée avec succès', { exact: false })).toBeInTheDocument();
 });
 
 test('Verify search for BuyPage', async () => {
     render(<Transaction />);
+    await userEvent.click(screen.getByLabelText('Achat'));
     await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 400));
+        await new Promise((resolve) => setTimeout(resolve, 200));
     });
     await userEvent.click(screen.getByLabelText('button-popup'));
     await userEvent.click(screen.getByText('Valider le paiment'));
@@ -90,6 +96,60 @@ test('Verify search for BuyPage', async () => {
     expect(screen.getByText('test')).toBeInTheDocument();
     await userEvent.click(screen.getByLabelText('button-popup'));
     await userEvent.click(screen.getByText('Valider le paiment'));
+    await new Promise((resolve) => setTimeout(resolve, 10));
     await userEvent.click(screen.getByLabelText('button-popup'));
     await userEvent.click(screen.getByText('Valider le paiment'));
+    await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+    });
+    expect(screen.getByText('Transaction effectuée avec succès')).toBeInTheDocument();
+});
+
+test('Verify error on post on BuyPage', async () => {
+    server.use(
+        rest.post('https://clochette.dev/api/v1/Transaction/Buy', (req, res, ctx) => {
+            return res(ctx.json({ detail: 'Transaction already exist' }), ctx.status(400));
+        })
+    );
+    render(<Transaction />);
+    await userEvent.click(screen.getByLabelText('Achat'));
+    await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+    });
+    expect(screen.queryByText('Nombre', { exact: false })).toBeNull();
+    const dropdowns = screen.getAllByLabelText('dropdown-button');
+    await userEvent.click(dropdowns[0]);
+    await userEvent.click(screen.getAllByLabelText('dropdown-item')[0]);
+    await act(async () => {
+        await userEvent.keyboard('{Enter}');
+    });
+    expect(screen.getByText('Nombre', { exact: false })).toBeInTheDocument();
+    await userEvent.click(screen.getByLabelText('button-popup'));
+    await userEvent.click(screen.getByText('Valider le paiment'));
+    await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+    });
+    expect(screen.getByText('Transaction already exist on https://clochette.dev/api/v1/Transaction/Buy with POST', { exact: false })).toBeInTheDocument();
+});
+
+test('Verify error on post on SalePage', async () => {
+    server.use(
+        rest.post('https://clochette.dev/api/v1/Transaction/Sell', (req, res, ctx) => {
+            return res(ctx.json({ detail: 'Transaction already exist' }), ctx.status(400));
+        })
+    );
+    render(<Transaction />);
+    await userEvent.click(screen.getByLabelText('Vente'));
+    await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+    });
+    await act(async () => {
+        await userEvent.click(screen.queryAllByLabelText('plus')[0]);
+    });
+    await userEvent.click(screen.getByLabelText('button-popup'));
+    await userEvent.click(screen.getByText('Valider le paiment'));
+    await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 200));
+    });
+    expect(screen.getByText('Transaction already exist on https://clochette.dev/api/v1/Transaction/Sell with POST', { exact: false })).toBeInTheDocument();
 });
