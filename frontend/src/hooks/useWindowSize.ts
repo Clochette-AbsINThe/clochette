@@ -5,7 +5,7 @@ interface Size {
     height: number
 }
 
-export function debounce(func: () => any, wait = 100): () => void {
+export function debounce(func: () => any, wait = 50): () => void {
     let h: NodeJS.Timeout;
     return () => {
         clearTimeout(h);
