@@ -9,7 +9,7 @@ export type IProxy = [
     }
 ];
 
-export type IProxyPost<T> = [
+export type IProxyPostTransaction<T> = [
     (transactionItems: T, paymentMethod: PaymentMethod, totalPrice: number, date: Date) => void,
     {
         loading: boolean
@@ -17,3 +17,18 @@ export type IProxyPost<T> = [
     }
 ];
 
+export type IProxyId = [
+    (id: number) => void,
+    {
+        loading: boolean
+        error?: AxiosError | null
+    }
+];
+
+export type IProxyPost<T> = [
+    (data: T) => void,
+    {
+        loading: boolean
+        error?: AxiosError | null
+    }
+];
