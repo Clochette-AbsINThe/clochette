@@ -7,7 +7,7 @@ interface ResponseValues<T> {
     response?: AxiosResponse<T> | null
 }
 
-type UseAxiosResult<T> = [ResponseValues<T>, (_config?: AxiosRequestConfig) => Promise<AxiosResponse<T>>];
+type UseAxiosResult<T> = [ResponseValues<T>, (_config?: AxiosRequestConfig, _url?: string) => Promise<AxiosResponse<T>>];
 
 const API = axios.create({
     baseURL: 'https://clochette.dev/api/v1',
@@ -22,11 +22,11 @@ export default function useAxios<T>(url: string, _config?: AxiosRequestConfig): 
     const [error, setError] = useState<AxiosError | null>(null);
     const [response, setResponse] = useState<AxiosResponse<T> | null>(null);
 
-    const request = async (config?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
+    const request = async (config?: AxiosRequestConfig, _url?: string): Promise<AxiosResponse<T>> => {
         setLoading(true);
         setError(null);
         try {
-            const response = await API.request({ ..._config, ...config, url });
+            const response = await API.request({ ..._config, ...config, url: _url ?? url });
             setResponse(response);
             return response;
         } catch (error: any) {
