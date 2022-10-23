@@ -198,7 +198,7 @@ export default function Form(props: FormProps): JSX.Element {
                     {(props.item.item.sellPrice !== undefined) && <li>Vente à {sellPrice} € l&apos;unité</li>}
                 </ul>
             </div>
-            <button type='submit' className='btn-primary' role='submit'>Envoyer</button>
+            <button type='submit' className='btn-primary' role='submit' id='submit-btn'>Envoyer</button>
         </form>
     );
 }
