@@ -173,7 +173,7 @@ test('postTransaction', async () => {
 
 test('postTransaction error', async () => {
     server.use(
-        rest.post('https://clochette.dev/api/v1/drink', (req, res, ctx) => {
+        rest.post('https://clochette.dev/api/v1/drink/', (req, res, ctx) => {
             return res(ctx.status(500));
         })
     );
@@ -188,7 +188,7 @@ test('postTransaction error', async () => {
 
 test('getDrink error', async () => {
     server.use(
-        rest.get('https://clochette.dev/api/v1/drink', (req, res, ctx) => {
+        rest.get('https://clochette.dev/api/v1/drink/', (req, res, ctx) => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
@@ -203,7 +203,7 @@ test('getDrink error', async () => {
 
 test('getConsumable error', async () => {
     server.use(
-        rest.get('https://clochette.dev/api/v1/ConsumableItem', (req, res, ctx) => {
+        rest.get('https://clochette.dev/api/v1/consumable_item/', (req, res, ctx) => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
