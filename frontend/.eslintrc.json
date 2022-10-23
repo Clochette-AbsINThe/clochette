@@ -95,7 +95,8 @@
             "always"
         ],
         "no-multiple-empty-lines": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off"
+        "@typescript-eslint/strict-boolean-expressions": "off",
+        "n/no-callback-literal": "off"
     },
     "settings": {
         "react": {
