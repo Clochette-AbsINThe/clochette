@@ -1,16 +1,14 @@
-import Page404 from '@components/404';
-import { addIdToUrl, ConfigurationPageHeader, getIdFromUrl, GoBackButton, removeIdFromUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
-import Loader from '@components/Loader';
+import { addIdToUrl, ConfigurationPageHeader, DisplayPage, getIdFromUrl, ItemPageWrapper, removeIdFromUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
 
 import { deleteConsumableItem, getConsumableItemById, getConsumableItems, postConsumableItem, putConsumableItem } from '@proxies/ConfigurationConsumableItemProxies';
 import { getIcon } from '@styles/utils';
 import type { ConsumableItem, IconName } from '@types';
 
 import { useEffect, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 export default function ConfigurationConsumableItem(): JSX.Element {
-    const [id, setId] = useState<number | null>(null);
+    const [id, setId] = useState<number | null>(NaN);
     const [query, setQuery] = useState('');
 
     const [consumableItems, setConsumableItems] = useState<ConsumableItem[]>([]);
@@ -33,8 +31,7 @@ export default function ConfigurationConsumableItem(): JSX.Element {
     const handleGoBack = (): void => {
         removeIdFromUrl();
         setId(null);
-        setConsumableItem({ name: '', icon: 'Misc' });
-        makeApiCalls();
+        setConsumableItem({ name: '', icon: 'Misc' }); // Forced to reset the field because recat is not updating the field properly when creating new consumable item
     };
 
     const [postConsumableItemData] = postConsumableItem((data) => {
@@ -61,8 +58,8 @@ export default function ConfigurationConsumableItem(): JSX.Element {
     const [deleteConsumabelItemData] = deleteConsumableItem((data) => {
         if (data.status === 200) {
             const item = data.data as ConsumableItem;
-            handleGoBack();
             toast.success(`${item.name} supprimé avec succès !`);
+            handleGoBack();
         } else {
             const { detail } = data.data as { detail: string };
             toast.error(`Erreur lors de la suppression de ${consumableItem.name}. ${detail}`);
@@ -88,64 +85,60 @@ export default function ConfigurationConsumableItem(): JSX.Element {
 
     useEffect(() => {
         setId(getIdFromUrl());
-        makeApiCalls();
     }, []);
 
-
     useEffect(() => {
-        if (id === null) return;
+        if (id === null) {
+            makeApiCalls();
+            return;
+        }
+        if (isNaN(id)) return; // Initial state = NaN, while id is not set do nothing
         if (id === -1) {
-            setConsumableItem({ name: '', icon: 'Misc' });
+            setConsumableItem({ name: '', icon: 'Misc' }); // Set a default consumable item without an id attribute
         } else {
             getConsumableItemByIdData(id);
         }
     }, [id]);
 
-    const homePage = (): JSX.Element => {
-        return (
-            <div className='flex-grow p-3 flex flex-col space-y-8'>
-                <ConfigurationPageHeader
-                    title='Modification des produits consommables'
-                    description='Les produits consommables sont les produits qui sont vendus sous la même forme qu&apos;ils sont acheté, comme par exemple les softs où les pizzas.'
-                    changeURLwithId={changeURLwithId}
-                    callbackQuery={setQuery}
-                />
-                {loadingGetAllConsumableItems
-                    ? <Loader />
-                    : (
-                        <>
-                            {displayConsumableItems.length === 0 && <p className='text-2xl'>Aucun produit trouvé</p>}
-                            <div className="grid gap-4 grid-cols-[repeat(auto-fill,_minmax(250px,1fr))]">
-                                {displayConsumableItems.map((consumableItem) => {
-                                    return (
-                                        <div
-                                            key={consumableItem.id}
-                                            className='flex flex-col space-y-5 p-4 bg-gray-50 rounded-lg shadow-md dark:bg-gray-700'
-                                        >
-                                            <div className='flex justify-start items-center space-x-5'>
-                                                <div>{getIcon(consumableItem.icon, 'w-10 h-10 dark:text-white ml-2 text-black')}</div>
-                                                <span className='text-center text-xl'>{consumableItem.name}</span>
-                                            </div>
-                                            <div className='flex grow justify-end space-x-5'>
-                                                <button className='btn-primary' onClick={() => changeURLwithId(consumableItem.id as number)} aria-label='edit'>Editer</button>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
+    const homePage = (): JSX.Element => (
+        <ConfigurationPageHeader
+            title='Modification des produits consommables'
+            description='Les produits consommables sont les produits qui sont vendus sous la même forme qu&apos;ils sont acheté, comme par exemple les softs où les pizzas.'
+            changeURLwithId={changeURLwithId}
+            callbackQuery={setQuery}
+            displayItems={displayConsumableItems}
+            loadingAllItems={loadingGetAllConsumableItems}
+        >
+            <>
+                {displayConsumableItems.map((consumableItem) => {
+                    return (
+                        <div
+                            key={consumableItem.id}
+                            className='flex flex-col space-y-5 p-4 bg-gray-50 rounded-lg shadow-md dark:bg-gray-700'
+                        >
+                            <div className='flex justify-start items-center space-x-5'>
+                                <div>{getIcon(consumableItem.icon, 'w-10 h-10 dark:text-white ml-2 text-black')}</div>
+                                <span className='text-center text-xl'>{consumableItem.name}</span>
                             </div>
-                        </>
-                    )}
-            </div>
-        );
-    };
+                            <div className='flex grow justify-end space-x-5'>
+                                <button className='btn-primary' onClick={() => changeURLwithId(consumableItem.id as number)} aria-label='edit'>Editer</button>
+                            </div>
+                        </div>
+                    );
+                })}
+            </>
+        </ConfigurationPageHeader >
+    );
+
 
     const consumableItemPage = (): JSX.Element => {
-        if (errorGetById?.response?.status === 404 && id !== -1) {
-            return <Page404 />;
-        } else if (loadingGetById || !consumableItem) {
-            return <Loader />;
-        } else {
-            return (
+        return (
+            <ItemPageWrapper
+                item={consumableItem}
+                errorGetById={errorGetById}
+                id={id}
+                loadingGetById={loadingGetById}
+            >
                 <>
                     <h1 className="text-2xl mt-3">{id !== -1 ? 'Modification' : 'Ajout'} d&apos;un produit consommable :</h1>
                     {id !== -1 && (
@@ -209,28 +202,22 @@ export default function ConfigurationConsumableItem(): JSX.Element {
                         </div>
                         <div className="grow"></div>
                         <button type='submit' className='btn-primary' role='submit'>
-                            {consumableItem.id === undefined
-                                ? 'Ajouter le nouveau consommable'
-                                : 'Modifier le consommable'}
+                            {consumableItem.id === undefined ? 'Ajouter le nouveau consommable' : 'Modifier le consommable'}
                         </button>
                     </form>
                 </>
-            );
-        }
+            </ItemPageWrapper>
+        );
     };
 
     return (
-        <>
-            <Toaster position='bottom-left' toastOptions={{ style: { maxWidth: 500 } }} />
-            {id !== null
-                ? (
-                    <>
-                        <GoBackButton handleGoBack={handleGoBack} />
-                        {consumableItemPage()}
-                    </>
-                )
-                : homePage()
-            }
-        </>
+        <DisplayPage {
+            ...{
+                homePage,
+                itemPage: consumableItemPage,
+                handleGoBack,
+                id
+            }}
+        />
     );
 }
