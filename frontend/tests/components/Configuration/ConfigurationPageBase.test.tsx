@@ -14,7 +14,18 @@ test('render goBackButton', async () => {
 test('render ConfigurationPageHeader', async () => {
     const callbackQuery = jest.fn();
     const changeURLwithId = jest.fn();
-    render(<ConfigurationPageHeader callbackQuery={callbackQuery} changeURLwithId={changeURLwithId} description='Description' title='Title' />);
+    render(
+        <ConfigurationPageHeader
+            callbackQuery={callbackQuery}
+            changeURLwithId={changeURLwithId}
+            description='Description'
+            title='Title'
+            displayItems={[]}
+            loadingAllItems={false}
+        >
+            <div>Test</div>
+        </ConfigurationPageHeader>
+    );
     expect(screen.getByText('Title')).toBeInTheDocument();
     expect(screen.getByText('Description')).toBeInTheDocument();
 
