@@ -28,8 +28,6 @@ class OutOfStockItemBuyUpdate(OutOfStockItemBase):
 
 class OutOfStockItemBuy(OutOfStockItemBase):
     id: int
-    buy_or_sell: bool
-    sell_price: int | None
 
     class Config:
         orm_mode = True
