@@ -2,32 +2,32 @@ export type TableData = 'outofstock' | 'glass' | 'barrel' | 'consumable';
 export type PaymentMethod = 'CB' | 'Espèces' | 'Lydia';
 export type IconName = 'Glass' | 'Beer' | 'Food' | 'Soft' | 'Barrel' | 'Misc';
 
-// Drink --> get // Rempli le dropdown des fûts
-// Drink --> post // Ajoute une nouvelle boisson manquante dans la base de données
+// drink/ --> get // Rempli le dropdown des fûts
+// drink/ --> post // Ajoute une nouvelle boisson manquante dans la base de données
 export interface Drink {
     readonly id?: number
     name: string
     icon?: IconName //! Pas dans la réponse de l'API
 }
 
-// ConsumableItem --> get // Rempli le dropdown des consommables
-// ConsumableItem --> post // Ajoute un nouveau consommable manquant dans la base de données
+// consumable_item/ --> get // Rempli le dropdown des consommables
+// consumable_item/ --> post // Ajoute un nouveau consommable manquant dans la base de données
 export interface ConsumableItem {
     readonly id?: number
     name: string
     icon: IconName
 }
 
-// OutOfStockItem/Buy --> get // Rempli le dropdown des hors stocks
-// OutOfStockItem/Buy --> post // Ajoute un nouveau hors stock de buy manquant dans la base de données
+// out_of_stock_item/buy/ --> get // Rempli le dropdown des hors stocks
+// out_of_stock_item/buy/ --> post // Ajoute un nouveau hors stock de buy manquant dans la base de données
 export interface OutOfStockItemBuy {
     readonly id?: number
     name: string
     icon: IconName
 }
 
-// OutOfStockItem/Sell --> get // Repmli la colonne des hors stocks
-// OutOfStockItem/Sell --> post // Ajoute un nouveau hors stock de sell manquant dans la base de données
+// out_of_stock_item/sell/ --> get // Repmli la colonne des hors stocks
+// out_of_stock_item/sell/ --> post // Ajoute un nouveau hors stock de sell manquant dans la base de données
 export interface OutOfStockItemSell {
     readonly id?: number
     name: string
@@ -35,20 +35,20 @@ export interface OutOfStockItemSell {
     sellPrice: number
 }
 
-// Barrel --> get // Utile pour l'appli des stocks
+// barrel/ --> get // Utile pour l'appli des stocks ( Rempli la colonne des verres avec barrel/mounted/ et j'adapte le front)
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface Barrel {
     readonly id?: number
     readonly fkID: number //* Drink['id']
     name: string
-    icon: IconName
+    icon: IconName //! Pas dans la réponse de l'API
     unitPrice: number
     sellPrice: number // Prix de vente du verre après
     isMounted: boolean // Default = false
     empty: boolean // Default = false
 }
 
-// Glass --> get // Rempli la colonne des verres
+// glass/ --> get // Utile pour l'appli de l'historique des transactions
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface Glass {
     readonly id?: number
@@ -58,7 +58,7 @@ export interface Glass {
     sellPrice: number
 }
 
-// Consumable --> get // Rempli la colonne des consommables
+// consumable --> get // Rempli la colonne des consommables
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface Consumable {
     readonly id?: number
@@ -71,7 +71,7 @@ export interface Consumable {
 }
 
 
-// OutOfStock/Buy --> get
+// out_of_stock/buy/ --> get (Utile pour l'appli de la partie historique des transactions ? Pas important a implémenter))
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface OutOfStockBuy {
     id?: number
@@ -82,7 +82,7 @@ export interface OutOfStockBuy {
     sellPrice?: number //! Pas dans la réponse de l'API
 }
 
-// OutOfStock/Sell --> get
+// out_of_stock/sell/ --> get (Utile pour l'appli de la partie historique des transactions et encore ? Pas important a implémenter) )
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface OutOfStockSell {
     id?: number
@@ -103,8 +103,8 @@ export type ItemBuy = APIItem<Barrel | OutOfStockBuy | Consumable>;
 
 export type ItemTransactionResponse = APIItem<Barrel | Glass | OutOfStockSell | OutOfStockBuy | Consumable>;
 
-// Transaction --> get
-// Transaction --> post // Ajoute une nouvelle transaction dans la base de données
+// transaction/ --> get // Utile pour l'appli de l'historique des transactions
+// transaction/ --> post // Ajoute une nouvelle transaction dans la base de données
 export interface TransactionType<T> {
     readonly id?: number
     dateTime: string
