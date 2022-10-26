@@ -14,7 +14,7 @@ class OutOfStockItemBuyCreateFront(OutOfStockItemBase):
 
 class OutOfStockItemBuyCreate(OutOfStockItemBase):
     buy_or_sell: bool
-    sell_price: int | None = None
+    sell_price: float | None = None
 
 
 class OutOfStockItemBuyUpdateFront(OutOfStockItemBase):
@@ -22,12 +22,38 @@ class OutOfStockItemBuyUpdateFront(OutOfStockItemBase):
 
 
 class OutOfStockItemBuyUpdate(OutOfStockItemBase):
-    buy_or_sell: bool
-    sell_price: int | None = None
+    buy_or_sell: bool = True
+    sell_price: float | None = None
 
 
 class OutOfStockItemBuy(OutOfStockItemBase):
     id: int
+
+    class Config:
+        orm_mode = True
+
+
+class OutOfStockItemSellCreateFront(OutOfStockItemBase):
+    sell_price: float = Field(..., gt=0)
+
+
+class OutOfStockItemSellCreate(OutOfStockItemBase):
+    buy_or_sell: bool = False
+    sell_price: float
+
+
+class OutOfStockItemSellUpdateFront(OutOfStockItemBase):
+    sell_price: float = Field(..., gt=0)
+
+
+class OutOfStockItemSellUpdate(OutOfStockItemBase):
+    buy_or_sell: bool = False
+    sell_price: float
+
+
+class OutOfStockItemSell(OutOfStockItemBase):
+    id: int
+    sell_price: int
 
     class Config:
         orm_mode = True
