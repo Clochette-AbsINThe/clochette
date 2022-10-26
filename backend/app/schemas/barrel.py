@@ -1,10 +1,14 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
+
+from app.core.types import IconName
 
 
 class BarrelBase(BaseModel):
-    price: float
-    is_mounted: bool = False
     empty: bool = False
+    icon: IconName
+    is_mounted: bool = False
+    sellPrice: float = Field(..., gt=0)
+    unitPrice: float = Field(..., gt=0)
 
 
 class BarrelCreate(BarrelBase):
@@ -17,12 +21,7 @@ class BarrelUpdate(BarrelBase):
 
 class Barrel(BarrelBase):
     id: int
-    treasury_id: int
     drink_id: int
-    stock_id: int
-    price: float
-    is_mounted: bool
-    empty: bool
 
     class Config:
         orm_mode = True
