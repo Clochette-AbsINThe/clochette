@@ -1,4 +1,3 @@
-from re import X
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.crud.crud_out_of_stock_item import out_of_stock_item as out_of_stock_items
