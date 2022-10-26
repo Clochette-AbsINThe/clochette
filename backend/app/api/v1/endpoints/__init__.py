@@ -1,5 +1,6 @@
 __all__ = [
-    'drink',
+    'barrel',
     'consumable_item',
+    'drink',
     'out_of_stock_item',
 ]
