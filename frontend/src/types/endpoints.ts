@@ -3,8 +3,8 @@ export const endpoints = {
         drink: '/drink/',
         consumable: '/consumable/',
         consumableItem: '/consumable_item/',
-        outOfStockItemBuy: '/out-of-stock_item/buy/',
-        outOfStockItemSell: '/out-of-stock_item/sell/',
+        outOfStockItemBuy: '/out_of_stock_item/buy/',
+        outOfStockItemSell: '/out_of_stock_item/sell/',
         mountedBarrel: '/barrel/mounted/',
         transactionSell: '/transaction/sell/',
         transactionBuy: '/transaction/buy/'
