@@ -2,9 +2,10 @@ import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyId, IProxyPost } from '@proxies/Config';
 import type { ConsumableItem } from '@types';
 import type { AxiosError, AxiosResponse } from 'axios';
+import { endpoints } from 'src/types/endpoints';
 
 export function getConsumableItems(setItem: (value: ConsumableItem[]) => void): IProxy {
-    const [{ error, loading }, get] = useAxios<ConsumableItem[]>('/consumable_item/');
+    const [{ error, loading }, get] = useAxios<ConsumableItem[]>(endpoints.v1.consumableItem);
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
@@ -24,7 +25,7 @@ export function getConsumableItemById(setItem: (value: ConsumableItem) => void):
 
     const getDataAsync = async (id: number): Promise<void> => {
         setItem({ name: '', icon: 'Misc' });
-        const { data } = (await get({}, `/consumable_item/${id}`));
+        const { data } = (await get({}, `${endpoints.v1.consumableItem}${id}`));
         setItem(data);
     };
 
@@ -36,7 +37,7 @@ export function getConsumableItemById(setItem: (value: ConsumableItem) => void):
 }
 
 export function postConsumableItem(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPost<ConsumableItem> {
-    const [{ error, loading }, post] = useAxios<ConsumableItem>('/consumable_item/', { method: 'POST' });
+    const [{ error, loading }, post] = useAxios<ConsumableItem>(endpoints.v1.consumableItem, { method: 'POST' });
 
     const postAsync = async (data: ConsumableItem): Promise<void> => {
         const response = (await post({ data }));
@@ -55,7 +56,7 @@ export function putConsumableItem(callback?: (data: AxiosResponse<unknown, any>)
 
     const putAsync = async (data: ConsumableItem): Promise<void> => {
         const { id, ...rest } = data;
-        const response = (await put({ data: rest }, `/consumable_item/${id as number}`));
+        const response = (await put({ data: rest }, `${endpoints.v1.consumableItem}${id as number}`));
         callback?.(response);
     };
 
@@ -70,7 +71,7 @@ export function deleteConsumableItem(callback?: (data: AxiosResponse<unknown, an
     const [{ error, loading }, del] = useAxios<ConsumableItem>('', { method: 'DELETE' });
 
     const deleteAsync = async (id: number): Promise<void> => {
-        const response = (await del({}, `/consumable_item/${id}`));
+        const response = (await del({}, `${endpoints.v1.consumableItem}${id}`));
         callback?.(response);
     };
 

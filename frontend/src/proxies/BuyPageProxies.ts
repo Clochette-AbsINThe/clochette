@@ -4,6 +4,7 @@ import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyPostTransaction } from '@proxies/Config';
 import type { Barrel, Consumable, ConsumableItem, Drink, ItemBuy, OutOfStockItemBuy, PaymentMethod, TransactionType } from '@types';
 import type { AxiosError, AxiosResponse } from 'axios';
+import { endpoints } from 'src/types/endpoints';
 
 /**
  * This function is used to retrieve the EcoCup item
@@ -11,7 +12,7 @@ import type { AxiosError, AxiosResponse } from 'axios';
  * @returns A function to make the API call and the loading and error state
  */
 export function getEcoCup(setItems: (item?: OutOfStockItemBuy) => void): IProxy {
-    const [{ loading, error }, get] = useAxios<OutOfStockItemBuy[]>('/OutOfStockItem/Buy');
+    const [{ loading, error }, get] = useAxios<OutOfStockItemBuy[]>(endpoints.v1.outOfStockItemBuy);
 
     const getDataAsync = async (): Promise<void> => {
         setItems();
@@ -34,7 +35,7 @@ export function getEcoCup(setItems: (item?: OutOfStockItemBuy) => void): IProxy 
  * @returns A function to make the API call and the loading and error state
  */
 export function getDrinks(setItems: (items: Drink[]) => void): IProxy {
-    const [{ loading, error }, get] = useAxios<Drink[]>('/drink/');
+    const [{ loading, error }, get] = useAxios<Drink[]>(endpoints.v1.drink);
 
     const getDataAsync = async (): Promise<void> => {
         setItems([]);
@@ -58,7 +59,7 @@ export function getDrinks(setItems: (items: Drink[]) => void): IProxy {
  * @returns A function to make the API call and the loading and error state
  */
 export function getConsumables(setItems: (items: ConsumableItem[]) => void): IProxy {
-    const [{ loading, error }, get] = useAxios<ConsumableItem[]>('/consumable_item/');
+    const [{ loading, error }, get] = useAxios<ConsumableItem[]>(endpoints.v1.consumableItem);
 
     const getDataAsync = async (): Promise<void> => {
         setItems([]);
@@ -79,7 +80,7 @@ export function getConsumables(setItems: (items: ConsumableItem[]) => void): IPr
  * @returns A function to make the API call and the loading and error state
  */
 export function getOutOfStocks(setItems: (items: OutOfStockItemBuy[]) => void): IProxy {
-    const [{ loading, error }, get] = useAxios<OutOfStockItemBuy[]>('/OutOfStockItem/Buy');
+    const [{ loading, error }, get] = useAxios<OutOfStockItemBuy[]>(endpoints.v1.outOfStockItemBuy);
 
     const getDataAsync = async (): Promise<void> => {
         setItems([]);
@@ -100,10 +101,10 @@ export function getOutOfStocks(setItems: (items: OutOfStockItemBuy[]) => void): 
  * @returns A function to make the API call and the loading state
  */
 export function postNewBuyTransaction(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPostTransaction<ItemBuy[]> {
-    const [{ loading: loading1, error: error1 }, postTransaction] = useAxios<TransactionType<ItemBuy>>('/Transaction/Buy', { method: 'POST' });
-    const [{ loading: loading2, error: error2 }, postOutOfStock] = useAxios<OutOfStockItemBuy>('/OutOfStockItem/Buy', { method: 'POST' });
-    const [{ loading: loading3, error: error3 }, postConsumable] = useAxios<ConsumableItem>('/consumable_item/', { method: 'POST' });
-    const [{ loading: loading4, error: error4 }, postDrink] = useAxios<Drink>('/drink/', { method: 'POST' });
+    const [{ loading: loading1, error: error1 }, postTransaction] = useAxios<TransactionType<ItemBuy>>(endpoints.mock.transactionBuy, { method: 'POST' });
+    const [{ loading: loading2, error: error2 }, postOutOfStock] = useAxios<OutOfStockItemBuy>(endpoints.v1.outOfStockItemBuy, { method: 'POST' });
+    const [{ loading: loading3, error: error3 }, postConsumable] = useAxios<ConsumableItem>(endpoints.v1.consumableItem, { method: 'POST' });
+    const [{ loading: loading4, error: error4 }, postDrink] = useAxios<Drink>(endpoints.v1.drink, { method: 'POST' });
 
     const loading = loading1 || loading2 || loading3 || loading4;
     const error = error1 ?? error2 ?? error3 ?? error4;

@@ -3,9 +3,10 @@ import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyId, IProxyPost } from '@proxies/Config';
 import type { Drink } from '@types';
 import type { AxiosError, AxiosResponse } from 'axios';
+import { endpoints } from 'src/types/endpoints';
 
 export function getDrinks(setItem: (value: Drink[]) => void): IProxy {
-    const [{ error, loading }, get] = useAxios<Drink[]>('/drink/');
+    const [{ error, loading }, get] = useAxios<Drink[]>(endpoints.v1.drink);
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
@@ -25,7 +26,7 @@ export function getDrinkById(setItem: (value: Drink) => void): IProxyId {
 
     const getDataAsync = async (id: number): Promise<void> => {
         setItem({ name: '' });
-        const { data } = (await get({}, `/drink/${id}`));
+        const { data } = (await get({}, `${endpoints.v1.drink}${id}`));
         setItem(data);
     };
 
@@ -37,7 +38,7 @@ export function getDrinkById(setItem: (value: Drink) => void): IProxyId {
 }
 
 export function postDrink(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPost<Drink> {
-    const [{ error, loading }, post] = useAxios<Drink>('/drink/', { method: 'POST' });
+    const [{ error, loading }, post] = useAxios<Drink>(endpoints.v1.drink, { method: 'POST' });
 
     const postAsync = async (data: Drink): Promise<void> => {
         const response = (await post({ data }));
@@ -56,7 +57,7 @@ export function putDrink(callback?: (data: AxiosResponse<unknown, any>) => void)
 
     const putAsync = async (data: Drink): Promise<void> => {
         const { id, ...rest } = data;
-        const response = (await put({ data: rest }, `/drink/${id as number}`));
+        const response = (await put({ data: rest }, `${endpoints.v1.drink}${id as number}`));
         callback?.(response);
     };
 
@@ -71,7 +72,7 @@ export function deleteDrink(callback?: (data: AxiosResponse<unknown, any>) => vo
     const [{ error, loading }, del] = useAxios<Drink>('', { method: 'DELETE' });
 
     const deleteAsync = async (id: number): Promise<void> => {
-        const response = (await del({}, `/drink/${id}`));
+        const response = (await del({}, `${endpoints.v1.drink}${id}`));
         callback?.(response);
     };
 
