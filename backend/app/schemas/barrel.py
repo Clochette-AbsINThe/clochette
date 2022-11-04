@@ -35,3 +35,7 @@ class Barrel(BarrelBase):
 
     class Config:
         orm_mode = True
+
+
+class TransactionCreate(BarrelBase):
+    drink_id: int = Field(..., alias='fkId')
