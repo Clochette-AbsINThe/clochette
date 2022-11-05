@@ -1,9 +1,10 @@
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import Field, PrivateAttr
 
+from app.core.config import DefaultModel
 from app.schemas.consumable_item import ConsumableItem
 
 
-class ConsumableBase(BaseModel):
+class ConsumableBase(DefaultModel):
     unit_price: float = Field(..., gt=0)
     sell_price: float = Field(..., gt=0)
     empty: bool

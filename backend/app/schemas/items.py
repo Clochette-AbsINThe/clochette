@@ -1,11 +1,11 @@
 import importlib
 from typing import Any
+from pydantic import validator
 
-from pydantic import BaseModel, ValidationError, validator
+from app.core.config import DefaultModel
 
 
-
-class Item(BaseModel):
+class Item(DefaultModel):
     table: str
 
     @validator('table')

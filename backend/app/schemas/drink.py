@@ -1,7 +1,6 @@
-from pydantic import BaseModel
+from app.core.config import DefaultModel
 
-
-class DrinkBase(BaseModel):
+class DrinkBase(DefaultModel):
     name: str
 
 
@@ -20,5 +19,5 @@ class Drink(DrinkBase):
         orm_mode = True
 
 
-class DrinkSearchResults(BaseModel):
+class DrinkSearchResults(DefaultModel):
     results: list[Drink]

@@ -1,12 +1,11 @@
 import datetime
 
-from pydantic import BaseModel
-
+from app.core.config import DefaultModel
 from app.core.types import PaymentMethod
 from app.schemas.items import Item
 
 
-class TransactionBase(BaseModel):
+class TransactionBase(DefaultModel):
     payment_method: PaymentMethod
     sale: bool
 

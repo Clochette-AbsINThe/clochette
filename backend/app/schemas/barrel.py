@@ -1,10 +1,11 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from app.core.config import DefaultModel
 from app.core.types import IconName
 from app.schemas.drink import Drink
 
 
-class BarrelBase(BaseModel):
+class BarrelBase(DefaultModel):
     empty: bool = False
     icon: IconName
     is_mounted: bool = False

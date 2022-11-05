@@ -1,9 +1,10 @@
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import Field, PrivateAttr
 
+from app.core.config import DefaultModel
 from app.schemas.barrel import BarrelInDB
 
 
-class GlassBase(BaseModel):
+class GlassBase(DefaultModel):
     pass
 
 

@@ -1,8 +1,9 @@
-from pydantic import BaseModel, Field, PrivateAttr
+from pydantic import Field, PrivateAttr
 
+from app.core.config import DefaultModel
 from app.schemas.out_of_stock_item import OutOfStockItemBuy, OutOfStockItemSell
 
-class OutOfStockBase(BaseModel):
+class OutOfStockBase(DefaultModel):
     unit_price: float = Field(..., gt=0)
 
 

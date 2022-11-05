@@ -1,7 +1,6 @@
-from pydantic import BaseModel
+from app.core.config import DefaultModel
 
-
-class TreasuryBase(BaseModel):
+class TreasuryBase(DefaultModel):
     total_amount: float
     cash_amount: float
 

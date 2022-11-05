@@ -1,9 +1,10 @@
-from pydantic import BaseModel, Field
+from pydantic import Field
 
+from app.core.config import DefaultModel
 from app.core.types import IconName
 
 
-class OutOfStockItemBase(BaseModel):
+class OutOfStockItemBase(DefaultModel):
     name: str = Field(..., min_length=1)
     icon: IconName
 

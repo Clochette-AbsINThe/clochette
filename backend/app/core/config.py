@@ -4,7 +4,7 @@ from pydantic import AnyHttpUrl, BaseModel, BaseSettings, EmailStr, validator
 import os
 
 
-class CamelModel(BaseModel):
+class DefaultModel(BaseModel):
     class Config:
         alias_generator = camelize
         allow_population_by_field_name = True
