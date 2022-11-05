@@ -21,11 +21,11 @@ class Item(DefaultModel):
         return v
 
     quantity: int
-    item: Any
+    item: dict
 
     @validator('item')
-    def check_table_scheme(cls, v, values, **kwargs):
+    def check_table_scheme(cls, v, values):
         if not 'table' in values.keys():
             return None
         transaction_scheme = importlib.import_module(f'app.schemas.{values["table"]}')
-        return transaction_scheme.TransactionCreate.parse_raw(v) 
+        return transaction_scheme.TransactionCreate.parse_obj(v) 
