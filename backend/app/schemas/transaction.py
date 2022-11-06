@@ -11,7 +11,7 @@ class TransactionBase(DefaultModel):
 
 
 class TransactionCreate(TransactionBase):
-    treasury_id: int = 0
+    treasury_id: int = 1
     datetime: datetime.datetime
     amount: float
 
