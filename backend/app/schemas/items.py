@@ -27,5 +27,5 @@ class Item(DefaultModel):
     def check_table_scheme(cls, v, values):
         if not 'table' in values.keys():
             return None
-        transaction_scheme = importlib.import_module(f'app.schemas.{values["table"]}')
-        return transaction_scheme.TransactionCreate.parse_obj(v) 
+        transaction_scheme = getattr(importlib.import_module(f'app.schemas.{values["table"]}'), f'{values["table"].capitalize()}Create')
+        return transaction_scheme.parse_obj(v)
