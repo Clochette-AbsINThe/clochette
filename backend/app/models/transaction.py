@@ -3,15 +3,8 @@ import enum
 from sqlalchemy import Boolean, Column, DateTime, Enum, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 
+from app.core.types import PaymentMethod
 from app.db.base_class import Base
-
-
-class PaymentMethod(str, enum.Enum):
-    LYDIA = "Lydia"
-    PUMPKIN = "Pumpkin"
-    SEPA = "Virement SEPA"
-    CASH = "Espèces"
-    TPE = "Carte bancaire"
 
 
 class Transaction(Base):

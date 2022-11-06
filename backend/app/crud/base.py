@@ -38,7 +38,7 @@ class CRUDBase(
         return db.query(self.model).filter_by(**kwargs).offset(skip).limit(limit).all()
 
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
-        obj_in_data = jsonable_encoder(obj_in)
+        obj_in_data = jsonable_encoder(obj_in, by_alias=False)
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
         db.commit()

@@ -1,23 +1,29 @@
 import datetime
 
-from pydantic import BaseModel
+from app.core.config import DefaultModel
+from app.core.types import PaymentMethod
+from app.schemas.items import Item
 
-from app.models.transaction import PaymentMethod
 
-
-class TransactionBase(BaseModel):
+class TransactionBase(DefaultModel):
     payment_method: PaymentMethod
-    sale: str
+    sale: bool
 
 
 class TransactionCreate(TransactionBase):
+    treasury_id: int = 1
     datetime: datetime.datetime
     amount: float
+
+
+class TransactionFrontCreate(TransactionBase):
+    datetime: datetime.datetime
+    amount: float
+    items: list[Item]
 
 
 class TransactionUpdate(TransactionBase):
-    datetime: datetime.datetime
-    amount: float
+    pass
 
 
 class Transaction(TransactionBase):

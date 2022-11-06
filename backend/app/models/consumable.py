@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Float, ForeignKey
+from sqlalchemy import Boolean, Column, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
@@ -6,8 +6,9 @@ from app.db.base_class import Base
 
 class Consumable(Base):
     id = Column(Integer, primary_key=True, nullable=False)
-    selling_price = Column(Float, nullable=False)
-    buying_price = Column(Float, nullable=False)
+    sell_price = Column(Float, nullable=False)
+    unit_price = Column(Float, nullable=False)
+    empty = Column(Boolean, nullable=False)
 
     consumable_item_id = Column(Integer, ForeignKey("consumableitem.id"))
     consumable_item = relationship("ConsumableItem", back_populates="consumables")

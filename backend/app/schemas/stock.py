@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from app.core.config import DefaultModel
 
 
-class StockBase(BaseModel):
+class StockBase(DefaultModel):
     pass
 
 

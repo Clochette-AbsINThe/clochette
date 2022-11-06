@@ -1,9 +1,8 @@
-from pydantic import BaseModel
-
+from app.core.config import DefaultModel
 from app.core.types import IconName
 
 
-class ConsumableItemBase(BaseModel):
+class ConsumableItemBase(DefaultModel):
     name: str
     icon: IconName
 

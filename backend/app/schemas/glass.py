@@ -1,8 +1,11 @@
-from pydantic import BaseModel
+from pydantic import Field, PrivateAttr
+
+from app.core.config import DefaultModel
+from app.schemas.barrel import BarrelInDB
 
 
-class GlassBase(BaseModel):
-    price: float
+class GlassBase(DefaultModel):
+    pass
 
 
 class GlassCreate(GlassBase):
@@ -15,9 +18,21 @@ class GlassUpdate(GlassBase):
 
 class Glass(GlassBase):
     id: int
-    transaction_id: int
     barrel_id: int
-    price: float
+    _barrel: BarrelInDB = PrivateAttr(default_factory=BarrelInDB)
+    name: str
+    sell_price: float = Field(..., gt=0)
+
+    def __init__(self, **data):
+        super().__init__(**data)
+        self.name = self._barrel.default_factory().drink.name
+        self.sell_price = self._barrel.default_factory().sell_price
 
     class Config:
         orm_mode = True
+
+class GlassFront(GlassBase):
+    id: int
+    barrel_id: int
+    name: str
+    sell_price: float = Field(..., gt=0)

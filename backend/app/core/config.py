@@ -1,6 +1,14 @@
-from pydantic import AnyHttpUrl, BaseSettings, EmailStr, validator
+from humps import camelize
+from pydantic import AnyHttpUrl, BaseModel, BaseSettings, EmailStr, validator
 
 import os
+
+
+class DefaultModel(BaseModel):
+    class Config:
+        alias_generator = camelize
+        allow_population_by_field_name = True
+
 
 class Settings(BaseSettings):
     API_V1_PREFIX: str = "/api/v1"

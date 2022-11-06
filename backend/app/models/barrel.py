@@ -6,8 +6,8 @@ from app.core.types import IconName
 
 class Barrel(Base):
     id = Column(Integer, primary_key=True, nullable=False)
-    unitPrice = Column(Float, nullable=False)
-    sellPrice = Column(Float, nullable=False)
+    unit_price = Column(Float, nullable=False)
+    sell_price = Column(Float, nullable=False)
     is_mounted = Column(Boolean, nullable=False)
     icon = Column(Enum(IconName), nullable=False)
     empty = Column(Boolean, nullable=False)

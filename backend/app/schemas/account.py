@@ -1,7 +1,7 @@
-from pydantic import BaseModel
+from app.core.config import DefaultModel
 
 
-class AccountBase(BaseModel):
+class AccountBase(DefaultModel):
     username: str
     password: str
     roles: str

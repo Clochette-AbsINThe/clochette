@@ -1,10 +1,11 @@
 from typing import Optional
-from pydantic import BaseModel, Field, root_validator, validator
+from pydantic import Field, root_validator, validator
 
+from app.core.config import DefaultModel
 from app.core.types import IconName
 
 
-class OutOfStockItemBase(BaseModel):
+class OutOfStockItemBase(DefaultModel):
     name: str = Field(..., min_length=1)
     icon: IconName
     sell_price: Optional[float] = Field(default=None, gt=0, alias="sellPrice")
