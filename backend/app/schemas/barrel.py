@@ -14,7 +14,7 @@ class BarrelBase(DefaultModel):
 
 
 class BarrelCreate(BarrelBase):
-    pass
+    drink_id: int = Field(..., alias='fkId')
 
 
 class BarrelUpdate(BarrelBase):
@@ -38,5 +38,5 @@ class Barrel(BarrelBase):
         orm_mode = True
 
 
-class TransactionCreate(BarrelBase):
-    drink_id: int = Field(..., alias='fkId')
+class TransactionCreate(BarrelCreate):
+    pass
