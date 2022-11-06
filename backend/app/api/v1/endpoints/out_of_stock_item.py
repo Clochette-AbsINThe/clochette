@@ -36,7 +36,7 @@ async def create_out_of_stock_item(out_of_stock_item: out_of_stock_item_schema.O
             status_code=400, detail="Out of stock item already exists")
 
     saved_model = out_of_stock_item_schema.OutOfStockItemCreate(
-        **out_of_stock_item.dict())  # Validator will populate buy_or_sell
+        **out_of_stock_item.dict(), buy_or_sell=out_of_stock_item.sell_price is None)
     return out_of_stock_items.create(db, obj_in=saved_model.dict(by_alias=False))
 
 
@@ -51,10 +51,9 @@ async def update_out_of_stock_item_buy(out_of_stock_item_id: int, out_of_stock_i
     if len(test) and test[0].id != old_out_of_stock_item.id:
         raise HTTPException(
             status_code=400, detail="Out of stock item already exists")
-    # If out_of_stock_item.sellPrice is None, set the buy_or_sale key to True, else set it to False
-    # validator can't re-populate buy_or_sell based on the None value of sellPrice
+
     saved_model = out_of_stock_item_schema.OutOfStockItemUpdate(
-        **dict(**out_of_stock_item.dict(), buy_or_sell=out_of_stock_item.sell_price is None))
+        **out_of_stock_item.dict(), buy_or_sell=out_of_stock_item.sell_price is None)
     return out_of_stock_items.update(db, db_obj=old_out_of_stock_item, obj_in=saved_model)
 
 

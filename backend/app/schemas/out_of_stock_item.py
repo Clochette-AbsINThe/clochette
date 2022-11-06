@@ -14,14 +14,7 @@ class OutOfStockItemBase(BaseModel):
 
 
 class OutOfStockItemCreate(OutOfStockItemBase):
-    buy_or_sell: bool = None
-
-    @validator("buy_or_sell", always=True, pre=True)
-    def populate_buy_or_sell(cls, v, values):
-        if values["sell_price"] is None:
-            return True
-        else:
-            return False
+    buy_or_sell: bool
 
 
 class OutOfStockItemUpdate(OutOfStockItemBase):
