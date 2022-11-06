@@ -27,7 +27,7 @@ services:
       - POSTGRES_DB=clochette
       - POSTGRES_USER=clochette
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      #- MIGRATE=True
+      - MIGRATE=True
   
   database:
     image: postgres:14.5-alpine
