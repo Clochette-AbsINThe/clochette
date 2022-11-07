@@ -24,6 +24,7 @@ export interface OutOfStockItemBuy {
     readonly id?: number
     name: string
     icon: IconName
+    sellPrice?: number
 }
 
 // out_of_stock_item/sell/ --> get // Repmli la colonne des hors stocks
