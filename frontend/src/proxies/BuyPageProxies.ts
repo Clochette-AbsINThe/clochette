@@ -102,7 +102,7 @@ export function getOutOfStocks(setItems: (items: OutOfStockItemBuy[]) => void): 
  */
 export function postNewBuyTransaction(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPostTransaction<ItemBuy[]> {
     const [{ loading: loading1, error: error1 }, postTransaction] = useAxios<TransactionType<ItemBuy>>(endpoints.mock.transactionBuy, { method: 'POST' });
-    const [{ loading: loading2, error: error2 }, postOutOfStock] = useAxios<OutOfStockItemBuy>(endpoints.v1.outOfStockItemBuy, { method: 'POST' });
+    const [{ loading: loading2, error: error2 }, postOutOfStock] = useAxios<OutOfStockItemBuy>(endpoints.v1.outOfStockItem, { method: 'POST' });
     const [{ loading: loading3, error: error3 }, postConsumable] = useAxios<ConsumableItem>(endpoints.v1.consumableItem, { method: 'POST' });
     const [{ loading: loading4, error: error4 }, postDrink] = useAxios<Drink>(endpoints.v1.drink, { method: 'POST' });
 
