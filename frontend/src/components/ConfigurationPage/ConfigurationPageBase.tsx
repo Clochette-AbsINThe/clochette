@@ -1,7 +1,7 @@
 import Page404 from '@components/404';
 import Loader from '@components/Loader';
 import type { ConsumableItem, Drink, OutOfStockItemBuy, OutOfStockItemSell } from '@types';
-import type { AxiosError } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import { Toaster } from 'react-hot-toast';
 
@@ -164,4 +164,25 @@ export const getIdFromUrl = (): number | null => {
     if (id === null) return null;
     if ((/^(-|)[0-9]+$/).test(id)) return parseInt(id);
     return null;
+};
+
+export function getErrorMessage(data: AxiosResponse<unknown, any>): string {
+    if (data.status === 422) {
+        const { detail } = data.data as {
+            detail: [{
+                loc: [
+                    string,
+                    number
+                ]
+                msg: string
+                type: string
+            }]
+        };
+        return detail.map((e) => e.msg).join(' ').charAt(0).toUpperCase() + detail.map((e) => e.msg).join(' ').slice(1);
+    } else if (data.status === 500) {
+        return 'Erreur serveur';
+    } else {
+        const { detail } = data.data as { detail: string };
+        return detail;
+    }
 };

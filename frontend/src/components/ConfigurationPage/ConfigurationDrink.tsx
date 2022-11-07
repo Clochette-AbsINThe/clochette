@@ -40,7 +40,7 @@ export default function ConfigurationDrink(): JSX.Element {
             toast.success(`${item.name} ajouté avec succès !`);
             changeURLwithId(item.id as number);
         } else {
-            const { detail } = data.data as { detail: string };
+            const detail = getErrorMessage(data);
             toast.error(`Erreur lors de l'ajout de ${drink.name}. ${detail}`);
         }
     });
@@ -50,7 +50,7 @@ export default function ConfigurationDrink(): JSX.Element {
             const item = data.data as Drink;
             toast.success(`${item.name} modifié avec succès !`);
         } else {
-            const { detail } = data.data as { detail: string };
+            const detail = getErrorMessage(data);
             toast.error(`Erreur lors de la modification de ${drink.name}. ${detail}`);
         }
     });
@@ -61,7 +61,7 @@ export default function ConfigurationDrink(): JSX.Element {
             handleGoBack();
             toast.success(`${item.name} supprimé avec succès !`);
         } else {
-            const { detail } = data.data as { detail: string };
+            const detail = getErrorMessage(data);
             toast.error(`Erreur lors de la suppression de ${drink.name}. ${detail}`);
         }
     });
@@ -92,7 +92,7 @@ export default function ConfigurationDrink(): JSX.Element {
             makeApiCalls();
             return;
         }
-        if (isNaN(id)) return; // Initial state = NaN, while id is not set do nothing
+        if (isNaN(id)) return; // Initial state = NaN, while id is not set, do nothing
         if (id === -1) {
             setDrink({ name: '' }); // Set a default drink without an id attribute
         } else {
@@ -110,23 +110,21 @@ export default function ConfigurationDrink(): JSX.Element {
             loadingAllItems={loadingGetAllDrinks}
         >
             <>
-                {displayDrinks.map((drinkItem) => {
-                    return (
-                        <div
-                            key={drinkItem.id}
-                            className='flex flex-col space-y-5 p-4 bg-gray-50 rounded-lg shadow-md dark:bg-gray-700'
-                        >
-                            <div className='flex justify-start items-center'>
-                                <div>{getIcon('Beer', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
-                                <div>{getIcon('Barrel', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
-                                <span className='text-center text-xl ml-4'>{drinkItem.name}</span>
-                            </div>
-                            <div className='flex grow justify-end space-x-5'>
-                                <button className='btn-primary' aria-label='edit' onClick={() => changeURLwithId(drinkItem.id as number)}>Editer</button>
-                            </div>
+                {displayDrinks.map((drinkItem) =>
+                    <div
+                        key={drinkItem.id}
+                        className='flex flex-col space-y-5 p-4 bg-gray-50 rounded-lg shadow-md dark:bg-gray-700'
+                    >
+                        <div className='flex justify-start items-center'>
+                            <div>{getIcon('Beer', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
+                            <div>{getIcon('Barrel', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
+                            <span className='text-center text-xl ml-4'>{drinkItem.name}</span>
                         </div>
-                    );
-                })}
+                        <div className='flex grow justify-end space-x-5'>
+                            <button className='btn-primary self-end' aria-label='edit' onClick={() => changeURLwithId(drinkItem.id as number)}>Editer</button>
+                        </div>
+                    </div>
+                )}
             </>
         </ConfigurationPageHeader>
     );
