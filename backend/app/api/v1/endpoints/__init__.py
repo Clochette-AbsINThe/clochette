@@ -7,4 +7,5 @@ __all__ = [
     'out_of_stock_item',
     'out_of_stock',
     'transaction',
+    'treasury',
 ]

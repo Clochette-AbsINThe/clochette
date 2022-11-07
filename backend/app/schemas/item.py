@@ -1,6 +1,6 @@
 import importlib
-from typing import Any
-from pydantic import validator
+
+from pydantic import Field, validator
 
 from app.core.config import DefaultModel
 
@@ -20,12 +20,12 @@ class Item(DefaultModel):
             raise ValueError(f'Table {v} does not have a transaction scheme')
         return v
 
-    quantity: int
-    item: Any
+    quantity: int = Field(..., gt=0)
+    item: dict
 
     @validator('item')
-    def check_table_scheme(cls, v, values, **kwargs):
+    def check_table_scheme(cls, v, values):
         if not 'table' in values.keys():
             return None
-        transaction_scheme = importlib.import_module(f'app.schemas.{values["table"]}')
-        return transaction_scheme.TransactionCreate.parse_raw(v) 
+        transaction_scheme = getattr(importlib.import_module(f'app.schemas.{values["table"]}'), f'{values["table"].capitalize()}Create')
+        return transaction_scheme.parse_obj(v)

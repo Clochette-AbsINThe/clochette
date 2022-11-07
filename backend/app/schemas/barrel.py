@@ -23,8 +23,8 @@ class BarrelUpdate(BarrelBase):
 
 class BarrelInDB(BarrelBase):
     id: int
-    drink_id: int
-    drink: Drink
+    drink_id: int | None
+    drink: Drink | None
 
     class Config:
         orm_mode = True
@@ -32,11 +32,11 @@ class BarrelInDB(BarrelBase):
 
 class Barrel(BarrelBase):
     id: int
-    drink_id: int
+    drink_id: int | None
 
     class Config:
         orm_mode = True
 
 
-class TransactionCreate(BarrelBase):
-    drink_id: int = Field(..., alias='fkId')
+class TransactionCreate(BarrelCreate):
+    pass

@@ -11,6 +11,12 @@ class TransactionBase(DefaultModel):
 
 
 class TransactionCreate(TransactionBase):
+    treasury_id: int = 1
+    datetime: datetime.datetime
+    amount: float
+
+
+class TransactionFrontCreate(TransactionBase):
     datetime: datetime.datetime
     amount: float
     items: list[Item]
