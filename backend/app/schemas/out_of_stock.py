@@ -1,7 +1,8 @@
 from pydantic import Field, PrivateAttr
 
 from app.core.config import DefaultModel
-from app.schemas.out_of_stock_item import OutOfStockItemBuy, OutOfStockItemSell
+from app.schemas.out_of_stock_item import OutOfStockItem
+
 
 class OutOfStockBase(DefaultModel):
     unit_price: float = Field(..., gt=0)
@@ -18,7 +19,7 @@ class OutOfStockUpdate(OutOfStockBase):
 class OutOfStockBuy(OutOfStockBase):
     id: int
     item_id: int
-    _item: OutOfStockItemBuy = PrivateAttr(default_factory=OutOfStockItemBuy)
+    _item: OutOfStockItem = PrivateAttr(default_factory=OutOfStockItem)
     name: str
     icon: str
 
@@ -34,7 +35,7 @@ class OutOfStockBuy(OutOfStockBase):
 class OutOfStockSell(OutOfStockBase):
     id: int
     item_id: int
-    _item: OutOfStockItemSell = PrivateAttr(default_factory=OutOfStockItemSell)
+    _item: OutOfStockItem = PrivateAttr(default_factory=OutOfStockItem)
     name: str
     icon: str
     sell_price: float = Field(..., gt=0)

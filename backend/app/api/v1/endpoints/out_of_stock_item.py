@@ -28,7 +28,7 @@ async def read_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)) 
 
 
 @router.post("/", response_model=out_of_stock_item_schema.OutOfStockItem, response_model_exclude_none=True)
-async def create_out_of_stock_item(out_of_stock_item: out_of_stock_item_schema.OutOfStockItemBase, db=Depends(get_db)) -> dict:
+async def create_out_of_stock_item(out_of_stock_item: out_of_stock_item_schema.OutOfStockItemCreateFront, db=Depends(get_db)) -> dict:
     test = out_of_stock_items.query(
         db, limit=1, name=out_of_stock_item.name, buy_or_sell=out_of_stock_item.sell_price is None)
     if len(test) > 0:
@@ -41,7 +41,7 @@ async def create_out_of_stock_item(out_of_stock_item: out_of_stock_item_schema.O
 
 
 @router.put("/{out_of_stock_item_id}", response_model=out_of_stock_item_schema.OutOfStockItem, response_model_exclude_none=True)
-async def update_out_of_stock_item_buy(out_of_stock_item_id: int, out_of_stock_item: out_of_stock_item_schema.OutOfStockItemBase, db=Depends(get_db)):
+async def update_out_of_stock_item(out_of_stock_item_id: int, out_of_stock_item: out_of_stock_item_schema.OutOfStockItemUpdateFront, db=Depends(get_db)):
     test = out_of_stock_items.query(
         db, limit=1, name=out_of_stock_item.name, buy_or_sell=out_of_stock_item.sell_price is None)
     old_out_of_stock_item = out_of_stock_items.read(db, out_of_stock_item_id)
@@ -58,7 +58,7 @@ async def update_out_of_stock_item_buy(out_of_stock_item_id: int, out_of_stock_i
 
 
 @router.delete("/{out_of_stock_item_id}", response_model=out_of_stock_item_schema.OutOfStockItem, response_model_exclude_none=True)
-async def delete_out_of_stock_item_buy(out_of_stock_item_id: int, db=Depends(get_db)):
+async def delete_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)):
     out_of_stock_item = out_of_stock_items.read(db, out_of_stock_item_id)
     if out_of_stock_item is None:
         raise HTTPException(
