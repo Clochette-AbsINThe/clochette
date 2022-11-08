@@ -111,6 +111,7 @@ export default function Form(props: FormProps): JSX.Element {
                     value={isNaN(quantity) ? '' : quantity}
                     onChange={(e) => setQuantity(e.target.value === '' ? NaN : (parseInt(e.target.value) > 0 ? parseInt(e.target.value) : 1))}
                     onBlur={() => setQuantity(isNaN(quantity) ? 1 : quantity)}
+                    min={1}
                 />
             </div>
             {props.item.item.unitPrice !== undefined && (
@@ -135,6 +136,7 @@ export default function Form(props: FormProps): JSX.Element {
                                 aria-label='unitPrice'
                                 className='input w-24'
                                 step={0.01}
+                                min={0.01}
                                 disabled={priceSelected === 'price_total'}
                                 onChange={(e) => setUnitPrice(e.target.value === '' ? NaN : (Number(e.target.value) > 0 ? Number(e.target.value) : 0))}
                                 value={isNaN(unitPrice) ? '' : unitPrice}
@@ -158,6 +160,7 @@ export default function Form(props: FormProps): JSX.Element {
                                 name='totalPrice'
                                 aria-label='totalPrice'
                                 className='input w-24'
+                                min={0.01}
                                 step={0.01}
                                 disabled={priceSelected === 'price_unit'}
                                 onChange={(e) => setTotalPrice(e.target.value === '' ? NaN : (Number(e.target.value) > 0 ? Number(e.target.value) : 0))}
@@ -180,6 +183,7 @@ export default function Form(props: FormProps): JSX.Element {
                             name='sellPrice'
                             aria-label='sellPrice'
                             className='input w-24'
+                            min={0.01}
                             step={0.01}
                             onChange={(e) => setSellPrice(e.target.value === '' ? NaN : (Number(e.target.value) > 0 ? Number(e.target.value) : 0))}
                             value={isNaN(sellPrice) ? '' : sellPrice}
