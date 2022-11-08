@@ -29,7 +29,10 @@
             ],
             "@types": [
                 "src/types/types"
-            ]
+            ],
+            "@endpoints": [
+                "src/types/endpoints"
+            ],
         }
     }
 }
