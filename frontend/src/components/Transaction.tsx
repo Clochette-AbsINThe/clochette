@@ -165,7 +165,9 @@ export default function Transaction(): JSX.Element {
             <TransactionSwitch changeTransactionType={handleChangeTransactionType} startTransactionType={transactionType} />
             {renderTransaction()}
             <div className='flex justify-end mt-3'>
-                <div className='text-2xl font-bold mr-8' aria-label='total-price'>Total: {totalPrice}€</div>
+                <div className='text-2xl font-bold mr-8' aria-label='total-price'>
+                    Total: <span>{totalPrice}</span>€€
+                </div>
 
                 <PopupWindows trigger={{ className: 'btn-primary', content: 'Valider' }} onOpen={popupWindowOpen} callback={(state) => setPopupWindowOpen(state)}>
                     <div className='flex flex-col flex-grow'>
