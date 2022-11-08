@@ -1,10 +1,10 @@
 /* eslint-disable n/no-callback-literal */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
+import { endpoints } from '@endpoints';
 import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyPostTransaction } from '@proxies/Config';
 import type { Barrel, Consumable, ConsumableItem, Drink, ItemBuy, OutOfStockItemBuy, PaymentMethod, TransactionType } from '@types';
 import type { AxiosError, AxiosResponse } from 'axios';
-import { endpoints } from 'src/types/endpoints';
 
 /**
  * This function is used to retrieve the EcoCup item
@@ -101,7 +101,7 @@ export function getOutOfStocks(setItems: (items: OutOfStockItemBuy[]) => void): 
  * @returns A function to make the API call and the loading state
  */
 export function postNewBuyTransaction(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPostTransaction<ItemBuy[]> {
-    const [{ loading: loading1, error: error1 }, postTransaction] = useAxios<TransactionType<ItemBuy>>(endpoints.mock.transactionBuy, { method: 'POST' });
+    const [{ loading: loading1, error: error1 }, postTransaction] = useAxios<TransactionType<ItemBuy>>(endpoints.v1.transaction, { method: 'POST' });
     const [{ loading: loading2, error: error2 }, postOutOfStock] = useAxios<OutOfStockItemBuy>(endpoints.v1.outOfStockItem, { method: 'POST' });
     const [{ loading: loading3, error: error3 }, postConsumable] = useAxios<ConsumableItem>(endpoints.v1.consumableItem, { method: 'POST' });
     const [{ loading: loading4, error: error4 }, postDrink] = useAxios<Drink>(endpoints.v1.drink, { method: 'POST' });
@@ -115,7 +115,7 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<unknown, a
             const item = transactionItems[i];
             let fkID = item.item.fkID;
             switch (item.table) {
-                case 'outofstock': {
+                case 'out_of_stock': {
                     if (item.item.fkID === -1) {
                         const dataRes = (await postOutOfStock({ data: { name: item.item.name, icon: item.item.icon } })).data;
                         fkID = dataRes.id as number;
@@ -162,10 +162,10 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<unknown, a
 
 
         const data: TransactionType<ItemBuy> = {
-            dateTime: date.toISOString(),
+            datetime: date.toISOString(),
             sale: false,
             paymentMethod,
-            totalPrice,
+            amount: totalPrice,
             items: newItems
         };
         const response = (await postTransaction({ data }));
