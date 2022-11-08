@@ -1,10 +1,10 @@
 /* eslint-disable n/no-callback-literal */
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
+import { endpoints } from '@endpoints';
 import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyPostTransaction } from '@proxies/Config';
 import type { APIItem, Consumable, Glass, ItemSell, ItemTransactionResponse, OutOfStockItemSell, OutOfStockSell, PaymentMethod, TransactionType } from '@types';
 import type { AxiosError, AxiosResponse } from 'axios';
-import { endpoints } from 'src/types/endpoints';
 
 /**
  * This function is used to fill glass column in the sale page
@@ -29,7 +29,7 @@ export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStockSell
         }));
         const EcoCup = dataOutOfStock.find((item) => item.name === 'EcoCup') as OutOfStockItemSell;
         const OutOfStockItem: APIItem<OutOfStockSell> = {
-            table: 'outofstock',
+            table: 'out_of_stock',
             quantity: 0,
             item: {
                 ...EcoCup,
@@ -61,7 +61,7 @@ export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStockSell>>) 
         setItem([]);
         const { data } = (await get());
         const newItem: Array<APIItem<OutOfStockSell>> = data.map((item) => ({
-            table: 'outofstock',
+            table: 'out_of_stock',
             quantity: 0,
             item: {
                 ...item,
@@ -110,7 +110,7 @@ export function getConsumables(setItem: (value: Array<APIItem<Consumable>>) => v
  * @returns A function to make the API call and the loading state
  */
 export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPostTransaction<ItemSell[]> {
-    const [{ loading, error }, postTransaction] = useAxios<TransactionType<ItemTransactionResponse>>(endpoints.mock.transactionSell, { method: 'POST' });
+    const [{ loading, error }, postTransaction] = useAxios<TransactionType<ItemTransactionResponse>>(endpoints.v1.transaction, { method: 'POST' });
 
     const postDataAsync = async (transactionItems: ItemSell[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): Promise<void> => {
         const newItems: ItemSell[] = [];
@@ -129,7 +129,7 @@ export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, 
                         } as Consumable
                     });
                     break;
-                case 'outofstock': {
+                case 'out_of_stock': {
                     newItems.push(item);
                     break;
                 }
@@ -137,10 +137,10 @@ export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, 
         }
 
         const data: TransactionType<ItemSell> = {
-            dateTime: date.toISOString(),
+            datetime: date.toISOString(),
             sale: true,
             paymentMethod,
-            totalPrice,
+            amount: totalPrice,
             items: newItems
         };
         const response = (await postTransaction({ data }));
