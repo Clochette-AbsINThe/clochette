@@ -1,4 +1,4 @@
-from pydantic import Field, PrivateAttr
+from pydantic import Field, validator
 
 from app.core.config import DefaultModel
 from app.schemas.out_of_stock_item import OutOfStockItemBuy, OutOfStockItemSell
@@ -11,6 +11,10 @@ class OutOfStockCreate(OutOfStockBase):
     pass
 
 
+class TransactionCreate(OutOfStockBase):
+    pass
+
+
 class OutOfStockUpdate(OutOfStockBase):
     pass
 
@@ -18,14 +22,18 @@ class OutOfStockUpdate(OutOfStockBase):
 class OutOfStockBuy(OutOfStockBase):
     id: int
     item_id: int
-    _item: OutOfStockItemBuy = PrivateAttr(default_factory=OutOfStockItemBuy)
-    name: str
-    icon: str
+    item: OutOfStockItemBuy = Field(..., exclude=True)
+    name: str | None
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        self.name = self._item.default_factory().name
-        self.icon = self._item.default_factory().icon
+    @validator('name')
+    def populate_name(cls, v, values):
+        return values['item'].name
+
+    icon: str | None
+
+    @validator('icon')
+    def populate_icon(cls, v, values):
+        return values['item'].icon
 
     class Config:
         orm_mode = True
@@ -34,16 +42,20 @@ class OutOfStockBuy(OutOfStockBase):
 class OutOfStockSell(OutOfStockBase):
     id: int
     item_id: int
-    _item: OutOfStockItemSell = PrivateAttr(default_factory=OutOfStockItemSell)
-    name: str
-    icon: str
-    sell_price: float = Field(..., gt=0)
+    item: OutOfStockItemSell = Field(..., exclude=True)
+    name: str | None
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        self.name = self._item.default_factory().name
-        self.icon = self._item.default_factory().icon
-        self.sell_price = self._item.default_factory().sell_price
+    @validator('name')
+    def populate_name(cls, v, values):
+        return values['item'].name
+    
+    icon: str | None
+
+    @validator('icon')
+    def populate_icon(cls, v, values):
+        return values['item'].icon
+
+    sell_price: float = Field(..., gt=0)
 
     class Config:
         orm_mode = True
