@@ -1,7 +1,8 @@
 from pydantic import Field, validator
 
 from app.core.config import DefaultModel
-from app.schemas.out_of_stock_item import OutOfStockItemBuy, OutOfStockItemSell
+from app.schemas.out_of_stock_item import OutOfStockItem
+
 
 class OutOfStockBase(DefaultModel):
     unit_price: float = Field(..., gt=0)
@@ -23,6 +24,7 @@ class OutOfStockBuy(OutOfStockBase):
     id: int
     item_id: int
     item: OutOfStockItemBuy = Field(..., exclude=True)
+    
     name: str | None
 
     @validator('name')
@@ -43,6 +45,7 @@ class OutOfStockSell(OutOfStockBase):
     id: int
     item_id: int
     item: OutOfStockItemSell = Field(..., exclude=True)
+    
     name: str | None
 
     @validator('name')
