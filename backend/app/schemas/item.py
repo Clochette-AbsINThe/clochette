@@ -5,6 +5,10 @@ from pydantic import Field, validator
 from app.core.config import DefaultModel
 
 
+def toPascalCase(string_data: str):
+    return string_data.replace("_", " ").title().replace(" ", "")
+
+
 class Item(DefaultModel):
     table: str
 
@@ -27,5 +31,6 @@ class Item(DefaultModel):
     def check_table_scheme(cls, v, values):
         if not 'table' in values.keys():
             return None
-        transaction_scheme = getattr(importlib.import_module(f'app.schemas.{values["table"]}'), f'{values["table"].capitalize()}Create')
+        transaction_scheme = getattr(importlib.import_module(
+            f'app.schemas.{values["table"]}'), f'{toPascalCase(values["table"])}Create')
         return transaction_scheme.parse_obj(v)

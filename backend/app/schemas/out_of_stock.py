@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import Field, validator
 
 from app.core.config import DefaultModel
@@ -5,7 +6,9 @@ from app.schemas.out_of_stock_item import OutOfStockItem
 
 
 class OutOfStockBase(DefaultModel):
-    unit_price: float = Field(..., gt=0)
+    item_id: int = Field(..., alias='fkID')
+
+    unit_price: Optional[float] = Field(default=None, gt=0)
 
 
 class OutOfStockCreate(OutOfStockBase):
@@ -20,45 +23,27 @@ class OutOfStockUpdate(OutOfStockBase):
     pass
 
 
-class OutOfStockBuy(OutOfStockBase):
+class OutOfStock(OutOfStockBase):
     id: int
-    item_id: int
-    item: OutOfStockItemBuy = Field(..., exclude=True)
-    
+    item: OutOfStockItem = Field(..., exclude=True)
+
     name: str | None
 
-    @validator('name')
+    @validator('name', always=True)
     def populate_name(cls, v, values):
         return values['item'].name
 
     icon: str | None
 
-    @validator('icon')
+    @validator('icon', always=True)
     def populate_icon(cls, v, values):
         return values['item'].icon
 
-    class Config:
-        orm_mode = True
+    sell_price: Optional[float] = Field(default=None)
 
-
-class OutOfStockSell(OutOfStockBase):
-    id: int
-    item_id: int
-    item: OutOfStockItemSell = Field(..., exclude=True)
-    
-    name: str | None
-
-    @validator('name')
-    def populate_name(cls, v, values):
-        return values['item'].name
-    
-    icon: str | None
-
-    @validator('icon')
-    def populate_icon(cls, v, values):
-        return values['item'].icon
-
-    sell_price: float = Field(..., gt=0)
+    @validator('sell_price', always=True)
+    def populate_sell_price(cls, v, values):
+        return values['item'].sell_price
 
     class Config:
         orm_mode = True
