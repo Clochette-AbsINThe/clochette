@@ -2,7 +2,7 @@ import datetime
 
 from app.core.config import DefaultModel
 from app.core.types import PaymentMethod
-from app.schemas.items import Item
+from app.schemas.item import Item
 
 
 class TransactionBase(DefaultModel):

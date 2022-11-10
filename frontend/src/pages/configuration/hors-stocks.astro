@@ -1,0 +1,12 @@
+---
+import ConfigurationOutOfStockItem from '@components/ConfigurationPage/ConfigurationOutOfStockItem';
+import Base from '@layouts/base.astro';
+---
+
+<Base
+    head={{
+        title: 'Hors stocks',
+        description: 'Configuration des produits hors stocks'
+    }}>
+    <ConfigurationOutOfStockItem client:load />
+</Base>

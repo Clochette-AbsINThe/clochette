@@ -165,7 +165,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                             loading={loadingExtras}
                             error={errorExtras}
                             handleModal={handleModal}
-                            table={'outofstock'}
+                            table={'out_of_stock'}
                         />
                     </div>
                     <div className='flex flex-col'>
@@ -180,7 +180,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                                     <h1 className='mr-6 text-2xl'>1€</h1>
                                 </div>
                                 <div className="flex flex-grow justify-end self-center cursor-pointer">
-                                    <button onClick={() => handleModal(ecoCup, 'outofstock')} aria-label='add-ecocup'>
+                                    <button onClick={() => handleModal(ecoCup, 'out_of_stock')} aria-label='add-ecocup'>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1} stroke="currentColor" className="w-10 h-10">
                                             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
@@ -252,7 +252,7 @@ export function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, 
                 quantity: 1,
                 table: 'barrel'
             };
-        case 'outofstock':
+        case 'out_of_stock':
             return {
                 item: {
                     fkID: item.id as number,
@@ -261,7 +261,7 @@ export function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, 
                     icon: (item as OutOfStockItemBuy).icon
                 },
                 quantity: 1,
-                table: 'outofstock'
+                table: 'out_of_stock'
             };
         default:
             return {
@@ -282,8 +282,8 @@ export function updateFkID(barrels: Drink[], consommables: ConsumableItem[], out
     if (ecoCup === undefined) return selectedItems;
     const fakeBarrels = barrels.map((barrel) => createNewItem(barrel, 'barrel'));
     const fakeConsommables = consommables.map((consommable) => createNewItem(consommable, 'consumable'));
-    const fakeOutOfStocks = outOfStocks.map((outOfStock) => createNewItem(outOfStock, 'outofstock'));
-    const fakeEcoCup = createNewItem(ecoCup, 'outofstock');
+    const fakeOutOfStocks = outOfStocks.map((outOfStock) => createNewItem(outOfStock, 'out_of_stock'));
+    const fakeEcoCup = createNewItem(ecoCup, 'out_of_stock');
     const allItems = [...fakeBarrels, ...fakeConsommables, ...fakeOutOfStocks, fakeEcoCup];
     return selectedItems.map((item) => {
         const newItem = allItems.find((i) => i.item.name === item.item.name && i.table === item.table && item.item.fkID === -1);

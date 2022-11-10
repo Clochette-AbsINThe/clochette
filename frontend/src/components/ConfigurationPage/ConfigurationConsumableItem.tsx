@@ -40,7 +40,7 @@ export default function ConfigurationConsumableItem(): JSX.Element {
             toast.success(`${item.name} ajouté avec succès !`);
             changeURLwithId(item.id as number);
         } else {
-            const { detail } = data.data as { detail: string };
+            const detail = getErrorMessage(data);
             toast.error(`Erreur lors de l'ajout de ${consumableItem.name}. ${detail}`);
         }
     });
@@ -50,7 +50,7 @@ export default function ConfigurationConsumableItem(): JSX.Element {
             const item = data.data as ConsumableItem;
             toast.success(`${item.name} modifié avec succès !`);
         } else {
-            const { detail } = data.data as { detail: string };
+            const detail = getErrorMessage(data);
             toast.error(`Erreur lors de la modification de ${consumableItem.name}. ${detail}`);
         }
     });
@@ -61,7 +61,7 @@ export default function ConfigurationConsumableItem(): JSX.Element {
             toast.success(`${item.name} supprimé avec succès !`);
             handleGoBack();
         } else {
-            const { detail } = data.data as { detail: string };
+            const detail = getErrorMessage(data);
             toast.error(`Erreur lors de la suppression de ${consumableItem.name}. ${detail}`);
         }
     });

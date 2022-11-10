@@ -12,6 +12,10 @@ class GlassCreate(GlassBase):
     pass
 
 
+class TransactionCreate(GlassBase):
+    pass
+
+
 class GlassUpdate(GlassBase):
     pass
 

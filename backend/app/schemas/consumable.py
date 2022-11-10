@@ -14,6 +14,10 @@ class ConsumableCreate(ConsumableBase):
     pass
 
 
+class TransactionCreate(ConsumableBase):
+    pass
+
+
 class ConsumableUpdate(ConsumableBase):
     pass
 

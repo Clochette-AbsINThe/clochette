@@ -1,4 +1,4 @@
-export type TableData = 'outofstock' | 'glass' | 'barrel' | 'consumable';
+export type TableData = 'out_of_stock' | 'glass' | 'barrel' | 'consumable';
 export type PaymentMethod = 'CB' | 'Espèces' | 'Lydia';
 export type IconName = 'Glass' | 'Beer' | 'Food' | 'Soft' | 'Barrel' | 'Misc';
 
@@ -24,6 +24,7 @@ export interface OutOfStockItemBuy {
     readonly id?: number
     name: string
     icon: IconName
+    sellPrice?: number
 }
 
 // out_of_stock_item/sell/ --> get // Repmli la colonne des hors stocks
@@ -107,8 +108,8 @@ export type ItemTransactionResponse = APIItem<Barrel | Glass | OutOfStockSell | 
 // transaction/ --> post // Ajoute une nouvelle transaction dans la base de données
 export interface TransactionType<T> {
     readonly id?: number
-    dateTime: string
-    totalPrice: number
+    datetime: string
+    amount: number
     sale: boolean // true = vente, false = achat
     paymentMethod: PaymentMethod
     items: T[]

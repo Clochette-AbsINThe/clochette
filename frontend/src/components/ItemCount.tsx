@@ -29,7 +29,7 @@ export default function ItemCount(props: ItemCountProps): JSX.Element {
     };
 
     return (
-        <div className="flex m-4 items-center h-max rounded-xl bg-[#70707016] p-3 md:max-w-[33vw] max-w-full flex-wrap shadow-md">
+        <div className="flex m-4 items-center h-max rounded-xl bg-[#70707016] p-3 md:max-w-[33vw] max-w-full flex-wrap shadow-md opacity-0 animate-fade-in">
             <div className="flex flex-grow-[10] items-center">
                 {props.item.item.icon && getIcon(props.item.item.icon, 'w-10 h-10 dark:text-white ml-2 text-black')}
                 <h1 className='grow lg:text-3xl mx-5 text-xl'>{props.item.item.name}</h1>

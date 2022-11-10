@@ -10,7 +10,8 @@ const config: Config = {
         '^@include/(.*)$': '<rootDir>/src/layouts/include/$1',
         '^@hooks/(.*)$': '<rootDir>/src/hooks/$1',
         '^@proxies/(.*)$': '<rootDir>/src/proxies/$1',
-        '^@types': '<rootDir>/src/types/types.ts'
+        '^@types': '<rootDir>/src/types/types.ts',
+        '^@endpoints': '<rootDir>/src/types/endpoints.ts'
     },
     testEnvironment: 'jsdom',
     setupFilesAfterEnv: ['<rootDir>/tests/setupTests.ts'],

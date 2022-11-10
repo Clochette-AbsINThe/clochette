@@ -1,9 +1,9 @@
 /* eslint-disable n/no-callback-literal */
+import { endpoints } from '@endpoints';
 import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyId, IProxyPost } from '@proxies/Config';
 import type { Drink } from '@types';
 import type { AxiosError, AxiosResponse } from 'axios';
-import { endpoints } from 'src/types/endpoints';
 
 export function getDrinks(setItem: (value: Drink[]) => void): IProxy {
     const [{ error, loading }, get] = useAxios<Drink[]>(endpoints.v1.drink);
