@@ -23,7 +23,7 @@ api_router = APIRouter(
 @app.on_event("startup")
 async def run_migrations():
     # Wait for db to start
-    if os.environ.get("MIGRATE") != None:
+    if os.environ.get("MIGRATE") is not None:
         while True:
             try:
                 conn = psycopg2.connect(
@@ -43,6 +43,7 @@ async def run_migrations():
                 cur.execute(
                     "DROP DATABASE IF EXISTS {db};".format(
                         db=settings.POSTGRES_DB
+                        
                     )
                 )
                 print("Database {db} dropped".format(db=settings.POSTGRES_DB))
