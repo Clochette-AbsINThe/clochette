@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.crud.crud_transaction import transaction as transactions
 from app.dependencies import get_db
@@ -20,9 +20,20 @@ async def create_transaction(transaction: transaction_schema.TransactionFrontCre
 
 @router.get("/{transaction_id}", response_model=transaction_schema.Transaction)
 async def read_transaction(transaction_id: int, db=Depends(get_db)) -> dict:
-    return transactions.read(db, transaction_id=transaction_id)
+    transaction = transactions.read(db, id=transaction_id)
+    if not transaction:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transaction not found"
+        )
+    return transaction
 
 
 @router.delete("/{transaction_id}", response_model=transaction_schema.Transaction)
 async def delete_transaction(transaction_id: int, db=Depends(get_db)) -> dict:
-    return transactions.delete(db, transaction_id=transaction_id)
+    if not transactions.read(db, id=transaction_id):
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Transaction not found"
+        )
+    return transactions.delete(db, id=transaction_id)
