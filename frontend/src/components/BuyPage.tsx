@@ -247,7 +247,8 @@ export function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, 
                     name: item.name,
                     unitPrice: 0,
                     sellPrice: 0,
-                    icon: 'Barrel'
+                    icon: 'Barrel',
+                    empty: false
                 },
                 quantity: 1,
                 table: 'barrel'
@@ -270,7 +271,8 @@ export function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, 
                     name: item.name,
                     unitPrice: 0,
                     sellPrice: 0,
-                    icon: (item as ConsumableItem).icon
+                    icon: (item as ConsumableItem).icon,
+                    empty: false
                 },
                 quantity: 1,
                 table: 'consumable'
