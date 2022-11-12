@@ -6,8 +6,11 @@ interface IconProps {
 
 const BeerIcon = (props: IconProps): JSX.Element => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className={props.className} fill="currentColor" strokeWidth={0} stroke="currenColor" aria-label='icon' data-testid='Beer'>
-            <path d="M115.2 133.3C119.8 130.2 125 128.8 130.2 128.8c8.338-.002 16.79 3.602 23.28 9.684C167.8 151.8 186.9 160 207.1 160s40.23-8.188 54.49-21.54c6.494-6.08 14.94-9.684 23.28-9.684c5.225 0 10.4 1.412 15.03 4.52C310.9 140 322.9 144 335.1 144c39.88 0 71.24-36.47 62.54-77.88c-4.861-23.15-23.39-42.46-46.36-48.12C346.7 16.64 341.3 16 335.1 16c-11.1 0-23.17 3.338-32.71 9.117c-5.84 3.537-12.22 5.328-18.49 5.328c-8.049 0-15.93-2.943-22.33-8.926C248.2 8.178 229.1 0 207.1 0S167.8 8.178 153.5 21.52C147.1 27.5 139.2 30.45 131.2 30.45c-6.277 0-12.65-1.791-18.49-5.328C103.2 19.34 91.1 16 80 16c-5.258-.002-10.67 .6406-16.18 1.998c-22.96 5.658-41.5 24.97-46.36 48.12C8.761 107.5 40.12 144 79.1 144C93.06 144 105.1 140 115.2 133.3zM33.12 69.4c3.625-17.26 17.5-31.68 34.53-35.87C71.78 32.52 75.93 31.1 80 32c8.629 0 17.07 2.352 24.42 6.803C112.7 43.8 121.9 46.45 131.2 46.45c12.32 0 24.13-4.703 33.26-13.24C176.3 22.11 191.8 16 207.1 16S239.7 22.11 251.5 33.2c9.125 8.541 20.94 13.24 33.26 13.24c9.264 0 18.53-2.643 26.78-7.643C318.9 34.35 327.4 32 335.1 32c4.068 0 8.225 .5156 12.35 1.533c17.03 4.195 30.9 18.61 34.53 35.87c3.121 14.86-.2832 29.35-9.588 40.82C364.1 121.5 350.5 128 335.1 128c-9.4 0-18.49-2.764-26.28-7.994c-7.053-4.732-15.33-7.232-23.95-7.232c-12.24 0-24.71 5.104-34.22 14.01C239.7 137.9 224.2 144 207.1 144s-31.7-6.117-43.55-17.22C154.9 117.9 142.5 112.8 130.2 112.8c-8.613 0-16.89 2.5-23.95 7.232C98.49 125.2 89.4 128 79.1 128C65.47 128 51.88 121.5 42.71 110.2C33.4 98.76 29.1 84.26 33.12 69.4zM135.1 232v208c0 4.422 3.579 8 8.001 8s7.999-3.578 7.999-8v-208c0-4.422-3.585-8-8.007-8S135.1 227.6 135.1 232zM439.1 160h-64c-4.418 0-8 3.582-8 8V448c0 26.51-21.49 48-48 48H95.1c-26.51 0-48-21.49-48-48V168c0-4.418-3.582-8-8-8s-8 3.582-8 8L31.1 448c0 35.35 28.65 64 64 64h223.1c35.35 0 64-28.65 64-64l-.0006-11.05l56.21-28.1c24.39-12.19 39.79-37.12 39.79-64.39V200C479.1 177.9 462.1 160 439.1 160zM463.1 344.5c0 21.34-11.86 40.53-30.95 50.08l-49.05 24.52V176h56c13.23 0 24 10.77 24 24V344.5zM199.1 232v208c0 4.422 3.579 8 8.001 8s7.999-3.578 7.999-8v-208c0-4.422-3.584-8-8.006-8S199.1 227.6 199.1 232zM263.1 232v208c0 4.422 3.579 8 8.001 8s7.999-3.578 7.999-8v-208c0-4.422-3.582-8-8.004-8S263.1 227.6 263.1 232z" />
+        <svg className={props.className} viewBox="0 0 512 512" aria-label='icon' data-testid='Beer'>
+            <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16" d="M352 200v240a40.12 40.12 0 0 1-40 40H136a40.12 40.12 0 0 1-40-40V224"></path>
+            <path fill="none" stroke="currentColor" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="16" d="M352 224h40a56.16 56.16 0 0 1 56 56v80a56.16 56.16 0 0 1-56 56h-40"></path>
+            <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="16" d="M224 256v160m64-160v160M160 256v160m160-304a48 48 0 0 1 0 96c-13.25 0-29.31-7.31-38-16H160c-8 22-27 32-48 32a48 48 0 0 1 0-96a47.91 47.91 0 0 1 26 9"></path>
+            <path fill="none" stroke="currentColor" strokeLinecap="round" strokeMiterlimit="10" strokeWidth="16" d="M91.86 132.43a40 40 0 1 1 60.46-52S160 91 160 96m-14.17-31.29C163.22 44.89 187.57 32 216 32c52.38 0 94 42.84 94 95.21a95 95 0 0 1-1.67 17.79"></path>
         </svg>
     );
 };
@@ -43,13 +46,10 @@ const SoftIcon = (props: IconProps): JSX.Element => {
 
 const BarrelIcon = (props: IconProps): JSX.Element => {
     return (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8.467 8.467" className={props.className} stroke="none" fill="currentColor" aria-label='icon' data-testid='Barrel'>
-            <g>
-                <path d="M-128.027 387.92v2.576h.264v-2.576zm-2.383-1.69v1.059h.266v-1.059zm2.383 0v1.059h.264v-1.059z" overflow="visible" transform="translate(133.32 -384.974)" />
-                <path d="M-131.262 385.503c-.281 0-.545.146-.71.301-.083.078-.154.151-.157.276a.22.22 0 0 0 .094.174.31.31 0 0 0 .178.043h5.54a.314.314 0 0 0 .18-.043.219.219 0 0 0 .094-.174c-.003-.125-.074-.198-.157-.276-.165-.155-.429-.3-.71-.3zm0 .264h4.352c.18 0 .413.12.529.229.024.023.02.019.031.037h-5.472c.011-.018.007-.014.031-.037.116-.11.348-.229.53-.229zm.852 5.358v1.058h.266v-1.058zm2.383 0v1.058h.264v-1.058z" overflow="visible" transform="translate(133.32 -384.974)" />
-                <path d="M-132.392 390.332a.4.4 0 0 0-.398.396v.067a.4.4 0 0 0 .398.396h6.614a.398.398 0 0 0 .396-.396v-.067a.398.398 0 0 0-.396-.396zm0 .263h6.614a.13.13 0 0 1 .132.133v.067a.13.13 0 0 1-.132.132h-6.614a.13.13 0 0 1-.133-.132v-.067a.13.13 0 0 1 .133-.133zm0-3.373a.4.4 0 0 0-.398.397v.066c0 .218.18.399.398.399h6.614a.4.4 0 0 0 .396-.399v-.066a.398.398 0 0 0-.396-.397zm0 .266h6.614c.075 0 .132.055.132.13v.067a.13.13 0 0 1-.132.133h-6.614a.13.13 0 0 1-.133-.133v-.066c0-.076.058-.131.133-.131z" overflow="visible" transform="translate(133.32 -384.974)" />
-                <path d="M-131.613 386.049c-.352.3-.643.74-.848 1.275l.248.096c.193-.503.461-.908.77-1.17zm-.602 4.941-.248.094c.202.531.488.97.836 1.271l.172-.201c-.305-.264-.57-.665-.76-1.164zm5.657-4.941c.352.3.64.74.845 1.275l-.248.096c-.192-.503-.46-.908-.77-1.17zm-6.07 1.816a5.666 5.666 0 0 0 0 2.685l.255-.064a5.418 5.418 0 0 1 0-2.557zm7.085 0a5.666 5.666 0 0 1 0 2.685l-.258-.064a5.418 5.418 0 0 0 0-2.557zm-.414 3.125.246.094c-.202.531-.486.97-.834 1.271l-.174-.201c.306-.264.572-.665.762-1.164zm-4.453-3.07v2.576h.266v-2.576z" overflow="visible" transform="translate(133.32 -384.974)" />
-                <path d="M-131.262 392.911c-.281 0-.545-.145-.71-.3-.083-.078-.154-.152-.157-.276a.22.22 0 0 1 .094-.174.31.31 0 0 1 .178-.043h5.54c.064 0 .124.007.18.043a.219.219 0 0 1 .094.174c-.003.124-.074.198-.157.275-.165.156-.429.301-.71.301zm0-.263h4.352c.18 0 .413-.12.529-.23.024-.022.02-.018.031-.036h-5.472c.011.018.007.014.031.037.116.11.348.229.53.229z" overflow="visible" transform="translate(133.32 -384.974)" />
+        <svg className={props.className} viewBox="0 0 24 24" aria-label='icon' data-testid='Barrel'>
+            <g fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1">
+                <path d="M7.278 4h9.444a2 2 0 0 1 1.841 1.22C19.521 7.48 20 9.74 20 12c0 2.26-.479 4.52-1.437 6.78A2 2 0 0 1 16.722 20H7.278a2 2 0 0 1-1.841-1.22C4.479 16.52 4 14.26 4 12c0-2.26.479-4.52 1.437-6.78A2 2 0 0 1 7.278 4z"></path>
+                <path d="M14 4c.667 2.667 1 5.333 1 8s-.333 5.333-1 8M10 4c-.667 2.667-1 5.333-1 8s.333 5.333 1 8m-5.5-4h15m0-8h-15"></path>
             </g>
         </svg>
     );
@@ -63,10 +63,34 @@ const MiscIcon = (props: IconProps): JSX.Element => {
     );
 };
 
+const LydiaIcon = (props: IconProps): JSX.Element => {
+    return (
+        <svg xmlns="http://www.w3.org/2000/svg" className={props.className} preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24" aria-label='icon' data-testid='Lydia'>
+            <path fill="#1472b1" d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12s12-5.373 12-12S18.627 0 12 0zm5.895 17.611a.421.421 0 0 1-.168.035h-1.155a.608.608 0 0 1-.56-.377l-4-9.613l-3.991 9.607a.61.61 0 0 1-.56.377H6.273a.42.42 0 0 1-.385-.59L10.91 5.575a.793.793 0 0 1 .726-.475h.748a.792.792 0 0 1 .726.48l5.003 11.482a.42.42 0 0 1-.218.549z" />
+        </svg>
+    );
+};
+
+const CashIcon = (props: IconProps): JSX.Element => {
+    return (
+        <svg className={props.className} viewBox="0 0 24 24" aria-label='icon' data-testid='Cash'>
+            <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0a3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
+        </svg>
+    );
+};
+
+const CBIcon = (props: IconProps): JSX.Element => {
+    return (
+        <svg className={props.className} viewBox="0 0 24 24" aria-label='icon' data-testid='CB'>
+            <path fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+        </svg>
+    );
+};
+
 
 // Geter for the icons
 
-export function getIcon(name: IconName, className: string): JSX.Element {
+export function getIcon(name: IconName, className: string = 'w-10 h-10 dark:text-white ml-2 text-black'): JSX.Element {
     switch (name) {
         case 'Glass':
             return <GlassIcon className={className} />;
@@ -80,6 +104,11 @@ export function getIcon(name: IconName, className: string): JSX.Element {
             return <BarrelIcon className={className} />;
         case 'Misc':
             return <MiscIcon className={className} />;
+        case 'Lydia':
+            return <LydiaIcon className={className} />;
+        case 'Cash':
+            return <CashIcon className={className} />;
+        case 'CB':
+            return <CBIcon className={className} />;
     }
 }
-
