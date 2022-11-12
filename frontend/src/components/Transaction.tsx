@@ -11,6 +11,8 @@ import { postNewSellTransaction } from '@proxies/SalePageProxies';
 import type { ItemBuy, ItemSell, PaymentMethod } from '@types';
 import type { AxiosResponse } from 'axios';
 import toast, { Toaster } from 'react-hot-toast';
+import { getErrorMessage } from '@components/ConfigurationPage/ConfigurationPageBase';
+import { getIcon } from '@styles/utils';
 
 /**
  * This component is in charge of displaying the transaction page.
@@ -59,7 +61,7 @@ export default function Transaction(): JSX.Element {
                 setSelectedItemsBuy([]);
             }
         } else {
-            const err = `Error ${data.status}: ${data.data.detail as string} on ${(data.config.baseURL as string) + (data.config.url as string)} with ${(data.config.method as string).toUpperCase()}`;
+            const err = `Error ${data.status}: ${getErrorMessage(data)} on ${(data.config.baseURL as string) + (data.config.url as string)} with ${(data.config.method as string).toUpperCase()}`;
             toast.error(err);
             if (transactionType === TransactionEnum.Achat) {
                 setReRender((reRender * -1) as -1 | 1);
@@ -166,14 +168,17 @@ export default function Transaction(): JSX.Element {
             {renderTransaction()}
             <div className='flex justify-end mt-3'>
                 <div className='text-2xl font-bold mr-8' aria-label='total-price'>
-                    Total: <span>{totalPrice}</span>€€
+                    Total: <span>{totalPrice}</span>€
                 </div>
 
                 <PopupWindows trigger={{ className: 'btn-primary', content: 'Valider' }} onOpen={popupWindowOpen} callback={(state) => setPopupWindowOpen(state)}>
                     <div className='flex flex-col flex-grow'>
                         <div className='text-3xl font-bold pb-2 border-b-2 border-neutral-400'>Récapitulatif de la commande :</div>
                         {renderRecap()}
-                        <div className='flex pt-3 self-end'>
+                        <div className='flex pt-3 self-end space-x-5'>
+                            {getIcon('CB')}
+                            {getIcon('Lydia')}
+                            {getIcon('Cash')}
                             <div className='text-2xl font-bold mr-8' aria-label='total-price'>Total: {totalPrice}€</div>
                             <button id='submit-btn' className='btn-primary' onClick={handlePostData} disabled={loadingBuy || loadingSell}>Valider le paiment</button>
                         </div>
