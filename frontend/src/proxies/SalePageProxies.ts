@@ -3,7 +3,7 @@
 import { endpoints } from '@endpoints';
 import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyPostTransaction } from '@proxies/Config';
-import type { APIItem, Consumable, Glass, ItemSell, ItemTransactionResponse, OutOfStockItemSell, OutOfStockSell, PaymentMethod, TransactionType } from '@types';
+import type { APIItem, Barrel, Consumable, Glass, ItemSell, ItemTransactionResponse, OutOfStockItemSell, OutOfStockSell, PaymentMethod, TransactionType } from '@types';
 import type { AxiosError, AxiosResponse } from 'axios';
 
 /**
@@ -12,18 +12,20 @@ import type { AxiosError, AxiosResponse } from 'axios';
  * @returns A function to make the API call and the loading and error state
  */
 export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStockSell>>) => void): IProxy {
-    const [{ error, loading: loading1 }, getGlass] = useAxios<Glass[]>(endpoints.mock.glass); // TODO Chnage type to Barrel[]
+    const [{ error, loading: loading1 }, getGlass] = useAxios<Barrel[]>(endpoints.v1.mountedBarrel);
     const [{ loading: loading2 }, outOfStockGet] = useAxios<OutOfStockItemSell[]>(endpoints.v1.outOfStockItemSell);
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
-        const { data: dataGlass } = (await getGlass());
+        const { data: dataBarrel } = (await getGlass());
         const { data: dataOutOfStock } = (await outOfStockGet());
-        const newItem: Array<APIItem<Glass | OutOfStockSell>> = dataGlass.map((item) => ({
+        const newItem: Array<APIItem<Glass | OutOfStockSell>> = dataBarrel.map((item) => ({
             table: 'glass',
             quantity: 0,
             item: {
-                ...item,
+                fkID: item.id as number,
+                name: item.name,
+                sellPrice: item.sellPrice,
                 icon: 'Beer'
             }
         }));
@@ -85,7 +87,7 @@ export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStockSell>>) 
  * @returns A function to make the API call and the loading and error state
  */
 export function getConsumables(setItem: (value: Array<APIItem<Consumable>>) => void): IProxy {
-    const [{ error, loading }, get] = useAxios<Consumable[]>(endpoints.mock.consumable);
+    const [{ error, loading }, get] = useAxios<Consumable[]>(endpoints.v1.consumableUnique);
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
