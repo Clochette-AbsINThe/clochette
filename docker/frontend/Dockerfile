@@ -1,37 +1,19 @@
-FROM nginx:1.23-alpine
+FROM node:18-alpine
 
-WORKDIR /usr/share/nginx/html/
+WORKDIR /code
 
-# Clean the default public folder
-RUN rm -rf * .??*
+COPY ./frontend/package.json ./package.json
+COPY ./frontend/package-lock.json ./package-lock.json
 
-# Copy configuration files
-COPY ./docker/frontend/nginx.conf /etc/nginx/nginx.conf
-COPY ./docker/frontend/general.conf /etc/nginx/conf.d/general.conf
-COPY ./docker/frontend/security.conf /etc/nginx/conf.d/security.conf
-COPY ./docker/frontend/proxy.conf /etc/nginx/conf.d/proxy.conf
-COPY ./docker/frontend/clochette.dev.conf /etc/nginx/sites-available/clochette.dev.conf
-RUN chmod 0644 /etc/nginx/conf.d/*
-RUN chmod 0644 /etc/nginx/sites-available/clochette.dev.conf
-RUN mkdir -p /etc/nginx/sites-enabled
-RUN ln -s /etc/nginx/sites-available/clochette.dev.conf /etc/nginx/sites-enabled/clochette.dev.conf
+RUN npm set progress=false
+RUN npm install
 
-# Copy certificate
-RUN mkdir -p /etc/nginx/ssl
-COPY ./docker/frontend/ssl/clochette.dev.key /etc/nginx/ssl/clochette.dev.key
-COPY ./docker/frontend/ssl/clochette.dev.crt /etc/nginx/ssl/clochette.dev.crt
-RUN chmod 0644 /etc/nginx/ssl/*
+COPY ./frontend .
 
-# Copy Diffie-Hellman ciphersuites
-COPY ./docker/frontend/ssl/dhparam.pem /etc/nginx/dhparam.pem
+RUN npm run build
 
-# Copy the public folder (astro build must be run before this!)
-RUN mkdir -p /var/www/clochette.dev/public
-COPY ./frontend/dist /var/www/clochette.dev/public
-RUN chmod -R 0755 /var/www/clochette.dev
+# Install pm2
+RUN npm install -g pm2
 
-# Set up environment variables
-ENV NGINX_HOST=clochette.dev
-
-# Open port
-EXPOSE 80
+# Serve the app
+CMD ["pm2-runtime", "start", "npm", "--name", "clochette-frontend" ,"--", "start"]

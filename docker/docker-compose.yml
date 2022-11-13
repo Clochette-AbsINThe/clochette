@@ -1,15 +1,25 @@
-#version: "1.0.0"
 services:
-  frontend:
+  reverse-proxy:
+    build:
+      context: ..
+      dockerfile: ./docker/reverse-proxy/Dockerfile
+    container_name: clochette-reverse-proxy
+    ports:
+      - 80:80
+      - 443:443
     depends_on:
+      - frontend
       - backend
+
+  frontend:
     build:
       context: ..
       dockerfile: ./docker/frontend/Dockerfile
     container_name: clochette-frontend
     ports:
-      - "443:443"
-      - "80:80"
+      - 8300:3000
+    environment:
+      - NODE_ENV=production
 
   backend:
     depends_on:
@@ -20,7 +30,15 @@ services:
     container_name: clochette-backend
     ports:
       - "8080:80"
-    command: ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]
+    command:
+      [
+        "uvicorn",
+        "app.main:app",
+        "--host",
+        "0.0.0.0",
+        "--port",
+        "80"
+      ]
     environment:
       - POSTGRES_HOST=clochette-db
       - POSTGRES_PORT=5432
@@ -28,7 +46,7 @@ services:
       - POSTGRES_USER=clochette
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - MIGRATE=True
-  
+
   database:
     image: postgres:14.5-alpine
     container_name: clochette-db
