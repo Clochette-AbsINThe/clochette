@@ -1,35 +1,16 @@
-import { getIcon } from '@styles/utils';
+import Card from '@components/Card';
 
 export default function ConfigurationHomePage(): JSX.Element {
     return (
         <>
-            <h1 className="text-3xl">Configuration</h1>
-            <p>Page de configuration</p>
-            <div className="grid grid-col-1 md:grid-cols-3 gap-5 flex-wrap">
-                <div className="flex flex-col items-center border space-y-5 p-4 bg-gray-50 rounded-lg shadow-md dark:bg-gray-700">
-                    <h2 className="text-xl">Boissons</h2>
-                    <a href="/configuration/boissons" className="btn-primary" aria-label="edit">Editer</a>
-                    <div className="flex justify-center space-x-5">
-                        <div>{getIcon('Beer', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
-                        <div>{getIcon('Barrel', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
-                    </div>
-                </div>
-                <div className="flex flex-col items-center border space-y-5 p-4 bg-gray-50 rounded-lg shadow-md dark:bg-gray-700">
-                    <h2 className="text-xl">Consommables</h2>
-                    <a href="/configuration/consommables" className="btn-primary" aria-label="edit">Editer</a>
-                    <div className="flex justify-center space-x-5">
-                        <div>{getIcon('Food', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
-                        <div>{getIcon('Soft', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
-                    </div>
-                </div>
-                <div className="flex flex-col items-center border space-y-5 p-4 bg-gray-50 rounded-lg shadow-md dark:bg-gray-700">
-                    <h2 className="text-xl">Produits hors-stock</h2>
-                    <a href="/configuration/hors-stocks" className="btn-primary" aria-label="edit">Editer</a>
-                    <div className="flex justify-center space-x-5">
-                        <div>{getIcon('Glass', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
-                        <div>{getIcon('Misc', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
-                    </div>
-                </div>
+            <div className="flex flex-col items-center justify-center h-full">
+                <h1 className="text-4xl font-bold text-green-700">Configuration</h1>
+                <h2 className="text-2xl text-gray-500 dark:text-gray-100">Page de configuration</h2>
+            </div>
+            <div className='grid grid-cols-1 lg:grid-cols-2 gap-5'>
+                <Card buttonLabel='Editer' icon={['Barrel', 'Beer']} title="Boissons" description="Les boissons sont les produits achetés sous forme de fûts et revendu en verre." link='/configuration/boissons' />
+                <Card buttonLabel='Editer' icon={['Soft', 'Food']} title="Consommables" description="Les produits consommables sont les produits qui sont vendus sous la même forme qu&apos;ils sont acheté, comme par exemple les softs où les pizzas." link='/configuration/consommables' />
+                <Card buttonLabel='Editer' icon={['Misc', 'Glass']} title="Produits hors-stock" description="Les produits hors stock sont les produits qui n&apos;apparaitrons pas dans la gestion des stocks comme les planchette de charcuterie." link='/configuration/hors-stocks' />
             </div>
         </>
     );
