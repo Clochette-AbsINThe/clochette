@@ -110,8 +110,8 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
     const homePage = (): JSX.Element => {
         return (
             <ConfigurationPageHeader
-                title='Modification des boissons'
-                description='Les boissons sont les produits achetés sous forme de fûts et revendu en verre.'
+                title='Modification des produits hors stock'
+                description='Les produits hors stock sont les produits qui n&apos;apparaitrons pas dans la gestion des stocks comme les planchette de charcuterie.'
                 changeURLwithId={changeURLwithId}
                 callbackQuery={setQuery}
                 displayItems={displayOutOfStockItems}

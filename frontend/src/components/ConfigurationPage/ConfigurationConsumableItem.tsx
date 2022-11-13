@@ -1,4 +1,4 @@
-import { addIdToUrl, ConfigurationPageHeader, DisplayPage, getIdFromUrl, ItemPageWrapper, removeIdFromUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
+import { addIdToUrl, ConfigurationPageHeader, DisplayPage, getErrorMessage, getIdFromUrl, ItemPageWrapper, removeIdFromUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
 
 import { deleteConsumableItem, getConsumableItemById, getConsumableItems, postConsumableItem, putConsumableItem } from '@proxies/ConfigurationConsumableItemProxies';
 import { getIcon } from '@styles/utils';
