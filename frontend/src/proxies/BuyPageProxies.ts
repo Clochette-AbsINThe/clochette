@@ -1,5 +1,3 @@
-/* eslint-disable n/no-callback-literal */
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { endpoints } from '@endpoints';
 import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyPostTransaction } from '@proxies/Config';
@@ -16,18 +14,18 @@ export function getEcoCup(setItems: (item?: OutOfStockItemBuy) => void): IProxy 
 
     const getDataAsync = async (): Promise<void> => {
         setItems();
-        const { data } = (await get());
+        const { data } = await get();
         const EcoCup = data.find((item) => item.name === 'EcoCup') as OutOfStockItemBuy;
 
         setItems(EcoCup);
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
-};
+}
 
 /**
  * This functon is used to fill barrel dropdown in the buy page
@@ -39,19 +37,21 @@ export function getDrinks(setItems: (items: Drink[]) => void): IProxy {
 
     const getDataAsync = async (): Promise<void> => {
         setItems([]);
-        const { data } = (await get());
-        setItems(data.map((item) => ({
-            ...item,
-            icon: 'Barrel'
-        })));
+        const { data } = await get();
+        setItems(
+            data.map((item) => ({
+                ...item,
+                icon: 'Barrel'
+            }))
+        );
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
-};
+}
 
 /**
  * This function is used to fill consumables dropdown in the buy page
@@ -63,12 +63,12 @@ export function getConsumables(setItems: (items: ConsumableItem[]) => void): IPr
 
     const getDataAsync = async (): Promise<void> => {
         setItems([]);
-        const { data } = (await get());
+        const { data } = await get();
         setItems(data);
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -84,17 +84,16 @@ export function getOutOfStocks(setItems: (items: OutOfStockItemBuy[]) => void): 
 
     const getDataAsync = async (): Promise<void> => {
         setItems([]);
-        const { data } = (await get());
+        const { data } = await get();
         setItems(data.filter((item) => item.name !== 'EcoCup'));
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
 }
-
 
 /**
  * This function is used to create a new Buy transaction
@@ -112,7 +111,7 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<unknown, a
     const postDataAsync = async (transactionItems: ItemBuy[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): Promise<void> => {
         const newItems: ItemBuy[] = [];
         for (let i = 0; i < transactionItems.length; i++) {
-            const item = transactionItems[i];
+            const item = transactionItems[i] as ItemBuy;
             let fkID = item.item.fkID;
             switch (item.table) {
                 case 'out_of_stock': {
@@ -158,8 +157,7 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<unknown, a
                     break;
                 }
             }
-        };
-
+        }
 
         const data: TransactionType<ItemBuy> = {
             datetime: date.toISOString(),
@@ -168,12 +166,14 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<unknown, a
             amount: totalPrice,
             items: newItems
         };
-        const response = (await postTransaction({ data }));
+        const response = await postTransaction({ data });
         callback?.(response);
     };
 
     const postData = (transactionItems: ItemBuy[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): void => {
-        postDataAsync(transactionItems, paymentMethod, totalPrice, date).catch((err: AxiosError) => { callback?.(err.response as AxiosResponse<unknown, any>); });
+        postDataAsync(transactionItems, paymentMethod, totalPrice, date).catch((err: AxiosError) => {
+            callback?.(err.response as AxiosResponse<unknown, any>);
+        });
     };
 
     return [postData, { loading, error }];

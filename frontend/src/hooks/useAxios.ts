@@ -2,9 +2,9 @@ import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useState } from 'react';
 
 interface ResponseValues<T> {
-    loading: boolean
-    error: AxiosError | null
-    response?: AxiosResponse<T> | null
+    loading: boolean;
+    error: AxiosError | null;
+    response?: AxiosResponse<T> | null;
 }
 
 type UseAxiosResult<T> = [ResponseValues<T>, (_config?: AxiosRequestConfig, _url?: string) => Promise<AxiosResponse<T>>];

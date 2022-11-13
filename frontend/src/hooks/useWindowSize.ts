@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
 interface Size {
-    width: number
-    height: number
+    width: number;
+    height: number;
 }
 
 export function debounce(func: () => any, wait = 50): () => void {

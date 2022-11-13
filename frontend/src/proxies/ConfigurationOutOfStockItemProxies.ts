@@ -1,4 +1,3 @@
-/* eslint-disable n/no-callback-literal */
 import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyId, IProxyPost } from '@proxies/Config';
 import type { OutOfStockItemBuy, OutOfStockItemSell } from '@types';
@@ -14,14 +13,14 @@ export function getOutOfStockItems(setItem: (value: Array<OutOfStockItemBuy | Ou
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
-        const { data: dataBuy } = (await getBuy());
-        const { data: dataSell } = (await getSell());
+        const { data: dataBuy } = await getBuy();
+        const { data: dataSell } = await getSell();
 
         setItem([...dataBuy, ...dataSell]);
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -32,13 +31,13 @@ export function getOutOfStockItemById(setItem: (value: OutOfStockItemBuy | OutOf
 
     const getDataAsync = async (id: number): Promise<void> => {
         setItem({ name: '', icon: 'Misc' });
-        const { data } = (await get({}, `${endpoints.v1.outOfStockItem}${id}`));
+        const { data } = await get({}, `${endpoints.v1.outOfStockItem}${id}`);
 
         setItem(data);
     };
 
     const getData = (id: number): void => {
-        getDataAsync(id).catch(() => { });
+        getDataAsync(id).catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -48,12 +47,14 @@ export function postOutOfStockItem(callback?: (data: AxiosResponse<unknown, any>
     const [{ error, loading }, post] = useAxios<OutOfStockItemBuy | OutOfStockItemSell>(endpoints.v1.outOfStockItem, { method: 'POST' });
 
     const postAsync = async (data: OutOfStockItemBuy | OutOfStockItemSell): Promise<void> => {
-        const response = (await post({ data }));
+        const response = await post({ data });
         callback?.(response);
     };
 
     const postData = (data: OutOfStockItemBuy | OutOfStockItemSell): void => {
-        postAsync(data).catch((err: AxiosError<unknown, any>) => { callback?.(err.response as AxiosResponse<unknown, any>); });
+        postAsync(data).catch((err: AxiosError<unknown, any>) => {
+            callback?.(err.response as AxiosResponse<unknown, any>);
+        });
     };
 
     return [postData, { loading, error }];
@@ -64,12 +65,14 @@ export function putOutOfStockItem(callback?: (data: AxiosResponse<unknown, any>)
 
     const putAsync = async (data: OutOfStockItemBuy | OutOfStockItemSell): Promise<void> => {
         const { id, ...rest } = data;
-        const response = (await put({ data: rest }, `${endpoints.v1.outOfStockItem}${id as number}`));
+        const response = await put({ data: rest }, `${endpoints.v1.outOfStockItem}${id as number}`);
         callback?.(response);
     };
 
     const putData = (data: OutOfStockItemBuy | OutOfStockItemSell): void => {
-        putAsync(data).catch((err: AxiosError<unknown, any>) => { callback?.(err.response as AxiosResponse<unknown, any>); });
+        putAsync(data).catch((err: AxiosError<unknown, any>) => {
+            callback?.(err.response as AxiosResponse<unknown, any>);
+        });
     };
 
     return [putData, { loading, error }];
@@ -79,12 +82,14 @@ export function deleteOutOfStockItem(callback?: (data: AxiosResponse<unknown, an
     const [{ error, loading }, del] = useAxios<OutOfStockItemBuy | OutOfStockItemSell>('', { method: 'DELETE' });
 
     const deleteAsync = async (id: number): Promise<void> => {
-        const response = (await del({}, `${endpoints.v1.outOfStockItem}${id}`));
+        const response = await del({}, `${endpoints.v1.outOfStockItem}${id}`);
         callback?.(response);
     };
 
     const deleteData = (id: number): void => {
-        deleteAsync(id).catch((err: AxiosError<unknown, any>) => { callback?.(err.response as AxiosResponse<unknown, any>); });
+        deleteAsync(id).catch((err: AxiosError<unknown, any>) => {
+            callback?.(err.response as AxiosResponse<unknown, any>);
+        });
     };
 
     return [deleteData, { loading, error }];

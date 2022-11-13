@@ -9,12 +9,12 @@ export function getConsumableItems(setItem: (value: ConsumableItem[]) => void): 
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
-        const { data } = (await get());
+        const { data } = await get();
         setItem(data);
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -25,12 +25,12 @@ export function getConsumableItemById(setItem: (value: ConsumableItem) => void):
 
     const getDataAsync = async (id: number): Promise<void> => {
         setItem({ name: '', icon: 'Misc' });
-        const { data } = (await get({}, `${endpoints.v1.consumableItem}${id}`));
+        const { data } = await get({}, `${endpoints.v1.consumableItem}${id}`);
         setItem(data);
     };
 
     const getData = (id: number): void => {
-        getDataAsync(id).catch(() => { });
+        getDataAsync(id).catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -40,12 +40,14 @@ export function postConsumableItem(callback?: (data: AxiosResponse<unknown, any>
     const [{ error, loading }, post] = useAxios<ConsumableItem>(endpoints.v1.consumableItem, { method: 'POST' });
 
     const postAsync = async (data: ConsumableItem): Promise<void> => {
-        const response = (await post({ data }));
+        const response = await post({ data });
         callback?.(response);
     };
 
     const postData = (data: ConsumableItem): void => {
-        postAsync(data).catch((err: AxiosError<unknown, any>) => { callback?.(err.response as AxiosResponse<unknown, any>); });
+        postAsync(data).catch((err: AxiosError<unknown, any>) => {
+            callback?.(err.response as AxiosResponse<unknown, any>);
+        });
     };
 
     return [postData, { loading, error }];
@@ -56,12 +58,14 @@ export function putConsumableItem(callback?: (data: AxiosResponse<unknown, any>)
 
     const putAsync = async (data: ConsumableItem): Promise<void> => {
         const { id, ...rest } = data;
-        const response = (await put({ data: rest }, `${endpoints.v1.consumableItem}${id as number}`));
+        const response = await put({ data: rest }, `${endpoints.v1.consumableItem}${id as number}`);
         callback?.(response);
     };
 
     const putData = (data: ConsumableItem): void => {
-        putAsync(data).catch((err: AxiosError<unknown, any>) => { callback?.(err.response as AxiosResponse<unknown, any>); });
+        putAsync(data).catch((err: AxiosError<unknown, any>) => {
+            callback?.(err.response as AxiosResponse<unknown, any>);
+        });
     };
 
     return [putData, { loading, error }];
@@ -71,12 +75,14 @@ export function deleteConsumableItem(callback?: (data: AxiosResponse<unknown, an
     const [{ error, loading }, del] = useAxios<ConsumableItem>('', { method: 'DELETE' });
 
     const deleteAsync = async (id: number): Promise<void> => {
-        const response = (await del({}, `${endpoints.v1.consumableItem}${id}`));
+        const response = await del({}, `${endpoints.v1.consumableItem}${id}`);
         callback?.(response);
     };
 
     const deleteData = (id: number): void => {
-        deleteAsync(id).catch((err: AxiosError<unknown, any>) => { callback?.(err.response as AxiosResponse<unknown, any>); });
+        deleteAsync(id).catch((err: AxiosError<unknown, any>) => {
+            callback?.(err.response as AxiosResponse<unknown, any>);
+        });
     };
 
     return [deleteData, { loading, error }];
