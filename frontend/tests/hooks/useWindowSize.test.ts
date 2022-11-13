@@ -1,7 +1,7 @@
 import { debounce } from '@hooks/useWindowSize';
 
 test('Debounce fonction', async () => {
-    const func = jest.fn();
+    const func = vi.fn();
     const debouncedFunc = debounce(func, 1000);
 
     debouncedFunc();
@@ -14,6 +14,6 @@ test('Debounce fonction', async () => {
 
     expect(func).toBeCalledTimes(0);
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     expect(func).toBeCalled();
 });

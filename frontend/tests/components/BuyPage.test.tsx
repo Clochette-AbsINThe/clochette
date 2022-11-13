@@ -31,7 +31,6 @@ const item2: ItemBuy = {
     }
 };
 
-
 describe('createNewItem tests', () => {
     test('create a new item of type Barrel', async () => {
         const newItem = createNewItem({ id: 0, name: 'Boisson 1', icon: 'Barrel' }, 'barrel');
@@ -95,17 +94,28 @@ describe('createNewItem tests', () => {
 });
 
 test('RecapItem renders', async () => {
-    const handleModalEdit = jest.fn();
-    const handleModalDelete = jest.fn();
-    render(<RecapItem item={item} handleModalEdit={handleModalEdit} handleRemoveItem={handleModalDelete} />);
+    const handleModalEdit = vi.fn();
+    const handleModalDelete = vi.fn();
+    render(
+        <RecapItem
+            item={item}
+            handleModalEdit={handleModalEdit}
+            handleRemoveItem={handleModalDelete}
+        />
+    );
     expect(screen.getByText('Consumable 1')).toBeInTheDocument();
     await userEvent.click(screen.getByLabelText('edit'));
     expect(handleModalEdit).toHaveBeenCalled();
 });
 
 test('BuyPage renders', async () => {
-    const changeSelectedItems = jest.fn();
-    render(<BuyPage changeSelectedItems={changeSelectedItems} selectedItems={[item, item2]} />);
+    const changeSelectedItems = vi.fn();
+    render(
+        <BuyPage
+            changeSelectedItems={changeSelectedItems}
+            selectedItems={[item, item2]}
+        />
+    );
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
     });
@@ -136,28 +146,45 @@ test('EcoCup error', async () => {
             return res(ctx.status(500));
         })
     );
-    const changeSelectedItems = jest.fn();
-    render(<BuyPage changeSelectedItems={changeSelectedItems} selectedItems={[item]} />);
+    const changeSelectedItems = vi.fn();
+    render(
+        <BuyPage
+            changeSelectedItems={changeSelectedItems}
+            selectedItems={[item]}
+        />
+    );
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
     });
-    expect(screen.getByText('Erreur lors du chargement de l\'écocup')).toBeInTheDocument();
+    expect(screen.getByText("Erreur lors du chargement de l'écocup")).toBeInTheDocument();
 });
 
 test('updateFkID', async () => {
-    const barrels: Drink[] = [{ id: 0, name: 'Boisson 1', icon: 'Barrel' }, { id: 1, name: 'Boisson 2', icon: 'Barrel' }];
-    const consommables: ConsumableItem[] = [{ id: 0, name: 'Consommable 1', icon: 'Food' }, { id: 1, name: 'Consumable 2', icon: 'Food' }];
-    const outOfStock: OutOfStockItemBuy[] = [{ id: 0, name: 'OutOfStock 1', icon: 'Food' }, { id: 1, name: 'OutOfStock 2', icon: 'Food' }];
+    const barrels: Drink[] = [
+        { id: 0, name: 'Boisson 1', icon: 'Barrel' },
+        { id: 1, name: 'Boisson 2', icon: 'Barrel' }
+    ];
+    const consommables: ConsumableItem[] = [
+        { id: 0, name: 'Consommable 1', icon: 'Food' },
+        { id: 1, name: 'Consumable 2', icon: 'Food' }
+    ];
+    const outOfStock: OutOfStockItemBuy[] = [
+        { id: 0, name: 'OutOfStock 1', icon: 'Food' },
+        { id: 1, name: 'OutOfStock 2', icon: 'Food' }
+    ];
     const ecoCup: OutOfStockItemBuy = { id: 0, name: 'EcoCup', icon: 'Glass' };
 
     const selectedItems = [item, item2];
 
     const newSelectedItems = updateFkID(barrels, consommables, outOfStock, ecoCup, selectedItems);
-    expect(newSelectedItems).toEqual([item, {
-        ...item2,
-        item: {
-            ...item2.item,
-            fkID: 1
+    expect(newSelectedItems).toEqual([
+        item,
+        {
+            ...item2,
+            item: {
+                ...item2.item,
+                fkID: 1
+            }
         }
-    }]);
+    ]);
 });

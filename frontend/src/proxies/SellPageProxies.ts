@@ -1,5 +1,3 @@
-/* eslint-disable n/no-callback-literal */
-/* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { endpoints } from '@endpoints';
 import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyPostTransaction } from '@proxies/Config';
@@ -17,8 +15,8 @@ export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStockSell
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
-        const { data: dataBarrel } = (await getGlass());
-        const { data: dataOutOfStock } = (await outOfStockGet());
+        const { data: dataBarrel } = await getGlass();
+        const { data: dataOutOfStock } = await outOfStockGet();
         const newItem: Array<APIItem<Glass | OutOfStockSell>> = dataBarrel.map((item) => ({
             table: 'glass',
             quantity: 0,
@@ -45,7 +43,7 @@ export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStockSell
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading: loading1 || loading2, error }];
@@ -61,7 +59,7 @@ export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStockSell>>) 
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
-        const { data } = (await get());
+        const { data } = await get();
         const newItem: Array<APIItem<OutOfStockSell>> = data.map((item) => ({
             table: 'out_of_stock',
             quantity: 0,
@@ -75,7 +73,7 @@ export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStockSell>>) 
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -91,7 +89,7 @@ export function getConsumables(setItem: (value: Array<APIItem<Consumable>>) => v
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
-        const { data } = (await get());
+        const { data } = await get();
         const newItem: Array<APIItem<Consumable>> = data.map((item) => ({
             table: 'consumable',
             quantity: 0,
@@ -101,14 +99,14 @@ export function getConsumables(setItem: (value: Array<APIItem<Consumable>>) => v
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
 }
 
 /**
- * This function is used to create a new Sale transaction
+ * This function is used to create a new Sell transaction
  * @returns A function to make the API call and the loading state
  */
 export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPostTransaction<ItemSell[]> {
@@ -117,7 +115,7 @@ export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, 
     const postDataAsync = async (transactionItems: ItemSell[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): Promise<void> => {
         const newItems: ItemSell[] = [];
         for (let i = 0; i < transactionItems.length; i++) {
-            const item = transactionItems[i];
+            const item = transactionItems[i] as ItemSell;
             switch (item.table) {
                 case 'glass':
                     newItems.push(item);
@@ -145,12 +143,14 @@ export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, 
             amount: totalPrice,
             items: newItems
         };
-        const response = (await postTransaction({ data }));
+        const response = await postTransaction({ data });
         callback?.(response);
     };
 
     const postData = (transactionItems: ItemSell[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): void => {
-        postDataAsync(transactionItems, paymentMethod, totalPrice, date).catch((err: AxiosError) => { callback?.(err.response as AxiosResponse<unknown, any>); });
+        postDataAsync(transactionItems, paymentMethod, totalPrice, date).catch((err: AxiosError) => {
+            callback?.(err.response as AxiosResponse<unknown, any>);
+        });
     };
 
     return [postData, { loading, error }];

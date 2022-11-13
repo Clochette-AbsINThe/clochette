@@ -5,16 +5,18 @@ import { rest } from 'msw';
 import { server } from '../setupTests';
 
 test('getDrinks', async () => {
-    const setItems = jest.fn();
+    const setItems = vi.fn();
     const { result } = renderHook(() => getDrinks(setItems));
     act(() => {
         result.current[0]();
     });
     await waitFor(() => expect(result.current[1].loading).toBe(false));
-    expect(setItems).toHaveBeenLastCalledWith([{
-        id: 1,
-        name: 'Rouge'
-    }]);
+    expect(setItems).toHaveBeenLastCalledWith([
+        {
+            id: 1,
+            name: 'Rouge'
+        }
+    ]);
 });
 
 test('getDrinks error', async () => {
@@ -23,7 +25,7 @@ test('getDrinks error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItems = jest.fn();
+    const setItems = vi.fn();
     const { result } = renderHook(() => getDrinks(setItems));
     act(() => {
         result.current[0]();
@@ -33,7 +35,7 @@ test('getDrinks error', async () => {
 });
 
 test('getDrinkbyId', async () => {
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getDrinkById(setItem));
     act(() => {
         result.current[0](1);
@@ -51,7 +53,7 @@ test('getDrinkbyId error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getDrinkById(setItem));
     act(() => {
         result.current[0](0);
@@ -61,7 +63,7 @@ test('getDrinkbyId error', async () => {
 });
 
 test('postDrink', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => postDrink(callback));
     act(() => {
         result.current[0]({
@@ -82,7 +84,7 @@ test('postDrink error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => postDrink(callback));
     act(() => {
         result.current[0]({
@@ -99,7 +101,7 @@ test('putDrink', async () => {
         id: 0,
         name: 'PutDrink'
     };
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => putDrink(callback));
     act(() => {
         result.current[0](sendData as Drink);
@@ -115,7 +117,7 @@ test('putDrink error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => putDrink(callback));
     act(() => {
         result.current[0]({
@@ -133,7 +135,7 @@ test('deleteDrink', async () => {
         id: 1,
         name: 'Rouge'
     };
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => deleteDrink(callback));
     act(() => {
         result.current[0](sendData.id);
@@ -149,7 +151,7 @@ test('deleteDrink error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => deleteDrink(callback));
     act(() => {
         result.current[0](0);

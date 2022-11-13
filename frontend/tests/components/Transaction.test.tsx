@@ -22,7 +22,7 @@ test('Change Transaction Type', async () => {
     expect(screen.getByLabelText('window-achat')).toBeInTheDocument();
 });
 
-test('Verify total for SalePage', async () => {
+test('Verify total for SellPage', async () => {
     server.use(
         rest.get(`https://clochette.dev/api/v1${endpoints.v1.consumableUnique}`, (req, res, ctx) => {
             return res(ctx.status(500));

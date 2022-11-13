@@ -161,7 +161,7 @@ const data: TransactionType<ItemBuy> = {
 };
 
 test('postTransaction', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => postNewBuyTransaction(callback));
     act(() => {
         result.current[0](transactionItems, 'CB', 10, date);
@@ -185,14 +185,13 @@ test('postTransaction error', async () => {
     expect(result.current[1].error).not.toBeNull();
 });
 
-
 test('getDrink error', async () => {
     server.use(
         rest.get('https://clochette.dev/api/v1/drink/', (req, res, ctx) => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getDrinks(setItem));
     act(() => {
         result.current[0]();
@@ -207,7 +206,7 @@ test('getConsumable error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getConsumables(setItem));
     act(() => {
         result.current[0]();
@@ -222,7 +221,7 @@ test('getOutOfStock error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getOutOfStocks(setItem));
     act(() => {
         result.current[0]();
@@ -237,7 +236,7 @@ test('getEcoCup error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getEcoCup(setItem));
     act(() => {
         result.current[0]();

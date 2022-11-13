@@ -8,15 +8,6 @@
     "useTabs": false,
     "vueIndentScriptAndStyle": true,
     "endOfLine": "auto",
-    "plugins": [
-        "./node_modules/prettier-plugin-astro"
-    ],
-    "overrides": [
-        {
-            "files": "*.astro",
-            "options": {
-                "parser": "astro"
-            }
-        }
-    ]
+    "printWidth": 256,
+    "singleAttributePerLine": true
 }

@@ -1,106 +1,56 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true,
-        "jest": true
-    },
-    "extends": [
-        "plugin:react/recommended",
-        "standard-with-typescript",
-        "plugin:astro/all"
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "next",
+    "next/core-web-vitals",
+    "plugin:react/recommended"
+  ],
+  "plugins": [
+    "react"
+  ],
+  "rules": {
+    "indent": [
+      "error",
+      4,
+      {
+        "SwitchCase": 1
+      }
     ],
-    "overrides": [
-        {
-            // Define the configuration for `.astro` file.
-            "files": [
-                "*.astro"
-            ],
-            // Allows Astro components to be parsed.
-            "parser": "astro-eslint-parser",
-            // Parse the script in `.astro` as TypeScript by adding the following configuration.
-            // It's the setting you need when using TypeScript.
-            "parserOptions": {
-                "parser": "@typescript-eslint/parser",
-                "extraFileExtensions": [
-                    ".astro"
-                ]
-            },
-            "rules": {
-                "react/react-in-jsx-scope": "off",
-                "react/no-unknown-property": "off",
-                "no-multiple-empty-lines": "off",
-                "astro/jsx-a11y/anchor-is-valid": "off"
-            }
-        }
+    "no-use-before-define": [
+      "error",
+      {
+        "functions": false
+      }
     ],
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "sourceType": "module",
-        "project": "./frontend/tsconfig.json"
-    },
-    "plugins": [
-        "react"
+    "no-plusplus": [
+      "error",
+      {
+        "allowForLoopAfterthoughts": true
+      }
     ],
-    "rules": {
-        "indent": [
-            "error",
-            4,
-            {
-                "SwitchCase": 1
-            }
-        ],
-        "no-use-before-define": [
-            "error",
-            {
-                "functions": false
-            }
-        ],
-        "no-plusplus": [
-            "error",
-            {
-                "allowForLoopAfterthoughts": true
-            }
-        ],
-        "max-len": [
-            "off"
-        ],
-        "no-console": [
-            "warn",
-            {
-                "allow": [
-                    "warn",
-                    "error"
-                ]
-            }
-        ],
-        "space-before-function-paren": "off",
-        "@typescript-eslint/space-before-function-paren": [
-            "off"
-        ],
-        "@typescript-eslint/indent": [
-            "error",
-            4,
-            {
-                "SwitchCase": 1
-            }
-        ],
-        "@typescript-eslint/triple-slash-reference": "off",
-        "react/react-in-jsx-scope": "off",
-        "semi": [
-            "error",
-            "always"
-        ],
-        "@typescript-eslint/semi": [
-            "error",
-            "always"
-        ],
-        "no-multiple-empty-lines": "off",
-        "@typescript-eslint/strict-boolean-expressions": "off",
-        "n/no-callback-literal": "off"
-    },
-    "settings": {
-        "react": {
-            "version": "detect"
-        }
-    }
+    "max-len": [
+      "off"
+    ],
+    "no-console": [
+      "warn",
+      {
+        "allow": [
+          "warn",
+          "error"
+        ]
+      }
+    ],
+    "space-before-function-paren": "off",
+    "semi": [
+      "error",
+      "always"
+    ],
+    "n/no-callback-literal": "off",
+    "react/react-in-jsx-scope": "off",
+    "react-hooks/rules-of-hooks": "off",
+    "react-hooks/exhaustive-deps": "off"
+  }
 }

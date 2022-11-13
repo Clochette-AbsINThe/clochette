@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 test('render goBackButton', async () => {
-    const handleGoBack = jest.fn();
+    const handleGoBack = vi.fn();
     render(<GoBackButton handleGoBack={handleGoBack} />);
     const goBackButton = screen.getByText('Retourner à la page de sélection');
     expect(goBackButton).toBeInTheDocument();
@@ -12,8 +12,8 @@ test('render goBackButton', async () => {
 });
 
 test('render ConfigurationPageHeader', async () => {
-    const callbackQuery = jest.fn();
-    const changeURLwithId = jest.fn();
+    const callbackQuery = vi.fn();
+    const changeURLwithId = vi.fn();
     render(
         <ConfigurationPageHeader
             callbackQuery={callbackQuery}
@@ -21,8 +21,7 @@ test('render ConfigurationPageHeader', async () => {
             description='Description'
             title='Title'
             displayItems={[]}
-            loadingAllItems={false}
-        >
+            loadingAllItems={false}>
             <div>Test</div>
         </ConfigurationPageHeader>
     );
@@ -52,30 +51,36 @@ test('Not a number in url', () => {
 
 describe('getErrorMessage', () => {
     test('Error 422', () => {
-        expect(getErrorMessage({
-            status: 422,
-            data: { detail: [{ loc: [], msg: 'Error message' }] },
-            statusText: '',
-            headers: {},
-            config: {}
-        })).toEqual('Error message');
+        expect(
+            getErrorMessage({
+                status: 422,
+                data: { detail: [{ loc: [], msg: 'Error message' }] },
+                statusText: '',
+                headers: {},
+                config: {}
+            })
+        ).toEqual('Error message');
     });
     test('Error 400', () => {
-        expect(getErrorMessage({
-            status: 400,
-            data: { detail: 'Error message' },
-            statusText: '',
-            headers: {},
-            config: {}
-        })).toEqual('Error message');
+        expect(
+            getErrorMessage({
+                status: 400,
+                data: { detail: 'Error message' },
+                statusText: '',
+                headers: {},
+                config: {}
+            })
+        ).toEqual('Error message');
     });
     test('Error 500', () => {
-        expect(getErrorMessage({
-            status: 500,
-            data: {},
-            statusText: '',
-            headers: {},
-            config: {}
-        })).toEqual('Erreur serveur');
+        expect(
+            getErrorMessage({
+                status: 500,
+                data: {},
+                statusText: '',
+                headers: {},
+                config: {}
+            })
+        ).toEqual('Erreur serveur');
     });
 });

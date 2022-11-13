@@ -1,19 +1,18 @@
-import SaleCol from '@components/SaleCol';
-import { getConsumables, getGlasses, getOutOfStocks } from '@proxies/SalePageProxies';
+import SellColumn from '@components/SellColumn';
+import { getConsumables, getGlasses, getOutOfStocks } from '@proxies/SellPageProxies';
 import type { APIItem, Consumable, Glass, ItemSell, OutOfStockSell } from '@types';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-interface SalePageProps {
-    setItems: (nbItems: ItemSell[]) => void
+interface SellPageProps {
+    setItems: (nbItems: ItemSell[]) => void;
 }
 
-export default function SalePage(props: SalePageProps): JSX.Element {
+export default function SellPage(props: SellPageProps): JSX.Element {
     /**
-    * This state is in charge of storing the items for the glasses sale.
-    */
+     * This state is in charge of storing the items for the glasses sale.
+     */
     const [itemsGlass, setItemsGlass] = useState<Array<APIItem<Glass | OutOfStockSell>>>([]);
     const [getDataBoissons, { loading: loadingBoisson, error: errorBoisson }] = getGlasses(setItemsGlass);
-
     /**
      * This state is in charge of storing the items for the consumables sale.
      */
@@ -26,11 +25,11 @@ export default function SalePage(props: SalePageProps): JSX.Element {
     const [itemsOutOfStocks, setItemsOutOfStocks] = useState<Array<APIItem<OutOfStockSell>>>([]);
     const [getDataHorsStock, { loading: loadingHorsStock, error: errorHorsStock }] = getOutOfStocks(setItemsOutOfStocks);
 
-    const makeApiCalls = (): void => {
+    const makeApiCalls = useCallback((): void => {
         getDataBoissons();
         getDataConsommables();
         getDataHorsStock();
-    };
+    }, [getDataBoissons, getDataConsommables, getDataHorsStock]);
 
     /**
      * Make all the api calls to get the items at first render.
@@ -47,20 +46,22 @@ export default function SalePage(props: SalePageProps): JSX.Element {
     }, [itemsGlass, itemsConsumables, itemsOutOfStocks]);
 
     return (
-        <div className="md:grid-cols-3 flex-grow grid md:gap-2 gap-y-2 grid-cols-1" aria-label='window-vente'>
-            <SaleCol
+        <div
+            className='md:grid-cols-3 flex-grow grid md:gap-2 gap-y-2 grid-cols-1'
+            aria-label='window-vente'>
+            <SellColumn
                 items={itemsGlass}
                 setItems={setItemsGlass}
                 loading={loadingBoisson}
                 error={errorBoisson}
             />
-            <SaleCol
+            <SellColumn
                 items={itemsConsumables}
                 setItems={setItemsConsumbales}
                 loading={loadingConsommable}
                 error={errorConsommable}
             />
-            <SaleCol
+            <SellColumn
                 items={itemsOutOfStocks}
                 setItems={setItemsOutOfStocks}
                 loading={loadingHorsStock}

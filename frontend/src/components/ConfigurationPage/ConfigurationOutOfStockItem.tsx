@@ -4,7 +4,7 @@ import { deleteOutOfStockItem, getOutOfStockItemById, getOutOfStockItems, postOu
 import { getIcon } from '@styles/utils';
 import type { OutOfStockItemBuy, OutOfStockItemSell } from '@types';
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 
 export default function ConfigurationOutOfStockItem(): JSX.Element {
@@ -21,9 +21,9 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
     const [outOfStockItem, setOutOfStockItem] = useState<OutOfStockItemBuy | OutOfStockItemSell>({ name: '', icon: 'Misc' });
     const [getOutOfStockItemByIdData, { error: errorGetById, loading: loadingGetById }] = getOutOfStockItemById(setOutOfStockItem);
 
-    const makeApiCalls = (): void => {
+    const makeApiCalls = useCallback((): void => {
         getOutOfStockItemsData();
-    };
+    }, [getOutOfStockItemsData]);
 
     const changeURLwithId = (id: number): void => {
         addIdToUrl(id);
@@ -111,25 +111,31 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
         return (
             <ConfigurationPageHeader
                 title='Modification des produits hors stock'
-                description='Les produits hors stock sont les produits qui n&apos;apparaitrons pas dans la gestion des stocks comme les planchette de charcuterie.'
+                description="Les produits hors stock sont les produits qui n'apparaitrons pas dans la gestion des stocks comme les planchette de charcuterie."
                 changeURLwithId={changeURLwithId}
                 callbackQuery={setQuery}
                 displayItems={displayOutOfStockItems}
-                loadingAllItems={loadingAllOutOfStockItems}
-            >
+                loadingAllItems={loadingAllOutOfStockItems}>
                 <>
-                    {displayOutOfStockItems.map((outOfStockItem) =>
-                        <div key={outOfStockItem.id} className='flex flex-col space-y-5 p-4 bg-gray-50 rounded-lg shadow-md dark:bg-gray-700'>
+                    {displayOutOfStockItems.map((outOfStockItem) => (
+                        <div
+                            key={outOfStockItem.id}
+                            className='flex flex-col space-y-5 p-4 bg-gray-50 rounded-lg shadow-md dark:bg-gray-700'>
                             <div className='flex justify-start items-center'>
                                 <div>{getIcon(outOfStockItem.icon, 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
                                 <span className='text-center text-xl ml-4'>{outOfStockItem.name}</span>
                             </div>
                             <div className='flex grow justify-end space-x-5'>
-                                {outOfStockItem.sellPrice !== undefined ? (<div className='self-end pb-2 grow'>Vente à {outOfStockItem.sellPrice}€</div>) : null}
-                                <button className='btn-primary self-end' aria-label='edit' onClick={() => changeURLwithId(outOfStockItem.id as number)}>Editer</button>
+                                {outOfStockItem.sellPrice !== undefined ? <div className='self-end pb-2 grow'>Vente à {outOfStockItem.sellPrice}€</div> : null}
+                                <button
+                                    className='btn-primary self-end'
+                                    aria-label='edit'
+                                    onClick={() => changeURLwithId(outOfStockItem.id as number)}>
+                                    Editer
+                                </button>
                             </div>
                         </div>
-                    )}
+                    ))}
                 </>
             </ConfigurationPageHeader>
         );
@@ -141,17 +147,27 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
                 item={outOfStockItem}
                 errorGetById={errorGetById}
                 loadingGetById={loadingGetById}
-                id={id}
-            >
+                id={id}>
                 <>
-                    <h1 className="text-2xl mt-3">{id !== -1 ? 'Modification' : 'Ajout'} d&apos;un produit hors stock :</h1>
+                    <h1 className='text-2xl mt-3'>{id !== -1 ? 'Modification' : 'Ajout'} d&apos;un produit hors stock :</h1>
                     {id !== -1 && (
-                        <div className="flex justify-end mt-2">
-                            <button className='btn-danger' onClick={onDelete}>Supprimer</button> {/* TODO Vérif car dangereux */}
+                        <div className='flex justify-end mt-2'>
+                            <button
+                                className='btn-danger'
+                                onClick={onDelete}>
+                                Supprimer
+                            </button>{' '}
+                            {/* TODO Vérif car dangereux */}
                         </div>
                     )}
-                    <form className="flex flex-col self-start space-y-4 p-4 grow w-full" onSubmit={onSubmit}>
-                        <label htmlFor='name' className='text-2xl'>Nom :</label>
+                    <form
+                        className='flex flex-col self-start space-y-4 p-4 grow w-full'
+                        onSubmit={onSubmit}>
+                        <label
+                            htmlFor='name'
+                            className='text-2xl'>
+                            Nom :
+                        </label>
                         <input
                             type='text'
                             id='name'
@@ -163,38 +179,38 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
                             onChange={(event) => setOutOfStockItem({ ...outOfStockItem, name: event.target.value })}
                         />
                         <div className='text-2xl'>Type de produit :</div>
-                        <div className="flex flex-col items-start flex-wrap space-y-2">
+                        <div className='flex flex-col items-start flex-wrap space-y-2'>
                             <div className='flex space-x-4 items-center'>
                                 <input
-                                    type="radio"
+                                    type='radio'
                                     id='Food'
-                                    name="icon"
+                                    name='icon'
                                     aria-label='icon-food'
                                     value='Food'
                                     className='checkbox'
                                     defaultChecked={outOfStockItem.icon === 'Food'}
                                     onChange={() => setOutOfStockItem({ ...outOfStockItem, icon: 'Food' })}
                                 />
-                                <label htmlFor="Food">{getIcon('Food', 'w-10 h-10 dark:text-white text-black')}</label>
+                                <label htmlFor='Food'>{getIcon('Food', 'w-10 h-10 dark:text-white text-black')}</label>
                             </div>
                             <div className='flex space-x-4 items-center'>
                                 <input
-                                    type="radio"
+                                    type='radio'
                                     id='Soft'
-                                    name="icon"
+                                    name='icon'
                                     aria-label='icon-soft'
                                     value='Soft'
                                     className='checkbox'
                                     defaultChecked={outOfStockItem.icon === 'Soft'}
                                     onChange={() => setOutOfStockItem({ ...outOfStockItem, icon: 'Soft' })}
                                 />
-                                <label htmlFor="Soft">{getIcon('Soft', 'w-10 h-10 dark:text-white text-black')}</label>
+                                <label htmlFor='Soft'>{getIcon('Soft', 'w-10 h-10 dark:text-white text-black')}</label>
                             </div>
                             <div className='flex space-x-4 items-center'>
                                 <input
-                                    type="radio"
+                                    type='radio'
                                     id='Misc'
-                                    name="icon"
+                                    name='icon'
                                     aria-label='icon-misc'
                                     value='Misc'
                                     className='checkbox'
@@ -205,9 +221,9 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
                             </div>
                             <div className='flex space-x-4 items-center'>
                                 <input
-                                    type="radio"
+                                    type='radio'
                                     id='Glass'
-                                    name="icon"
+                                    name='icon'
                                     aria-label='icon-glass'
                                     value='Glass'
                                     className='checkbox'
@@ -217,8 +233,12 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
                                 <label htmlFor='Glass'>{getIcon('Glass', 'w-10 h-10 dark:text-white text-black')}</label>
                             </div>
                         </div>
-                        <div className="flex flex-col space-y-5">
-                            <label htmlFor='sellPriceCheckbox' className='text-2xl'>Produit disponoble à la vente ?</label>
+                        <div className='flex flex-col space-y-5'>
+                            <label
+                                htmlFor='sellPriceCheckbox'
+                                className='text-2xl'>
+                                Produit disponoble à la vente ?
+                            </label>
                             <div className='flex space-x-4 items-center'>
                                 <input
                                     ref={sellPriceCheckbox}
@@ -236,7 +256,11 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
                                         }
                                     }}
                                 />
-                                <label htmlFor='sellPrice' className='text-2xl'>Prix :</label>
+                                <label
+                                    htmlFor='sellPrice'
+                                    className='text-2xl'>
+                                    Prix :
+                                </label>
                                 <input
                                     type='number'
                                     id='sellPrice'
@@ -250,8 +274,11 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
                                 />
                             </div>
                         </div>
-                        <div className="grow"></div>
-                        <button type='submit' className='btn-primary' role='submit'>
+                        <div className='grow'></div>
+                        <button
+                            type='submit'
+                            className='btn-primary'
+                            role='submit'>
                             {outOfStockItem.id === undefined ? 'Ajouter le nouveau produit hors stock' : 'Modifier le produit hors stock'}
                         </button>
                     </form>
@@ -260,5 +287,12 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
         );
     };
 
-    return <DisplayPage id={id} homePage={homePage} itemPage={outOfStockItemPage} handleGoBack={handleGoBack} />;
+    return (
+        <DisplayPage
+            id={id}
+            homePage={homePage}
+            itemPage={outOfStockItemPage}
+            handleGoBack={handleGoBack}
+        />
+    );
 }

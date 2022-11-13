@@ -29,8 +29,13 @@ const newItemConsumable: ItemBuy = {
 
 describe('Form tests', () => {
     test('Barrel Item tests', async () => {
-        const onSubmit = jest.fn();
-        render(<Form item={newItemBarrel} onSubmited={onSubmit} />);
+        const onSubmit = vi.fn();
+        render(
+            <Form
+                item={newItemBarrel}
+                onSubmited={onSubmit}
+            />
+        );
         expect(screen.queryAllByText('Vente', { exact: false })).not.toBeNull();
         expect(screen.queryAllByText('écocup', { exact: false })).not.toBeNull();
 
@@ -111,8 +116,13 @@ describe('Form tests', () => {
     });
 
     test('Consumable Item tests', async () => {
-        const onSubmit = jest.fn();
-        render(<Form item={newItemConsumable} onSubmited={onSubmit} />);
+        const onSubmit = vi.fn();
+        render(
+            <Form
+                item={newItemConsumable}
+                onSubmited={onSubmit}
+            />
+        );
         expect(screen.getByText('Type de produit :')).toBeInTheDocument();
         await userEvent.click(screen.getByLabelText('icon-food'));
         expect(screen.getByLabelText('icon-food')).toBeChecked();

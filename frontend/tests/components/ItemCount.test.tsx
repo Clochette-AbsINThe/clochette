@@ -19,10 +19,15 @@ const itemData: ItemSell = {
     item
 };
 
-const onValueChange = jest.fn();
+const onValueChange = vi.fn();
 
 describe('ItemCount', () => {
-    render(<ItemCount item={itemData} onValueChange={onValueChange} />);
+    render(
+        <ItemCount
+            item={itemData}
+            onValueChange={onValueChange}
+        />
+    );
     const itemOnScreen = screen.queryByText('Test');
 
     test('Render ItemCount', () => {
@@ -31,27 +36,46 @@ describe('ItemCount', () => {
 });
 
 test('ItemCount plus click', async () => {
-    render(<ItemCount item={itemData} onValueChange={onValueChange} />);
+    render(
+        <ItemCount
+            item={itemData}
+            onValueChange={onValueChange}
+        />
+    );
     const plus = screen.getByLabelText('plus');
     await userEvent.click(plus);
     expect(onValueChange).toHaveBeenLastCalledWith(1, item);
 });
 test('ItemCount minus click', async () => {
-    render(<ItemCount item={itemData} onValueChange={onValueChange} />);
+    render(
+        <ItemCount
+            item={itemData}
+            onValueChange={onValueChange}
+        />
+    );
     const minus = screen.getByLabelText('minus');
     await userEvent.click(minus);
     expect(onValueChange).toHaveBeenCalledWith(-1, item);
 });
 test('ItemCount reset click', async () => {
-    render(<ItemCount item={itemData} onValueChange={onValueChange} />);
+    render(
+        <ItemCount
+            item={itemData}
+            onValueChange={onValueChange}
+        />
+    );
     const reset = screen.getByLabelText('reset');
     await userEvent.click(reset);
     expect(onValueChange).toHaveBeenCalledWith(0, item);
 });
 
-
 test('Icon is rendered', () => {
-    render(<ItemCount item={itemData} onValueChange={onValueChange} />);
+    render(
+        <ItemCount
+            item={itemData}
+            onValueChange={onValueChange}
+        />
+    );
     const icon = screen.queryByLabelText('icon');
     expect(icon).toBeInTheDocument();
 });
@@ -67,9 +91,12 @@ test('Icon is not rendered', () => {
         table: 'glass',
         item: newitem
     };
-    render(<ItemCount item={newitemData} onValueChange={onValueChange} />);
+    render(
+        <ItemCount
+            item={newitemData}
+            onValueChange={onValueChange}
+        />
+    );
     const icon = screen.queryByLabelText('icon');
     expect(icon).toBeNull();
 });
-
-

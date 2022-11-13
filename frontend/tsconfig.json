@@ -1,38 +1,67 @@
 {
-    "extends": "astro/tsconfigs/strict",
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@components/*": [
-                "src/components/*"
-            ],
-            "@layouts/*": [
-                "src/layouts/*"
-            ],
-            "@pages/*": [
-                "src/pages/*"
-            ],
-            "@assets/*": [
-                "src/assets/*"
-            ],
-            "@styles/*": [
-                "src/styles/*"
-            ],
-            "@include/*": [
-                "src/layouts/include/*"
-            ],
-            "@hooks/*": [
-                "src/hooks/*"
-            ],
-            "@proxies/*": [
-                "src/proxies/*"
-            ],
-            "@types": [
-                "src/types/types"
-            ],
-            "@endpoints": [
-                "src/types/endpoints"
-            ],
-        }
-    }
+  "compilerOptions": {
+    "target": "es5",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "noUncheckedIndexedAccess": true,
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@layouts/*": [
+        "src/layouts/*"
+      ],
+      "@pages/*": [
+        "src/pages/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ],
+      "@styles/*": [
+        "src/styles/*"
+      ],
+      "@include/*": [
+        "src/layouts/include/*"
+      ],
+      "@hooks/*": [
+        "src/hooks/*"
+      ],
+      "@proxies/*": [
+        "src/proxies/*"
+      ],
+      "@types": [
+        "src/types/types"
+      ],
+      "@endpoints": [
+        "src/types/endpoints"
+      ],
+    },
+    "types": [
+      "vitest/globals"
+    ]
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

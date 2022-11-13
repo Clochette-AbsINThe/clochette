@@ -1,4 +1,4 @@
-import { getConsumables, getGlasses, getOutOfStocks, postNewSellTransaction } from '@proxies/SalePageProxies';
+import { getConsumables, getGlasses, getOutOfStocks, postNewSellTransaction } from '@proxies/SellPageProxies';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { ItemSell } from '@types';
 import { rest } from 'msw';
@@ -83,9 +83,8 @@ const data = {
     ]
 };
 
-
 test('getGlasses', async () => {
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getGlasses(setItem));
     act(() => {
         result.current[0]();
@@ -131,7 +130,7 @@ test('getGlasses error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getGlasses(setItem));
     act(() => {
         result.current[0]();
@@ -141,7 +140,7 @@ test('getGlasses error', async () => {
 });
 
 test('getOutOfStocks', async () => {
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getOutOfStocks(setItem));
     act(() => {
         result.current[0]();
@@ -167,7 +166,7 @@ test('getOutOfStocks error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getOutOfStocks(setItem));
     act(() => {
         result.current[0]();
@@ -176,9 +175,8 @@ test('getOutOfStocks error', async () => {
     expect(setItem).toBeCalledWith([]);
 });
 
-
 test('getConsumables', async () => {
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getConsumables(setItem));
     act(() => {
         result.current[0]();
@@ -207,7 +205,7 @@ test('getConsumables error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getConsumables(setItem));
     act(() => {
         result.current[0]();
@@ -217,7 +215,7 @@ test('getConsumables error', async () => {
 });
 
 test('postTransaction', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => postNewSellTransaction(callback));
     act(() => {
         result.current[0](transactionItems, 'CB', 10, date);
@@ -240,4 +238,3 @@ test('postTransaction error', async () => {
     await waitFor(() => expect(result.current[1].loading).toBe(false));
     expect(result.current[1].error).not.toBeNull();
 });
-
