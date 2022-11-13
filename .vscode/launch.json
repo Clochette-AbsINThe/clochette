@@ -1,28 +1,27 @@
 {
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
   "configurations": [
     {
-      "command": "cd ./frontend && ./node_modules/.bin/astro dev --host",
-      "name": "Development server",
-      "request": "launch",
-      "type": "node-terminal"
-    },
-    {
       "type": "node",
-      "name": "vscode-jest-tests.v2",
       "request": "launch",
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "program": "/home/samug/ProjetPerso/clochette/frontend/node_modules/.bin/jest",
-      "cwd": "/home/samug/ProjetPerso/clochette/frontend/",
+      "name": "Debug Current Test File",
+      "autoAttachChildProcesses": true,
+      "skipFiles": [
+        "<node_internals>/**",
+        "**/node_modules/**"
+      ],
+      "program": "${workspaceRoot}/frontend/node_modules/vitest/vitest.mjs",
       "args": [
-        "--runInBand",
-        "--watchAll=false",
+        "run",
+        "${relativeFile}",
         "--config",
-        "/home/samug/ProjetPerso/clochette/frontend/jest.config.ts",
-        "--testTimeout",
-        "100000",
-      ]
+        "${workspaceRoot}/frontend/vitest.config.ts",
+        "-r",
+        "${workspaceRoot}/frontend"
+      ],
+      "smartStep": true,
+      "console": "integratedTerminal"
     }
   ]
 }

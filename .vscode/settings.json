@@ -2,7 +2,6 @@
     "eslint.validate": [
         "javascript",
         "javascriptreact",
-        "astro", // Enable .astro
         "typescript", // Enable .ts
         "typescriptreact" // Enable .tsx
     ],
@@ -11,12 +10,6 @@
         "**/.git": true,
         "frontend/node_modules/": true,
     },
-    "jest.coverageColors": {
-        "covered": "rgba(9, 156, 65, 0.1)",
-        "uncovered": "rgba(121, 31, 10, 0.1)",
-        "partially-covered": "rgba(235, 198, 52, 0.1)",
-    },
-    "jest.rootPath": "frontend",
-    "jest.debugMode": true,
-    "jest.jestCommandLine": "npm run test --"
+    "vitest.enable": true,
+    "vitest.commandLine": "./frontend/node_modules/.bin/vitest --config ./vitest.config.ts -r ./frontend/ --watch"
 }
