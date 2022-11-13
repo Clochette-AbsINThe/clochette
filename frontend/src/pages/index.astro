@@ -1,5 +1,6 @@
 ---
 // Component Imports
+import HomePage from '@components/HomePage';
 import Base from '@layouts/base.astro';
 
 const header = {
@@ -11,4 +12,6 @@ const header = {
 // https://docs.astro.build/core-concepts/astro-components/
 ---
 
-<Base head={header} />
+<Base head={header}>
+    <HomePage />
+</Base>
