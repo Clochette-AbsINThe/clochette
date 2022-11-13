@@ -138,8 +138,8 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
     return (
         <>
             <div className="md:grid-cols-3 flex-grow grid md:gap-2 gap-y-2 grid-cols-1" aria-label='window-achat'>
-                <div className='h-full flex flex-col border-2 rounded border-gray-800 dark:border-gray-300 p-1 justify-between'>
-                    <div className='flex flex-col'>
+                <div className='h-full flex flex-col rounded border border-gray-800 dark:border-gray-300 p-1 justify-between'>
+                    <div className='flex flex-col space-y-4'>
                         <h1 className='text-2xl font-bold'>Fûts :</h1>
                         <DropDownSelector
                             items={barrels}
@@ -190,7 +190,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                         }
                     </div>
                 </div>
-                <div className='col-span-2 border-2 rounded border-gray-800 dark:border-gray-300 p-1'>
+                <div className='col-span-2 border rounded border-gray-800 dark:border-gray-300 p-1'>
                     <h1 className='text-2xl font-bold'>Récapitulatif :</h1>
                     {selectedItems.map((item, index) => <RecapItem key={index} handleModalEdit={handleModalEdit} item={item} handleRemoveItem={handleRemoveItem} />)}
                 </div>

@@ -58,7 +58,7 @@ export default function SaleCol(props: SaleColProps): JSX.Element {
     }, [props.items]);
 
     return (
-        <div className="h-full flex flex-col border-2 rounded border-gray-800 dark:border-gray-300">
+        <div className="h-full flex flex-col border rounded border-gray-800 dark:border-gray-300">
             {props.loading && <Loader />}
             {props.error && <div className="text-red-500 text-center text-3xl">{props.error.message}</div>}
             {items.map((item, index) => (item.item.name === 'EcoCup')
