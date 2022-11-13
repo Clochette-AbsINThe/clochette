@@ -3,10 +3,9 @@ import useWindowSize from '@hooks/useWindowSize';
 import { useState } from 'react';
 
 const navitems = {
-    Home: '/',
-    Stocks: '/stocks',
     Transaction: '/transaction',
-    Historique: '/transaction-history',
+    Stocks: '/stocks',
+    Historique: '/transaction_history',
     Configuration: '/configuration'
 };
 
@@ -18,7 +17,7 @@ export default function Navbar(): JSX.Element {
     return (
         <header className="flex flex-col">
             <div className="flex">
-                <h1 className="text-4xl text-green-700 font-bold p-4">Clochette</h1>
+                <a href='/' className="text-4xl text-green-700 font-bold p-4">Clochette</a>
                 {dimension.width > 1024
                     ? (
                         <>
