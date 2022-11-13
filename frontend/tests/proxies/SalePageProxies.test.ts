@@ -29,7 +29,7 @@ const transactionItems: ItemSell[] = [
         }
     },
     {
-        table: 'outofstock',
+        table: 'out_of_stock',
         quantity: 1,
         item: {
             id: undefined,
@@ -42,10 +42,10 @@ const transactionItems: ItemSell[] = [
 ];
 
 const data = {
-    dateTime: date.toISOString(),
+    datetime: date.toISOString(),
     sale: true,
     paymentMethod: 'CB',
-    totalPrice: 10,
+    amount: 10,
     items: [
         {
             table: 'consumable',
@@ -71,7 +71,7 @@ const data = {
             }
         },
         {
-            table: 'outofstock',
+            table: 'out_of_stock',
             quantity: 1,
             item: {
                 fkID: 21,
@@ -96,7 +96,7 @@ test('getGlasses', async () => {
             table: 'glass',
             quantity: 0,
             item: {
-                fKID: 1,
+                fkID: 1,
                 name: 'boisson 1',
                 sellPrice: 2,
                 icon: 'Beer'
@@ -106,14 +106,14 @@ test('getGlasses', async () => {
             table: 'glass',
             quantity: 0,
             item: {
-                fKID: 2,
+                fkID: 2,
                 name: 'boisson 2',
                 sellPrice: 2,
                 icon: 'Beer'
             }
         },
         {
-            table: 'outofstock',
+            table: 'out_of_stock',
             quantity: 0,
             item: {
                 name: 'EcoCup',
@@ -127,7 +127,7 @@ test('getGlasses', async () => {
 
 test('getGlasses error', async () => {
     server.use(
-        rest.get('https://clochette.dev/api/v1/Glass', (req, res, ctx) => {
+        rest.get('https://clochette.dev/api/v1/barrel/mounted/', (req, res, ctx) => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
@@ -149,13 +149,13 @@ test('getOutOfStocks', async () => {
     await waitFor(() => expect(result.current[1].loading).toBe(false));
     expect(setItem).toBeCalledWith([
         {
-            table: 'outofstock',
+            table: 'out_of_stock',
             quantity: 0,
             item: {
                 name: 'Planchette Charcuterie',
                 sellPrice: 5,
                 icon: 'Food',
-                fkID: 1
+                fkID: 2
             }
         }
     ]);
@@ -163,7 +163,7 @@ test('getOutOfStocks', async () => {
 
 test('getOutOfStocks error', async () => {
     server.use(
-        rest.get('https://clochette.dev/api/v1/OutOfStockItem/Sell', (req, res, ctx) => {
+        rest.get('https://clochette.dev/api/v1/out_of_stock_item/sell/', (req, res, ctx) => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
@@ -203,7 +203,7 @@ test('getConsumables', async () => {
 
 test('getConsumables error', async () => {
     server.use(
-        rest.get('https://clochette.dev/api/v1/Consumable', (req, res, ctx) => {
+        rest.get('https://clochette.dev/api/v1/consumable/unique/', (req, res, ctx) => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
@@ -229,7 +229,7 @@ test('postTransaction', async () => {
 
 test('postTransaction error', async () => {
     server.use(
-        rest.post('https://clochette.dev/api/v1/Transaction/Sell', (req, res, ctx) => {
+        rest.post('https://clochette.dev/api/v1/transaction', (req, res, ctx) => {
             return res(ctx.status(500));
         })
     );

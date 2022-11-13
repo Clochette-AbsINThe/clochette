@@ -1,6 +1,6 @@
 import { getConsumables, getDrinks, getEcoCup, getOutOfStocks, postNewBuyTransaction } from '@proxies/BuyPageProxies';
 import { act, renderHook, waitFor } from '@testing-library/react';
-import type { ItemBuy } from '@types';
+import type { ItemBuy, TransactionType } from '@types';
 import { rest } from 'msw';
 import { date, server } from '../setupTests';
 
@@ -56,7 +56,7 @@ const transactionItems: ItemBuy[] = [
         }
     },
     {
-        table: 'outofstock',
+        table: 'out_of_stock',
         quantity: 1,
         item: {
             fkID: 21,
@@ -67,7 +67,7 @@ const transactionItems: ItemBuy[] = [
         }
     },
     {
-        table: 'outofstock',
+        table: 'out_of_stock',
         quantity: 1,
         item: {
             fkID: -1,
@@ -79,11 +79,11 @@ const transactionItems: ItemBuy[] = [
     }
 ];
 
-const data = {
-    dateTime: date.toISOString(),
+const data: TransactionType<ItemBuy> = {
+    datetime: date.toISOString(),
     sale: false,
     paymentMethod: 'CB',
-    totalPrice: 10,
+    amount: 10,
     items: [
         {
             table: 'consumable',
@@ -136,7 +136,7 @@ const data = {
             }
         },
         {
-            table: 'outofstock',
+            table: 'out_of_stock',
             quantity: 1,
             item: {
                 fkID: 21,
@@ -147,7 +147,7 @@ const data = {
             }
         },
         {
-            table: 'outofstock',
+            table: 'out_of_stock',
             quantity: 1,
             item: {
                 fkID: 10,
