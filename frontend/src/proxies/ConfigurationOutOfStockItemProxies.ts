@@ -3,7 +3,7 @@ import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyId, IProxyPost } from '@proxies/Config';
 import type { OutOfStockItemBuy, OutOfStockItemSell } from '@types';
 import type { AxiosError, AxiosResponse } from 'axios';
-import { endpoints } from 'src/types/endpoints';
+import { endpoints } from '@endpoints';
 
 export function getOutOfStockItems(setItem: (value: Array<OutOfStockItemBuy | OutOfStockItemSell>) => void): IProxy {
     const [{ error: error1, loading: loading1 }, getBuy] = useAxios<OutOfStockItemBuy[]>(endpoints.v1.outOfStockItemBuy);
