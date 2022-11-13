@@ -5,17 +5,19 @@ import { rest } from 'msw';
 import { server } from '../setupTests';
 
 test('getConsumableItems', async () => {
-    const setItems = jest.fn();
+    const setItems = vi.fn();
     const { result } = renderHook(() => getConsumableItems(setItems));
     act(() => {
         result.current[0]();
     });
     await waitFor(() => expect(result.current[1].loading).toBe(false));
-    expect(setItems).toHaveBeenLastCalledWith([{
-        id: 0,
-        name: 'Pizza',
-        icon: 'Food'
-    }]);
+    expect(setItems).toHaveBeenLastCalledWith([
+        {
+            id: 0,
+            name: 'Pizza',
+            icon: 'Food'
+        }
+    ]);
 });
 
 test('getConsumableItems error', async () => {
@@ -24,7 +26,7 @@ test('getConsumableItems error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItems = jest.fn();
+    const setItems = vi.fn();
     const { result } = renderHook(() => getConsumableItems(setItems));
     act(() => {
         result.current[0]();
@@ -34,7 +36,7 @@ test('getConsumableItems error', async () => {
 });
 
 test('getConsumableItembyId', async () => {
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getConsumableItemById(setItem));
     act(() => {
         result.current[0](0);
@@ -53,7 +55,7 @@ test('getConsumableItembyId error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getConsumableItemById(setItem));
     act(() => {
         result.current[0](0);
@@ -63,7 +65,7 @@ test('getConsumableItembyId error', async () => {
 });
 
 test('postConsumableItem', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => postConsumableItem(callback));
     act(() => {
         result.current[0]({
@@ -86,7 +88,7 @@ test('postConsumableItem error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => postConsumableItem(callback));
     act(() => {
         result.current[0]({
@@ -105,7 +107,7 @@ test('putConsumableItem', async () => {
         name: 'PutConsommable',
         icon: 'Misc'
     };
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => putConsumableItem(callback));
     act(() => {
         result.current[0](sendData as ConsumableItem);
@@ -121,7 +123,7 @@ test('putConsumableItem error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => putConsumableItem(callback));
     act(() => {
         result.current[0]({
@@ -141,7 +143,7 @@ test('deleteConsumableItem', async () => {
         name: 'Pizza',
         icon: 'Food'
     };
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => deleteConsumableItem(callback));
     act(() => {
         result.current[0](sendData.id);
@@ -157,7 +159,7 @@ test('deleteConsumableItem error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => deleteConsumableItem(callback));
     act(() => {
         result.current[0](0);

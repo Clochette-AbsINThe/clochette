@@ -6,20 +6,23 @@ import { rest } from 'msw';
 import { act } from 'react-dom/test-utils';
 import { server } from '../../setupTests';
 
-
 test('Render ConfigurationDrink', async () => {
     server.use(
         rest.get('https://clochette.dev/api/v1/drink/', (req, res, ctx) => {
-            return res(ctx.json([
-                {
-                    id: 1,
-                    name: 'Rouge'
-                },
-                {
-                    id: 2,
-                    name: 'Blanc'
-                }
-            ]), ctx.status(200), ctx.delay(50));
+            return res(
+                ctx.json([
+                    {
+                        id: 1,
+                        name: 'Rouge'
+                    },
+                    {
+                        id: 2,
+                        name: 'Blanc'
+                    }
+                ]),
+                ctx.status(200),
+                ctx.delay(50)
+            );
         })
     );
     render(<ConfigurationDrink />);
@@ -29,7 +32,6 @@ test('Render ConfigurationDrink', async () => {
     });
     expect(screen.getByText('Rouge')).toBeInTheDocument();
 });
-
 
 test('Edit a drink succes', async () => {
     render(<ConfigurationDrink />);
@@ -43,7 +45,7 @@ test('Edit a drink succes', async () => {
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
-    expect(screen.getByText('Modification d\'une boisson', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("Modification d'une boisson", { exact: false })).toBeInTheDocument();
     await userEvent.type(screen.getByLabelText('name'), 'test');
     await userEvent.click(screen.getByRole('submit'));
 
@@ -70,7 +72,7 @@ test('Edit a drink error', async () => {
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
-    expect(screen.getByText('Modification d\'une boisson', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("Modification d'une boisson", { exact: false })).toBeInTheDocument();
     await userEvent.type(screen.getByLabelText('name'), 'test');
     await userEvent.click(screen.getByRole('submit'));
 
@@ -92,7 +94,7 @@ test('Add a drink succes', async () => {
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
-    expect(screen.getByText('Ajout d\'une boisson', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("Ajout d'une boisson", { exact: false })).toBeInTheDocument();
     await userEvent.type(screen.getByLabelText('name'), 'NewDrink');
     await userEvent.click(screen.getByRole('submit'));
 
@@ -119,14 +121,14 @@ test('Add a drink error', async () => {
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
-    expect(screen.getByText('Ajout d\'une boisson', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("Ajout d'une boisson", { exact: false })).toBeInTheDocument();
     await userEvent.type(screen.getByLabelText('name'), 'NewDrink');
     await userEvent.click(screen.getByRole('submit'));
 
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
-    expect(screen.getByText('Erreur lors de l\'ajout de NewDrink. Error message')).toBeInTheDocument();
+    expect(screen.getByText("Erreur lors de l'ajout de NewDrink. Error message")).toBeInTheDocument();
 });
 
 test('Delete a drink succes', async () => {
@@ -141,7 +143,7 @@ test('Delete a drink succes', async () => {
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
-    expect(screen.getByText('Modification d\'une boisson', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("Modification d'une boisson", { exact: false })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
 
     await act(async () => {
@@ -167,7 +169,7 @@ test('Delete a drink error', async () => {
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
-    expect(screen.getByText('Modification d\'une boisson', { exact: false })).toBeInTheDocument();
+    expect(screen.getByText("Modification d'une boisson", { exact: false })).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
 
     await act(async () => {

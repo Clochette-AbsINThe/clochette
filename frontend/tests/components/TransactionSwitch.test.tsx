@@ -3,8 +3,13 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 test('TransactionSwitch click Vente', async () => {
-    const changeTransactionType = jest.fn();
-    render(<TransactionSwitch changeTransactionType={changeTransactionType} startTransactionType={TransactionEnum.Achat} />);
+    const changeTransactionType = vi.fn();
+    render(
+        <TransactionSwitch
+            changeTransactionType={changeTransactionType}
+            startTransactionType={TransactionEnum.Achat}
+        />
+    );
     const item = screen.queryByText('Achat');
     expect(item).toBeInTheDocument();
     const achat = screen.getByLabelText('Achat');

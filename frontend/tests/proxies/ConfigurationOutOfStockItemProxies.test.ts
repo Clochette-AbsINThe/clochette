@@ -5,7 +5,7 @@ import { rest } from 'msw';
 import { server } from '../setupTests';
 
 test('getOutOfStockItems', async () => {
-    const setItems = jest.fn();
+    const setItems = vi.fn();
     const { result } = renderHook(() => getOutOfStockItems(setItems));
     act(() => {
         result.current[0]();
@@ -38,7 +38,7 @@ test('getOutOfStockItems error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItems = jest.fn();
+    const setItems = vi.fn();
     const { result } = renderHook(() => getOutOfStockItems(setItems));
     act(() => {
         result.current[0]();
@@ -48,7 +48,7 @@ test('getOutOfStockItems error', async () => {
 });
 
 test('getOutOfStockItembyId', async () => {
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getOutOfStockItemById(setItem));
     act(() => {
         result.current[0](1);
@@ -67,7 +67,7 @@ test('getOutOfStockItembyId error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const setItem = jest.fn();
+    const setItem = vi.fn();
     const { result } = renderHook(() => getOutOfStockItemById(setItem));
     act(() => {
         result.current[0](0);
@@ -77,7 +77,7 @@ test('getOutOfStockItembyId error', async () => {
 });
 
 test('postOutOfStockItem', async () => {
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => postOutOfStockItem(callback));
     act(() => {
         result.current[0]({
@@ -100,7 +100,7 @@ test('postOutOfStockItem error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => postOutOfStockItem(callback));
     act(() => {
         result.current[0]({
@@ -119,7 +119,7 @@ test('putOutOfStockItem', async () => {
         name: 'PutOutOfStockItem',
         icon: 'Glass'
     };
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => putOutOfStockItem(callback));
     act(() => {
         result.current[0](sendData as OutOfStockItemBuy);
@@ -135,7 +135,7 @@ test('putOutOfStockItem error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => putOutOfStockItem(callback));
     act(() => {
         result.current[0]({
@@ -155,7 +155,7 @@ test('deleteOutOfStockItem', async () => {
         name: 'EcoCup',
         icon: 'Glass'
     };
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => deleteOutOfStockItem(callback));
     act(() => {
         result.current[0](sendData.id);
@@ -171,7 +171,7 @@ test('deleteOutOfStockItem error', async () => {
             return res(ctx.status(500), ctx.delay(100));
         })
     );
-    const callback = jest.fn();
+    const callback = vi.fn();
     const { result } = renderHook(() => deleteOutOfStockItem(callback));
     act(() => {
         result.current[0](1);

@@ -4,23 +4,28 @@ import userEvent from '@testing-library/user-event';
 
 beforeAll(() => {
     render(
-        <PopupWindows trigger={{ className: '', content: 'TriggerButton' }}>
+        <PopupWindows trigger={{ classNameContent: '', content: 'TriggerButton' }}>
             <div>PopupWindow</div>
-        </PopupWindows>);
+        </PopupWindows>
+    );
 });
 
 afterEach(() => {
     render(
-        <PopupWindows trigger={{ className: '', content: 'TriggerButton' }}>
+        <PopupWindows trigger={{ classNameContent: '', content: 'TriggerButton' }}>
             <div>PopupWindow</div>
-        </PopupWindows>);
+        </PopupWindows>
+    );
 });
 
 test('Open the popup when the open props is set to true', () => {
     render(
-        <PopupWindows trigger={{ className: '', content: 'TriggerButton' }} onOpen={true}>
+        <PopupWindows
+            trigger={{ classNameContent: '', content: 'TriggerButton' }}
+            onOpen={true}>
             <div>PopupWindow</div>
-        </PopupWindows>);
+        </PopupWindows>
+    );
     expect(screen.getByText('PopupWindow')).toBeInTheDocument();
 });
 
@@ -57,7 +62,7 @@ test('close popupWindows when clicking the close button', async () => {
     expect(popupWindow).toBeNull();
 });
 
-test('don\'t close popupWindows when clicking inside', async () => {
+test("don't close popupWindows when clicking inside", async () => {
     const triggerButton = screen.getByRole('button', { name: 'button-popup' });
     await userEvent.click(triggerButton);
     const popupWindow = screen.getByText('PopupWindow');
@@ -66,7 +71,7 @@ test('don\'t close popupWindows when clicking inside', async () => {
     expect(screen.getByText('PopupWindow')).toBeInTheDocument();
 });
 
-test('don\'t close popupWindows when pressing a != Escape', async () => {
+test("don't close popupWindows when pressing a != Escape", async () => {
     const triggerButton = screen.getByRole('button', { name: 'button-popup' });
     await userEvent.click(triggerButton);
     await userEvent.keyboard('a');
