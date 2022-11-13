@@ -36,3 +36,27 @@ test('getIcon Misc', () => {
     const icon = screen.getByTestId('Misc');
     expect(icon).toBeInTheDocument();
 });
+
+test('getIcon Cash', () => {
+    render(<div>{getIcon('Cash', '')}</div>);
+    const icon = screen.getByTestId('Cash');
+    expect(icon).toBeInTheDocument();
+});
+
+test('getIcon CB', () => {
+    render(<div>{getIcon('CB', '')}</div>);
+    const icon = screen.getByTestId('CB');
+    expect(icon).toBeInTheDocument();
+});
+
+test('getIcon Lydia', () => {
+    render(<div>{getIcon('Lydia', '')}</div>);
+    const icon = screen.getByTestId('Lydia');
+    expect(icon).toBeInTheDocument();
+});
+
+test('getIcon Setting', () => {
+    render(<div>{getIcon('Setting', '')}</div>);
+    const icon = screen.getByTestId('Setting');
+    expect(icon).toBeInTheDocument();
+});
