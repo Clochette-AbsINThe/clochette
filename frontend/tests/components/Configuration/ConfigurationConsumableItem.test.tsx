@@ -1,4 +1,4 @@
-import ConfigurationConsumabelItem from '@components/ConfigurationPage/ConfigurationConsumableItem';
+import ConfigurationConsumableItem from '@components/ConfigurationPage/ConfigurationConsumableItem';
 import { addIdToUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -24,7 +24,7 @@ test('Render ConfigurationConsumabelItem', async () => {
             ]), ctx.status(200), ctx.delay(50));
         })
     );
-    render(<ConfigurationConsumabelItem />);
+    render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
@@ -34,7 +34,7 @@ test('Render ConfigurationConsumabelItem', async () => {
 
 
 test('Edit a consumable item succes', async () => {
-    render(<ConfigurationConsumabelItem />);
+    render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
@@ -61,7 +61,7 @@ test('Edit a consumable item error', async () => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
         })
     );
-    render(<ConfigurationConsumabelItem />);
+    render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
@@ -83,7 +83,7 @@ test('Edit a consumable item error', async () => {
 });
 
 test('Add a consumable item succes', async () => {
-    render(<ConfigurationConsumabelItem />);
+    render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
@@ -116,7 +116,7 @@ test('Add a consumable item error', async () => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
         })
     );
-    render(<ConfigurationConsumabelItem />);
+    render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
@@ -138,7 +138,7 @@ test('Add a consumable item error', async () => {
 });
 
 test('Delete a consumable item succes', async () => {
-    render(<ConfigurationConsumabelItem />);
+    render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
@@ -164,7 +164,7 @@ test('Delete a consumable item error', async () => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
         })
     );
-    render(<ConfigurationConsumabelItem />);
+    render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
@@ -186,7 +186,7 @@ test('Delete a consumable item error', async () => {
 
 test('Go to 404', async () => {
     addIdToUrl(404);
-    render(<ConfigurationConsumabelItem />);
+    render(<ConfigurationConsumableItem />);
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
     });
