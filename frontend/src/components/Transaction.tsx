@@ -21,7 +21,7 @@ export default function Transaction(): JSX.Element {
     /**
      * This state is in charge of storing the transaction type.
      */
-    const [transactionType, setTransactionType] = useState(TransactionEnum.Achat);
+    const [transactionType, setTransactionType] = useState(TransactionEnum.Vente);
 
     /**
      * This state is in charge of storing the total price.
@@ -37,7 +37,7 @@ export default function Transaction(): JSX.Element {
     /**
      * This state is in charge of storing the payment method.
      */
-    const [paymentMethod] = useState<PaymentMethod>('CB');
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('Lydia');
 
     /**
      * This state is in charge of storing the open state of the popup window.
@@ -175,16 +175,50 @@ export default function Transaction(): JSX.Element {
                     <div className='flex flex-col flex-grow'>
                         <div className='text-3xl font-bold pb-2 border-b-2 border-neutral-400'>Récapitulatif de la commande :</div>
                         {renderRecap()}
-                        <div className='flex pt-3 self-end space-x-5'>
-                            {getIcon('CB')}
-                            {getIcon('Lydia')}
-                            {getIcon('Cash')}
-                            <div className='text-2xl font-bold mr-8' aria-label='total-price'>Total: {totalPrice}€</div>
-                            <button id='submit-btn' className='btn-primary' onClick={handlePostData} disabled={loadingBuy || loadingSell}>Valider le paiment</button>
+                        <div className='flex justify-between flex-wrap'>
+                            <PaymentMethodForm changePaymentMethod={setPaymentMethod} paymentMethod={paymentMethod} />
+                            <div className='flex pt-3 self-end space-x-5'>
+                                <div className='text-2xl font-bold mr-8' aria-label='total-price'>Total: {totalPrice}€</div>
+                                <button id='submit-btn' className='btn-primary' onClick={handlePostData} disabled={loadingBuy || loadingSell}>Valider le paiment</button>
+                            </div>
                         </div>
                     </div>
                 </PopupWindows>
             </div>
         </>
+    );
+};
+
+export function PaymentMethodForm({ paymentMethod, changePaymentMethod }: { paymentMethod: PaymentMethod, changePaymentMethod: (data: PaymentMethod) => void }): JSX.Element {
+    return (
+        <div className='flex flex-col space-y-3 mr-8'>
+            <label htmlFor='payment-method'>
+                <span className='text-2xl font-bold mb-2'>Moyen de paiement</span>
+            </label>
+            <div className='flex flex-row flex-wrap'>
+                <label htmlFor='cb' className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
+                    <input type='radio' id='cb' name='payment-method' value='CB' checked={paymentMethod === 'CB'} onChange={() => changePaymentMethod('CB')} className='checkbox' aria-label='cb' />
+                    {getIcon('CB')}
+                    <span>
+                        CB
+                    </span>
+                </label>
+
+                <label htmlFor='lydia' className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
+                    <input type='radio' id='lydia' name='payment-method' value='Lydia' checked={paymentMethod === 'Lydia'} onChange={() => changePaymentMethod('Lydia')} className='checkbox' aria-label='lydia' />
+                    {getIcon('Lydia')}
+                    <span>
+                        Lydia
+                    </span>
+                </label>
+                <label htmlFor='cash' className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
+                    <input type='radio' id='cash' name='payment-method' value='Cash' checked={paymentMethod === 'Espèces'} onChange={() => changePaymentMethod('Espèces')} className='checkbox' aria-label='cash' />
+                    {getIcon('Cash')}
+                    <span>
+                        Espèces
+                    </span>
+                </label>
+            </div>
+        </div>
     );
 };
