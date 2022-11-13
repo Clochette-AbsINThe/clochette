@@ -1,6 +1,6 @@
 export type TableData = 'out_of_stock' | 'glass' | 'barrel' | 'consumable';
 export type PaymentMethod = 'CB' | 'Espèces' | 'Lydia';
-export type IconName = 'Glass' | 'Beer' | 'Food' | 'Soft' | 'Barrel' | 'Misc' | 'Lydia' | 'Cash' | 'CB';
+export type IconName = 'Glass' | 'Beer' | 'Food' | 'Soft' | 'Barrel' | 'Misc' | 'Lydia' | 'Cash' | 'CB' | 'Setting';
 
 // drink/ --> get // Rempli le dropdown des fûts
 // drink/ --> post // Ajoute une nouvelle boisson manquante dans la base de données

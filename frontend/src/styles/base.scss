@@ -1,4 +1,6 @@
+@tailwind base;
 @tailwind components;
+@tailwind utilities;
 
 .color-green {
     color: green;
@@ -14,6 +16,10 @@
 
 .color-white {
     color: white;
+}
+
+button {
+    background-color: unset;
 }
 
 @layer components {
