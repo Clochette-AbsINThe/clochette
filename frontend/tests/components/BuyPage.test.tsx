@@ -1,4 +1,5 @@
 import BuyPage, { createNewItem, RecapItem, updateFkID } from '@components/BuyPage';
+import { endpoints } from '@endpoints';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ConsumableItem, Drink, ItemBuy, OutOfStockItemBuy } from '@types';
@@ -12,8 +13,8 @@ const item: ItemBuy = {
     item: {
         fkID: 0,
         name: 'Consumable 1',
-        unitPrice: 0,
-        sellPrice: 0,
+        unitPrice: 1,
+        sellPrice: 1,
         icon: 'Food'
     }
 };
@@ -24,8 +25,8 @@ const item2: ItemBuy = {
     item: {
         fkID: -1,
         name: 'Consumable 2',
-        unitPrice: 0,
-        sellPrice: 0,
+        unitPrice: 1,
+        sellPrice: 1,
         icon: 'Food'
     }
 };
@@ -42,15 +43,16 @@ describe('createNewItem tests', () => {
                 name: 'Boisson 1',
                 unitPrice: 0,
                 sellPrice: 0,
-                icon: 'Barrel'
+                icon: 'Barrel',
+                empty: false
             }
         });
     });
 
     test('create a new item of type OutOfStockBuy', async () => {
-        const newItem = createNewItem({ id: 1, name: 'OutOfStock 1', icon: 'Food' }, 'outofstock');
+        const newItem = createNewItem({ id: 1, name: 'OutOfStock 1', icon: 'Food' }, 'out_of_stock');
         expect(newItem).toEqual({
-            table: 'outofstock',
+            table: 'out_of_stock',
             quantity: 1,
             item: {
                 fkID: 1,
@@ -62,9 +64,9 @@ describe('createNewItem tests', () => {
     });
 
     test('create a new item of type OutOfStock EcoCup', async () => {
-        const newItem = createNewItem({ id: 0, name: 'EcoCup', icon: 'Glass' }, 'outofstock');
+        const newItem = createNewItem({ id: 0, name: 'EcoCup', icon: 'Glass' }, 'out_of_stock');
         expect(newItem).toEqual({
-            table: 'outofstock',
+            table: 'out_of_stock',
             quantity: 1,
             item: {
                 fkID: 0,
@@ -85,7 +87,8 @@ describe('createNewItem tests', () => {
                 name: 'Consumable 1',
                 unitPrice: 0,
                 sellPrice: 0,
-                icon: 'Food'
+                icon: 'Food',
+                empty: false
             }
         });
     });
@@ -108,13 +111,18 @@ test('BuyPage renders', async () => {
     });
     expect(screen.getByText('1€')).toBeInTheDocument();
     expect(screen.getByText('Consumable 1')).toBeInTheDocument();
+
     await userEvent.click(screen.getByLabelText('add-ecocup'));
     expect(screen.getByText('Nombre :')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('submit'));
     expect(changeSelectedItems).toHaveBeenCalled();
+
     await userEvent.click(screen.getAllByLabelText('edit')[0]);
+    expect(screen.getByText('Nombre :')).toBeInTheDocument();
     await userEvent.keyboard('{Escape}');
+
     await userEvent.click(screen.getAllByLabelText('edit')[0]);
+    expect(screen.getByText('Nombre :')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('submit'));
     expect(changeSelectedItems).toHaveBeenCalled();
 
@@ -124,7 +132,7 @@ test('BuyPage renders', async () => {
 
 test('EcoCup error', async () => {
     server.use(
-        rest.get('https://clochette.dev/api/v1/OutOfStockItem/Buy', (req, res, ctx) => {
+        rest.get(`https://clochette.dev/api/v1${endpoints.v1.outOfStockItemBuy}`, (req, res, ctx) => {
             return res(ctx.status(500));
         })
     );
