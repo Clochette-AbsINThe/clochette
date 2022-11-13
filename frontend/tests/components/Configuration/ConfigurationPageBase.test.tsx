@@ -1,4 +1,4 @@
-import { addIdToUrl, ConfigurationPageHeader, getIdFromUrl, GoBackButton, removeIdFromUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
+import { addIdToUrl, ConfigurationPageHeader, getErrorMessage, getIdFromUrl, GoBackButton, removeIdFromUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -48,4 +48,34 @@ test('test id in url', () => {
 test('Not a number in url', () => {
     window.history.pushState({}, 'Test', '?id=notanumber');
     expect(getIdFromUrl()).toEqual(null);
+});
+
+describe('getErrorMessage', () => {
+    test('Error 422', () => {
+        expect(getErrorMessage({
+            status: 422,
+            data: { detail: [{ loc: [], msg: 'Error message' }] },
+            statusText: '',
+            headers: {},
+            config: {}
+        })).toEqual('Error message');
+    });
+    test('Error 400', () => {
+        expect(getErrorMessage({
+            status: 400,
+            data: { detail: 'Error message' },
+            statusText: '',
+            headers: {},
+            config: {}
+        })).toEqual('Error message');
+    });
+    test('Error 500', () => {
+        expect(getErrorMessage({
+            status: 500,
+            data: {},
+            statusText: '',
+            headers: {},
+            config: {}
+        })).toEqual('Erreur serveur');
+    });
 });
