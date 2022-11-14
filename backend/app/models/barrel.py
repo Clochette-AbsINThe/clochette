@@ -2,14 +2,12 @@ from sqlalchemy import Boolean, Column, Enum, Integer, Float, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.db.base_class import Base
-from app.core.types import IconName
 
 class Barrel(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     unit_price = Column(Float, nullable=False)
     sell_price = Column(Float, nullable=False)
     is_mounted = Column(Boolean, nullable=False)
-    icon = Column(Enum(IconName), nullable=False)
     empty = Column(Boolean, nullable=False)
 
     drink_id = Column(Integer, ForeignKey("drink.id"))
