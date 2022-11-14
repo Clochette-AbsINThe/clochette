@@ -18,6 +18,11 @@ async def read_mounted_barrels(db=Depends(get_db)) -> list:
     return barrels.query(db, is_mounted=True, limit=None)
 
 
+@router.get("/distincts/", response_model=list[barrel_schema.Barrel])
+async def read_distincts_barrels(db=Depends(get_db)) -> list:
+    return barrels.read_distincts(db, "drink_id", limit=None)
+
+
 @router.put("/{barrel_id}", response_model=barrel_schema.Barrel)
 async def update_barrel(barrel_id: int, barrel: barrel_schema.BarrelUpdate, db=Depends(get_db)) -> barrel_schema.Barrel:
     db_barrel = barrels.get(db, barrel_id)
