@@ -10,17 +10,22 @@ router = APIRouter()
 
 @router.get("/", response_model=list[barrel_schema.Barrel])
 async def read_barrels(db=Depends(get_db)) -> list:
-    return barrels.query(db, limit=None)
+    return barrels.query(db, empty=False, limit=None)
 
 
 @router.get("/mounted/", response_model=list[barrel_schema.Barrel])
 async def read_mounted_barrels(db=Depends(get_db)) -> list:
-    return barrels.query(db, is_mounted=True, limit=None)
+    return barrels.query(db, is_mounted=True, empty=False, limit=None)
 
 
 @router.get("/distincts/", response_model=list[barrel_schema.Barrel])
 async def read_distincts_barrels(db=Depends(get_db)) -> list:
-    return barrels.read_distincts(db, "drink_id", limit=None)
+    return barrels.query(db, distinct='drink_id', empty=False, limit=None)
+
+
+@router.get("/all/", response_model=list[barrel_schema.Barrel])
+async def read_all_barrels(db=Depends(get_db)) -> list:
+    return barrels.query(db, limit=None)
 
 
 @router.put("/{barrel_id}", response_model=barrel_schema.Barrel)
