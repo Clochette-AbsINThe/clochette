@@ -4,7 +4,7 @@ from app.core.config import DefaultModel
 
 class TreasuryBase(DefaultModel):
     total_amount: float
-    cash_amount: float = Field(..., gt=0)
+    cash_amount: float = Field(..., ge=0)
 
 
 class TreasuryCreate(TreasuryBase):
