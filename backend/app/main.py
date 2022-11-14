@@ -23,7 +23,7 @@ api_router = APIRouter(
 @app.on_event("startup")
 async def run_migrations():
     # Wait for db to start
-    if os.environ.get("MIGRATE") is not None:
+    if os.environ.get("MIGRATE") == 'True':
         while True:
             try:
                 conn = psycopg2.connect(
