@@ -2,8 +2,10 @@ from typing import Any, Generic, Optional, Type, TypeVar
 
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
+from app.core.decorators import handle_exceptions
 from app.db.base_class import Base
 
 
@@ -40,6 +42,7 @@ class CRUDBase(
     def query(self, db: Session, *, skip: int = 0, limit: int = 100, **kwargs) -> list[ModelType]:
         return db.query(self.model).filter_by(**kwargs).offset(skip).limit(limit).all()
 
+    @handle_exceptions('Data relationship integrity error', IntegrityError)
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
         obj_in_data = jsonable_encoder(obj_in, by_alias=False)
         db_obj = self.model(**obj_in_data)
@@ -48,6 +51,7 @@ class CRUDBase(
         db.refresh(db_obj)
         return db_obj
 
+    @handle_exceptions('Data relationship integrity error', IntegrityError)
     def update(self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType | dict[str, Any]) -> ModelType:
         obj_data = jsonable_encoder(db_obj)
         if isinstance(obj_in, dict):
