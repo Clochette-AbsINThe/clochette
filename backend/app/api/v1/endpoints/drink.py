@@ -9,16 +9,6 @@ from app.schemas import drink as drink_schema
 router = APIRouter()
 
 
-@router.get("/search", response_model=drink_schema.DrinkSearchResults)
-async def search_drinks(*, query: str | None = Query(None, min_length=3), limit: int | None = 10, db=Depends(get_db)) -> dict:
-    drinks_found = drinks.read_multi(db)
-    if not query:
-        return {"results": drinks_found}
-    results = filter(lambda drinks_found: query.lower()
-                     in drinks_found.name.lower(), drinks_found)
-    return {"results": list(results)[:limit]}
-
-
 @router.get("/{drink_id}", response_model=drink_schema.Drink)
 async def read_drink(drink_id: int, db=Depends(get_db)) -> Any:
     drink = drinks.read(db, drink_id)
@@ -35,7 +25,7 @@ async def read_drinks(db=Depends(get_db)):
 @router.post("/", response_model=drink_schema.Drink)
 async def create_drink(drink: drink_schema.DrinkCreate, db=Depends(get_db)) -> dict:
     # Check if drink already exists
-    if drinks.query(db, name=drink.name):
+    if drinks.query(db, name=drink.name, limit=1):
         raise HTTPException(status_code=400, detail="Drink already exists")
     return drinks.create(db, obj_in=drink)
 
@@ -45,7 +35,7 @@ async def update_drink(drink_id: int, drink: drink_schema.DrinkUpdate, db=Depend
     old_drink = drinks.read(db, drink_id)
     if old_drink is None:
         raise HTTPException(status_code=404, detail="Drink not found")
-    results = drinks.query(db, name=drink.name)
+    results = drinks.query(db, name=drink.name, limit=None)
     if results and results[0].id != old_drink.id:
         raise HTTPException(
             status_code=400, detail="Consumable item already exists")

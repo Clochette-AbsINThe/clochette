@@ -16,7 +16,7 @@ async def read_consumable_items(db=Depends(get_db)) -> list:
 
 @router.post("/", response_model=consumable_item_schema.ConsumableItem)
 async def create_consumable_item(consumable_item: consumable_item_schema.ConsumableItemCreate, db=Depends(get_db)) -> dict:
-    if consumable_items.query(db, name=consumable_item.name):
+    if consumable_items.query(db, name=consumable_item.name, limit=1):
         raise HTTPException(
             status_code=400, detail="Consumable item already exists")
     return consumable_items.create(db, obj_in=consumable_item)
@@ -37,7 +37,7 @@ async def update_consumable_item(consumable_item_id: int, consumable_item: consu
     if old_consumable_item is None:
         raise HTTPException(
             status_code=404, detail="Consumabel Item not found")
-    results = consumable_items.query(db, name=consumable_item.name)
+    results = consumable_items.query(db, name=consumable_item.name, limit=None)
     if len(results) and results[0].id != old_consumable_item.id:
         raise HTTPException(
             status_code=400, detail="Consumable item already exists")
