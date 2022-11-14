@@ -6,7 +6,7 @@ from app.schemas.out_of_stock_item import OutOfStockItem
 
 
 class OutOfStockBase(DefaultModel):
-    item_id: int = Field(..., alias='fkID')
+    item_id: int = Field(..., alias='fkId')
 
     unit_price: Optional[float] = Field(default=None, gt=0)
 
