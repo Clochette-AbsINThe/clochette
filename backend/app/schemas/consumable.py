@@ -6,8 +6,8 @@ from app.schemas.consumable_item import ConsumableItem
 
 class ConsumableBase(DefaultModel):
     consumable_item_id: int = Field(..., alias='fkId')
-    unit_price: float = Field(..., ge=0)
-    sell_price: float = Field(..., ge=0)
+    unit_price: float = Field(..., gt=0)
+    sell_price: float = Field(..., gt=0)
     empty: bool
 
 
