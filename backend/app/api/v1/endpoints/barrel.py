@@ -13,7 +13,7 @@ async def read_barrels(db=Depends(get_db)) -> list:
     return barrels.query(db, limit=None)
 
 
-@router.get("/mounted", response_model=list[barrel_schema.Barrel])
+@router.get("/mounted/", response_model=list[barrel_schema.Barrel])
 async def read_mounted_barrels(db=Depends(get_db)) -> list:
     return barrels.query(db, is_mounted=True, limit=None)
 
