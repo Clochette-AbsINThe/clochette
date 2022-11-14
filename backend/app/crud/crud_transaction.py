@@ -28,8 +28,9 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
                     if transaction.sale is True and items[i].table == 'consumable':
                         crud_table.update(db, db_obj=crud_table.get(db, id=items[i].id), obj_in=ConsumableUpdate(**obj_in.dict()))
                     crud_table.create(db, obj_in=obj_in)
-        except IntegrityError:
+        except IntegrityError as e:
             db.rollback()
+            print(e) # TODO: Remove when email alert middleware is implemented #24
             raise HTTPException(status_code=400, detail=f'Data relationship integrity error')
         
         return transaction
