@@ -26,7 +26,7 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
             for _ in range(items[i].quantity):
                 obj_in = items[i].item
                 if transaction.sale is True and items[i].table == 'consumable':
-                    crud_table.update(db, db_obj=crud_table.get(db, id=items[i].id), obj_in=ConsumableUpdate(**obj_in.dict()))
+                    crud_table.update(db, db_obj=crud_table.read(db, id=items[i].id), obj_in=ConsumableUpdate(**obj_in.dict()))
                 else:
                     crud_table.create(db, obj_in=obj_in)
         
