@@ -6,6 +6,7 @@ from app.schemas.drink import Drink
 
 
 class BarrelBase(DefaultModel):
+    drink_id: int | None = Field(..., alias='fkId')
     empty: bool = False
     icon: IconName
     is_mounted: bool = False
@@ -21,18 +22,8 @@ class BarrelUpdate(BarrelBase):
     pass
 
 
-class BarrelInDB(BarrelBase):
-    id: int
-    drink_id: int | None
-    drink: Drink | None
-
-    class Config:
-        orm_mode = True
-
-
 class Barrel(BarrelBase):
     id: int
-    drink_id: int | None
 
     class Config:
         orm_mode = True
