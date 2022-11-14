@@ -5,7 +5,7 @@ from pydantic import BaseModel
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.core.decorators import handle_exceptions
+from app.core.decorator import handle_exceptions
 from app.db.base_class import Base
 
 

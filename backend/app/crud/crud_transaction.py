@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from app.core.decorators import handle_exceptions
+from app.core.decorator import handle_exceptions
 from app.crud.base import CRUDBase
 from app.crud.crud_treasury import treasury as treasuries
 from app.models.transaction import Transaction
