@@ -34,9 +34,8 @@ async def read_drinks(db=Depends(get_db)):
 
 @router.post("/", response_model=drink_schema.Drink)
 async def create_drink(drink: drink_schema.DrinkCreate, db=Depends(get_db)) -> dict:
-    results = list(filter(lambda drinks_found: drink.name.lower(
-    ) == drinks_found.name.lower(), drinks.read_multi(db)))[:1]  # TODO: Improve this
-    if len(results):
+    # Check if drink already exists
+    if drinks.query(db, name=drink.name):
         raise HTTPException(status_code=400, detail="Drink already exists")
     return drinks.create(db, obj_in=drink)
 
@@ -44,11 +43,10 @@ async def create_drink(drink: drink_schema.DrinkCreate, db=Depends(get_db)) -> d
 @router.put("/{drink_id}", response_model=drink_schema.Drink)
 async def update_drink(drink_id: int, drink: drink_schema.DrinkUpdate, db=Depends(get_db)):
     old_drink = drinks.read(db, drink_id)
-    results = list(filter(lambda drinks_found: drink.name.lower(
-    ) == drinks_found.name.lower(), drinks.read_multi(db)))[:1]  # TODO: Improve this
     if old_drink is None:
         raise HTTPException(status_code=404, detail="Drink not found")
-    if len(results) and results[0].id != old_drink.id:
+    results = drinks.query(db, name=drink.name)
+    if results and results[0].id != old_drink.id:
         raise HTTPException(
             status_code=400, detail="Consumable item already exists")
     return drinks.update(db, db_obj=old_drink, obj_in=drink)
