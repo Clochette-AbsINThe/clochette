@@ -5,6 +5,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.crud.base import CRUDBase
+from app.crud.crud_treasury import treasury as treasuries
 from app.models.transaction import Transaction
 from app.schemas.transaction import TransactionCreate, TransactionFrontCreate, TransactionUpdate
 
@@ -14,6 +15,8 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
         try:
             # Create transaction
             transaction = super().create(db, obj_in=TransactionCreate(**obj_in.dict()))
+            # Update treasury
+            treasuries.add_transaction(db, obj_in=transaction)
             # Get items
             items = obj_in.items
             for i in range(len(items)):
@@ -24,6 +27,7 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
         except IntegrityError:
             db.rollback()
             raise HTTPException(status_code=400, detail=f'Data relationship integrity error')
+        
         return transaction
 
 
