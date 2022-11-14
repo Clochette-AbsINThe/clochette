@@ -36,8 +36,10 @@ class CRUDBase(
     def read_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> list[ModelType]:
         return db.query(self.model).offset(skip).limit(limit).all()
 
-    def query(self, db: Session, distinct: str = '', skip: int = 0, limit: int = 100, **kwargs) -> list[ModelType]:
-        return db.query(self.model).filter_by(**kwargs).distinct(distinct).offset(skip).limit(limit).all()
+    def query(self, db: Session, distinct: str | None = None, skip: int = 0, limit: int = 100, **kwargs) -> list[ModelType]:
+        if distinct:
+            return db.query(self.model).filter_by(**kwargs).distinct(distinct).offset(skip).limit(limit).all()
+        return db.query(self.model).filter_by(**kwargs).offset(skip).limit(limit).all()
 
     @handle_exceptions('Data relationship integrity error', IntegrityError)
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
