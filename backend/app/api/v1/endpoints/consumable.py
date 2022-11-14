@@ -11,3 +11,8 @@ router = APIRouter()
 @router.get("/", response_model=list[consumable_schema.Consumable])
 async def read_consumables(db=Depends(get_db)) -> list:
     return consumables.query(db, limit=None)
+
+
+@router.get("/distincts/", response_model=list[consumable_schema.Consumable])
+async def read_consumables_distincts(db=Depends(get_db)) -> list:
+    return consumables/read_consumables_distincts(db, 'consumbale_item_id', limit=None)
