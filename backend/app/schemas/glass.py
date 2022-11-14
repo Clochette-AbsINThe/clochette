@@ -37,9 +37,3 @@ class Glass(GlassBase):
 
     class Config:
         orm_mode = True
-
-class GlassFront(GlassBase):
-    id: int
-    barrel_id: int
-    name: str
-    sell_price: float = Field(..., gt=0)
