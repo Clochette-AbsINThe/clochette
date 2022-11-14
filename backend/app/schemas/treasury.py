@@ -3,7 +3,7 @@ from pydantic import Field
 from app.core.config import DefaultModel
 
 class TreasuryBase(DefaultModel):
-    total_amount: float = Field(..., gt=0)
+    total_amount: float
     cash_amount: float = Field(..., gt=0)
 
 
