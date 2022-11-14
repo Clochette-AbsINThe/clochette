@@ -13,6 +13,8 @@ class DefaultModel(BaseModel):
 class Settings(BaseSettings):
     API_V1_PREFIX: str = "/api/v1"
 
+    ALLOWED_HOSTS: list[str] = ["*"] # Shouldn't be set to ["*"] in production!
+
     # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
     BACKEND_CORS_ORIGIN: list[AnyHttpUrl] = []
 
