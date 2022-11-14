@@ -7,7 +7,7 @@ const newItemBarrel: ItemBuy = {
     table: 'barrel',
     quantity: 1,
     item: {
-        fkID: -1,
+        fkId: -1,
         name: '',
         unitPrice: 0,
         sellPrice: 0,
@@ -19,7 +19,7 @@ const newItemConsumable: ItemBuy = {
     table: 'consumable',
     quantity: 1,
     item: {
-        fkID: -1,
+        fkId: -1,
         name: '',
         unitPrice: 0,
         sellPrice: 0,
@@ -106,7 +106,7 @@ describe('Form tests', () => {
             table: 'barrel',
             quantity: 1,
             item: {
-                fkID: -1,
+                fkId: -1,
                 name: 'New Barrel',
                 unitPrice: 4,
                 sellPrice: 10,

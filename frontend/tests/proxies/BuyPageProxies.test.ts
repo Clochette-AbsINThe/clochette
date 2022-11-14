@@ -9,7 +9,7 @@ const transactionItems: ItemBuy[] = [
         table: 'consumable',
         quantity: 1,
         item: {
-            fkID: 1,
+            fkId: 1,
             name: 'Pizza',
             icon: 'Food',
             unitPrice: 1,
@@ -21,7 +21,7 @@ const transactionItems: ItemBuy[] = [
         table: 'consumable',
         quantity: 1,
         item: {
-            fkID: -1,
+            fkId: -1,
             name: 'NewConsumable',
             icon: 'Misc',
             unitPrice: 1,
@@ -33,7 +33,7 @@ const transactionItems: ItemBuy[] = [
         table: 'barrel',
         quantity: 1,
         item: {
-            fkID: 11,
+            fkId: 11,
             name: 'Rouge',
             unitPrice: 50,
             sellPrice: 2,
@@ -46,7 +46,7 @@ const transactionItems: ItemBuy[] = [
         table: 'barrel',
         quantity: 1,
         item: {
-            fkID: -1,
+            fkId: -1,
             name: 'NewDrink',
             unitPrice: 50,
             sellPrice: 2,
@@ -59,7 +59,7 @@ const transactionItems: ItemBuy[] = [
         table: 'out_of_stock',
         quantity: 1,
         item: {
-            fkID: 21,
+            fkId: 21,
             name: 'EcoCup',
             icon: 'Glass',
             unitPrice: 1,
@@ -70,7 +70,7 @@ const transactionItems: ItemBuy[] = [
         table: 'out_of_stock',
         quantity: 1,
         item: {
-            fkID: -1,
+            fkId: -1,
             name: 'NewOutOfStock',
             icon: 'Misc',
             unitPrice: 1,
@@ -89,7 +89,7 @@ const data: TransactionType<ItemBuy> = {
             table: 'consumable',
             quantity: 1,
             item: {
-                fkID: 1,
+                fkId: 1,
                 name: 'Pizza',
                 icon: 'Food',
                 unitPrice: 1,
@@ -101,7 +101,7 @@ const data: TransactionType<ItemBuy> = {
             table: 'consumable',
             quantity: 1,
             item: {
-                fkID: 10,
+                fkId: 10,
                 name: 'NewConsumable',
                 icon: 'Misc',
                 unitPrice: 1,
@@ -113,7 +113,7 @@ const data: TransactionType<ItemBuy> = {
             table: 'barrel',
             quantity: 1,
             item: {
-                fkID: 11,
+                fkId: 11,
                 name: 'Rouge',
                 unitPrice: 50,
                 sellPrice: 2,
@@ -126,7 +126,7 @@ const data: TransactionType<ItemBuy> = {
             table: 'barrel',
             quantity: 1,
             item: {
-                fkID: 10,
+                fkId: 10,
                 name: 'NewDrink',
                 unitPrice: 50,
                 sellPrice: 2,
@@ -139,7 +139,7 @@ const data: TransactionType<ItemBuy> = {
             table: 'out_of_stock',
             quantity: 1,
             item: {
-                fkID: 21,
+                fkId: 21,
                 name: 'EcoCup',
                 icon: 'Glass',
                 unitPrice: 1,
@@ -150,7 +150,7 @@ const data: TransactionType<ItemBuy> = {
             table: 'out_of_stock',
             quantity: 1,
             item: {
-                fkID: 10,
+                fkId: 10,
                 name: 'NewOutOfStock',
                 icon: 'Misc',
                 unitPrice: 1,

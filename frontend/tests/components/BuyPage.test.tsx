@@ -11,7 +11,7 @@ const item: ItemBuy = {
     table: 'consumable',
     quantity: 1,
     item: {
-        fkID: 0,
+        fkId: 0,
         name: 'Consumable 1',
         unitPrice: 1,
         sellPrice: 1,
@@ -23,7 +23,7 @@ const item2: ItemBuy = {
     table: 'consumable',
     quantity: 1,
     item: {
-        fkID: -1,
+        fkId: -1,
         name: 'Consumable 2',
         unitPrice: 1,
         sellPrice: 1,
@@ -38,7 +38,7 @@ describe('createNewItem tests', () => {
             table: 'barrel',
             quantity: 1,
             item: {
-                fkID: 0,
+                fkId: 0,
                 name: 'Boisson 1',
                 unitPrice: 0,
                 sellPrice: 0,
@@ -54,7 +54,7 @@ describe('createNewItem tests', () => {
             table: 'out_of_stock',
             quantity: 1,
             item: {
-                fkID: 1,
+                fkId: 1,
                 name: 'OutOfStock 1',
                 unitPrice: 0,
                 icon: 'Food'
@@ -68,7 +68,7 @@ describe('createNewItem tests', () => {
             table: 'out_of_stock',
             quantity: 1,
             item: {
-                fkID: 0,
+                fkId: 0,
                 name: 'EcoCup',
                 unitPrice: 1,
                 icon: 'Glass'
@@ -82,7 +82,7 @@ describe('createNewItem tests', () => {
             table: 'consumable',
             quantity: 1,
             item: {
-                fkID: 0,
+                fkId: 0,
                 name: 'Consumable 1',
                 unitPrice: 0,
                 sellPrice: 0,
@@ -183,7 +183,7 @@ test('updateFkID', async () => {
             ...item2,
             item: {
                 ...item2.item,
-                fkID: 1
+                fkId: 1
             }
         }
     ]);

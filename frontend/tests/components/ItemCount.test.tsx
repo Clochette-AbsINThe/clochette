@@ -7,7 +7,7 @@ const item: Consumable = {
     name: 'Test',
     unitPrice: 0,
     sellPrice: 0,
-    fkID: 0,
+    fkId: 0,
     id: 0,
     icon: 'Food',
     empty: false
@@ -84,7 +84,7 @@ test('Icon is not rendered', () => {
     const newitem: Glass = {
         name: 'test',
         sellPrice: 1,
-        fkID: 0
+        fkId: 0
     };
     const newitemData: ItemSell = {
         quantity: 0,

@@ -21,7 +21,7 @@ export function getEcoCup(setItems: (item?: OutOfStockItemBuy) => void): IProxy 
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => {});
+        getDataAsync().catch(() => { });
     };
 
     return [getData, { loading, error }];
@@ -47,7 +47,7 @@ export function getDrinks(setItems: (items: Drink[]) => void): IProxy {
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => {});
+        getDataAsync().catch(() => { });
     };
 
     return [getData, { loading, error }];
@@ -68,7 +68,7 @@ export function getConsumables(setItems: (items: ConsumableItem[]) => void): IPr
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => {});
+        getDataAsync().catch(() => { });
     };
 
     return [getData, { loading, error }];
@@ -89,7 +89,7 @@ export function getOutOfStocks(setItems: (items: OutOfStockItemBuy[]) => void): 
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => {});
+        getDataAsync().catch(() => { });
     };
 
     return [getData, { loading, error }];
@@ -112,46 +112,46 @@ export function postNewBuyTransaction(callback?: (data: AxiosResponse<unknown, a
         const newItems: ItemBuy[] = [];
         for (let i = 0; i < transactionItems.length; i++) {
             const item = transactionItems[i] as ItemBuy;
-            let fkID = item.item.fkID;
+            let fkId = item.item.fkId;
             switch (item.table) {
                 case 'out_of_stock': {
-                    if (item.item.fkID === -1) {
+                    if (item.item.fkId === -1) {
                         const dataRes = (await postOutOfStock({ data: { name: item.item.name, icon: item.item.icon } })).data;
-                        fkID = dataRes.id as number;
+                        fkId = dataRes.id as number;
                     }
                     newItems.push({
                         ...item,
                         item: {
                             ...item.item,
-                            fkID
+                            fkId
                         }
                     });
                     break;
                 }
                 case 'consumable': {
-                    if (item.item.fkID === -1) {
+                    if (item.item.fkId === -1) {
                         const dataRes = (await postConsumable({ data: { name: item.item.name, icon: item.item.icon } })).data;
-                        fkID = dataRes.id as number;
+                        fkId = dataRes.id as number;
                     }
                     newItems.push({
                         ...item,
                         item: {
                             ...item.item,
-                            fkID
+                            fkId
                         } as Consumable
                     });
                     break;
                 }
                 case 'barrel': {
-                    if (item.item.fkID === -1) {
+                    if (item.item.fkId === -1) {
                         const dataRes = (await postDrink({ data: { name: item.item.name } })).data;
-                        fkID = dataRes.id as number;
+                        fkId = dataRes.id as number;
                     }
                     newItems.push({
                         ...item,
                         item: {
                             ...item.item,
-                            fkID
+                            fkId
                         } as Barrel
                     });
                     break;

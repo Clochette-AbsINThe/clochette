@@ -17,7 +17,7 @@ export const server = setupServer(
             ctx.json([
                 {
                     id: 0,
-                    fkID: 0,
+                    fkId: 0,
                     name: 'Pizza',
                     sellPrice: 5,
                     unitPrice: 1,
@@ -34,7 +34,7 @@ export const server = setupServer(
             ctx.json([
                 {
                     id: 1,
-                    fkID: 1,
+                    fkId: 1,
                     name: 'boisson 1',
                     sellPrice: 2,
                     unitPrice: 1,
@@ -43,7 +43,7 @@ export const server = setupServer(
                 },
                 {
                     id: 2,
-                    fkID: 2,
+                    fkId: 2,
                     name: 'boisson 2',
                     sellPrice: 2,
                     unitPrice: 1,
@@ -86,7 +86,7 @@ export const server = setupServer(
                 items: [
                     {
                         id: 0,
-                        fkID: 1,
+                        fkId: 1,
                         name: 'Pizza',
                         icon: 'Food',
                         unitPrice: 1,
@@ -95,13 +95,13 @@ export const server = setupServer(
                     },
                     {
                         id: 10,
-                        fkID: 11,
+                        fkId: 11,
                         name: 'boisson 1',
                         sellPrice: 2
                     },
                     {
                         id: 20,
-                        fkID: 21,
+                        fkId: 21,
                         name: 'EcoCup',
                         icon: 'Glass',
                         unitPrice: 1

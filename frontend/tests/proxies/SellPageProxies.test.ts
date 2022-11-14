@@ -10,7 +10,7 @@ const transactionItems: ItemSell[] = [
         quantity: 1,
         item: {
             id: 0,
-            fkID: 1,
+            fkId: 1,
             name: 'Pizza',
             icon: 'Food',
             unitPrice: 1,
@@ -22,7 +22,7 @@ const transactionItems: ItemSell[] = [
         table: 'glass',
         quantity: 1,
         item: {
-            fkID: 11,
+            fkId: 11,
             name: 'boisson 1',
             sellPrice: 2,
             icon: 'Beer'
@@ -33,7 +33,7 @@ const transactionItems: ItemSell[] = [
         quantity: 1,
         item: {
             id: undefined,
-            fkID: 21,
+            fkId: 21,
             name: 'EcoCup',
             icon: 'Glass',
             sellPrice: 1
@@ -52,7 +52,7 @@ const data = {
             quantity: 1,
             item: {
                 id: 0,
-                fkID: 1,
+                fkId: 1,
                 name: 'Pizza',
                 icon: 'Food',
                 unitPrice: 1,
@@ -64,7 +64,7 @@ const data = {
             table: 'glass',
             quantity: 1,
             item: {
-                fkID: 11,
+                fkId: 11,
                 name: 'boisson 1',
                 sellPrice: 2,
                 icon: 'Beer'
@@ -74,7 +74,7 @@ const data = {
             table: 'out_of_stock',
             quantity: 1,
             item: {
-                fkID: 21,
+                fkId: 21,
                 name: 'EcoCup',
                 icon: 'Glass',
                 sellPrice: 1
@@ -95,7 +95,7 @@ test('getGlasses', async () => {
             table: 'glass',
             quantity: 0,
             item: {
-                fkID: 1,
+                fkId: 1,
                 name: 'boisson 1',
                 sellPrice: 2,
                 icon: 'Beer'
@@ -105,7 +105,7 @@ test('getGlasses', async () => {
             table: 'glass',
             quantity: 0,
             item: {
-                fkID: 2,
+                fkId: 2,
                 name: 'boisson 2',
                 sellPrice: 2,
                 icon: 'Beer'
@@ -118,7 +118,7 @@ test('getGlasses', async () => {
                 name: 'EcoCup',
                 sellPrice: 1,
                 icon: 'Glass',
-                fkID: 0
+                fkId: 0
             }
         }
     ]);
@@ -154,7 +154,7 @@ test('getOutOfStocks', async () => {
                 name: 'Planchette Charcuterie',
                 sellPrice: 5,
                 icon: 'Food',
-                fkID: 2
+                fkId: 2
             }
         }
     ]);
@@ -188,7 +188,7 @@ test('getConsumables', async () => {
             quantity: 0,
             item: {
                 id: 0,
-                fkID: 0,
+                fkId: 0,
                 name: 'Pizza',
                 sellPrice: 5,
                 unitPrice: 1,

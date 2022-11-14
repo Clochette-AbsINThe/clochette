@@ -54,7 +54,7 @@ export default function Form(props: FormProps): JSX.Element {
      */
     const renderIconChoice = (): JSX.Element => {
         const item = props.item.item;
-        if (item.fkID === -1 && props.item.table !== 'barrel') {
+        if (item.fkId === -1 && props.item.table !== 'barrel') {
             return (
                 <>
                     <div className='text-2xl'>Type de produit :</div>
@@ -119,11 +119,11 @@ export default function Form(props: FormProps): JSX.Element {
             />
             <input
                 type='number'
-                value={props.item.item.fkID}
+                value={props.item.item.fkId}
                 className='sr-only'
                 readOnly
-                id='fkID'
-                name='fkID'
+                id='fkId'
+                name='fkId'
                 disabled
             />
             <input
@@ -145,7 +145,7 @@ export default function Form(props: FormProps): JSX.Element {
                     className='input w-64'
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    disabled={props.item.item.fkID !== -1}
+                    disabled={props.item.item.fkId !== -1}
                     required
                 />
             </div>

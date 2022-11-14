@@ -1,4 +1,4 @@
-import Transaction from '@components/Transaction';
+import Transaction, { PaymentMethodForm } from '@components/Transaction';
 import { endpoints } from '@endpoints';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -202,4 +202,16 @@ test('Change paymentMethod', async () => {
     expect(screen.getByLabelText('lydia')).toBeChecked();
     await userEvent.click(screen.getByLabelText('cb'));
     expect(screen.getByLabelText('cb')).toBeChecked();
+});
+
+test('Render paymentMethodForm', () => {
+    render(
+        <PaymentMethodForm
+            changePaymentMethod={vi.fn()}
+            paymentMethod='CB'
+        />
+    );
+    expect(screen.getByLabelText('cash')).toBeInTheDocument();
+    expect(screen.getByLabelText('lydia')).toBeInTheDocument();
+    expect(screen.getByLabelText('cb')).toBeInTheDocument();
 });

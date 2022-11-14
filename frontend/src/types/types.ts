@@ -40,7 +40,7 @@ export interface OutOfStockItemSell {
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface Barrel {
     readonly id?: number;
-    readonly fkID: number; //* Drink['id']
+    readonly fkId: number; //* Drink['id']
     name: string;
     icon: IconName; //! Pas dans la réponse de l'API
     unitPrice: number;
@@ -53,7 +53,7 @@ export interface Barrel {
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface Glass {
     readonly id?: number;
-    readonly fkID: number; //* Barrel['id']
+    readonly fkId: number; //* Barrel['id']
     name: string;
     icon?: IconName; //! Pas dans la réponse de l'API
     sellPrice: number;
@@ -63,7 +63,7 @@ export interface Glass {
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface Consumable {
     readonly id?: number;
-    readonly fkID: number; //* ConsumableItem['id']
+    readonly fkId: number; //* ConsumableItem['id']
     name: string;
     icon: IconName;
     unitPrice: number;
@@ -75,7 +75,7 @@ export interface Consumable {
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface OutOfStockBuy {
     id?: number;
-    readonly fkID: number; //* OutOfStockItemBuy['id']
+    readonly fkId: number; //* OutOfStockItemBuy['id']
     name: string;
     icon: IconName;
     unitPrice: number;
@@ -86,7 +86,7 @@ export interface OutOfStockBuy {
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface OutOfStockSell {
     id?: number;
-    readonly fkID: number; //* OutOfStockItemSell['id']
+    readonly fkId: number; //* OutOfStockItemSell['id']
     name: string;
     icon: IconName;
     sellPrice: number;

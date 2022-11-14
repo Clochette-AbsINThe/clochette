@@ -21,7 +21,7 @@ export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStockSell
             table: 'glass',
             quantity: 0,
             item: {
-                fkID: item.id as number,
+                fkId: item.id as number,
                 name: item.name,
                 sellPrice: item.sellPrice,
                 icon: 'Beer'
@@ -33,7 +33,7 @@ export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStockSell
             quantity: 0,
             item: {
                 ...EcoCup,
-                fkID: EcoCup.id as number
+                fkId: EcoCup.id as number
             }
         };
         delete OutOfStockItem.item.id;
@@ -43,7 +43,7 @@ export function getGlasses(setItem: (value: Array<APIItem<Glass | OutOfStockSell
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => {});
+        getDataAsync().catch(() => { });
     };
 
     return [getData, { loading: loading1 || loading2, error }];
@@ -65,7 +65,7 @@ export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStockSell>>) 
             quantity: 0,
             item: {
                 ...item,
-                fkID: item.id as number
+                fkId: item.id as number
             }
         }));
         newItem.forEach((item) => delete item.item.id);
@@ -73,7 +73,7 @@ export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStockSell>>) 
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => {});
+        getDataAsync().catch(() => { });
     };
 
     return [getData, { loading, error }];
@@ -99,7 +99,7 @@ export function getConsumables(setItem: (value: Array<APIItem<Consumable>>) => v
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => {});
+        getDataAsync().catch(() => { });
     };
 
     return [getData, { loading, error }];

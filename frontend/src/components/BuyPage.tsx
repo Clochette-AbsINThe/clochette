@@ -279,7 +279,7 @@ export function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, 
         case 'barrel':
             return {
                 item: {
-                    fkID: item.id as number,
+                    fkId: item.id as number,
                     name: item.name,
                     unitPrice: 0,
                     sellPrice: 0,
@@ -292,7 +292,7 @@ export function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, 
         case 'out_of_stock':
             return {
                 item: {
-                    fkID: item.id as number,
+                    fkId: item.id as number,
                     name: item.name,
                     unitPrice: item.name === 'EcoCup' ? 1 : 0,
                     icon: (item as OutOfStockItemBuy).icon
@@ -303,7 +303,7 @@ export function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, 
         default:
             return {
                 item: {
-                    fkID: item.id as number,
+                    fkId: item.id as number,
                     name: item.name,
                     unitPrice: 0,
                     sellPrice: 0,
@@ -324,13 +324,13 @@ export function updateFkID(barrels: Drink[], consommables: ConsumableItem[], out
     const fakeEcoCup = createNewItem(ecoCup, 'out_of_stock');
     const allItems = [...fakeBarrels, ...fakeConsommables, ...fakeOutOfStocks, fakeEcoCup];
     return selectedItems.map((item) => {
-        const newItem = allItems.find((i) => i.item.name === item.item.name && i.table === item.table && item.item.fkID === -1);
+        const newItem = allItems.find((i) => i.item.name === item.item.name && i.table === item.table && item.item.fkId === -1);
         if (newItem) {
             return {
                 ...item,
                 item: {
                     ...item.item,
-                    fkID: newItem.item.fkID
+                    fkId: newItem.item.fkId
                 }
             };
         }
