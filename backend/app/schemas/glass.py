@@ -1,7 +1,7 @@
-from pydantic import Field, PrivateAttr
+from pydantic import Field, validator
 
 from app.core.config import DefaultModel
-from app.schemas.barrel import BarrelInDB
+from app.schemas.barrel import Barrel
 
 
 class GlassBase(DefaultModel):
@@ -22,15 +22,18 @@ class GlassUpdate(GlassBase):
 
 class Glass(GlassBase):
     id: int
-    barrel_id: int
-    _barrel: BarrelInDB = PrivateAttr(default_factory=BarrelInDB)
-    name: str
-    sell_price: float = Field(..., gt=0)
+    barrel: Barrel = Field(..., exclude=True)
+    name: str | None
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        self.name = self._barrel.default_factory().drink.name
-        self.sell_price = self._barrel.default_factory().sell_price
+    @validator('name', always=True)
+    def populate_name(cls, v, values):
+        return values['barrel'].name
+    
+    sell_price: float | None
+
+    @validator('sell_price', always=True)
+    def populate_sell_price(cls, v, values):
+        return values['barrel'].sell_price
 
     class Config:
         orm_mode = True
