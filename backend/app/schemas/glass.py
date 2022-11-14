@@ -5,7 +5,7 @@ from app.schemas.barrel import Barrel
 
 
 class GlassBase(DefaultModel):
-    pass
+    barrel_id: int = Field(..., alias='fkId')
 
 
 class GlassCreate(GlassBase):
