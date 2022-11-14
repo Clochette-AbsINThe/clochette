@@ -34,6 +34,9 @@ class CRUDBase(
     def read_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> list[ModelType]:
         return db.query(self.model).offset(skip).limit(limit).all()
 
+    def read_distincts(self, db: Session, distinct: str, skip: int = 0, limit: int = 100) -> list[ModelType]:
+        return db.query(self.model).distinct(distinct).offset(skip).limit(limit).all()
+
     def query(self, db: Session, *, skip: int = 0, limit: int = 100, **kwargs) -> list[ModelType]:
         return db.query(self.model).filter_by(**kwargs).offset(skip).limit(limit).all()
 
