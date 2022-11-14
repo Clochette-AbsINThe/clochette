@@ -96,6 +96,7 @@ export interface APIItem<ItemType> {
     table: TableData;
     quantity: number;
     item: ItemType;
+    maxQuantity?: number; //! Pas dans la réponse de l'API
 }
 
 export type ItemSell = APIItem<Glass | OutOfStockSell | Consumable>;

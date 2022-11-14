@@ -2,7 +2,7 @@ export const endpoints = {
     v1: {
         drink: '/drink/',
         consumable: '/consumable/',
-        consumableUnique: '/consumable/unique/',
+        consumableDistinct: '/consumable/distincts/',
         consumableItem: '/consumable_item/',
         outOfStock: '/out_of_stock/',
         outOfStockItemBuy: '/out_of_stock_item/buy/',

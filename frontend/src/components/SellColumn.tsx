@@ -24,11 +24,12 @@ export default function SellColumn(props: SellColumProps): JSX.Element {
         const itemGlass = items.find((item) => item.item.name === 'EcoCup') ?? { id: -1, name: '', price: 0, value: 0 };
         const itemFound = items.find((item) => item.item === _item) as ItemSell;
         const increment = _value - itemFound.quantity;
+        const maxQuantityForConsumable = itemFound.maxQuantity ?? Infinity;
         const newNbItems = items.map((item) => {
             if (item === itemFound) {
                 return {
                     ...item,
-                    quantity: _value
+                    quantity: (_value <= maxQuantityForConsumable) ? _value : itemFound.maxQuantity as number,
                 };
             } else if (item === itemGlass) {
                 return {

@@ -85,16 +85,24 @@ export function getOutOfStocks(setItem: (value: Array<APIItem<OutOfStockSell>>) 
  * @returns A function to make the API call and the loading and error state
  */
 export function getConsumables(setItem: (value: Array<APIItem<Consumable>>) => void): IProxy {
-    const [{ error, loading }, get] = useAxios<Consumable[]>(endpoints.v1.consumableUnique);
+    const [{ error: error1, loading: loading1 }, get] = useAxios<Consumable[]>(endpoints.v1.consumableDistinct);
+    const [{ error: error2, loading: loading2 }, getAll] = useAxios<Consumable[]>(endpoints.v1.consumable);
+
+    const error = error1 || error2;
+    const loading = loading1 || loading2;
 
     const getDataAsync = async (): Promise<void> => {
         setItem([]);
         const { data } = await get();
-        const newItem: Array<APIItem<Consumable>> = data.map((item) => ({
-            table: 'consumable',
-            quantity: 0,
-            item
-        }));
+        const { data: dataAll } = await getAll();
+        const newItem: Array<APIItem<Consumable>> = data.map((item) => {
+            return {
+                table: 'consumable',
+                quantity: 0,
+                item,
+                maxQuantity: dataAll.filter((item2) => item2.name === item.name).reduce((acc) => acc + 1, 0)
+            } as APIItem<Consumable>;
+        });
         setItem(newItem);
     };
 
@@ -111,9 +119,12 @@ export function getConsumables(setItem: (value: Array<APIItem<Consumable>>) => v
  */
 export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPostTransaction<ItemSell[]> {
     const [{ loading, error }, postTransaction] = useAxios<TransactionType<ItemTransactionResponse>>(endpoints.v1.transaction, { method: 'POST' });
+    const [{ loading: loading2, error: error2 }, getAllConsumable] = useAxios<Consumable[]>(endpoints.v1.consumable);
 
     const postDataAsync = async (transactionItems: ItemSell[], paymentMethod: PaymentMethod, totalPrice: number, date: Date): Promise<void> => {
         const newItems: ItemSell[] = [];
+        const { data: dataAllConsumable } = await getAllConsumable();
+
         for (let i = 0; i < transactionItems.length; i++) {
             const item = transactionItems[i] as ItemSell;
             switch (item.table) {
@@ -121,13 +132,7 @@ export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, 
                     newItems.push(item);
                     break;
                 case 'consumable':
-                    newItems.push({
-                        ...item,
-                        item: {
-                            ...item.item,
-                            empty: true
-                        } as Consumable
-                    });
+                    newItems.push(...createListOfConsumable(item as APIItem<Consumable>, dataAllConsumable));
                     break;
                 case 'out_of_stock': {
                     newItems.push(item);
@@ -154,4 +159,22 @@ export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, 
     };
 
     return [postData, { loading, error }];
+}
+
+function createListOfConsumable(consumableItem: APIItem<Consumable>, allConsumables: Consumable[]): Array<APIItem<Consumable>> {
+    const newConsumables: Array<APIItem<Consumable>> = [];
+    const quantity = consumableItem.quantity;
+    const consumable = allConsumables.filter((item2) => item2.name === consumableItem.item.name);
+
+    for (let i = 0; i < quantity; i++) {
+        newConsumables.push({
+            table: 'consumable',
+            quantity: 1,
+            item: {
+                ...consumable[i] as Consumable,
+                empty: true
+            }
+        });
+    }
+    return newConsumables;
 }
