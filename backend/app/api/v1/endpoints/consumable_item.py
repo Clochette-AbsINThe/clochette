@@ -16,9 +16,7 @@ async def read_consumable_items(db=Depends(get_db)) -> list:
 
 @router.post("/", response_model=consumable_item_schema.ConsumableItem)
 async def create_consumable_item(consumable_item: consumable_item_schema.ConsumableItemCreate, db=Depends(get_db)) -> dict:
-    results = list(filter(lambda consumable_items_found: consumable_item.name.lower(
-    ) == consumable_items_found.name.lower(), consumable_items.read_multi(db)))[:1]  # TODO: Improve this
-    if len(results):
+    if consumable_items.query(db, name=consumable_item.name):
         raise HTTPException(
             status_code=400, detail="Consumable item already exists")
     return consumable_items.create(db, obj_in=consumable_item)
@@ -35,12 +33,11 @@ async def read_consumable_item(consumable_item_id: int, db=Depends(get_db)) -> A
 
 @router.put("/{consumable_item_id}", response_model=consumable_item_schema.ConsumableItem)
 async def update_consumable_item(consumable_item_id: int, consumable_item: consumable_item_schema.ConsumableItemUpdate, db=Depends(get_db)):
-    results = list(filter(lambda consumable_items_found: consumable_item.name.lower(
-    ) == consumable_items_found.name.lower(), consumable_items.read_multi(db)))[:1]  # TODO: Improve this
     old_consumable_item = consumable_items.read(db, consumable_item_id)
     if old_consumable_item is None:
         raise HTTPException(
             status_code=404, detail="Consumabel Item not found")
+    results = consumable_items.query(db, name=consumable_item.name)
     if len(results) and results[0].id != old_consumable_item.id:
         raise HTTPException(
             status_code=400, detail="Consumable item already exists")
