@@ -25,7 +25,7 @@ async def read_distincts_barrels(db=Depends(get_db)) -> list:
 
 @router.put("/{barrel_id}", response_model=barrel_schema.Barrel)
 async def update_barrel(barrel_id: int, barrel: barrel_schema.BarrelUpdate, db=Depends(get_db)) -> barrel_schema.Barrel:
-    db_barrel = barrels.get(db, barrel_id)
+    db_barrel = barrels.read(db, barrel_id)
     if db_barrel is None:
         raise HTTPException(status_code=404, detail="Barrel not found")
-    return barrels.update(db, db_barrel, barrel)
+    return barrels.update(db, db_obj=db_barrel, obj_in=barrel)
