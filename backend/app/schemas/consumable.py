@@ -1,4 +1,4 @@
-from pydantic import Field, PrivateAttr
+from pydantic import Field, validator
 
 from app.core.config import DefaultModel
 from app.schemas.consumable_item import ConsumableItem
@@ -24,15 +24,18 @@ class ConsumableUpdate(ConsumableBase):
 
 class Consumable(ConsumableBase):
     id: int
-    consumable_item_id: int
-    _consumable_item: ConsumableItem = PrivateAttr(default_factory=ConsumableItem)
-    name: str
-    icon: str
+    consumable_item: ConsumableItem = Field(..., exclude=True)
+    name: str | None
 
-    def __init__(self, **data):
-        super().__init__(**data)
-        self.name = self._consumable_item.default_factory().name
-        self.icon = self._consumable_item.default_factory().icon
+    @validator('name', always=True)
+    def populate_name(cls, v, values):
+        return values['consumable_item'].name
+
+    icon: str | None
+
+    @validator('icon', always=True)
+    def populate_icon(cls, v, values):
+        return values['consumable_item'].icon
 
     class Config:
         orm_mode = True
