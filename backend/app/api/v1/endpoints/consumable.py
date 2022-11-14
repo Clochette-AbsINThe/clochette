@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 
 from app.crud.crud_consumable import consumable as consumables
 from app.dependencies import get_db
