@@ -1,8 +1,10 @@
+from pydantic import Field
+
 from app.core.config import DefaultModel
 
 class TreasuryBase(DefaultModel):
-    total_amount: float
-    cash_amount: float
+    total_amount: float = Field(..., gt=0)
+    cash_amount: float = Field(..., gt=0)
 
 
 class TreasuryCreate(TreasuryBase):
@@ -10,7 +12,8 @@ class TreasuryCreate(TreasuryBase):
 
 
 class TreasuryUpdate(TreasuryBase):
-    pass
+    class Config:
+        orm_mode = True
 
 
 class Treasury(TreasuryBase):
