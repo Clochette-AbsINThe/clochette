@@ -1,4 +1,3 @@
-from typing import Optional
 from pydantic import Field, validator
 
 from app.core.config import DefaultModel
@@ -7,8 +6,7 @@ from app.schemas.out_of_stock_item import OutOfStockItem
 
 class OutOfStockBase(DefaultModel):
     item_id: int = Field(..., alias='fkId')
-
-    unit_price: Optional[float] = Field(default=None, gt=0)
+    unit_price: float | None = Field(default=None, gt=0)
 
 
 class OutOfStockCreate(OutOfStockBase):
@@ -39,7 +37,7 @@ class OutOfStock(OutOfStockBase):
     def populate_icon(cls, v, values):
         return values['item'].icon
 
-    sell_price: Optional[float] = Field(default=None)
+    sell_price: float | None = Field(default=None)
 
     @validator('sell_price', always=True)
     def populate_sell_price(cls, v, values):
