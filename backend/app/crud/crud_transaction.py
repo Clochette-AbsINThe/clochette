@@ -13,10 +13,11 @@ from app.schemas.transaction import TransactionCreate, TransactionFrontCreate, T
 class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate]):
     def create(self, db: Session, *, obj_in: TransactionFrontCreate) -> Transaction:
         try:
-            # Create transaction
-            transaction = super().create(db, obj_in=TransactionCreate(**obj_in.dict()))
+            transaction_create = TransactionCreate(**obj_in.dict())
             # Update treasury
-            treasuries.add_transaction(db, obj_in=transaction)
+            treasuries.add_transaction(db, obj_in=transaction_create)
+            # Store transaction
+            transaction = super().create(db, obj_in=transaction_create)
             # Get items
             items = obj_in.items
             for i in range(len(items)):
