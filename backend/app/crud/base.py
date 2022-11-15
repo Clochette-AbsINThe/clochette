@@ -53,6 +53,17 @@ class CRUDBase(
         return db.query(self.model).offset(skip).limit(limit).all()
 
     def query(self, db: Session, distinct: str | None = None, skip: int = 0, limit: int = 100, **kwargs) -> list[ModelType]:
+        """
+        Get multiple records with filters and distinct option.
+
+        :param db: The database session
+        :param distinct: The distinct option, specify the column name
+        :param skip: The number of records to skip
+        :param limit: The number of records to return
+        :param kwargs: The filters, should be in the form of {column_name: value}
+
+        :return: The list of records
+        """
         if distinct:
             return db.query(self.model).filter_by(**kwargs).distinct(distinct).offset(skip).limit(limit).all()
         return db.query(self.model).filter_by(**kwargs).offset(skip).limit(limit).all()
