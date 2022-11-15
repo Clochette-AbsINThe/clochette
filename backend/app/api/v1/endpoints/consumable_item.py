@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from typing import Any
 
 from app.crud.crud_consumable_item import consumable_item as consumable_items
+from app.crud.crud_consumable import consumable as consumables
 from app.dependencies import get_db
 from app.schemas import consumable_item as consumable_item_schema
 
@@ -50,4 +51,7 @@ async def delete_consumable_item(consumable_item_id: int, db=Depends(get_db)):
     if consumable_item is None:
         raise HTTPException(
             status_code=404, detail="Consumable Item not found")
+    if consumables.query(db, consumable_item_id=consumable_item_id, limit=1):
+        raise HTTPException(
+            status_code=400, detail="Consumable Item is in use")
     return consumable_items.delete(db, id=consumable_item_id)

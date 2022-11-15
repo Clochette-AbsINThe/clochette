@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 
 from app.crud.crud_out_of_stock_item import out_of_stock_item as out_of_stock_items
+from app.crud.crud_out_of_stock import out_of_stock as out_of_stocks
 from app.dependencies import get_db
 from app.schemas import out_of_stock_item as out_of_stock_item_schema
 
@@ -63,4 +64,7 @@ async def delete_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)
     if out_of_stock_item is None:
         raise HTTPException(
             status_code=404, detail="Out of stock item not found")
+    if out_of_stocks.query(db, limit=1, out_of_stock_item_id=out_of_stock_item_id):
+        raise HTTPException(
+            status_code=400, detail="Out of stock item is in use")
     return out_of_stock_items.delete(db, id=out_of_stock_item_id)

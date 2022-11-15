@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from typing import Any
 
+from app.crud.crud_barrel import barrel as barrels
 from app.crud.crud_drink import drink as drinks
 from app.dependencies import get_db
 from app.schemas import drink as drink_schema
@@ -47,4 +48,6 @@ async def delete_drink(drink_id: int, db=Depends(get_db)):
     drink = drinks.read(db, drink_id)
     if drink is None:
         raise HTTPException(status_code=404, detail="Drink not found")
+    if barrels.query(db, drink_id=drink_id, limit=1):
+        raise HTTPException(status_code=400, detail="Drink is in use")
     return drinks.delete(db, id=drink_id)
