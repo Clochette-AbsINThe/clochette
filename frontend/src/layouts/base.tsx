@@ -2,6 +2,7 @@ import Footer from '@include/Footer';
 import Head from 'next/head';
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
+import { Toaster } from 'react-hot-toast';
 
 export interface Props {
     title: string;
@@ -26,7 +27,13 @@ export default function Base({ children, title, description }: React.PropsWithCh
                 />
             </Head>
             <Navbar />
-            <main className='flex-grow p-3 flex flex-col space-y-4'>{children}</main>
+            <main className='flex-grow p-3 flex flex-col space-y-4'>
+                {children}
+                <Toaster
+                    position='bottom-left'
+                    toastOptions={{ style: { maxWidth: 500 } }}
+                />
+            </main>
             <Footer />
             <Script id='theme'>
                 {`
