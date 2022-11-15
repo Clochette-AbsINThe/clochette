@@ -48,8 +48,14 @@
       "@types": [
         "src/types/types"
       ],
+      "@proxiesTypes": [
+        "src/types/proxiesTypes.ts"
+      ],
       "@endpoints": [
-        "src/types/endpoints"
+        "src/utils/endpoints"
+      ],
+      "@utils/*": [
+        "src/utils/*"
       ],
     },
     "types": [
