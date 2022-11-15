@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, status
 from typing import Any
 
 from app.crud.crud_barrel import barrel as barrels
@@ -14,7 +14,10 @@ router = APIRouter()
 async def read_drink(drink_id: int, db=Depends(get_db)) -> Any:
     drink = drinks.read(db, drink_id)
     if drink is None:
-        raise HTTPException(status_code=404, detail="Drink not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Drink not found"
+        )
     return drink
 
 
@@ -27,7 +30,10 @@ async def read_drinks(db=Depends(get_db)):
 async def create_drink(drink: drink_schema.DrinkCreate, db=Depends(get_db)) -> dict:
     # Check if drink already exists
     if drinks.query(db, name=drink.name, limit=1):
-        raise HTTPException(status_code=400, detail="Drink already exists")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Drink already exists"
+        )
     return drinks.create(db, obj_in=drink)
 
 
@@ -35,11 +41,16 @@ async def create_drink(drink: drink_schema.DrinkCreate, db=Depends(get_db)) -> d
 async def update_drink(drink_id: int, drink: drink_schema.DrinkUpdate, db=Depends(get_db)):
     old_drink = drinks.read(db, drink_id)
     if old_drink is None:
-        raise HTTPException(status_code=404, detail="Drink not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Drink not found"
+        )
     results = drinks.query(db, name=drink.name, limit=None)
     if results and results[0].id != old_drink.id:
         raise HTTPException(
-            status_code=400, detail="Consumable item already exists")
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Consumable item already exists"
+        )
     return drinks.update(db, db_obj=old_drink, obj_in=drink)
 
 
@@ -47,7 +58,13 @@ async def update_drink(drink_id: int, drink: drink_schema.DrinkUpdate, db=Depend
 async def delete_drink(drink_id: int, db=Depends(get_db)):
     drink = drinks.read(db, drink_id)
     if drink is None:
-        raise HTTPException(status_code=404, detail="Drink not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Drink not found"
+        )
     if barrels.query(db, drink_id=drink_id, limit=1):
-        raise HTTPException(status_code=400, detail="Drink is in use")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Drink is in use"
+        )
     return drinks.delete(db, id=drink_id)

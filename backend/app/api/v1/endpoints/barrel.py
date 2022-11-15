@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.crud.crud_barrel import barrel as barrels
 from app.dependencies import get_db
@@ -32,5 +32,8 @@ async def read_all_barrels(db=Depends(get_db)) -> list:
 async def update_barrel(barrel_id: int, barrel: barrel_schema.BarrelUpdate, db=Depends(get_db)) -> barrel_schema.Barrel:
     db_barrel = barrels.read(db, barrel_id)
     if db_barrel is None:
-        raise HTTPException(status_code=404, detail="Barrel not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Barrel not found"
+        )
     return barrels.update(db, db_obj=db_barrel, obj_in=barrel)
