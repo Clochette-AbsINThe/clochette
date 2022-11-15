@@ -30,6 +30,14 @@ class CRUDBase(
         self.model = model
 
     def read(self, db: Session, id: Any) -> Optional[ModelType]:
+        """
+        Get a record by id.
+
+        :param db: The database session
+        :param id: The record id
+        
+        :return: The record
+        """
         return db.query(self.model).filter(self.model.id == id).first()
 
     def read_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> list[ModelType]:
