@@ -1,0 +1,5 @@
+*.json
+README.md
+*.config.*
+.next/**
+**/coverage/**

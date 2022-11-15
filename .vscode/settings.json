@@ -1,0 +1,15 @@
+{
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript", // Enable .ts
+        "typescriptreact" // Enable .tsx
+    ],
+    "astro.typescript.diagnostics.enabled": true,
+    "files.exclude": {
+        "**/.git": true,
+        "frontend/node_modules/": true,
+    },
+    "vitest.enable": true,
+    "vitest.commandLine": "./frontend/node_modules/.bin/vitest --config ./vitest.config.ts -r ./frontend/ --watch"
+}

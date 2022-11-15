@@ -1,0 +1,119 @@
+@tailwind base;
+/* Fierfox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #99999999 #222222bb;
+}
+
+/* Chrome, Edge, and Safari */
+*::-webkit-scrollbar {
+    width: 6px;
+}
+
+*::-webkit-scrollbar-track {
+    background: #99999999;
+    border-radius: 14px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #222222bb;
+    border-radius: 14px;
+    border: 1px solid #99999999;
+}
+@tailwind components;
+@tailwind utilities;
+
+.color-green {
+    color: green;
+}
+
+.color-gray {
+    color: gray;
+}
+
+.color-black {
+    color: black;
+}
+
+.color-white {
+    color: white;
+}
+
+@layer components {
+    .btn-primary {
+        @apply text-white rounded-lg py-2 px-4 text-center bg-green-700 hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-green-800 shadow-md;
+    }
+
+    .btn-danger {
+        @apply text-white rounded-lg py-2 px-4 text-center bg-red-700 hover:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-red-800 shadow-md;
+    }
+
+    .input {
+        @apply block p-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-500 dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white dark:disabled:bg-gray-800 dark:disabled:border-gray-700 disabled:bg-gray-300 disabled:border-gray-200 disabled:text-gray-400 dark:disabled:text-gray-500;
+    }
+
+    .checkbox {
+        @apply appearance-none w-4 h-4 rounded border text-green-500 bg-gray-300 border-gray-500 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 checked:bg-green-700 checked:border-transparent focus:outline-none dark:checked:bg-green-500;
+    }
+}
+
+#hamburger-menu {
+    margin: 0 10px;
+    width: max-content;
+    height: max-content;
+    cursor: pointer;
+
+    padding: 4px;
+
+    & > span {
+        display: block;
+        width: 28px;
+        height: 2px;
+        border-radius: 9999px;
+
+        &:not(:last-child) {
+            margin-bottom: 7px;
+        }
+
+        &:last-child {
+            padding: 1px 0;
+        }
+    }
+
+    &,
+    & > span {
+        transition: all 0.3s ease-in-out;
+    }
+
+    &.active {
+        transition-delay: 0.7s;
+        transform: rotate(45deg);
+        border: 0px;
+
+        & > span {
+            &:nth-child(1) {
+                transform: translateY(9px);
+                transition-delay: 0.4s;
+            }
+
+            &:nth-child(2) {
+                width: 0;
+            }
+
+            &:nth-child(3) {
+                transform: translateY(-9px) rotate(90deg);
+                transition-delay: 0.4s;
+            }
+        }
+    }
+}
+
+body > * {
+    transition: all 0.3s ease-in-out;
+}
+
+body > div {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
