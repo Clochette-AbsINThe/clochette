@@ -136,8 +136,7 @@ test('Add a drink error', async () => {
     expect(screen.getByText("Erreur lors de l'ajout de NewDrink. Error message")).toBeInTheDocument();
 });
 
-test('Delete a drink succes', async () => {
-    render(<Toaster />);
+test('Click on go back button', async () => {
     render(<ConfigurationDrink />);
     expect(screen.getByText('Modification des boissons')).toBeInTheDocument();
     await act(async () => {
@@ -145,44 +144,14 @@ test('Delete a drink succes', async () => {
     });
     expect(screen.getByText('Rouge')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByLabelText('edit'));
+    await userEvent.click(screen.getByRole('button', { name: 'Ajouter un produit' }));
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
-    expect(screen.getByText("Modification d'une boisson", { exact: false })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+    expect(screen.getByText("Ajout d'une boisson", { exact: false })).toBeInTheDocument();
 
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Rouge supprimé avec succès !')).toBeInTheDocument();
-});
-
-test('Delete a drink error', async () => {
-    render(<Toaster />);
-    server.use(
-        rest.delete('https://clochette.dev/api/v1/drink/1', (req, res, ctx) => {
-            return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
-        })
-    );
-    render(<ConfigurationDrink />);
+    await userEvent.click(screen.getByText('Retourner à la page de sélection'));
     expect(screen.getByText('Modification des boissons')).toBeInTheDocument();
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Rouge')).toBeInTheDocument();
-
-    await userEvent.click(screen.getByLabelText('edit'));
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText("Modification d'une boisson", { exact: false })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
-
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Erreur lors de la suppression de Rouge. Error message')).toBeInTheDocument();
 });
 
 test('Go to 404', async () => {

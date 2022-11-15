@@ -137,8 +137,7 @@ test('Add a outOfStock item error', async () => {
     expect(screen.getByText("Erreur lors de l'ajout de NewOutOfStock. Error message")).toBeInTheDocument();
 });
 
-test('Delete a outOfStock item succes', async () => {
-    render(<Toaster />);
+test('Click on go back button', async () => {
     render(<ConfigurationOutOfStockItem />);
     expect(screen.getByText('Modification des produits hors stock')).toBeInTheDocument();
     await act(async () => {
@@ -146,44 +145,14 @@ test('Delete a outOfStock item succes', async () => {
     });
     expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument();
 
-    await userEvent.click(screen.getAllByLabelText('edit')[0]);
+    await userEvent.click(screen.getByRole('button', { name: 'Ajouter un produit' }));
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
-    expect(screen.getByText("Modification d'un produit hors stock", { exact: false })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+    expect(screen.getByText("Ajout d'un produit hors stock", { exact: false })).toBeInTheDocument();
 
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('EcoCup supprimé avec succès !')).toBeInTheDocument();
-});
-
-test('Delete a outOfStock item error', async () => {
-    render(<Toaster />);
-    server.use(
-        rest.delete('https://clochette.dev/api/v1/out_of_stock_item/1', (req, res, ctx) => {
-            return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
-        })
-    );
-    render(<ConfigurationOutOfStockItem />);
+    await userEvent.click(screen.getByText('Retourner à la page de sélection'));
     expect(screen.getByText('Modification des produits hors stock')).toBeInTheDocument();
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument();
-
-    await userEvent.click(screen.getAllByLabelText('edit')[0]);
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText("Modification d'un produit hors stock", { exact: false })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
-
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Erreur lors de la suppression de EcoCup. Error message')).toBeInTheDocument();
 });
 
 test('Go to 404', async () => {

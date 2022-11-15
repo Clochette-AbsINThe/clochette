@@ -1,4 +1,4 @@
-import { deleteDrink, getDrinkById, getDrinks, postDrink, putDrink } from '@proxies/ConfigurationDrinkProxies';
+import { getDrinkById, getDrinks, postDrink, putDrink } from '@proxies/ConfigurationDrinkProxies';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { Drink } from '@types';
 import { rest } from 'msw';
@@ -124,37 +124,6 @@ test('putDrink error', async () => {
             id: 0,
             name: 'PutDrink'
         });
-    });
-    await waitFor(() => expect(result.current[1].loading).toBe(false));
-    const status = callback.mock.calls[0][0].status;
-    expect(status).toBe(500);
-});
-
-test('deleteDrink', async () => {
-    const sendData = {
-        id: 1,
-        name: 'Rouge'
-    };
-    const callback = vi.fn();
-    const { result } = renderHook(() => deleteDrink(callback));
-    act(() => {
-        result.current[0](sendData.id);
-    });
-    await waitFor(() => expect(result.current[1].loading).toBe(false));
-    const receiveData = callback.mock.calls[0][0].data;
-    expect(receiveData).toStrictEqual(sendData);
-});
-
-test('deleteDrink error', async () => {
-    server.use(
-        rest.delete('https://clochette.dev/api/v1/drink/0', (req, res, ctx) => {
-            return res(ctx.status(500), ctx.delay(100));
-        })
-    );
-    const callback = vi.fn();
-    const { result } = renderHook(() => deleteDrink(callback));
-    act(() => {
-        result.current[0](0);
     });
     await waitFor(() => expect(result.current[1].loading).toBe(false));
     const status = callback.mock.calls[0][0].status;

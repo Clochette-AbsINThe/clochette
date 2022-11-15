@@ -144,8 +144,7 @@ test('Add a consumable item error', async () => {
     expect(screen.getByText("Erreur lors de l'ajout de NewConsumable. Error message")).toBeInTheDocument();
 });
 
-test('Delete a consumable item succes', async () => {
-    render(<Toaster />);
+test('Click on go back button', async () => {
     render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
     await act(async () => {
@@ -153,44 +152,14 @@ test('Delete a consumable item succes', async () => {
     });
     expect(screen.getByText('Pizza')).toBeInTheDocument();
 
-    await userEvent.click(screen.getByLabelText('edit'));
+    await userEvent.click(screen.getByRole('button', { name: 'Ajouter un produit' }));
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
-    expect(screen.getByText("Modification d'un produit consommable", { exact: false })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
+    expect(screen.getByText("Ajout d'un produit consommable", { exact: false })).toBeInTheDocument();
 
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Pizza supprimé avec succès !')).toBeInTheDocument();
-});
-
-test('Delete a consumable item error', async () => {
-    render(<Toaster />);
-    server.use(
-        rest.delete('https://clochette.dev/api/v1/consumable_item/0', (req, res, ctx) => {
-            return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
-        })
-    );
-    render(<ConfigurationConsumableItem />);
+    await userEvent.click(screen.getByText('Retourner à la page de sélection'));
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Pizza')).toBeInTheDocument();
-
-    await userEvent.click(screen.getByLabelText('edit'));
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText("Modification d'un produit consommable", { exact: false })).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: 'Supprimer' }));
-
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Erreur lors de la suppression de Pizza. Error message')).toBeInTheDocument();
 });
 
 test('Go to 404', async () => {

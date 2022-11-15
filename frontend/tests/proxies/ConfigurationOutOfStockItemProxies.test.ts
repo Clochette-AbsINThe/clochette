@@ -1,4 +1,4 @@
-import { deleteOutOfStockItem, getOutOfStockItemById, getOutOfStockItems, postOutOfStockItem, putOutOfStockItem } from '@proxies/ConfigurationOutOfStockItemProxies';
+import { getOutOfStockItemById, getOutOfStockItems, postOutOfStockItem, putOutOfStockItem } from '@proxies/ConfigurationOutOfStockItemProxies';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import type { OutOfStockItemBuy } from '@types';
 import { rest } from 'msw';
@@ -143,38 +143,6 @@ test('putOutOfStockItem error', async () => {
             name: 'PutOutOfStockItem',
             icon: 'Glass'
         });
-    });
-    await waitFor(() => expect(result.current[1].loading).toBe(false));
-    const status = callback.mock.calls[0][0].status;
-    expect(status).toBe(500);
-});
-
-test('deleteOutOfStockItem', async () => {
-    const sendData = {
-        id: 1,
-        name: 'EcoCup',
-        icon: 'Glass'
-    };
-    const callback = vi.fn();
-    const { result } = renderHook(() => deleteOutOfStockItem(callback));
-    act(() => {
-        result.current[0](sendData.id);
-    });
-    await waitFor(() => expect(result.current[1].loading).toBe(false));
-    const receiveData = callback.mock.calls[0][0].data;
-    expect(receiveData).toStrictEqual(sendData);
-});
-
-test('deleteOutOfStockItem error', async () => {
-    server.use(
-        rest.delete('https://clochette.dev/api/v1/out_of_stock_item/1', (req, res, ctx) => {
-            return res(ctx.status(500), ctx.delay(100));
-        })
-    );
-    const callback = vi.fn();
-    const { result } = renderHook(() => deleteOutOfStockItem(callback));
-    act(() => {
-        result.current[0](1);
     });
     await waitFor(() => expect(result.current[1].loading).toBe(false));
     const status = callback.mock.calls[0][0].status;
