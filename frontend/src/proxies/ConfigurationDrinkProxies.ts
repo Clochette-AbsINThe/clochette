@@ -14,7 +14,7 @@ export function getDrinks(setItem: (value: Drink[]) => void): IProxy {
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => {});
+        getDataAsync().catch(() => { });
     };
 
     return [getData, { loading, error }];
@@ -30,7 +30,7 @@ export function getDrinkById(setItem: (value: Drink) => void): IProxyId {
     };
 
     const getData = (id: number): void => {
-        getDataAsync(id).catch(() => {});
+        getDataAsync(id).catch(() => { });
     };
 
     return [getData, { loading, error }];
@@ -69,21 +69,4 @@ export function putDrink(callback?: (data: AxiosResponse<unknown, any>) => void)
     };
 
     return [putData, { loading, error }];
-}
-
-export function deleteDrink(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyId {
-    const [{ error, loading }, del] = useAxios<Drink>('', { method: 'DELETE' });
-
-    const deleteAsync = async (id: number): Promise<void> => {
-        const response = await del({}, `${endpoints.v1.drink}${id}`);
-        callback?.(response);
-    };
-
-    const deleteData = (id: number): void => {
-        deleteAsync(id).catch((err: AxiosError<unknown, any>) => {
-            callback?.(err.response as AxiosResponse<unknown, any>);
-        });
-    };
-
-    return [deleteData, { loading, error }];
 }

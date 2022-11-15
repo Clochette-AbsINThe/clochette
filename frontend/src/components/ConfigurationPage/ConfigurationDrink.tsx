@@ -1,14 +1,15 @@
-import { deleteDrink, getDrinkById, getDrinks, postDrink, putDrink } from '@proxies/ConfigurationDrinkProxies';
+import { addIdToUrl, removeIdFromUrl, getErrorMessage, getIdFromUrl } from '@utils/utils';
+import ConfigurationPageHeader from '@components/ConfigurationPage/ConfigurationPageHeader';
+import ItemPageWrapper from '@components/ConfigurationPage/ItemPageWrapper';
+import LayoutConfigurationPage from '@components/ConfigurationPage/LayoutConfigurationPage';
+
+import { getDrinkById, getDrinks, postDrink, putDrink } from '@proxies/ConfigurationDrinkProxies';
+
 import { getIcon } from '@styles/utils';
 import type { Drink } from '@types';
 
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-
-import { addIdToUrl, removeIdFromUrl, getErrorMessage, getIdFromUrl } from '@utils/utils';
-import ConfigurationPageHeader from '@components/ConfigurationPage/ConfigurationPageHeader';
-import ItemPageWrapper from '@components/ConfigurationPage/ItemPageWrapper';
-import LayoutConfigurationPage from '@components/ConfigurationPage/LayoutConfigurationPage';
 
 export default function ConfigurationDrink(): JSX.Element {
     const [id, setId] = useState<number | null>(NaN);
@@ -58,16 +59,6 @@ export default function ConfigurationDrink(): JSX.Element {
         }
     });
 
-    const [deleteDrinkData] = deleteDrink((data) => {
-        if (data.status === 200) {
-            const item = data.data as Drink;
-            handleGoBack();
-            toast.success(`${item.name} supprimé avec succès !`);
-        } else {
-            const detail = getErrorMessage(data);
-            toast.error(`Erreur lors de la suppression de ${drink.name}. ${detail}`);
-        }
-    });
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
@@ -78,9 +69,6 @@ export default function ConfigurationDrink(): JSX.Element {
         }
     };
 
-    const onDelete = (): void => {
-        deleteDrinkData(id as number);
-    };
 
     useEffect(() => {
         setId(getIdFromUrl());
@@ -139,16 +127,6 @@ export default function ConfigurationDrink(): JSX.Element {
             id={id}>
             <>
                 <h1 className='text-2xl mt-3'>{id !== -1 ? 'Modification' : 'Ajout'} d&apos;une boisson :</h1>
-                {id !== -1 && (
-                    <div className='flex justify-end mt-2'>
-                        <button
-                            className='btn-danger'
-                            onClick={onDelete}>
-                            Supprimer
-                        </button>{' '}
-                        {/* TODO Vérif car dangereux */}
-                    </div>
-                )}
                 <form
                     className='flex flex-col self-start space-y-4 p-4 grow w-full'
                     onSubmit={onSubmit}>
@@ -181,12 +159,10 @@ export default function ConfigurationDrink(): JSX.Element {
 
     return (
         <LayoutConfigurationPage
-            {...{
-                homePage,
-                itemPage: drinkItemPage,
-                handleGoBack,
-                id
-            }}
+            id={id}
+            homePage={homePage}
+            itemPage={drinkItemPage}
+            handleGoBack={handleGoBack}
         />
     );
 }

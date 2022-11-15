@@ -20,7 +20,7 @@ export function getOutOfStockItems(setItem: (value: Array<OutOfStockItemBuy | Ou
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => {});
+        getDataAsync().catch(() => { });
     };
 
     return [getData, { loading, error }];
@@ -37,7 +37,7 @@ export function getOutOfStockItemById(setItem: (value: OutOfStockItemBuy | OutOf
     };
 
     const getData = (id: number): void => {
-        getDataAsync(id).catch(() => {});
+        getDataAsync(id).catch(() => { });
     };
 
     return [getData, { loading, error }];
@@ -76,21 +76,4 @@ export function putOutOfStockItem(callback?: (data: AxiosResponse<unknown, any>)
     };
 
     return [putData, { loading, error }];
-}
-
-export function deleteOutOfStockItem(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyId {
-    const [{ error, loading }, del] = useAxios<OutOfStockItemBuy | OutOfStockItemSell>('', { method: 'DELETE' });
-
-    const deleteAsync = async (id: number): Promise<void> => {
-        const response = await del({}, `${endpoints.v1.outOfStockItem}${id}`);
-        callback?.(response);
-    };
-
-    const deleteData = (id: number): void => {
-        deleteAsync(id).catch((err: AxiosError<unknown, any>) => {
-            callback?.(err.response as AxiosResponse<unknown, any>);
-        });
-    };
-
-    return [deleteData, { loading, error }];
 }

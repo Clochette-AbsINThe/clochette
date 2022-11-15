@@ -3,7 +3,7 @@ import ConfigurationPageHeader from '@components/ConfigurationPage/Configuration
 import ItemPageWrapper from '@components/ConfigurationPage/ItemPageWrapper';
 import LayoutConfigurationPage from '@components/ConfigurationPage/LayoutConfigurationPage';
 
-import { deleteOutOfStockItem, getOutOfStockItemById, getOutOfStockItems, postOutOfStockItem, putOutOfStockItem } from '@proxies/ConfigurationOutOfStockItemProxies';
+import { getOutOfStockItemById, getOutOfStockItems, postOutOfStockItem, putOutOfStockItem } from '@proxies/ConfigurationOutOfStockItemProxies';
 
 import { getIcon } from '@styles/utils';
 import type { OutOfStockItemBuy, OutOfStockItemSell } from '@types';
@@ -37,7 +37,7 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
     const handleGoBack = (): void => {
         removeIdFromUrl();
         setId(null);
-        setOutOfStockItem({ name: '', icon: 'Misc' }); // Forced to reset the field because recat is not updating the field properly when creating new outOfStockItem
+        setOutOfStockItem({ name: '', icon: 'Misc', sellPrice: 0 }); // Forced to reset the field because recat is not updating the field properly when creating new outOfStockItem
     };
 
     const [postOutOfStockItemData] = postOutOfStockItem((data) => {
@@ -61,17 +61,6 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
         }
     });
 
-    const [deleteOutOfStockItemData] = deleteOutOfStockItem((data) => {
-        if (data.status === 200) {
-            const item = data.data as OutOfStockItemBuy | OutOfStockItemSell;
-            toast.success(`${item.name} supprimé avec succès !`);
-            handleGoBack();
-        } else {
-            const detail = getErrorMessage(data);
-            toast.error(`Erreur lors de la suppression de ${outOfStockItem.name}. ${detail}`);
-        }
-    });
-
     const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
         if (id === -1) {
@@ -79,10 +68,6 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
         } else {
             editOutOfStockItemData({ id: id as number, ...outOfStockItem });
         }
-    };
-
-    const onDelete = (): void => {
-        deleteOutOfStockItemData(id as number);
     };
 
     const handleSellPriceChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
@@ -105,7 +90,7 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
         }
         if (isNaN(id)) return; // Initial state = NaN, while id is not set, do nothing
         if (id === -1) {
-            setOutOfStockItem({ name: '', icon: 'Misc' }); // Set a default item without id attribute
+            setOutOfStockItem({ name: '', icon: 'Misc', sellPrice: 0 }); // Set a default item without id attribute
         } else {
             getOutOfStockItemByIdData(id);
         }
@@ -154,16 +139,6 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
                 id={id}>
                 <>
                     <h1 className='text-2xl mt-3'>{id !== -1 ? 'Modification' : 'Ajout'} d&apos;un produit hors stock :</h1>
-                    {id !== -1 && (
-                        <div className='flex justify-end mt-2'>
-                            <button
-                                className='btn-danger'
-                                onClick={onDelete}>
-                                Supprimer
-                            </button>{' '}
-                            {/* TODO Vérif car dangereux */}
-                        </div>
-                    )}
                     <form
                         className='flex flex-col self-start space-y-4 p-4 grow w-full'
                         onSubmit={onSubmit}>
@@ -241,7 +216,7 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
                             <label
                                 htmlFor='sellPriceCheckbox'
                                 className='text-2xl'>
-                                Produit disponoble à la vente ?
+                                Produit disponible à la vente ?
                             </label>
                             <div className='flex space-x-4 items-center'>
                                 <input

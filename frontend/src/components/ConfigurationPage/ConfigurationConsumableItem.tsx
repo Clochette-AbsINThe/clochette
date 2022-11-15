@@ -3,9 +3,10 @@ import ConfigurationPageHeader from '@components/ConfigurationPage/Configuration
 import ItemPageWrapper from '@components/ConfigurationPage/ItemPageWrapper';
 import LayoutConfigurationPage from '@components/ConfigurationPage/LayoutConfigurationPage';
 
-import { deleteConsumableItem, getConsumableItemById, getConsumableItems, postConsumableItem, putConsumableItem } from '@proxies/ConfigurationConsumableItemProxies';
+import { getConsumableItemById, getConsumableItems, postConsumableItem, putConsumableItem } from '@proxies/ConfigurationConsumableItemProxies';
+
 import { getIcon } from '@styles/utils';
-import type { ConsumableItem, IconName } from '@types';
+import type { ConsumableItem } from '@types';
 
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -58,16 +59,6 @@ export default function ConfigurationConsumableItem(): JSX.Element {
         }
     });
 
-    const [deleteConsumabelItemData] = deleteConsumableItem((data) => {
-        if (data.status === 200) {
-            const item = data.data as ConsumableItem;
-            toast.success(`${item.name} supprimé avec succès !`);
-            handleGoBack();
-        } else {
-            const detail = getErrorMessage(data);
-            toast.error(`Erreur lors de la suppression de ${consumableItem.name}. ${detail}`);
-        }
-    });
 
     const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
@@ -78,9 +69,6 @@ export default function ConfigurationConsumableItem(): JSX.Element {
         }
     };
 
-    const onDelete = (): void => {
-        deleteConsumabelItemData(id as number);
-    };
 
     useEffect(() => {
         setId(getIdFromUrl());
@@ -141,16 +129,6 @@ export default function ConfigurationConsumableItem(): JSX.Element {
                 loadingGetById={loadingGetById}>
                 <>
                     <h1 className='text-2xl mt-3'>{id !== -1 ? 'Modification' : 'Ajout'} d&apos;un produit consommable :</h1>
-                    {id !== -1 && (
-                        <div className='flex justify-end mt-2'>
-                            <button
-                                className='btn-danger'
-                                onClick={onDelete}>
-                                Supprimer
-                            </button>{' '}
-                            {/* TODO Vérif car dangereux */}
-                        </div>
-                    )}
                     <form
                         className='flex flex-col self-start space-y-4 p-4 grow w-full'
                         onSubmit={onSubmit}>
@@ -226,12 +204,10 @@ export default function ConfigurationConsumableItem(): JSX.Element {
 
     return (
         <LayoutConfigurationPage
-            {...{
-                homePage,
-                itemPage: consumableItemPage,
-                handleGoBack,
-                id
-            }}
+            id={id}
+            homePage={homePage}
+            itemPage={consumableItemPage}
+            handleGoBack={handleGoBack}
         />
     );
 }
