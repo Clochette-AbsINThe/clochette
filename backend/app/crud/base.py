@@ -9,9 +9,9 @@ from app.core.decorator import handle_exceptions
 from app.db.base_class import Base
 
 
-ModelType = TypeVar("ModelType", bound=Base)
-CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
-UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
+ModelType = TypeVar("ModelType", bound=Base) # SQLAlchemy model representing the object
+CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel) # Pydantic validation schema for creating the object
+UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel) # Pydantic validation schema for updating the object
 
 
 class CRUDBase(
@@ -126,7 +126,7 @@ class CRUDBase(
 
         :return: The deleted record
         """
-        
+
         obj = db.query(self.model).get(id)
         db.delete(obj)
         db.commit()
