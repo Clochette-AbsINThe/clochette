@@ -4,10 +4,18 @@ from fastapi import HTTPException, status
 
 
 def handle_exceptions(detail, *exceptions):
+    """
+    Decorator to handle exceptions and return a custom error message.
+
+    :param detail: The error message
+    :param exceptions: The exceptions to handle
+
+    :return: The decorated function
+    """
+
     def decorator(func):
-        @functools.wraps(func)
+        @functools.wraps(func) # This is needed to preserve the original function name
         def wrapper(*args, **kwargs):
-            e = None
             try:
                 return func(*args, **kwargs)
             except exceptions or Exception as e:
