@@ -35,12 +35,21 @@ class CRUDBase(
 
         :param db: The database session
         :param id: The record id
-        
+
         :return: The record
         """
         return db.query(self.model).filter(self.model.id == id).first()
 
     def read_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> list[ModelType]:
+        """
+        Get multiple records.
+
+        :param db: The database session
+        :param skip: The number of records to skip
+        :param limit: The number of records to return
+
+        :return: The list of records
+        """
         return db.query(self.model).offset(skip).limit(limit).all()
 
     def query(self, db: Session, distinct: str | None = None, skip: int = 0, limit: int = 100, **kwargs) -> list[ModelType]:
