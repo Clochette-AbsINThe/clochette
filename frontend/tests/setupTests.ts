@@ -1,5 +1,5 @@
-import { removeIdFromUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
-import { endpoints } from '@endpoints';
+import { removeIdFromUrl } from '@utils/utils';
+import { endpoints } from '@utils/endpoints';
 import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/extend-expect';
 import { cleanup } from '@testing-library/react';
@@ -12,7 +12,7 @@ import toast from 'react-hot-toast';
 export const date = new Date();
 
 export const server = setupServer(
-    rest.get(`https://clochette.dev/api/v1${endpoints.v1.consumableUnique}`, (req, res, ctx) => {
+    rest.get(`https://clochette.dev/api/v1${endpoints.v1.consumableDistinct}`, (req, res, ctx) => {
         return res(
             ctx.json([
                 {
@@ -29,7 +29,24 @@ export const server = setupServer(
             ctx.delay(100)
         );
     }),
-    rest.get(`https://clochette.dev/api/v1${endpoints.v1.mountedBarrel}`, (req, res, ctx) => {
+    rest.get(`https://clochette.dev/api/v1${endpoints.v1.consumable}`, (req, res, ctx) => {
+        return res(
+            ctx.json([
+                {
+                    id: 0,
+                    fkId: 0,
+                    name: 'Pizza',
+                    sellPrice: 5,
+                    unitPrice: 1,
+                    icon: 'Food',
+                    empty: false
+                }
+            ]),
+            ctx.status(200),
+            ctx.delay(100)
+        );
+    }),
+    rest.get(`https://clochette.dev/api/v1${endpoints.v1.barrelMounted}`, (req, res, ctx) => {
         return res(
             ctx.json([
                 {

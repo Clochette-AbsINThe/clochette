@@ -1,6 +1,8 @@
-import { addIdToUrl, ConfigurationPageHeader, getErrorMessage, getIdFromUrl, GoBackButton, removeIdFromUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
+import ConfigurationPageHeader from '@components/ConfigurationPage/ConfigurationPageHeader';
+import GoBackButton from '@components/ConfigurationPage/GoBackButton';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { addIdToUrl, getErrorMessage, getIdFromUrl, removeIdFromUrl } from '@utils/utils';
 
 test('render goBackButton', async () => {
     const handleGoBack = vi.fn();

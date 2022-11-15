@@ -10,7 +10,7 @@ const transactionItems: ItemSell[] = [
         quantity: 1,
         item: {
             id: 0,
-            fkId: 1,
+            fkId: 0,
             name: 'Pizza',
             icon: 'Food',
             unitPrice: 1,
@@ -52,7 +52,7 @@ const data = {
             quantity: 1,
             item: {
                 id: 0,
-                fkId: 1,
+                fkId: 0,
                 name: 'Pizza',
                 icon: 'Food',
                 unitPrice: 1,
@@ -194,7 +194,8 @@ test('getConsumables', async () => {
                 unitPrice: 1,
                 icon: 'Food',
                 empty: false
-            }
+            },
+            maxQuantity: 1
         }
     ]);
 });

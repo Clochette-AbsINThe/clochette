@@ -1,10 +1,11 @@
 import ConfigurationDrink from '@components/ConfigurationPage/ConfigurationDrink';
-import { addIdToUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
+import { addIdToUrl } from '@utils/utils';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
 import { act } from 'react-dom/test-utils';
 import { server } from '../../setupTests';
+import { Toaster } from 'react-hot-toast';
 
 test('Render ConfigurationDrink', async () => {
     server.use(
@@ -34,6 +35,7 @@ test('Render ConfigurationDrink', async () => {
 });
 
 test('Edit a drink succes', async () => {
+    render(<Toaster />);
     render(<ConfigurationDrink />);
     expect(screen.getByText('Modification des boissons')).toBeInTheDocument();
     await act(async () => {
@@ -56,6 +58,7 @@ test('Edit a drink succes', async () => {
 });
 
 test('Edit a drink error', async () => {
+    render(<Toaster />);
     server.use(
         rest.put('https://clochette.dev/api/v1/drink/1', (req, res, ctx) => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
@@ -83,6 +86,7 @@ test('Edit a drink error', async () => {
 });
 
 test('Add a drink succes', async () => {
+    render(<Toaster />);
     render(<ConfigurationDrink />);
     expect(screen.getByText('Modification des boissons')).toBeInTheDocument();
     await act(async () => {
@@ -105,6 +109,7 @@ test('Add a drink succes', async () => {
 });
 
 test('Add a drink error', async () => {
+    render(<Toaster />);
     server.use(
         rest.post('https://clochette.dev/api/v1/drink/', (req, res, ctx) => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
@@ -132,6 +137,7 @@ test('Add a drink error', async () => {
 });
 
 test('Delete a drink succes', async () => {
+    render(<Toaster />);
     render(<ConfigurationDrink />);
     expect(screen.getByText('Modification des boissons')).toBeInTheDocument();
     await act(async () => {
@@ -153,6 +159,7 @@ test('Delete a drink succes', async () => {
 });
 
 test('Delete a drink error', async () => {
+    render(<Toaster />);
     server.use(
         rest.delete('https://clochette.dev/api/v1/drink/1', (req, res, ctx) => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));

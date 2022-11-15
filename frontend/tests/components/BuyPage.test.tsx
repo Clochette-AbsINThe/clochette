@@ -1,5 +1,5 @@
-import BuyPage, { createNewItem, RecapItem, updateFkID } from '@components/BuyPage';
-import { endpoints } from '@endpoints';
+import BuyPage, { createNewItem, RecapItem, updateFkID } from '@components/Transaction/Buy/BuyPage';
+import { endpoints } from '@utils/endpoints';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { ConsumableItem, Drink, ItemBuy, OutOfStockItemBuy } from '@types';

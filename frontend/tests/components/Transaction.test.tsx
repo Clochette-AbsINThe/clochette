@@ -1,9 +1,10 @@
-import Transaction, { PaymentMethodForm } from '@components/Transaction';
-import { endpoints } from '@endpoints';
+import Transaction, { PaymentMethodForm } from '@components/Transaction/Transaction';
+import { endpoints } from '@utils/endpoints';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
 import { server } from '../setupTests';
+import { Toaster } from 'react-hot-toast';
 
 test('Change Transaction Type', async () => {
     render(<Transaction />);
@@ -23,8 +24,9 @@ test('Change Transaction Type', async () => {
 });
 
 test('Verify total for SellPage', async () => {
+    render(<Toaster />);
     server.use(
-        rest.get(`https://clochette.dev/api/v1${endpoints.v1.consumableUnique}`, (req, res, ctx) => {
+        rest.get(`https://clochette.dev/api/v1${endpoints.v1.consumableDistinct}`, (req, res, ctx) => {
             return res(ctx.status(500));
         })
     );
@@ -62,12 +64,13 @@ test('Verify total for SellPage', async () => {
     });
     await userEvent.click(screen.getByText('Valider le paiment'));
     await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 400));
     });
     expect(screen.getByText('Transaction effectuée avec succès', { exact: false })).toBeInTheDocument();
 });
 
 test('Verify search for BuyPage', async () => {
+    render(<Toaster />);
     render(<Transaction />);
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 400));
@@ -130,6 +133,7 @@ test('Verify search for BuyPage', async () => {
 });
 
 test('Verify error on post on BuyPage', async () => {
+    render(<Toaster />);
     server.use(
         rest.post(`https://clochette.dev/api/v1${endpoints.v1.transaction}`, (req, res, ctx) => {
             return res(ctx.json({ detail: 'Transaction already exist' }), ctx.status(400));
@@ -164,6 +168,7 @@ test('Verify error on post on BuyPage', async () => {
 });
 
 test('Verify error on post on SalePage', async () => {
+    render(<Toaster />);
     server.use(
         rest.post(`https://clochette.dev/api/v1${endpoints.v1.transaction}`, (req, res, ctx) => {
             return res(ctx.json({ detail: 'Transaction already exist' }), ctx.status(400));

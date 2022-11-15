@@ -1,10 +1,11 @@
 import ConfigurationConsumableItem from '@components/ConfigurationPage/ConfigurationConsumableItem';
-import { addIdToUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
+import { addIdToUrl } from '@utils/utils';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
 import { act } from 'react-dom/test-utils';
 import { server } from '../../setupTests';
+import { Toaster } from 'react-hot-toast';
 
 test('Render ConfigurationConsumabelItem', async () => {
     server.use(
@@ -36,6 +37,7 @@ test('Render ConfigurationConsumabelItem', async () => {
 });
 
 test('Edit a consumable item succes', async () => {
+    render(<Toaster />);
     render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
     await act(async () => {
@@ -58,6 +60,7 @@ test('Edit a consumable item succes', async () => {
 });
 
 test('Edit a consumable item error', async () => {
+    render(<Toaster />);
     server.use(
         rest.put('https://clochette.dev/api/v1/consumable_item/0', (req, res, ctx) => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
@@ -85,6 +88,7 @@ test('Edit a consumable item error', async () => {
 });
 
 test('Add a consumable item succes', async () => {
+    render(<Toaster />);
     render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
     await act(async () => {
@@ -113,6 +117,7 @@ test('Add a consumable item succes', async () => {
 });
 
 test('Add a consumable item error', async () => {
+    render(<Toaster />);
     server.use(
         rest.post('https://clochette.dev/api/v1/consumable_item/', (req, res, ctx) => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
@@ -140,6 +145,7 @@ test('Add a consumable item error', async () => {
 });
 
 test('Delete a consumable item succes', async () => {
+    render(<Toaster />);
     render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
     await act(async () => {
@@ -161,6 +167,7 @@ test('Delete a consumable item succes', async () => {
 });
 
 test('Delete a consumable item error', async () => {
+    render(<Toaster />);
     server.use(
         rest.delete('https://clochette.dev/api/v1/consumable_item/0', (req, res, ctx) => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));

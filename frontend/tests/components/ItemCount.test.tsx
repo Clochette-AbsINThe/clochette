@@ -1,4 +1,4 @@
-import ItemCount from '@components/ItemCount';
+import ItemCount from '@components/Transaction/Sell/ItemCount';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { Consumable, Glass, ItemSell } from '@types';

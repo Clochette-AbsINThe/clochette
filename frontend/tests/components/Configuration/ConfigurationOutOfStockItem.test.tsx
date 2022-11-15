@@ -1,10 +1,11 @@
 import ConfigurationOutOfStockItem from '@components/ConfigurationPage/ConfigurationOutOfStockItem';
-import { addIdToUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
+import { addIdToUrl } from '@utils/utils';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
 import { act } from 'react-dom/test-utils';
 import { server } from '../../setupTests';
+import { Toaster } from 'react-hot-toast';
 
 test('Render ConfigurationOutOfStockItem', async () => {
     render(<ConfigurationOutOfStockItem />);
@@ -16,6 +17,7 @@ test('Render ConfigurationOutOfStockItem', async () => {
 });
 
 test('Edit a outOfStock item succes', async () => {
+    render(<Toaster />);
     render(<ConfigurationOutOfStockItem />);
     expect(screen.getByText('Modification des produits hors stock')).toBeInTheDocument();
     await act(async () => {
@@ -38,6 +40,7 @@ test('Edit a outOfStock item succes', async () => {
 });
 
 test('Edit a outOfStock item error', async () => {
+    render(<Toaster />);
     server.use(
         rest.put('https://clochette.dev/api/v1/out_of_stock_item/1', (req, res, ctx) => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
@@ -65,6 +68,7 @@ test('Edit a outOfStock item error', async () => {
 });
 
 test('Add a outOfStock item succes', async () => {
+    render(<Toaster />);
     render(<ConfigurationOutOfStockItem />);
     expect(screen.getByText('Modification des produits hors stock')).toBeInTheDocument();
     await act(async () => {
@@ -106,6 +110,7 @@ test('Add a outOfStock item succes', async () => {
 });
 
 test('Add a outOfStock item error', async () => {
+    render(<Toaster />);
     server.use(
         rest.post('https://clochette.dev/api/v1/out_of_stock_item/', (req, res, ctx) => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
@@ -133,6 +138,7 @@ test('Add a outOfStock item error', async () => {
 });
 
 test('Delete a outOfStock item succes', async () => {
+    render(<Toaster />);
     render(<ConfigurationOutOfStockItem />);
     expect(screen.getByText('Modification des produits hors stock')).toBeInTheDocument();
     await act(async () => {
@@ -154,6 +160,7 @@ test('Delete a outOfStock item succes', async () => {
 });
 
 test('Delete a outOfStock item error', async () => {
+    render(<Toaster />);
     server.use(
         rest.delete('https://clochette.dev/api/v1/out_of_stock_item/1', (req, res, ctx) => {
             return res(ctx.json({ detail: 'Error message' }), ctx.status(400), ctx.delay(50));
