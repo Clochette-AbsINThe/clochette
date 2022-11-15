@@ -70,6 +70,14 @@ class CRUDBase(
 
     @handle_exceptions('Data relationship integrity error', IntegrityError)
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
+        """
+        Create a new record.
+
+        :param db: The database session
+        :param obj_in: The record data
+
+        :return: The created record
+        """
         obj_in_data = jsonable_encoder(obj_in, by_alias=False)
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
