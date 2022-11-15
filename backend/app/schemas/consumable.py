@@ -13,24 +13,17 @@ class ConsumableBase(DefaultModel):
 
 class ConsumableCreate(ConsumableBase):
     id: int | None = None
-    sale: bool
-
-    # transaction_id_purchase sould be use if sale is False
-    # transaction_id_sale sould be use if sale is True
-    transaction_id_purchase: int | None = None
-    transaction_id_sale: int | None = None
-
-    @root_validator(pre=True)
-    def check_transaction_id(cls, values):
-        if values['sale'] is True:
-            values['transaction_id_sale'] = Field(..., alias='transaction_id')
-        else:
-            values['transaction_id_purchase'] = Field(..., alias='transaction_id')
-        return values
 
     class Config:
         exclude_none = True
-        exclude = {'sale'}
+
+
+class ConsumableCreatePurchase(ConsumableCreate):
+    transaction_id_purchase: int = Field(0, alias='transaction_id')
+
+
+class ConsumableCreateSale(ConsumableCreate):
+    transaction_id_sale: int = Field(0, alias='transaction_id')
 
 
 class TransactionCreate(ConsumableBase):
