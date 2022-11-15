@@ -120,7 +120,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                 if (item === sameItem) {
                     newItems.push(data);
                 } else {
-                    newItems.push(data);
+                    newItems.push(item);
                 }
             });
         } else {
