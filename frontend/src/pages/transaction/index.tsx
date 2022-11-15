@@ -1,5 +1,5 @@
 import Base from '@layouts/base';
-import Transaction from '@components/Transaction';
+import Transaction from '@components/Transaction/Transaction';
 import type { NextPage } from 'next';
 
 const TransactionPage: NextPage = () => {
