@@ -10,7 +10,7 @@ class OutOfStockBase(DefaultModel):
 
 
 class OutOfStockCreate(OutOfStockBase):
-    pass
+    transaction_id: int = 0
 
 
 class TransactionCreate(OutOfStockBase):

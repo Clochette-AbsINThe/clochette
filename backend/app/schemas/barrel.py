@@ -13,6 +13,10 @@ class BarrelBase(DefaultModel):
 
 
 class BarrelCreate(BarrelBase):
+    transaction_id: int = 0
+
+
+class TransactionCreate(BarrelCreate):
     pass
 
 
@@ -31,7 +35,3 @@ class Barrel(BarrelBase):
 
     class Config:
         orm_mode = True
-
-
-class TransactionCreate(BarrelCreate):
-    pass

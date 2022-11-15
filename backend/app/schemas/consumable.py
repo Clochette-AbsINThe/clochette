@@ -12,7 +12,7 @@ class ConsumableBase(DefaultModel):
 
 
 class ConsumableCreate(ConsumableBase):
-    pass
+    transaction_id: int = 0
 
 
 class TransactionCreate(ConsumableBase):

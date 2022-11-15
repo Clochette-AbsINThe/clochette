@@ -9,7 +9,7 @@ class GlassBase(DefaultModel):
 
 
 class GlassCreate(GlassBase):
-    pass
+    transaction_id: int = 0
 
 
 class TransactionCreate(GlassBase):
