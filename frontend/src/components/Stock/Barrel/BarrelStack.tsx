@@ -20,7 +20,7 @@ export function BarrelStack(props: BarrelStackProps): JSX.Element {
             }}>
             {smallStack.map((barrel, index) => (
                 <div
-                    className='flex h-60 w-40 bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 border-gray-300 border hover:border-gray-400 absolute'
+                    className='flex h-60 w-40 bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 border-gray-300 border hover:border-gray-400 absolute dark:border-gray-500'
                     style={{
                         zIndex: index,
                         top: index * 10,

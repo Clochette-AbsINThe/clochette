@@ -20,7 +20,7 @@ export function ConsumableStack(props: ConsumableStackProps): JSX.Element {
             }}>
             {smallStack.map((_consumable, index) => (
                 <div
-                    className='flex h-60 w-40 bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 border-gray-300 border hover:border-gray-400 absolute'
+                    className='flex h-60 w-40 bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 border-gray-300 border hover:border-gray-400 absolute dark:border-gray-500'
                     style={{
                         zIndex: index,
                         top: index * 10,
