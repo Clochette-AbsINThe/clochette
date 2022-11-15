@@ -35,7 +35,7 @@ export default function Navbar(): JSX.Element {
                         <DarkMode />
                         <div className='justify-center self-center mr-4'>
                             <Link href='/login'>
-                                <a className='btn-primary'>Login</a>
+                                <a className='btn-primary'>Se connecter</a>
                             </Link>
                         </div>
                     </>
@@ -61,7 +61,7 @@ export default function Navbar(): JSX.Element {
                         <DarkMode />
                         <div className='justify-center self-center mr-4'>
                             <Link href='/login'>
-                                <a className='btn-primary'>Login</a>
+                                <a className='btn-primary'>Se connecter</a>
                             </Link>
                         </div>
                     </div>
