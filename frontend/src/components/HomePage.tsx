@@ -7,8 +7,8 @@ export default function HomePage(): JSX.Element {
                 <h1 className='text-4xl font-bold text-green-700'>Bienvenue sur Clochette!</h1>
                 <h2 className='text-2xl font-medium text-gray-500 dark:text-gray-100'>Le site pour la gestion du bar.</h2>
             </div>
-            <div className='flex flex-grow flex-col'>
-                <div className='grid grid-col-1 lg:grid-cols-2 gap-5'>
+            <div className='flex flex-grow flex-col justify-center'>
+                <div className='grid grid-col-1 lg:grid-cols-2 gap-5 flex-grow'>
                     <Card
                         icon={['CB', 'Cash']}
                         title='Gestion des transactions'
