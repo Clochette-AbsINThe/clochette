@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 const navitems = {
     Transaction: '/transaction',
-    Stocks: '/stocks',
+    Stock: '/stock',
     Historique: '/transaction_history',
     Configuration: '/configuration'
 };
