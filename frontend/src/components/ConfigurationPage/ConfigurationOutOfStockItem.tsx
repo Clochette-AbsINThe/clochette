@@ -1,4 +1,8 @@
-import { addIdToUrl, ConfigurationPageHeader, DisplayPage, getErrorMessage, getIdFromUrl, ItemPageWrapper, removeIdFromUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
+import { addIdToUrl, removeIdFromUrl, getErrorMessage, getIdFromUrl } from '@utils/utils';
+import ConfigurationPageHeader from '@components/ConfigurationPage/ConfigurationPageHeader';
+import ItemPageWrapper from '@components/ConfigurationPage/ItemPageWrapper';
+import LayoutConfigurationPage from '@components/ConfigurationPage/LayoutConfigurationPage';
+
 import { deleteOutOfStockItem, getOutOfStockItemById, getOutOfStockItems, postOutOfStockItem, putOutOfStockItem } from '@proxies/ConfigurationOutOfStockItemProxies';
 
 import { getIcon } from '@styles/utils';
@@ -288,7 +292,7 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
     };
 
     return (
-        <DisplayPage
+        <LayoutConfigurationPage
             id={id}
             homePage={homePage}
             itemPage={outOfStockItemPage}

@@ -1,11 +1,14 @@
-import { addIdToUrl, ConfigurationPageHeader, DisplayPage, getErrorMessage, getIdFromUrl, ItemPageWrapper, removeIdFromUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
-
 import { deleteDrink, getDrinkById, getDrinks, postDrink, putDrink } from '@proxies/ConfigurationDrinkProxies';
 import { getIcon } from '@styles/utils';
 import type { Drink } from '@types';
 
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+
+import { addIdToUrl, removeIdFromUrl, getErrorMessage, getIdFromUrl } from '@utils/utils';
+import ConfigurationPageHeader from '@components/ConfigurationPage/ConfigurationPageHeader';
+import ItemPageWrapper from '@components/ConfigurationPage/ItemPageWrapper';
+import LayoutConfigurationPage from '@components/ConfigurationPage/LayoutConfigurationPage';
 
 export default function ConfigurationDrink(): JSX.Element {
     const [id, setId] = useState<number | null>(NaN);
@@ -177,7 +180,7 @@ export default function ConfigurationDrink(): JSX.Element {
     );
 
     return (
-        <DisplayPage
+        <LayoutConfigurationPage
             {...{
                 homePage,
                 itemPage: drinkItemPage,

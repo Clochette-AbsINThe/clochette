@@ -1,4 +1,7 @@
-import { addIdToUrl, ConfigurationPageHeader, DisplayPage, getErrorMessage, getIdFromUrl, ItemPageWrapper, removeIdFromUrl } from '@components/ConfigurationPage/ConfigurationPageBase';
+import { addIdToUrl, removeIdFromUrl, getErrorMessage, getIdFromUrl } from '@utils/utils';
+import ConfigurationPageHeader from '@components/ConfigurationPage/ConfigurationPageHeader';
+import ItemPageWrapper from '@components/ConfigurationPage/ItemPageWrapper';
+import LayoutConfigurationPage from '@components/ConfigurationPage/LayoutConfigurationPage';
 
 import { deleteConsumableItem, getConsumableItemById, getConsumableItems, postConsumableItem, putConsumableItem } from '@proxies/ConfigurationConsumableItemProxies';
 import { getIcon } from '@styles/utils';
@@ -222,7 +225,7 @@ export default function ConfigurationConsumableItem(): JSX.Element {
     };
 
     return (
-        <DisplayPage
+        <LayoutConfigurationPage
             {...{
                 homePage,
                 itemPage: consumableItemPage,

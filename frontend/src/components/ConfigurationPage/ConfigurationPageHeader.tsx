@@ -1,33 +1,7 @@
-import Page404 from '@components/404';
 import Loader from '@components/Loader';
-import type { ConsumableItem, Drink, OutOfStockItemBuy, OutOfStockItemSell } from '@types';
-import type { AxiosError, AxiosResponse } from 'axios';
+import { Drink, ConsumableItem, OutOfStockItemBuy, OutOfStockItemSell } from '@types';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
-import { Toaster } from 'react-hot-toast';
-
-export function GoBackButton({ handleGoBack }: { handleGoBack: () => void }): JSX.Element {
-    return (
-        <button
-            onClick={handleGoBack}
-            className='btn-primary w-max flex space-x-2'>
-            <svg
-                xmlns='http://www.w3.org/2000/svg'
-                fill='none'
-                viewBox='0 0 24 24'
-                strokeWidth={1.5}
-                stroke='currentColor'
-                className='w-6 h-6'>
-                <path
-                    strokeLinecap='round'
-                    strokeLinejoin='round'
-                    d='M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18'
-                />
-            </svg>
-            <span>Retourner à la page de sélection</span>
-        </button>
-    );
-}
+import { useState, useEffect } from 'react';
 
 interface ConfigurationPageHeaderProps {
     title: string;
@@ -39,7 +13,7 @@ interface ConfigurationPageHeaderProps {
     children: JSX.Element;
 }
 
-export function ConfigurationPageHeader(props: ConfigurationPageHeaderProps): JSX.Element {
+export default function ConfigurationPageHeader(props: ConfigurationPageHeaderProps): JSX.Element {
     const { title, description, changeURLwithId, callbackQuery, loadingAllItems, displayItems, children } = props;
     const [query, setQuery] = useState('');
 
@@ -125,108 +99,4 @@ export function ConfigurationPageHeader(props: ConfigurationPageHeaderProps): JS
             )}
         </div>
     );
-}
-
-interface DisplayPageProps {
-    id: number | null;
-    homePage: () => JSX.Element;
-    itemPage: () => JSX.Element;
-    handleGoBack: () => void;
-}
-
-export function DisplayPage(props: DisplayPageProps): JSX.Element {
-    const { id, homePage, itemPage, handleGoBack } = props;
-    const base = (): JSX.Element => {
-        if (id === null) {
-            return homePage();
-        } else if (isNaN(id)) {
-            return <></>;
-        } else {
-            return (
-                <>
-                    <GoBackButton handleGoBack={handleGoBack} />
-                    {itemPage()}
-                </>
-            );
-        }
-    };
-    return (
-        <>
-            <Toaster
-                position='bottom-left'
-                toastOptions={{ style: { maxWidth: 500 } }}
-            />
-            {base()}
-        </>
-    );
-}
-
-interface ItemPageWrapperProps {
-    id: number | null;
-    errorGetById: AxiosError<unknown, any> | null | undefined;
-    loadingGetById: boolean;
-    item: Drink | ConsumableItem | OutOfStockItemBuy | OutOfStockItemSell;
-    children: JSX.Element;
-}
-
-export function ItemPageWrapper(props: ItemPageWrapperProps): JSX.Element {
-    const { id, errorGetById, loadingGetById, item, children } = props;
-    if (id !== -1) {
-        if (errorGetById?.response?.status === 404) {
-            return <Page404 />;
-        } else if (loadingGetById || item.id === undefined) {
-            return <Loader />;
-        }
-    }
-    return children;
-}
-
-export const addIdToUrl = (id: number): void => {
-    const url = new URL(window.location.href);
-    url.searchParams.set('id', id.toString());
-    window.history.pushState({}, '', url.href);
-};
-
-export const removeIdFromUrl = (): void => {
-    const url = new URL(window.location.href);
-    url.searchParams.delete('id');
-    window.history.pushState({}, '', url.href);
-};
-
-export const getIdFromUrl = (): number | null => {
-    const url = new URL(window.location.href);
-    const id = url.searchParams.get('id');
-    if (id === null) return null;
-    if (/^(-|)[0-9]+$/.test(id)) return parseInt(id);
-    return null;
-};
-
-export function getErrorMessage(data: AxiosResponse<unknown, any>): string {
-    if (data.status === 422) {
-        const { detail } = data.data as {
-            detail: [
-                {
-                    loc: [string, number];
-                    msg: string;
-                    type: string;
-                }
-            ];
-        };
-        return (
-            detail
-                .map((e) => e.msg)
-                .join(' ')
-                .charAt(0)
-                .toUpperCase() +
-            detail
-                .map((e) => e.msg)
-                .join(' ')
-                .slice(1)
-        );
-    } else if (data.status === 500) {
-        return 'Erreur serveur';
-    } else {
-        const { detail } = data.data as { detail: string };
-        return detail;
-    }
 }
