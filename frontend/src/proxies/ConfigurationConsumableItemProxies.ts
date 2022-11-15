@@ -1,6 +1,6 @@
-import { endpoints } from '@endpoints';
+import { endpoints } from '@utils/endpoints';
 import useAxios from '@hooks/useAxios';
-import type { IProxy, IProxyId, IProxyPost } from '@proxies/Config';
+import type { IProxy, IProxyId, IProxyPost } from '@proxiesTypes';
 import type { ConsumableItem } from '@types';
 import type { AxiosError, AxiosResponse } from 'axios';
 

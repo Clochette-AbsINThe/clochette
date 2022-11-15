@@ -1,6 +1,6 @@
-import { endpoints } from '@endpoints';
+import { endpoints } from '@utils/endpoints';
 import useAxios from '@hooks/useAxios';
-import type { IProxy, IProxyPostTransaction } from '@proxies/Config';
+import type { IProxy, IProxyPostTransaction } from '@proxiesTypes';
 import type { Barrel, Consumable, ConsumableItem, Drink, ItemBuy, OutOfStockItemBuy, PaymentMethod, TransactionType } from '@types';
 import type { AxiosError, AxiosResponse } from 'axios';
 
@@ -21,7 +21,7 @@ export function getEcoCup(setItems: (item?: OutOfStockItemBuy) => void): IProxy 
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -47,7 +47,7 @@ export function getDrinks(setItems: (items: Drink[]) => void): IProxy {
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -68,7 +68,7 @@ export function getConsumables(setItems: (items: ConsumableItem[]) => void): IPr
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -89,7 +89,7 @@ export function getOutOfStocks(setItems: (items: OutOfStockItemBuy[]) => void): 
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
