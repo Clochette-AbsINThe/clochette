@@ -1,4 +1,4 @@
-import SellColumn from '@components/SellColumn';
+import SellColumn from '@components/Transaction/Sell/SellColumn';
 import { getConsumables, getGlasses, getOutOfStocks } from '@proxies/SellPageProxies';
 import type { APIItem, Consumable, Glass, ItemSell, OutOfStockSell } from '@types';
 import { useCallback, useEffect, useState } from 'react';

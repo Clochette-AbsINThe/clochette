@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 
-import BuyPage from '@components/BuyPage';
+import BuyPage from '@components/Transaction/Buy/BuyPage';
+import SellPage from '@components/Transaction/Sell/SellPage';
+import TransactionSwitch, { TransactionEnum } from '@components/Transaction/TransactionSwitch';
 import PopupWindows from '@components/PopupWindows';
-import SellPage from '@components/SellPage';
-import TransactionSwitch, { TransactionEnum } from '@components/TransactionSwitch';
 
 import { postNewBuyTransaction } from '@proxies/BuyPageProxies';
 import { postNewSellTransaction } from '@proxies/SellPageProxies';
 
 import type { ItemBuy, ItemSell, PaymentMethod } from '@types';
 import type { AxiosResponse } from 'axios';
-import toast, { Toaster } from 'react-hot-toast';
-import { getErrorMessage } from '@components/ConfigurationPage/ConfigurationPageBase';
+import toast from 'react-hot-toast';
+import { getErrorMessage } from '@utils/utils';
 import { getIcon } from '@styles/utils';
 
 /**
@@ -73,9 +73,9 @@ export default function Transaction(): JSX.Element {
      */
     useEffect(() => {
         if (transactionType === TransactionEnum.Achat) {
-            setTotalPrice(selectedItemsBuy.reduce((acc, item) => acc + Number((item.quantity * item.item.unitPrice).toFixed(2)), 0));
+            setTotalPrice(+selectedItemsBuy.reduce((acc, item) => acc + Number(item.quantity * item.item.unitPrice), 0).toFixed(2));
         } else {
-            setTotalPrice(selectedItemsSell.reduce((acc, item) => acc + Number((item.quantity * item.item.sellPrice).toFixed(2)), 0));
+            setTotalPrice(+selectedItemsSell.reduce((acc, item) => acc + Number(item.quantity * item.item.sellPrice), 0).toFixed(2));
         }
     }, [transactionType, selectedItemsBuy, selectedItemsSell]);
 
@@ -171,10 +171,6 @@ export default function Transaction(): JSX.Element {
 
     return (
         <>
-            <Toaster
-                position='bottom-left'
-                toastOptions={{ style: { maxWidth: 500 } }}
-            />
             <TransactionSwitch
                 changeTransactionType={handleChangeTransactionType}
                 startTransactionType={transactionType}

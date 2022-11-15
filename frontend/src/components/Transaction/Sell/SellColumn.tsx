@@ -1,4 +1,4 @@
-import ItemCount from '@components/ItemCount';
+import ItemCount from '@components/Transaction/Sell/ItemCount';
 import Loader from '@components/Loader';
 import type { Consumable, Glass, ItemSell, OutOfStockItemSell } from '@types';
 import type { AxiosError } from 'axios';
@@ -29,7 +29,7 @@ export default function SellColumn(props: SellColumProps): JSX.Element {
             if (item === itemFound) {
                 return {
                     ...item,
-                    quantity: (_value <= maxQuantityForConsumable) ? _value : itemFound.maxQuantity as number,
+                    quantity: _value <= maxQuantityForConsumable ? _value : (itemFound.maxQuantity as number)
                 };
             } else if (item === itemGlass) {
                 return {

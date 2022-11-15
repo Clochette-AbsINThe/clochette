@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
-import DropDownSelector from '@components/DropDownSelector';
-import Form from '@components/Form';
+import DropDownSelector from '@components/Transaction/Buy/DropDownSelector';
+import Form from '@components/Transaction/Buy/Form';
 import Loader from '@components/Loader';
 import PopupWindows from '@components/PopupWindows';
 
@@ -84,7 +84,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
      * @param item The item to add to the transaction
      * @param table The table the item belong to
      */
-    const handleModal = (item: Drink | OutOfStockItemBuy | ConsumableItem, table: TableData): void => {
+    const handleModalNew = (item: Drink | OutOfStockItemBuy | ConsumableItem, table: TableData): void => {
         setPopUp(true);
         const newItem = createNewItem(item, table);
         setPopUpItem(newItem);
@@ -147,7 +147,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                             text={'des fûts'}
                             loading={loadingFuts}
                             error={errorFuts}
-                            handleModal={handleModal}
+                            handleModal={handleModalNew}
                             table={'barrel'}
                         />
                         <h1 className='text-2xl font-bold'>Consommables :</h1>
@@ -156,7 +156,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                             text={'des consommables'}
                             loading={loadingConsommable}
                             error={errorConsommable}
-                            handleModal={handleModal}
+                            handleModal={handleModalNew}
                             table={'consumable'}
                         />
                         <h1 className='text-2xl font-bold'>Extras :</h1>
@@ -165,7 +165,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                             text={'des extras'}
                             loading={loadingExtras}
                             error={errorExtras}
-                            handleModal={handleModal}
+                            handleModal={handleModalNew}
                             table={'out_of_stock'}
                         />
                     </div>
@@ -182,7 +182,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                                 </div>
                                 <div className='flex flex-grow justify-end self-center cursor-pointer'>
                                     <button
-                                        onClick={() => handleModal(ecoCup, 'out_of_stock')}
+                                        onClick={() => handleModalNew(ecoCup, 'out_of_stock')}
                                         aria-label='add-ecocup'>
                                         <svg
                                             xmlns='http://www.w3.org/2000/svg'
