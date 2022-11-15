@@ -25,6 +25,7 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
             crud_table = getattr(importlib.import_module(f'app.crud.crud_{items[i].table}'), items[i].table)
             for _ in range(items[i].quantity):
                 obj_in = items[i].item
+                obj_in.transaction_id = transaction.id
                 if transaction.sale is True and items[i].table == 'consumable':
                     crud_table.update(db, db_obj=crud_table.read(db, id=items[i].id), obj_in=ConsumableUpdate(**obj_in.dict()))
                 else:
