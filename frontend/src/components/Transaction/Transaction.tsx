@@ -13,6 +13,7 @@ import type { AxiosResponse } from 'axios';
 import toast from 'react-hot-toast';
 import { getErrorMessage } from '@utils/utils';
 import { getIcon } from '@styles/utils';
+import Link from 'next/link';
 
 /**
  * This component is in charge of displaying the transaction page.
@@ -176,42 +177,46 @@ export default function Transaction(): JSX.Element {
                 startTransactionType={transactionType}
             />
             {renderTransaction()}
-            <div className='flex justify-end mt-3'>
-                <div
-                    className='text-2xl font-bold mr-8'
-                    aria-label='total-price'>
-                    Total: <span>{totalPrice}</span>€
-                </div>
-
-                <PopupWindows
-                    trigger={{ className: 'btn-primary', content: 'Valider' }}
-                    onOpen={popupWindowOpen}
-                    callback={(state) => setPopupWindowOpen(state)}>
-                    <div className='flex flex-col flex-grow'>
-                        <div className='text-3xl font-bold pb-2 border-b-2 border-neutral-400'>Récapitulatif de la commande :</div>
-                        {renderRecap()}
-                        <div className='flex justify-between flex-wrap'>
-                            <PaymentMethodForm
-                                changePaymentMethod={setPaymentMethod}
-                                paymentMethod={paymentMethod}
-                            />
-                            <div className='flex pt-3 self-end space-x-5'>
-                                <div
-                                    className='text-2xl font-bold mr-8'
-                                    aria-label='total-price'>
-                                    Total: {totalPrice}€
+            <div className="flex justify-between mt-3 flex-row">
+                <Link href={"/configuration/hors-stocks?id=-1"}>
+                    <a>Pour ajouter un produit hors stock manquant</a>
+                </Link>
+                <div className='flex'>
+                    <div
+                        className='text-2xl font-bold mr-8'
+                        aria-label='total-price'>
+                        Total: <span>{totalPrice}</span>€
+                    </div>
+                    <PopupWindows
+                        trigger={{ className: 'btn-primary', content: 'Valider' }}
+                        onOpen={popupWindowOpen}
+                        callback={(state) => setPopupWindowOpen(state)}>
+                        <div className='flex flex-col flex-grow'>
+                            <div className='text-3xl font-bold pb-2 border-b-2 border-neutral-400'>Récapitulatif de la commande :</div>
+                            {renderRecap()}
+                            <div className='flex justify-between flex-wrap'>
+                                <PaymentMethodForm
+                                    changePaymentMethod={setPaymentMethod}
+                                    paymentMethod={paymentMethod}
+                                />
+                                <div className='flex pt-3 self-end space-x-5'>
+                                    <div
+                                        className='text-2xl font-bold mr-8'
+                                        aria-label='total-price'>
+                                        Total: {totalPrice}€
+                                    </div>
+                                    <button
+                                        id='submit-btn'
+                                        className='btn-primary'
+                                        onClick={handlePostData}
+                                        disabled={loadingBuy || loadingSell}>
+                                        Valider le paiment
+                                    </button>
                                 </div>
-                                <button
-                                    id='submit-btn'
-                                    className='btn-primary'
-                                    onClick={handlePostData}
-                                    disabled={loadingBuy || loadingSell}>
-                                    Valider le paiment
-                                </button>
                             </div>
                         </div>
-                    </div>
-                </PopupWindows>
+                    </PopupWindows>
+                </div>
             </div>
         </>
     );
