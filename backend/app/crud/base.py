@@ -27,6 +27,7 @@ class CRUDBase(
 
         :param model: A SQLAlchemy model class
         """
+        
         self.model = model
 
     def read(self, db: Session, id: Any) -> Optional[ModelType]:
@@ -38,6 +39,7 @@ class CRUDBase(
 
         :return: The record
         """
+
         return db.query(self.model).filter(self.model.id == id).first()
 
     def read_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> list[ModelType]:
@@ -50,6 +52,7 @@ class CRUDBase(
 
         :return: The list of records
         """
+
         return db.query(self.model).offset(skip).limit(limit).all()
 
     def query(self, db: Session, distinct: str | None = None, skip: int = 0, limit: int = 100, **kwargs) -> list[ModelType]:
@@ -64,6 +67,7 @@ class CRUDBase(
 
         :return: The list of records
         """
+
         if distinct:
             return db.query(self.model).filter_by(**kwargs).distinct(distinct).offset(skip).limit(limit).all()
         return db.query(self.model).filter_by(**kwargs).offset(skip).limit(limit).all()
@@ -78,6 +82,7 @@ class CRUDBase(
 
         :return: The created record
         """
+
         obj_in_data = jsonable_encoder(obj_in, by_alias=False)
         db_obj = self.model(**obj_in_data)
         db.add(db_obj)
@@ -87,6 +92,16 @@ class CRUDBase(
 
     @handle_exceptions('Data relationship integrity error', IntegrityError)
     def update(self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType | dict[str, Any]) -> ModelType:
+        """
+        Update a record.
+
+        :param db: The database session
+        :param db_obj: The record to update
+        :param obj_in: The record data
+
+        :return: The updated record
+        """
+
         obj_data = jsonable_encoder(db_obj)
         if isinstance(obj_in, dict):
             update_data = obj_in
