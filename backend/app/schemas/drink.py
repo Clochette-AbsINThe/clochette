@@ -1,5 +1,6 @@
 from app.core.config import DefaultModel
 
+
 class DrinkBase(DefaultModel):
     name: str
 
@@ -18,6 +19,3 @@ class Drink(DrinkBase):
     class Config:
         orm_mode = True
 
-
-class DrinkSearchResults(DefaultModel):
-    results: list[Drink]
