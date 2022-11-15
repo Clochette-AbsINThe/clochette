@@ -19,7 +19,7 @@ export default function HomePage(): JSX.Element {
                         icon={['Barrel', 'Soft']}
                         title='Gestion des stocks'
                         description='Gestion des différents stocks du bar; les boissons et les consommables'
-                        link='/stocks'
+                        link='/stock'
                     />
                     <Card
                         icon={['Misc']}
