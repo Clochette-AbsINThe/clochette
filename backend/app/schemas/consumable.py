@@ -31,7 +31,7 @@ class TransactionCreate(ConsumableBase):
 
 
 class ConsumableUpdate(ConsumableBase):
-    pass
+    transaction_id_sale: int = Field(0, alias='transaction_id')
 
 
 class Consumable(ConsumableBase):
