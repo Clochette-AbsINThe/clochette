@@ -7,7 +7,7 @@ from app.core.decorator import handle_exceptions
 from app.crud.base import CRUDBase
 from app.crud.crud_treasury import treasury as treasuries
 from app.models.transaction import Transaction
-from app.schemas.consumable import ConsumableUpdate
+from app.schemas.consumable import ConsumableCreatePurchase, ConsumableCreateSale, ConsumableUpdate
 from app.schemas.transaction import TransactionCreate, TransactionFrontCreate, TransactionUpdate
 
 
@@ -25,10 +25,13 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
             crud_table = getattr(importlib.import_module(f'app.crud.crud_{items[i].table}'), items[i].table)
             for _ in range(items[i].quantity):
                 obj_in = items[i].item
-                obj_in.transaction_id = transaction.id
-                if transaction.sale is True and items[i].table == 'consumable':
-                    crud_table.update(db, db_obj=crud_table.read(db, id=items[i].id), obj_in=ConsumableUpdate(**obj_in.dict()))
+                if items[i].table == 'consumable':
+                    obj_in = ConsumableCreateSale(**obj_in.dict(), transaction_id=transaction.id) if transaction.sale else ConsumableCreatePurchase(**obj_in.dict(), transaction_id=transaction.id)
+                    if transaction.sale:
+                        crud_table.update(db, db_obj=crud_table.read(db, id=obj_in.id), obj_in=ConsumableUpdate(**obj_in.dict()))
                 else:
+                    obj_in.transaction_id = transaction.id
+                if not transaction.sale:
                     crud_table.create(db, obj_in=obj_in)
         
         return transaction
