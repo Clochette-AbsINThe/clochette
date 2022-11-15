@@ -29,9 +29,10 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
                     obj_in = ConsumableCreateSale(**obj_in.dict(), transaction_id=transaction.id) if transaction.sale else ConsumableCreatePurchase(**obj_in.dict(), transaction_id=transaction.id)
                     if transaction.sale:
                         crud_table.update(db, db_obj=crud_table.read(db, id=obj_in.id), obj_in=ConsumableUpdate(**obj_in.dict()))
+                    else:
+                        crud_table.create(db, obj_in=obj_in)
                 else:
                     obj_in.transaction_id = transaction.id
-                if not transaction.sale:
                     crud_table.create(db, obj_in=obj_in)
         
         return transaction
