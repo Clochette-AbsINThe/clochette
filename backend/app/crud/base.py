@@ -27,7 +27,7 @@ class CRUDBase(
 
         :param model: A SQLAlchemy model class
         """
-        
+
         self.model = model
 
     def read(self, db: Session, id: Any) -> Optional[ModelType]:
@@ -118,6 +118,15 @@ class CRUDBase(
         return db_obj
 
     def delete(self, db: Session, *, id: int) -> ModelType:
+        """
+        Delete a record.
+
+        :param db: The database session
+        :param id: The record id
+
+        :return: The deleted record
+        """
+        
         obj = db.query(self.model).get(id)
         db.delete(obj)
         db.commit()
