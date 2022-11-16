@@ -177,10 +177,14 @@ export default function Transaction(): JSX.Element {
                 startTransactionType={transactionType}
             />
             {renderTransaction()}
-            <div className="flex justify-between mt-3 flex-row">
-                <Link href={"/configuration/hors-stocks?id=-1"}>
-                    <a>Pour ajouter un produit hors stock manquant</a>
-                </Link>
+            <div className='flex justify-between mt-3 flex-row'>
+                {transactionType === TransactionEnum.Vente ? (
+                    <Link href={'/configuration/hors-stocks?id=-1'}>
+                        <a className='btn-primary'>Pour ajouter un produit hors stock manquant</a>
+                    </Link>
+                ) : (
+                    <div className='flex-grow'></div>
+                )}
                 <div className='flex'>
                     <div
                         className='text-2xl font-bold mr-8'
