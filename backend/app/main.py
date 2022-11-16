@@ -9,6 +9,7 @@ from time import sleep
 
 from app.api.v1.api import api_v1_router
 from app.core.config import settings
+from app.core.middleware import ExceptionMonitorMiddleware
 
 
 app = FastAPI(
@@ -16,6 +17,9 @@ app = FastAPI(
     openapi_url="{prefix}/openapi.json".format(prefix=settings.API_V1_PREFIX),
 )
 
+app.add_middleware(
+    ExceptionMonitorMiddleware, alert_backend=settings.ALERT_BACKEND
+)
 app.add_middleware(
     TrustedHostMiddleware, allowed_hosts=settings.ALLOWED_HOSTS
 )
