@@ -22,7 +22,7 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
 
     const displayOutOfStockItems = outOfStockItems.filter((outOfStockItem) => outOfStockItem.name.toLowerCase().includes(query.toLowerCase())).sort((a, b) => a.name.localeCompare(b.name));
 
-    const [outOfStockItem, setOutOfStockItem] = useState<OutOfStockItemBuy | OutOfStockItemSell>({ name: '', icon: 'Misc' });
+    const [outOfStockItem, setOutOfStockItem] = useState<OutOfStockItemBuy | OutOfStockItemSell>({ name: '', icon: 'Misc', sellPrice: 0 });
     const [getOutOfStockItemByIdData, { error: errorGetById, loading: loadingGetById }] = getOutOfStockItemById(setOutOfStockItem);
 
     const makeApiCalls = useCallback((): void => {
@@ -225,7 +225,7 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
                                     id='sellPriceCheckbox'
                                     name='sellPriceCheckbox'
                                     aria-label='sellPriceCheckbox'
-                                    className='checkbox'
+                                    className='checkbox w-6 h-6'
                                     defaultChecked={outOfStockItem.sellPrice !== undefined}
                                     onChange={(event) => {
                                         if (!event.target.checked) {
@@ -246,6 +246,7 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
                                     name='sellPrice'
                                     aria-label='sellPrice'
                                     className='input w-64'
+                                    min={0}
                                     disabled={!sellPriceCheckbox.current?.checked && outOfStockItem.sellPrice === undefined}
                                     required
                                     value={outOfStockItem.sellPrice ?? ''}
