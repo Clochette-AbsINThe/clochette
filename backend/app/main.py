@@ -3,13 +3,14 @@ import psycopg2
 import shlex
 import subprocess
 
-from fastapi import FastAPI, APIRouter
+from fastapi import APIRouter, FastAPI
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from time import sleep
 
 from app.api.v1.api import api_v1_router
 from app.core.config import settings
 from app.core.middleware import ExceptionMonitorMiddleware
+from app.core.utils.alert_backend import alert_backend
 
 
 app = FastAPI(
@@ -18,7 +19,7 @@ app = FastAPI(
 )
 
 app.add_middleware(
-    ExceptionMonitorMiddleware, alert_backend=settings.ALERT_BACKEND
+    ExceptionMonitorMiddleware, alert_backend=alert_backend()
 )
 app.add_middleware(
     TrustedHostMiddleware, allowed_hosts=settings.ALLOWED_HOSTS
