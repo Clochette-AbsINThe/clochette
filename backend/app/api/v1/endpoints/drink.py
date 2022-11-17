@@ -56,8 +56,7 @@ async def update_drink(drink_id: int, drink: drink_schema.DrinkUpdate, db=Depend
 
 @router.delete("/{drink_id}", response_model=drink_schema.Drink)
 async def delete_drink(drink_id: int, db=Depends(get_db)):
-    drink = drinks.read(db, drink_id)
-    if drink is None:
+    if drinks.read(db, drink_id) is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Drink not found"

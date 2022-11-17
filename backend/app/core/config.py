@@ -1,8 +1,10 @@
+import os
+
+from collections.abc import Callable
 from humps import camelize
 from pydantic import AnyHttpUrl, BaseModel, BaseSettings, EmailStr, validator
 
-import os
-
+from app.core.utils.alert_backend import alert_to_terminal
 
 class DefaultModel(BaseModel):
     class Config:
@@ -11,6 +13,8 @@ class DefaultModel(BaseModel):
 
 
 class Settings(BaseSettings):
+    ALERT_BACKEND: Callable[[str, Exception], None] = alert_to_terminal
+
     API_V1_PREFIX: str = "/api/v1"
 
     ALLOWED_HOSTS: list[str] = ["*"] # Shouldn't be set to ["*"] in production!
