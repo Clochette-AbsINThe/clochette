@@ -10,7 +10,7 @@ class DefaultModel(BaseModel):
 
 
 class Settings(BaseSettings):
-    ALERT_BACKEND: str = 'github'
+    ALERT_BACKEND: str = os.environ.get('ALERT_BACKEND', default='terminal')
 
     API_V1_PREFIX: str = "/api/v1"
 
