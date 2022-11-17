@@ -46,6 +46,11 @@ services:
       - POSTGRES_USER=clochette
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - MIGRATE=True
+      - GITHUB_USER=${GITHUB_USER}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - ISSUE_LABELS=Backend,bug
+      - REPOSITORY_NAME=${REPOSITORY_NAME}
+      - REPOSITORY_OWNER=${REPOSITORY_OWNER}
 
   database:
     image: postgres:14.5-alpine
