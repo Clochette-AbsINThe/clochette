@@ -46,6 +46,7 @@ services:
       - POSTGRES_USER=clochette
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
       - MIGRATE=True
+      - ALERT_BACKEND=github # Default is terminal if not set
       - GITHUB_USER=${GITHUB_USER}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
       - ISSUE_LABELS=Backend,bug
