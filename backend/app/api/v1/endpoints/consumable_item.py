@@ -42,10 +42,10 @@ async def update_consumable_item(consumable_item_id: int, consumable_item: consu
     if old_consumable_item is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Consumabel Item not found"
+            detail="Consumabel item not found"
         )
     results = consumable_items.query(db, name=consumable_item.name, limit=None)
-    if len(results) and results[0].id != old_consumable_item.id:
+    if results and results[0].id != old_consumable_item.id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Consumable item already exists"
@@ -59,11 +59,11 @@ async def delete_consumable_item(consumable_item_id: int, db=Depends(get_db)):
     if consumable_item is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Consumable Item not found"
+            detail="Consumable item not found"
         )
     if consumables.query(db, consumable_item_id=consumable_item_id, limit=1):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Consumable Item is in use"
+            detail="Consumable item is in use"
         )
     return consumable_items.delete(db, id=consumable_item_id)
