@@ -21,7 +21,7 @@ async def create_transaction(transaction: transaction_schema.TransactionFrontCre
 @router.get("/{transaction_id}", response_model=transaction_schema.TransactionSingle, response_model_exclude_none=True)
 async def read_transaction(transaction_id: int, db=Depends(get_db)) -> dict:
     transaction = transactions.read(db, id=transaction_id)
-    if not transaction:
+    if transaction is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Transaction not found"
@@ -31,7 +31,7 @@ async def read_transaction(transaction_id: int, db=Depends(get_db)) -> dict:
 
 @router.delete("/{transaction_id}", response_model=transaction_schema.Transaction)
 async def delete_transaction(transaction_id: int, db=Depends(get_db)) -> dict:
-    if not transactions.read(db, id=transaction_id):
+    if transactions.read(db, id=transaction_id) is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Transaction not found"
