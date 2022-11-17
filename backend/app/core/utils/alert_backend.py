@@ -11,9 +11,11 @@ def alert_backend() -> Callable[[Exception, dict], None]:
     elif settings.ALERT_BACKEND == "github":
         return alert_to_github_issues
     else:
-        raise ValueError("Invalid alert backend: {backend}".format(
+        print("Invalid alert backend: {backend}".format(
             backend=settings.ALERT_BACKEND
         ))
+        print("Falling back to terminal alert")
+        return alert_to_terminal
 
 
 def alert_to_terminal(exception: Exception, **request: dict) -> None:
