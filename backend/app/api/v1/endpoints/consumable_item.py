@@ -55,8 +55,7 @@ async def update_consumable_item(consumable_item_id: int, consumable_item: consu
 
 @router.delete("/{consumable_item_id}", response_model=consumable_item_schema.ConsumableItem)
 async def delete_consumable_item(consumable_item_id: int, db=Depends(get_db)):
-    consumable_item = consumable_items.read(db, consumable_item_id)
-    if consumable_item is None:
+    if consumable_items.read(db, consumable_item_id) is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Consumable item not found"
