@@ -14,7 +14,7 @@ export function getConsumableItems(setItem: (value: ConsumableItem[]) => void): 
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -30,7 +30,7 @@ export function getConsumableItemById(setItem: (value: ConsumableItem) => void):
     };
 
     const getData = (id: number): void => {
-        getDataAsync(id).catch(() => { });
+        getDataAsync(id).catch(() => {});
     };
 
     return [getData, { loading, error }];

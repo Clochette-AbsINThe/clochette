@@ -1,6 +1,6 @@
 import ConfigurationConsumableItem from '@components/ConfigurationPage/ConfigurationConsumableItem';
 import { addIdToUrl } from '@utils/utils';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
 import { act } from 'react-dom/test-utils';
@@ -30,10 +30,7 @@ test('Render ConfigurationConsumabelItem', async () => {
     );
     render(<ConfigurationConsumableItem />);
     expect(screen.getByText('Modification des produits consommables')).toBeInTheDocument();
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Pizza')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Pizza')).toBeInTheDocument());
 });
 
 test('Edit a consumable item succes', async () => {
@@ -168,5 +165,5 @@ test('Go to 404', async () => {
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
     });
-    expect(screen.getByText('PAGE NOT FOUND')).toBeInTheDocument();
+    expect(screen.getByText('La page est introuvable')).toBeInTheDocument();
 });

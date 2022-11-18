@@ -1,5 +1,5 @@
-import { getIcon } from "@styles/utils";
-import { ItemBuy } from "@types";
+import { getIcon } from '@styles/utils';
+import { ItemBuy } from '@types';
 
 interface RecapItemProps {
     item: ItemBuy;

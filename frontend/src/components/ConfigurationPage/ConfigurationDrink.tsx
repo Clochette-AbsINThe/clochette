@@ -59,7 +59,6 @@ export default function ConfigurationDrink(): JSX.Element {
         }
     });
 
-
     const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
         if (id === -1) {
@@ -68,7 +67,6 @@ export default function ConfigurationDrink(): JSX.Element {
             editDrinkData({ id: id as number, ...drink });
         }
     };
-
 
     useEffect(() => {
         setId(getIdFromUrl());

@@ -14,7 +14,7 @@ export function getDrinks(setItem: (value: Drink[]) => void): IProxy {
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -30,7 +30,7 @@ export function getDrinkById(setItem: (value: Drink) => void): IProxyId {
     };
 
     const getData = (id: number): void => {
-        getDataAsync(id).catch(() => { });
+        getDataAsync(id).catch(() => {});
     };
 
     return [getData, { loading, error }];

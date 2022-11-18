@@ -9,16 +9,14 @@
     "lint": "next lint",
     "test": "vitest",
     "coverage": "vitest --coverage --run",
-    "format": "prettier --write --config .prettierrc.json ."
+    "format": "prettier --config .prettierrc.json ."
   },
   "dependencies": {
     "axios": "^0.27.2",
-    "msw": "^0.47.3",
     "next": "12.1.6",
     "react": "18.1.0",
     "react-dom": "18.1.0",
-    "react-hot-toast": "^2.4.0",
-    "vite-tsconfig-paths": "^3.5.2"
+    "react-hot-toast": "^2.4.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -40,11 +38,13 @@
     "eslint-plugin-promise": "^6.0.1",
     "eslint-plugin-react": "^7.31.8",
     "jsdom": "^19.0.0",
+    "msw": "^0.47.3",
     "postcss": "^8.4.14",
     "prettier": "^2.7.1",
     "sass": "^1.54.9",
     "tailwindcss": "^3.0.24",
     "typescript": "^4.8.3",
-    "vitest": "^0.25.1"
+    "vitest": "^0.25.1",
+    "vite-tsconfig-paths": "^3.5.2"
   }
 }

@@ -13,17 +13,3 @@ test('Render Card', () => {
     const card = screen.queryByText('Test');
     expect(card).toBeInTheDocument();
 });
-
-test('Render Card with button label', () => {
-    render(
-        <Card
-            description=''
-            icon={['Beer']}
-            link=''
-            title='Test'
-            buttonLabel='TestLabel'
-        />
-    );
-    const card = screen.queryByText('TestLabel');
-    expect(card).toBeInTheDocument();
-});

@@ -1,6 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useState } from 'react';
 
+export const baseURL: string = 'https://clochette.dev/api/v1';
+
 interface ResponseValues<T> {
     loading: boolean;
     error: AxiosError | null;
@@ -9,8 +11,8 @@ interface ResponseValues<T> {
 
 type UseAxiosResult<T> = [ResponseValues<T>, (_config?: AxiosRequestConfig, _url?: string) => Promise<AxiosResponse<T>>];
 
-const API = axios.create({
-    baseURL: 'https://clochette.dev/api/v1',
+export const API = axios.create({
+    baseURL,
     headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json'

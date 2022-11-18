@@ -1,4 +1,4 @@
-import BuyPage, { createNewItem, RecapItem, updateFkID } from '@components/Transaction/Buy/BuyPage';
+import BuyPage, { createNewItem, updateFkID } from '@components/Transaction/Buy/BuyPage';
 import { endpoints } from '@utils/endpoints';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -6,6 +6,7 @@ import type { ConsumableItem, Drink, ItemBuy, OutOfStockItemBuy } from '@types';
 import { rest } from 'msw';
 import { act } from 'react-dom/test-utils';
 import { server } from '../setupTests';
+import { RecapItem } from '@components/Transaction/Buy/RecapItem';
 
 const item: ItemBuy = {
     table: 'consumable',
