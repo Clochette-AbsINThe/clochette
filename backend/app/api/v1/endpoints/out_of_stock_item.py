@@ -66,7 +66,7 @@ async def delete_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Out of stock item not found"
         )
-    if out_of_stocks.query(db, limit=1, out_of_stock_item_id=out_of_stock_item_id):
+    if out_of_stocks.query(db, limit=1, item_id=out_of_stock_item_id):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Out of stock item is in use"
