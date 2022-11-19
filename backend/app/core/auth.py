@@ -12,7 +12,7 @@ from app.dependencies import get_db
 from app.models.account import Account
 
 
-JWTPatloadMapping = MutableMapping[
+JWTPayloadMapping = MutableMapping[
     str,
     datetime | bool | str | list[str] | list[int]
 ]
@@ -27,3 +27,25 @@ def authenticate(username: str, password: str, db=Depends(get_db)) -> Account | 
     if not verify_password(password, account.password_hash):
         return None
     return account
+
+
+def create_access_token(*, subject: str) -> str:
+    return _create_token(
+        subject=subject,
+        expires_delta=timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES),
+        token_type='access_token'
+    )
+
+
+def _create_token(subject: str, expires_delta: timedelta, token_type: str) -> str:
+    to_encode: JWTPayloadMapping = {
+        'sub': subject,
+        'iat': datetime.utcnow(),
+        'exp': datetime.utcnow() + expires_delta,
+        'token_type': token_type
+    }
+    return jwt.encode(
+        to_encode,
+        settings.SECRET_KEY,
+        algorithm=settings.ALGORITHM
+    )
