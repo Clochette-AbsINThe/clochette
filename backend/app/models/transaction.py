@@ -17,8 +17,8 @@ class Transaction(Base):
     treasury_id = Column(Integer, ForeignKey("treasury.id"))
     treasury = relationship("Treasury", back_populates="transactions")
 
-    barrels = relationship("Barrel", back_populates="transaction")
-    consumables_purchase = relationship("Consumable", foreign_keys="Consumable.transaction_id_purchase")
-    consumables_sale = relationship("Consumable", foreign_keys="Consumable.transaction_id_sale")
-    glasses = relationship("Glass", back_populates="transaction")
-    out_of_stocks = relationship("OutOfStock", back_populates="transaction")
+    barrels = relationship("Barrel", back_populates="transaction", cascade="all, delete-orphan")
+    consumables_purchase = relationship("Consumable", foreign_keys="Consumable.transaction_id_purchase", cascade="all, delete-orphan")
+    consumables_sale = relationship("Consumable", foreign_keys="Consumable.transaction_id_sale", cascade="all, delete-orphan")
+    glasses = relationship("Glass", back_populates="transaction", cascade="all, delete-orphan")
+    out_of_stocks = relationship("OutOfStock", back_populates="transaction", cascade="all, delete-orphan")
