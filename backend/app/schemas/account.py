@@ -3,7 +3,6 @@ from app.core.config import DefaultModel
 
 class AccountBase(DefaultModel):
     username: str
-    password: str
     roles: str
     is_active: bool
     last_name: str
@@ -14,11 +13,11 @@ class AccountBase(DefaultModel):
 
 
 class AccountCreate(AccountBase):
-    pass
+    password: str
 
 
 class AccountUpdate(AccountBase):
-    id: int
+    password: str    
 
 
 class Account(AccountBase):
