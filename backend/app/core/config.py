@@ -16,6 +16,14 @@ class Settings(BaseSettings):
 
     ALLOWED_HOSTS: list[str] = ["*"] # Shouldn't be set to ["*"] in production!
 
+    ### Authentication config
+
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 1 # 1 day
+    SECRET_KEY: str = os.environ.get('SECRET_KEY')
+    ALGORITHM: str = "HS256" # TODO: Change to ES256 in the future
+
+    ###
+
     # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
     BACKEND_CORS_ORIGIN: list[AnyHttpUrl] = []
 
