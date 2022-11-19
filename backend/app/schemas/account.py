@@ -8,7 +8,6 @@ class AccountBase(DefaultModel):
     is_active: bool
     last_name: str
     first_name: str
-    amount: float
     promotion_year: int
     staff_name: str
     is_inducted: bool
@@ -24,7 +23,6 @@ class AccountUpdate(AccountBase):
 
 class Account(AccountBase):
     id: int
-    transactions: list = []
 
     class Config:
         orm_mode = True

@@ -12,7 +12,6 @@ class Account(Base):
     is_active = Column(Boolean, nullable=False)
     last_name = Column(String(256), nullable=False)
     first_name = Column(String(256), nullable=False)
-    amount = Column(Float, nullable=False)
     promotion_year = Column(Integer, nullable=False)
     staff_name = Column(String(256), nullable=False)
     is_inducted = Column(Boolean, nullable=False)
