@@ -45,11 +45,11 @@ services:
       - POSTGRES_DB=clochette
       - POSTGRES_USER=clochette
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - MIGRATE=True
+      - MIGRATE=${MIGRATE}
       - ALERT_BACKEND=github # Default is terminal if not set
       - GITHUB_USER=${GITHUB_USER}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
-      - ISSUE_LABELS=Backend,bug
+      - ISSUE_LABELS=Backend,bug,bot
       - REPOSITORY_NAME=${REPOSITORY_NAME}
       - REPOSITORY_OWNER=${REPOSITORY_OWNER}
 

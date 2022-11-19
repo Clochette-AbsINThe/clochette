@@ -68,7 +68,7 @@ def alert_to_github_issues(exception: Exception, **request: dict) -> None:
     session.auth = (settings.GITHUB_USER, settings.GITHUB_TOKEN)
 
     payload = {
-        "title": "{type}: {msg}".format(
+        "title": "[bug] [production] {type}: {msg}".format(
             type=exception.__class__.__name__,
             msg=str(exception)
         ),
