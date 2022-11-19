@@ -19,7 +19,7 @@ class Settings(BaseSettings):
     ### Authentication config
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 1 # 1 day
-    SECRET_KEY: str = os.environ.get('SECRET_KEY')
+    JWT_SECRET_KEY: str = os.environ.get('SECRET_KEY') # openssl rand -hex 32
     ALGORITHM: str = "HS256" # TODO: Change to ES256 in the future
 
     ###
