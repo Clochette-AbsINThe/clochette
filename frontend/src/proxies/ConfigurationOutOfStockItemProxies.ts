@@ -20,7 +20,7 @@ export function getOutOfStockItems(setItem: (value: Array<OutOfStockItemBuy | Ou
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -37,7 +37,7 @@ export function getOutOfStockItemById(setItem: (value: OutOfStockItemBuy | OutOf
     };
 
     const getData = (id: number): void => {
-        getDataAsync(id).catch(() => { });
+        getDataAsync(id).catch(() => {});
     };
 
     return [getData, { loading, error }];

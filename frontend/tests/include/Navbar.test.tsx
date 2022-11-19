@@ -11,14 +11,14 @@ test('Render Navbar', () => {
 test('Resize Navbar Hide', () => {
     window.innerWidth = 500;
     render(<Navbar />);
-    const login = screen.queryByText('Login');
+    const login = screen.queryByText('Se connecter');
     expect(login).toBeNull();
 });
 
 test('Resize Navbar Show', () => {
     window.innerWidth = 1025;
     render(<Navbar />);
-    const login = screen.queryByText('Login');
+    const login = screen.queryByText('Se connecter');
     expect(login).toBeInTheDocument();
 });
 
@@ -30,7 +30,7 @@ test('debounce Resize Navbar Show', async () => {
         window.dispatchEvent(new Event('resize'));
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
-    const login = screen.queryByText('Login');
+    const login = screen.queryByText('Se connecter');
     expect(login).toBeNull();
 });
 
@@ -40,6 +40,6 @@ test('Open hamburger-menu', async () => {
     await act(async () => {
         await userEvent.click(screen.getByLabelText('hamburger-menu'));
     });
-    const login = screen.queryByText('Login');
+    const login = screen.queryByText('Se connecter');
     expect(login).toBeInTheDocument();
 });

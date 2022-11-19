@@ -1,6 +1,6 @@
 import ConfigurationOutOfStockItem from '@components/ConfigurationPage/ConfigurationOutOfStockItem';
 import { addIdToUrl } from '@utils/utils';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
 import { act } from 'react-dom/test-utils';
@@ -10,10 +10,7 @@ import { Toaster } from 'react-hot-toast';
 test('Render ConfigurationOutOfStockItem', async () => {
     render(<ConfigurationOutOfStockItem />);
     expect(screen.getByText('Modification des produits hors stock')).toBeInTheDocument();
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument());
 });
 
 test('Edit a outOfStock item succes', async () => {
@@ -91,15 +88,18 @@ test('Add a outOfStock item succes', async () => {
     await userEvent.click(screen.getByLabelText('icon-glass'));
     expect(screen.getByLabelText('icon-glass')).toBeChecked();
 
-    await userEvent.click(screen.getByLabelText('sellPriceCheckbox'));
     expect(screen.getByLabelText('sellPriceCheckbox')).toBeChecked();
     await userEvent.click(screen.getByLabelText('sellPrice'));
     await userEvent.keyboard('{Backspace}');
     expect(screen.getByLabelText('sellPrice')).toHaveValue(null);
     await userEvent.type(screen.getByLabelText('sellPrice'), '1');
     expect(screen.getByLabelText('sellPrice')).toHaveValue(1);
+
     await userEvent.click(screen.getByLabelText('sellPriceCheckbox'));
     expect(screen.getByLabelText('sellPriceCheckbox')).not.toBeChecked();
+
+    await userEvent.click(screen.getByLabelText('sellPriceCheckbox'));
+    expect(screen.getByLabelText('sellPriceCheckbox')).toBeChecked();
 
     await userEvent.click(screen.getByRole('submit'));
 
@@ -161,5 +161,5 @@ test('Go to 404', async () => {
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
     });
-    expect(screen.getByText('PAGE NOT FOUND')).toBeInTheDocument();
+    expect(screen.getByText('La page est introuvable')).toBeInTheDocument();
 });

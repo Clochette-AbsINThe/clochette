@@ -59,7 +59,6 @@ export default function ConfigurationConsumableItem(): JSX.Element {
         }
     });
 
-
     const onSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
         event.preventDefault();
         if (id === -1) {
@@ -68,7 +67,6 @@ export default function ConfigurationConsumableItem(): JSX.Element {
             editConsumableItemData({ id: id as number, ...consumableItem });
         }
     };
-
 
     useEffect(() => {
         setId(getIdFromUrl());

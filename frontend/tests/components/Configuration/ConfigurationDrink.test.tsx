@@ -160,5 +160,5 @@ test('Go to 404', async () => {
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
     });
-    expect(screen.getByText('PAGE NOT FOUND')).toBeInTheDocument();
+    expect(screen.getByText('La page est introuvable')).toBeInTheDocument();
 });

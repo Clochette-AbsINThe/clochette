@@ -1,0 +1,41 @@
+name: frontend-checks
+
+on:
+  push:
+    branches: [dev]
+
+defaults:
+  run:
+    working-directory: frontend
+
+jobs:
+  frontend-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache-dependency-path: frontend/package.json
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify lint
+        run: npm run lint
+
+      - name: Verify format
+        run: npm run format -- -c
+
+      - name: Test frontend and get coverage
+        run: npm run coverage
+
+      - name: Upload coverage reports to Codecov with GitHub Action
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./coverage/coverage-final.json
+          fail_ci_if_error: true
+          working-directory: frontend

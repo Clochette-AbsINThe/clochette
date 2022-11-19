@@ -1,10 +1,7 @@
 import os
 
-from collections.abc import Callable
 from humps import camelize
 from pydantic import AnyHttpUrl, BaseModel, BaseSettings, EmailStr, validator
-
-from app.core.utils.alert_backend import alert_to_terminal
 
 class DefaultModel(BaseModel):
     class Config:
@@ -13,7 +10,7 @@ class DefaultModel(BaseModel):
 
 
 class Settings(BaseSettings):
-    ALERT_BACKEND: Callable[[str, Exception], None] = alert_to_terminal
+    ALERT_BACKEND: str = os.environ.get('ALERT_BACKEND', default='terminal')
 
     API_V1_PREFIX: str = "/api/v1"
 
@@ -30,6 +27,10 @@ class Settings(BaseSettings):
             return v
         raise ValueError(v)
 
+    HOST_NAME: str = os.environ.get('HOST_NAME')
+
+    ### Database config
+
     POSTGRES_HOST = os.environ.get('POSTGRES_HOST')
     POSTGRES_PORT = os.environ.get('POSTGRES_PORT')
     POSTGRES_DB = os.environ.get('POSTGRES_DB')
@@ -43,6 +44,20 @@ class Settings(BaseSettings):
         port=POSTGRES_PORT,
         db=POSTGRES_DB
     )
+
+    ###
+
+    ### Github config
+
+    GITHUB_USER: str = os.environ.get('GITHUB_USER')
+    GITHUB_TOKEN: str = os.environ.get('GITHUB_TOKEN')
+
+    ISSUE_LABELS: str = os.environ.get('ISSUES_LABELS')
+    REPOSITORY_NAME: str = os.environ.get('REPOSITORY_NAME')
+    REPOSITORY_OWNER: str = os.environ.get('REPOSITORY_OWNER')
+
+
+    ###
 
     class Config:
         case_sensitive = True
