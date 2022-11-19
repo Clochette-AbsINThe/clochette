@@ -54,6 +54,7 @@ services:
       - ISSUE_LABELS=Backend,bug,bot
       - REPOSITORY_NAME=${REPOSITORY_NAME}
       - REPOSITORY_OWNER=${REPOSITORY_OWNER}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
 
   database:
     image: postgres:14.5-alpine
