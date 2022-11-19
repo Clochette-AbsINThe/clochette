@@ -1,4 +1,5 @@
 __all__ = [
+    'auth',
     'barrel',
     'consumable_item',
     'consumable',
