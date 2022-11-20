@@ -6,6 +6,7 @@ from app.schemas import out_of_stock as out_of_stock_schema
 
 
 router = APIRouter()
+AUTHENTICATION_REQUIRED = True
 
 
 @router.get("/", response_model=list[out_of_stock_schema.OutOfStock], response_model_exclude_none=True)
