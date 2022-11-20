@@ -11,6 +11,7 @@ from app.api.v1.api import api_v1_router
 from app.core.config import settings
 from app.core.middleware import ExceptionMonitorMiddleware
 from app.core.utils.alert_backend import alert_backend
+from app.initial_data import init_db
 
 
 app = FastAPI(
@@ -79,7 +80,6 @@ async def run_migrations():
                     shlex.split("alembic upgrade head"),
                     check=True
                 )
-                break
             except psycopg2.OperationalError as e:
                 if e.pgcode is None or e.pgcode.startswith("08"):
                     print("Postgres is unavailable -- sleeping (receiving error code {code})".format(code=e.pgcode))
@@ -87,6 +87,13 @@ async def run_migrations():
                     continue
                 else:
                     raise e
+            
+            # Init db
+            if os.environ.get("POPULATE_DB") == 'True':
+                print("Populating database with initial data...")
+                init_db()
+                print("Database populated.")
+            break
 
 
 @api_router.get("/", status_code=200)

@@ -24,6 +24,13 @@ class Settings(BaseSettings):
 
     ###
 
+    ### Base account config ###
+
+    BASE_ACCOUNT_USERNAME: str = os.environ.get('BASE_ACCOUNT_USERNAME', default='admin')
+    BASE_ACCOUNT_PASSWORD: str = os.environ.get('BASE_ACCOUNT_PASSWORD')
+
+    ###
+
     # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
     BACKEND_CORS_ORIGIN: list[AnyHttpUrl] = []
 
