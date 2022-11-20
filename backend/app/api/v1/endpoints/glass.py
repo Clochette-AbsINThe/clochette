@@ -6,6 +6,7 @@ from app.schemas import glass as glass_schema
 
 
 router = APIRouter()
+AUTHENTICATION_REQUIRED = True
 
 
 @router.get("/", response_model=list[glass_schema.Glass])
