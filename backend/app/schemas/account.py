@@ -17,7 +17,7 @@ class AccountCreate(AccountBase):
 
 
 class AccountUpdate(AccountBase):
-    password: str    
+    password: str
 
 
 class Account(AccountBase):
