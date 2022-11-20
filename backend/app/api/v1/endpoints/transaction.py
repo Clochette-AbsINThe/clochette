@@ -6,6 +6,7 @@ from app.schemas import transaction as transaction_schema
 
 
 router = APIRouter()
+AUTHENTICATION_REQUIRED = True
 
 
 @router.get("/", response_model=list[transaction_schema.Transaction])
