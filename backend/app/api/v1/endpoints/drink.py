@@ -8,6 +8,7 @@ from app.schemas import drink as drink_schema
 
 
 router = APIRouter()
+AUTHENTICATION_REQUIRED = True
 
 
 @router.get("/{drink_id}", response_model=drink_schema.Drink)
