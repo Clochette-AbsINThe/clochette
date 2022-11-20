@@ -8,6 +8,7 @@ from app.schemas import account as account_schema
 
 
 router = APIRouter()
+AUTHENTICATION_REQUIRED = True
 
 
 @router.get("/", response_model=list[account_schema.Account])
