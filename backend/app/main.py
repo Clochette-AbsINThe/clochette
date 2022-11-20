@@ -87,13 +87,10 @@ async def run_migrations():
                     continue
                 else:
                     raise e
-            
-            # Init db
-            if os.environ.get("POPULATE_DB") == 'True':
-                print("Populating database with initial data...")
-                init_db()
-                print("Database populated.")
-            break
+
+            print("Populating database with initial data...")
+            init_db()
+            print("Database populated.")
 
 
 @api_router.get("/", status_code=200)
