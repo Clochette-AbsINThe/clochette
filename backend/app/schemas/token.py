@@ -1,9 +1,11 @@
+from pydantic import BaseModel
+
 from app.core.config import DefaultModel
 
 
-class Token(DefaultModel):
+class Token(BaseModel):
     access_token: str
-    token_type: str
+    token_type: str = 'bearer'
 
 
 class TokenData(DefaultModel):
