@@ -6,6 +6,7 @@ from app.schemas import barrel as barrel_schema
 
 
 router = APIRouter()
+AUTHENTICATION_REQUIRED = True
 
 
 @router.get("/", response_model=list[barrel_schema.Barrel])
