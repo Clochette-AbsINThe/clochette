@@ -6,6 +6,7 @@ from app.schemas import treasury as treasury_schema
 
 
 router = APIRouter()
+AUTHENTICATION_REQUIRED = True
 
 
 @router.get("/", response_model=list[treasury_schema.Treasury])
