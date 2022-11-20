@@ -6,6 +6,7 @@ from app.schemas import consumable as consumable_schema
 
 
 router = APIRouter()
+AUTHENTICATION_REQUIRED = True
 
 
 @router.get("/", response_model=list[consumable_schema.Consumable])
