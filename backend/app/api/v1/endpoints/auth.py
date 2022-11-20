@@ -21,10 +21,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(g
             detail="Invalid credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-    return {
-        "access_token": create_access_token(subject=account.id),
-        "token_type": "bearer",
-    }
+    return {'access_token': create_access_token(subject=account.username)}
 
 
 @router.get("/me", response_model=account_schema.Account)
