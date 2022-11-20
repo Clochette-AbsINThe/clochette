@@ -24,7 +24,7 @@ def get_db() -> Generator:
 def get_current_account(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)) -> Account:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
+        detail="Authentication required",
         headers={"WWW-Authenticate": "Bearer"},
     )
     try:
@@ -33,9 +33,9 @@ def get_current_account(db: Session = Depends(get_db), token: str = Depends(oaut
         if username is None:
             raise credentials_exception
         token_data = token_schema.TokenData(username=username)
-    except JWTError:
+    except JWTError as e:
         raise credentials_exception
-    account = accounts.query(db, limit=1, username=token_data.username)
+    account = accounts.query(db, limit=1, username=token_data.username)[0]
     if account is None:
         raise credentials_exception
     return account
