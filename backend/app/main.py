@@ -32,7 +32,7 @@ api_router = APIRouter(
 
 
 @app.on_event("startup")
-async def run_migrations():
+def run_migrations():
     # Wait for db to start
     if os.environ.get("MIGRATE") == 'True':
         while True:
@@ -91,6 +91,7 @@ async def run_migrations():
             print("Populating database with initial data...")
             init_db()
             print("Database populated.")
+            break
 
 
 @api_router.get("/", status_code=200)
