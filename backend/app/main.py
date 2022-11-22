@@ -10,7 +10,8 @@ from time import sleep
 from app.api.v1.api import api_v1_router
 from app.core.config import settings
 from app.core.middleware import ExceptionMonitorMiddleware
-from app.core.utils.alert_backend import alert_backend
+from app.core.security import authentication_required
+from app.core.utils.backend.alert_backend import alert_backend
 from app.initial_data import init_db
 
 
@@ -92,6 +93,16 @@ def run_migrations():
             init_db()
             print("Database populated.")
             break
+
+@app.on_event("startup")
+@authentication_required()
+def startup_event(*args, **kwargs):
+    with open("blablabla.txt", 'w') as f:
+        f.write("blablabla")
+        f.write("Args: {args}".format(args=args))
+        f.write("Kwargs: {kwargs}".format(kwargs=kwargs))
+
+
 
 
 @api_router.get("/", status_code=200)
