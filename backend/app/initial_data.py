@@ -42,14 +42,14 @@ def init_db(db: Session = SessionLocal()) -> None:
         db=db,
         obj_in=out_of_stock_item_schema.OutOfStockItemCreate(
             name='EcoCup',
-            icon='glass',
+            icon='Glass',
         )
     )
     out_of_stock_items.create(
         db=db,
         obj_in=out_of_stock_item_schema.OutOfStockItemCreate(
             name='EcoCup',
-            icon='glass',
+            icon='Glass',
             sell_price=1,
         )
     )
