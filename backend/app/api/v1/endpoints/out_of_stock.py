@@ -6,9 +6,8 @@ from app.schemas import out_of_stock as out_of_stock_schema
 
 
 router = APIRouter()
-AUTHENTICATION_REQUIRED = True
 
 
-@router.get("/", response_model=list[out_of_stock_schema.OutOfStock], response_model_exclude_none=True)
+@router.get("/", response_model=list[out_of_stock_schema.OutOfStock], response_model_exclude_none=True, dependencies=[Depends(get_db)])
 async def read_out_of_stocks(db=Depends(get_db)) -> list:
     return out_of_stocks.query(db, limit=None)
