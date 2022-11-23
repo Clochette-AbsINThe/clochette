@@ -12,7 +12,7 @@ from app.schemas import token as token_schema
 router = APIRouter()
 
 
-@router.post("/login", response_model=token_schema.Token)
+@router.post("/login/", response_model=token_schema.Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(get_db)) -> Any:
     account = accounts.query(db, username=form_data.username, limit=1)[0]
     if account is None or not verify_password(form_data.password, account.password):
@@ -24,6 +24,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(g
     return {'access_token': create_access_token(subject=account.username)}
 
 
-@router.get("/me", response_model=account_schema.Account)
+@router.get("/me/", response_model=account_schema.Account)
 def read_account_me(current_account: account_schema.Account = Depends(get_current_account)) -> Any:
     return current_account
