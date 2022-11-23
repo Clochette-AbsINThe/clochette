@@ -10,7 +10,6 @@ from time import sleep
 from app.api.v1.api import api_v1_router
 from app.core.config import settings
 from app.core.middleware import ExceptionMonitorMiddleware
-from app.core.security import authentication_required
 from app.core.utils.backend.alert_backend import alert_backend
 from app.initial_data import init_db
 
