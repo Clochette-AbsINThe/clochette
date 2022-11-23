@@ -93,16 +93,6 @@ def run_migrations():
             print("Database populated.")
             break
 
-@app.on_event("startup")
-@authentication_required()
-def startup_event(*args, **kwargs):
-    with open("blablabla.txt", 'w') as f:
-        f.write("blablabla")
-        f.write("Args: {args}".format(args=args))
-        f.write("Kwargs: {kwargs}".format(kwargs=kwargs))
-
-
-
 
 @api_router.get("/", status_code=200)
 async def root() -> dict:
