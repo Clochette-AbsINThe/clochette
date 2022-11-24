@@ -1,10 +1,11 @@
-import Transaction, { PaymentMethodForm } from '@components/Transaction/Transaction';
+import Transaction from '@components/Transaction/Transaction';
 import { endpoints } from '@utils/endpoints';
 import { act, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
 import { server } from '../setupTests';
 import { Toaster } from 'react-hot-toast';
+import { PaymentMethodForm } from '@components/Transaction/PaymentMethodForm';
 
 test('Change Transaction Type', async () => {
     render(<Transaction />);
