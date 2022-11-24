@@ -35,7 +35,7 @@ def get_current_account(db: Session = Depends(get_db), token: str = Depends(oaut
         token_data = token_schema.TokenData(username=username)
     except JWTError as e:
         raise credentials_exception
-    account = accounts.query(db, limit=1, username=token_data.username)[0]
+    account = (accounts.query(db, limit=1, username=token_data.username)[0:1] or [None])[0]
     if account is None:
         raise credentials_exception
     return account

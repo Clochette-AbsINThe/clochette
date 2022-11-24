@@ -14,7 +14,7 @@ router = APIRouter()
 
 @router.post("/login/", response_model=token_schema.Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(get_db)) -> Any:
-    account = accounts.query(db, username=form_data.username, limit=1)[0]
+    account = (accounts.query(db, username=form_data.username, limit=1)[0:1] or [None])[0]
     if account is None or not verify_password(form_data.password, account.password):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
