@@ -1,16 +1,14 @@
 import Footer from '@include/Footer';
 import Head from 'next/head';
 import Script from 'next/script';
-import dynamic from 'next/dynamic';
 import { Toaster } from 'react-hot-toast';
+import Navbar from '@include/Navbar';
 
 export interface Props {
     title: string;
     description: string;
     children: JSX.Element;
 }
-
-const Navbar = dynamic(() => import('@include/Navbar'), { ssr: false });
 
 export default function Base({ children, title, description }: React.PropsWithChildren<Props>): JSX.Element {
     return (
