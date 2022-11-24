@@ -13,6 +13,10 @@ export default defineConfig({
             include: ['src/**/*.{ts,tsx}'],
             exclude: ['src/pages/**', 'src/types/**', 'src/layouts/base.tsx'],
             all: true
+        },
+        env: {
+            NEXT_PUBLIC_BASE_URL: 'http://localhost:3000',
+            NEXT_PUBLIC_BACKEND_API_URL: 'https://clochette.dev/api/v1'
         }
     }
 });
