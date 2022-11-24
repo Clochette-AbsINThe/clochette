@@ -8,6 +8,7 @@ Create a `.env.development` file where there is :
 
 -   NEXT_PUBLIC_BASE_URL=http://localhost:3000
 -   NEXT_PUBLIC_BACKEND_API_URL=https://clochette.dev/api/v1
+-   SECRET_KEY=\*\*\*\*\*\* #Same as the one in the backend
 
 ## Running:
 

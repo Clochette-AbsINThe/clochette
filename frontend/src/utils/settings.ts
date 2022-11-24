@@ -1,4 +1,4 @@
-export const SECRET_KEY = process.env.SECRET_KEY ?? '5d4156z41d561zd561z65d1z56d156165316zdaqzda';
+export const SECRET_KEY = process.env.SECRET_KEY;
 
 export const environmentVariable = {
     BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
