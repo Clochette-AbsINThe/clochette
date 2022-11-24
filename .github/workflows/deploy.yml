@@ -16,7 +16,7 @@ jobs:
           bump_version_scheme: patch
           tag_prefix: v
           release_name: <RELEASE_TAG>
-          max_commits: 10
+          max_commits: 25
       - name: Check Output Parameters
         run: |
           echo "Got tag name ${{ steps.release.outputs.tag_name }}"
