@@ -24,8 +24,10 @@ export default function ConfigurationPageHeader(props: ConfigurationPageHeaderPr
     const topBar = (): JSX.Element => {
         return (
             <>
-                <Link href='/configuration'>
-                    <a className='btn-primary w-max flex space-x-2 cursor-pointer'>
+                <Link
+                    href='/configuration'
+                    className='btn-primary w-max flex space-x-2 cursor-pointer'>
+                    <>
                         <svg
                             xmlns='http://www.w3.org/2000/svg'
                             fill='none'
@@ -40,7 +42,7 @@ export default function ConfigurationPageHeader(props: ConfigurationPageHeaderPr
                             />
                         </svg>
                         <span>Retour</span>
-                    </a>
+                    </>
                 </Link>
                 <h1 className='text-2xl'>{title}</h1>
                 <p>{description}</p>
