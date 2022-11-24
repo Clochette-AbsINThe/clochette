@@ -11,6 +11,8 @@ import toast from 'react-hot-toast';
 
 export const date = new Date();
 
+export const jwt = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTY2OTI0MjIwMywiZXhwIjoxNjY5MzI4NjAzLCJ0b2tlbl90eXBlIjoiYWNjZXNzX3Rva2VuIn0.FJ-BFAziyWCRm-uXEgsIEomY0L3LGH7guKanajZ8Uoc';
+
 export const server = setupServer(
     rest.get(`https://clochette.dev/api/v1${endpoints.v1.consumableDistinct}`, (req, res, ctx) => {
         return res(
@@ -332,6 +334,48 @@ export const server = setupServer(
     }),
     rest.get('https://clochette.dev/api/v1/out_of_stock_item/10', (req, res, ctx) => {
         return res(ctx.status(200));
+    }),
+    rest.get(`http://localhost:3000/internal-api/api/getJwtInCookie`, (req, res, ctx) => {
+        return res(
+            ctx.json({
+                jwt
+            }),
+            ctx.status(200)
+        );
+    }),
+    rest.get(`https://clochette.dev/api/v1${endpoints.v1.barrel}`, (req, res, ctx) => {
+        return res(
+            ctx.json([
+                {
+                    id: 1,
+                    fkId: 1,
+                    name: 'boisson 1',
+                    sellPrice: 2,
+                    unitPrice: 1,
+                    isMounted: false,
+                    empty: false
+                }
+            ]),
+            ctx.status(200),
+            ctx.delay(100)
+        );
+    }),
+    rest.get(`https://clochette.dev/api/v1${endpoints.v1.barrelDistinct}`, (req, res, ctx) => {
+        return res(
+            ctx.json([
+                {
+                    id: 1,
+                    fkId: 1,
+                    name: 'boisson 1',
+                    sellPrice: 2,
+                    unitPrice: 1,
+                    isMounted: false,
+                    empty: false
+                }
+            ]),
+            ctx.status(200),
+            ctx.delay(100)
+        );
     })
 );
 
@@ -357,3 +401,7 @@ Object.defineProperty(window, 'matchMedia', {
         dispatchEvent: vi.fn()
     }))
 });
+
+vi.mock('next/router', () => require('next-router-mock'));
+// This is needed for mocking 'next/link':
+vi.mock('next/dist/client/router', () => require('next-router-mock'));
