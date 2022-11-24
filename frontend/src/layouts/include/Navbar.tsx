@@ -1,7 +1,9 @@
-import { DarkMode } from '@components/DarkMode';
-import useWindowSize from '@hooks/useWindowSize';
 import Link from 'next/link';
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
+import LoginButton from '@components/LoginButton';
+import { useAuthContext } from '@components/Context';
+import { getRedirectUrlEncoded } from '@utils/utils';
 
 const navitems = {
     Transaction: '/transaction',
@@ -10,82 +12,57 @@ const navitems = {
     Configuration: '/configuration'
 };
 
-export default function Navbar(): JSX.Element {
-    const dimension = useWindowSize();
+// Import Dark mode dynamically to avoid SSR issues
+const DarkMode = dynamic(() => import('@components/DarkMode').then((mod) => mod.DarkMode), { ssr: false });
 
+export default function Navbar(): JSX.Element {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <header className='flex flex-col'>
-            <div className='flex'>
-                <Link href='/'>
-                    <a className='text-4xl text-green-700 font-bold p-4'>Clochette</a>
+        <header className='flex flex-col lg:flex-row'>
+            <div className='flex justify-between items-center'>
+                <Link
+                    href='/'
+                    className='text-4xl text-green-700 font-bold p-4'>
+                    Clochette
                 </Link>
-                {dimension.width > 1024 ? (
-                    <>
-                        <div className='flex p-2 justify-start flex-grow self-center h-full'>
-                            {Object.entries(navitems).map(([name, link]) => (
-                                <NavbarItem
-                                    key={name}
-                                    name={name}
-                                    link={link}
-                                />
-                            ))}
-                        </div>
-                        <DarkMode />
-                        <div className='justify-center self-center mr-4'>
-                            <Link href='/login'>
-                                <a className='btn-primary'>Se connecter</a>
-                            </Link>
-                        </div>
-                    </>
-                ) : (
-                    <>
-                        <div className='flex flex-grow justify-end items-center'>
-                            <div
-                                id='hamburger-menu'
-                                aria-label='hamburger-menu'
-                                onClick={() => setIsOpen(!isOpen)}
-                                className={isOpen ? 'active' : ''}>
-                                <span className='bg-gray-600 dark:bg-gray-300'></span>
-                                <span className='bg-gray-600 dark:bg-gray-300'></span>
-                                <span className='bg-gray-600 dark:bg-gray-300'></span>
-                            </div>
-                        </div>
-                    </>
-                )}
+                <div
+                    id='hamburger-menu'
+                    aria-label='hamburger-menu'
+                    onClick={() => setIsOpen(!isOpen)}
+                    className={(isOpen ? 'active ' : '') + 'lg:hidden'}>
+                    <span className='bg-gray-600 dark:bg-gray-300'></span>
+                    <span className='bg-gray-600 dark:bg-gray-300'></span>
+                    <span className='bg-gray-600 dark:bg-gray-300'></span>
+                </div>
             </div>
-            {isOpen && dimension.width < 1024 && (
-                <div className='relative'>
-                    <div className='flex flex-grow justify-end items-center'>
-                        <DarkMode />
-                        <div className='justify-center self-center mr-4'>
-                            <Link href='/login'>
-                                <a className='btn-primary'>Se connecter</a>
-                            </Link>
-                        </div>
-                    </div>
-                    <div className='flex flex-col w-full border-b-2 space-y-2 pb-4'>
-                        {Object.entries(navitems).map(([name, link]) => (
-                            <NavbarItem
-                                key={name}
-                                name={name}
-                                link={link}
-                            />
-                        ))}
+            <div className={(!isOpen ? 'hidden ' : '') + 'lg:flex flex-col lg:flex-row items-center flex-grow'}>
+                <div className={'flex p-2 justify-start flex-grow self-start lg:self-center h-full flex-col lg:flex-row pb-4 space-y-2 lg:space-y-0 lg:items-end lg:mb-2'}>
+                    {Object.entries(navitems).map(([name, link]) => (
+                        <NavbarItem
+                            key={name}
+                            name={name}
+                            link={link}
+                        />
+                    ))}
+                </div>
+                <div className='flex flex-row justify-end'>
+                    <DarkMode />
+                    <div className='justify-center self-center mr-4'>
+                        <LoginButton />
                     </div>
                 </div>
-            )}
+            </div>
         </header>
     );
 }
 
 function NavbarItem(props: { name: string; link: string }): JSX.Element {
+    const { authenticated } = useAuthContext();
+    const link = authenticated ? props.link : `/login?redirect=${getRedirectUrlEncoded(props.link)}`;
     return (
-        <div className='text-xl hover:underline mx-6'>
-            <Link href={props.link}>
-                <a>{props.name}</a>
-            </Link>
+        <div className='text-xl hover:underline mx-6 w-max'>
+            <Link href={link}>{props.name}</Link>
         </div>
     );
 }

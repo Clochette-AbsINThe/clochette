@@ -40,7 +40,7 @@ export function DarkMode(): JSX.Element {
     }, [theme]);
     return (
         <div
-            className='flex items-center justify-center bg-[#70707016] rounded-full m-4 md:mr-10 shadow-md py-2'
+            className='flex items-center justify-center bg-[#70707016] rounded-full m-4 lg:mr-10 shadow-md py-2'
             aria-label='darkMode'>
             {themes.map((t, i) => {
                 const icon = icons[i];
