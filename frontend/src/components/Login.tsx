@@ -13,7 +13,7 @@ export default function Login() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const formDetails = new FormData(e.currentTarget);
-        const username = formDetails.get('user') as string;
+        const username = formDetails.get('username') as string;
         const password = formDetails.get('password') as string;
 
         // Get the redirection URL from the query string after the login sucess
