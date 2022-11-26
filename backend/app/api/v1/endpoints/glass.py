@@ -5,7 +5,7 @@ from app.dependencies import get_current_account, get_db
 from app.schemas import glass as glass_schema
 
 
-router = APIRouter()
+router = APIRouter(tags=["glass"])
 
 
 @router.get("/", response_model=list[glass_schema.Glass], dependencies=[Depends(get_current_account)])

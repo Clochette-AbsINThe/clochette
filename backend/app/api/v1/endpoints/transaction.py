@@ -5,7 +5,7 @@ from app.dependencies import get_current_account, get_db
 from app.schemas import transaction as transaction_schema
 
 
-router = APIRouter()
+router = APIRouter(tags=["transaction"])
 
 
 @router.get("/", response_model=list[transaction_schema.Transaction], dependencies=[Depends(get_current_account)])

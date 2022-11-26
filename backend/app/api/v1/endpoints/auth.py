@@ -9,7 +9,7 @@ from app.schemas import account as account_schema
 from app.schemas import token as token_schema
 
 
-router = APIRouter()
+router = APIRouter(tags=["auth"])
 
 
 @router.post("/login/", response_model=token_schema.Token)

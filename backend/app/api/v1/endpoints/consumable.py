@@ -5,7 +5,7 @@ from app.dependencies import get_current_account, get_db
 from app.schemas import consumable as consumable_schema
 
 
-router = APIRouter()
+router = APIRouter(tags=["consumable"])
 
 
 @router.get("/", response_model=list[consumable_schema.Consumable], dependencies=[Depends(get_current_account)])

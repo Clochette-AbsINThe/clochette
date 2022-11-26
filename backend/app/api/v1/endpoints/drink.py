@@ -7,7 +7,7 @@ from app.dependencies import get_current_account, get_db
 from app.schemas import drink as drink_schema
 
 
-router = APIRouter()
+router = APIRouter(tags=["drink"])
 
 
 @router.get("/{drink_id}", response_model=drink_schema.Drink, dependencies=[Depends(get_current_account)])

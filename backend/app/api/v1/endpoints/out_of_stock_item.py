@@ -6,7 +6,7 @@ from app.dependencies import get_current_account, get_db
 from app.schemas import out_of_stock_item as out_of_stock_item_schema
 
 
-router = APIRouter()
+router = APIRouter(tags=["out_of_stock_item"])
 
 
 @router.get("/buy/", response_model=list[out_of_stock_item_schema.OutOfStockItem], response_model_exclude_none=True, dependencies=[Depends(get_current_account)])

@@ -7,7 +7,7 @@ from app.dependencies import get_current_account, get_db
 from app.schemas import consumable_item as consumable_item_schema
 
 
-router = APIRouter()
+router = APIRouter(tags=["consumable_item"])
 
 
 @router.get("/", response_model=list[consumable_item_schema.ConsumableItem], dependencies=[Depends(get_current_account)])

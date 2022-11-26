@@ -5,7 +5,7 @@ from app.dependencies import get_current_account, get_db
 from app.schemas import treasury as treasury_schema
 
 
-router = APIRouter()
+router = APIRouter(tags=["treasury"])
 
 
 @router.get("/", response_model=list[treasury_schema.Treasury], dependencies=[Depends(get_current_account)])

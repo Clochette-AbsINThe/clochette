@@ -5,7 +5,7 @@ from app.dependencies import get_current_account, get_db
 from app.schemas import barrel as barrel_schema
 
 
-router = APIRouter()
+router = APIRouter(tags=["barrel"])
 
 
 @router.get("/", response_model=list[barrel_schema.Barrel], dependencies=[Depends(get_current_account)])
