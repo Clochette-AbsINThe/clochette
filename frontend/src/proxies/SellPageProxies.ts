@@ -1,7 +1,7 @@
 import { endpoints } from '@utils/endpoints';
 import useAxios from '@hooks/useAxios';
 import type { IProxy, IProxyPostTransaction } from '@proxiesTypes';
-import type { APIItem, Barrel, Consumable, Glass, ItemSell, ItemTransactionResponse, OutOfStockItemSell, OutOfStockSell, PaymentMethod, TransactionType } from '@types';
+import type { APIItem, Barrel, Consumable, Glass, ItemSell, ItemTransactionResponse, ITransactionType, OutOfStockItemSell, OutOfStockSell, PaymentMethod, TransactionType } from '@types';
 import type { AxiosError, AxiosResponse } from 'axios';
 
 /**
@@ -118,7 +118,7 @@ export function getConsumables(setItem: (value: Array<APIItem<Consumable>>) => v
  * @returns A function to make the API call and the loading state
  */
 export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPostTransaction<ItemSell[]> {
-    const [{ loading: loading1, error: error1 }, postTransaction] = useAxios<TransactionType<ItemTransactionResponse>>(endpoints.v1.transaction, { method: 'POST' });
+    const [{ loading: loading1, error: error1 }, postTransaction] = useAxios<ITransactionType[]>(endpoints.v1.transaction, { method: 'POST' });
     const [{ loading: loading2, error: error2 }, getAllConsumable] = useAxios<Consumable[]>(endpoints.v1.consumable);
 
     const error = error1 || error2;

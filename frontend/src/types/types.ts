@@ -104,13 +104,24 @@ export type ItemBuy = APIItem<Barrel | OutOfStockBuy | Consumable>;
 
 export type ItemTransactionResponse = APIItem<Barrel | Glass | OutOfStockSell | OutOfStockBuy | Consumable>;
 
-// transaction/ --> get // Utile pour l'appli de l'historique des transactions
-// transaction/ --> post // Ajoute une nouvelle transaction dans la base de données
-export interface TransactionType<T> {
+export interface ITransactionType {
     readonly id?: number;
     datetime: string;
     amount: number;
     sale: boolean; // true = vente, false = achat
     paymentMethod: PaymentMethod;
+}
+
+// transaction/ --> get // Utile pour l'appli de l'historique des transactions
+// transaction/ --> post // Ajoute une nouvelle transaction dans la base de données
+export interface TransactionType<T> extends ITransactionType {
     items: T[];
+}
+
+export interface TransactionResponse extends ITransactionType {
+    barrels: Barrel[];
+    glasses: Glass[];
+    outOfStocks: Array<OutOfStockBuy | OutOfStockSell>;
+    consumablesPurchase: Consumable[];
+    consumablesSale: Consumable[];
 }
