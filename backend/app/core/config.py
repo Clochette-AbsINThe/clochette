@@ -14,6 +14,8 @@ class Settings(BaseSettings):
 
     API_V1_PREFIX: str = "/api/v1"
 
+    LOCALE: str = os.environ.get('LOCALE', default='en')
+
     ALLOWED_HOSTS: list[str] = ["*"] # Shouldn't be set to ["*"] in production!
 
     ### Authentication config
