@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import LoginButton from '@components/LoginButton';
+import LoginButton from '@components/Layout/Navbar/LoginButton';
 import { AppContext } from '@components/Context';
 import { act } from 'react-dom/test-utils';
 import userEvent from '@testing-library/user-event';
@@ -10,7 +10,7 @@ import { rest } from 'msw';
 
 test('LoginButton authenticated', () => {
     render(
-        <AppContext.Provider value={{ jwt: '', setJwt: () => {}, authenticated: true }}>
+        <AppContext.Provider value={{ jwt: '', setJwt: () => { }, authenticated: true }}>
             <LoginButton />
         </AppContext.Provider>
     );
@@ -20,7 +20,7 @@ test('LoginButton authenticated', () => {
 
 test('LoginButton not authenticated', () => {
     render(
-        <AppContext.Provider value={{ jwt: '', setJwt: () => {}, authenticated: false }}>
+        <AppContext.Provider value={{ jwt: '', setJwt: () => { }, authenticated: false }}>
             <LoginButton />
         </AppContext.Provider>
     );
@@ -36,7 +36,7 @@ test('LoginButton signout', async () => {
     );
 
     render(
-        <AppContext.Provider value={{ jwt: '', setJwt: () => {}, authenticated: true }}>
+        <AppContext.Provider value={{ jwt: '', setJwt: () => { }, authenticated: true }}>
             <LoginButton />
         </AppContext.Provider>
     );

@@ -1,4 +1,4 @@
-import Login from '@components/Login';
+import Login from '@components/Admin/Login';
 import Base from '@layouts/base';
 import type { NextPage } from 'next';
 
