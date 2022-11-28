@@ -62,8 +62,8 @@ export default function Transaction(): JSX.Element {
                 setSelectedItemsBuy([]);
             }
         } else {
-            const err = `Error ${data.status}: ${getErrorMessage(data)} on ${(data.config.baseURL as string) + (data.config.url as string)} with ${(data.config.method as string).toUpperCase()}`;
-            toast.error(err);
+            // const err = `Error ${data.status}: ${getErrorMessage(data)} on ${(data.config.baseURL as string) + (data.config.url as string)} with ${(data.config.method as string).toUpperCase()}`;
+            toast.error(`Erreur lors de la validation de la transaction: ${getErrorMessage(data)}`);
             if (transactionType === TransactionEnum.Achat) {
                 setReRender((reRender * -1) as -1 | 1);
             }
