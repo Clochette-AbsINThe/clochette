@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import { DarkMode } from '@components/DarkMode';
+import { DarkMode } from '@components/Layout/Navbar/DarkMode';
 import userEvent from '@testing-library/user-event';
 
 test('Render DarkMode', () => {
