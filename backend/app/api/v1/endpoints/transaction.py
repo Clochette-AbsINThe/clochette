@@ -1,11 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
+from app.core.translation import Translator
 from app.crud.crud_transaction import transaction as transactions
 from app.dependencies import get_current_account, get_db
 from app.schemas import transaction as transaction_schema
 
 
 router = APIRouter(tags=["transaction"])
+translator = Translator(element="transaction")
 
 
 @router.get("/", response_model=list[transaction_schema.Transaction], dependencies=[Depends(get_current_account)])
@@ -24,7 +26,7 @@ async def read_transaction(transaction_id: int, db=Depends(get_db)) -> dict:
     if transaction is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Transaction not found"
+            detail=translator.ELEMENT_NOT_FOUND
         )
     return transaction
 
@@ -34,6 +36,6 @@ async def delete_transaction(transaction_id: int, db=Depends(get_db)) -> dict:
     if transactions.read(db, id=transaction_id) is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Transaction not found"
+            detail=translator.ELEMENT_NOT_FOUND
         )
     return transactions.delete(db, id=transaction_id)
