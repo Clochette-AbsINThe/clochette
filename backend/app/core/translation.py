@@ -56,6 +56,11 @@ class Translator:
         "fr": "L'élément est utilisé et ne peut pas être supprimé" if format is None else "L'élément {element} est utilisé et ne peut pas être supprimé"
     })
 
+    NEGATIVE_CASH_AMOUNT: TranslatedString = TranslatedString({
+        "en": "Cash amount cannot be negative",
+        "fr": "Le montant en espèces ne peut pas être négatif"
+    })
+
     def __getattribute__(self, __name: str) -> str:
         """ Get the translated string. """
         attr = super().__getattribute__(__name)
