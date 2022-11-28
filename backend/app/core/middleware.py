@@ -5,6 +5,11 @@ from fastapi import status
 from starlette.background import BackgroundTask
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from app.core.translation import Translator
+
+
+translator = Translator()
+
 
 class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
     def __init__(self, app, alert_backend: Callable[[Exception, dict], None]):
@@ -38,7 +43,7 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
                 body=body,
             )
             return Response(
-                content="Internal Server Error, admin has been notified",
+                content=translator.INTERNAL_SERVER_ERROR,
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
                 background=task
             )
