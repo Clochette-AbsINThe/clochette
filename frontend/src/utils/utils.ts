@@ -80,3 +80,7 @@ export function parseJwt(token: string): Token {
 export function getRedirectUrlEncoded(url: string): string {
     return encodeURIComponent(environmentVariable.BASE_URL + url);
 }
+
+export const unique = (value: any, index: any, self: any[]) => {
+    return self.indexOf(value) === index;
+};
