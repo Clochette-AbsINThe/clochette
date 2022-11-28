@@ -9,9 +9,9 @@
 - POSTGRES_PASSWORD=\*\*\*
 - MIGRATE=\*\*\*
 - JWT_SECRET_KEY=\*\*\*
-- POPULATE_DB=\*\*\*
-- BASE_ACCOUNT_PASSWORD=\*\*\*
 - BASE_ACCOUNT_USERNAME=\*\*\*
+- BASE_ACCOUNT_PASSWORD=\*\*\*
+- LOCALE=fr #Or en
 
 ## `.env.production` in the frontend/ folder
 
