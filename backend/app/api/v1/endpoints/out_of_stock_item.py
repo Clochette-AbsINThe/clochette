@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
+from app.core.translation import Translator
 from app.crud.crud_out_of_stock_item import out_of_stock_item as out_of_stock_items
 from app.crud.crud_out_of_stock import out_of_stock as out_of_stocks
 from app.dependencies import get_current_account, get_db
@@ -7,6 +8,7 @@ from app.schemas import out_of_stock_item as out_of_stock_item_schema
 
 
 router = APIRouter(tags=["out_of_stock_item"])
+translator = Translator(element="out_of_stock_item")
 
 
 @router.get("/buy/", response_model=list[out_of_stock_item_schema.OutOfStockItem], response_model_exclude_none=True, dependencies=[Depends(get_current_account)])
@@ -25,7 +27,7 @@ async def read_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)) 
     if out_of_stock_item is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Out of stock item not found"
+            detail=translator.ELEMENT_NOT_FOUND
         )
     return out_of_stock_item
 
@@ -35,7 +37,7 @@ async def create_out_of_stock_item(out_of_stock_item: out_of_stock_item_schema.O
     if out_of_stock_items.query(db, limit=1, name=out_of_stock_item.name, buy_or_sell=out_of_stock_item.sell_price is None):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Out of stock item already exists"
+            detail=translator.ELEMENT_ALREADY_EXISTS
         )
     saved_model = out_of_stock_item_schema.OutOfStockItemCreate(**out_of_stock_item.dict(), buy_or_sell=out_of_stock_item.sell_price is None)
     return out_of_stock_items.create(db, obj_in=saved_model.dict(by_alias=False))
@@ -47,13 +49,13 @@ async def update_out_of_stock_item(out_of_stock_item_id: int, out_of_stock_item:
     if old_out_of_stock_item is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Out of stock item not found"
+            detail=translator.ELEMENT_NOT_FOUND
         )
     results = out_of_stock_items.query(db, limit=1, name=out_of_stock_item.name, buy_or_sell=out_of_stock_item.sell_price is None)
     if results and results[0].id != old_out_of_stock_item.id:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Out of stock item already exists"
+            detail=translator.ELEMENT_ALREADY_EXISTS
         )
     saved_model = out_of_stock_item_schema.OutOfStockItemUpdate(**out_of_stock_item.dict(), buy_or_sell=out_of_stock_item.sell_price is None)
     return out_of_stock_items.update(db, db_obj=old_out_of_stock_item, obj_in=saved_model)
@@ -64,11 +66,11 @@ async def delete_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)
     if out_of_stock_items.read(db, out_of_stock_item_id) is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Out of stock item not found"
+            detail=translator.ELEMENT_NOT_FOUND
         )
     if out_of_stocks.query(db, limit=1, item_id=out_of_stock_item_id):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Out of stock item is in use"
+            detail=translator.DELETION_OF_USED_ELEMENT
         )
     return out_of_stock_items.delete(db, id=out_of_stock_item_id)
