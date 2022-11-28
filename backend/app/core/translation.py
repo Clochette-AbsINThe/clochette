@@ -66,6 +66,11 @@ class Translator:
         "fr": "Erreur interne du serveur, l'administrateur a été notifié"
     })
 
+    AUTHENTICATION_REQUIRED: TranslatedString = TranslatedString({
+        "en": "Authentication required",
+        "fr": "Authentification requise"
+    })
+
     def __getattribute__(self, __name: str) -> str:
         """ Get the translated string. """
         attr = super().__getattribute__(__name)
