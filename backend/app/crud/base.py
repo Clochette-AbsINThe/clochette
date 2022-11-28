@@ -6,8 +6,11 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.decorator import handle_exceptions
+from app.core.translation import Translator
 from app.db.base_class import Base
 
+
+translator = Translator()
 
 ModelType = TypeVar("ModelType", bound=Base) # SQLAlchemy model representing the object
 CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel) # Pydantic validation schema for creating the object
@@ -72,7 +75,7 @@ class CRUDBase(
             return db.query(self.model).filter_by(**kwargs).distinct(distinct).offset(skip).limit(limit).all()
         return db.query(self.model).filter_by(**kwargs).offset(skip).limit(limit).all()
 
-    @handle_exceptions('Data relationship integrity error', IntegrityError)
+    @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
     def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
         """
         Create a new record.
@@ -90,7 +93,7 @@ class CRUDBase(
         db.refresh(db_obj)
         return db_obj
 
-    @handle_exceptions('Data relationship integrity error', IntegrityError)
+    @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
     def update(self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType | dict[str, Any]) -> ModelType:
         """
         Update a record.

@@ -4,6 +4,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.core.decorator import handle_exceptions
+from app.core.translation import Translator
 from app.crud.base import CRUDBase
 from app.crud.crud_treasury import treasury as treasuries
 from app.models.transaction import Transaction
@@ -11,8 +12,11 @@ from app.schemas.consumable import ConsumableCreatePurchase, ConsumableCreateSal
 from app.schemas.transaction import TransactionCreate, TransactionFrontCreate, TransactionUpdate
 
 
+translator = Translator()
+
+
 class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate]):
-    @handle_exceptions('Data relationship integrity error', IntegrityError)
+    @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
     def create(self, db: Session, *, obj_in: TransactionFrontCreate) -> Transaction:
         transaction_create = TransactionCreate(**obj_in.dict())
         # Update treasury
