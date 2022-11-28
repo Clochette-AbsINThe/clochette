@@ -61,6 +61,11 @@ class Translator:
         "fr": "Le montant en espèces ne peut pas être négatif"
     })
 
+    INTERNAL_SERVER_ERROR: TranslatedString = TranslatedString({
+        "en": "Internal server error, administrator has been notified",
+        "fr": "Erreur interne du serveur, l'administrateur a été notifié"
+    })
+
     def __getattribute__(self, __name: str) -> str:
         """ Get the translated string. """
         attr = super().__getattribute__(__name)
