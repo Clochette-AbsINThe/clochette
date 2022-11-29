@@ -14,7 +14,24 @@ class Settings(BaseSettings):
 
     API_V1_PREFIX: str = "/api/v1"
 
+    LOCALE: str = os.environ.get('LOCALE', default='en')
+
     ALLOWED_HOSTS: list[str] = ["*"] # Shouldn't be set to ["*"] in production!
+
+    ### Authentication config
+
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 1 # 1 day
+    JWT_SECRET_KEY: str = os.environ.get('SECRET_KEY') # openssl rand -hex 32
+    ALGORITHM: str = "HS256" # TODO: Change to ES256 in the future
+
+    ###
+
+    ### Base account config ###
+
+    BASE_ACCOUNT_USERNAME: str = os.environ.get('BASE_ACCOUNT_USERNAME', default='admin')
+    BASE_ACCOUNT_PASSWORD: str = os.environ.get('BASE_ACCOUNT_PASSWORD')
+
+    ###
 
     # BACKEND_CORS_ORIGINS is a JSON-formatted list of origins
     BACKEND_CORS_ORIGIN: list[AnyHttpUrl] = []

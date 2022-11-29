@@ -10,8 +10,10 @@ export default function Page404(): JSX.Element {
             </div>
             <h2 className='opacity-0 animate-slide-in md:text-7xl my-4 text-4xl uppercase'>La page est introuvable</h2>
             <p className='text-xl'>La page que vous recherchez a peut-être été supprimée, a été renommée ou est provisoirement indisponible.</p>
-            <Link href='/'>
-                <a className='btn-primary'>Retourner à l&apos;accueil</a>
+            <Link
+                href='/'
+                className='btn-primary'>
+                Retourner à l&apos;accueil
             </Link>
         </div>
     );

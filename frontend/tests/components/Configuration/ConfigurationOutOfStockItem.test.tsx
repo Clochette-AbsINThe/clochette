@@ -17,10 +17,7 @@ test('Edit a outOfStock item succes', async () => {
     render(<Toaster />);
     render(<ConfigurationOutOfStockItem />);
     expect(screen.getByText('Modification des produits hors stock')).toBeInTheDocument();
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument());
 
     await userEvent.click(screen.getAllByLabelText('edit')[0]);
     await act(async () => {
@@ -45,10 +42,7 @@ test('Edit a outOfStock item error', async () => {
     );
     render(<ConfigurationOutOfStockItem />);
     expect(screen.getByText('Modification des produits hors stock')).toBeInTheDocument();
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument());
 
     await userEvent.click(screen.getAllByLabelText('edit')[0]);
     await act(async () => {
@@ -68,10 +62,7 @@ test('Add a outOfStock item succes', async () => {
     render(<Toaster />);
     render(<ConfigurationOutOfStockItem />);
     expect(screen.getByText('Modification des produits hors stock')).toBeInTheDocument();
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument());
 
     await userEvent.click(screen.getByRole('button', { name: 'Ajouter un produit' }));
     await act(async () => {
@@ -118,10 +109,7 @@ test('Add a outOfStock item error', async () => {
     );
     render(<ConfigurationOutOfStockItem />);
     expect(screen.getByText('Modification des produits hors stock')).toBeInTheDocument();
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument());
 
     await userEvent.click(screen.getByRole('button', { name: 'Ajouter un produit' }));
     await act(async () => {
@@ -140,10 +128,7 @@ test('Add a outOfStock item error', async () => {
 test('Click on go back button', async () => {
     render(<ConfigurationOutOfStockItem />);
     expect(screen.getByText('Modification des produits hors stock')).toBeInTheDocument();
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Planchette Charcuterie')).toBeInTheDocument());
 
     await userEvent.click(screen.getByRole('button', { name: 'Ajouter un produit' }));
     await act(async () => {

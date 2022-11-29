@@ -13,12 +13,12 @@ export const endpoints = {
         barrelDistinct: '/barrel/distincts/',
         transaction: '/transaction/',
         transactionSell: '/transaction/sell/',
-        transactionBuy: '/transaction/buy/'
+        transactionBuy: '/transaction/buy/',
+        login: '/auth/login/'
     },
-    mock: {
-        transactionSell: '/Transaction/Sell',
-        transactionBuy: '/Transaction/Buy',
-        consumable: '/Consumable',
-        glass: '/Glass'
+    internal: {
+        saveJwtInCookie: '/api/saveJwtInCookie',
+        getJwtInCookie: '/api/getJwtInCookie',
+        deleteJwtInCookie: '/api/deleteJwtInCookie'
     }
 };

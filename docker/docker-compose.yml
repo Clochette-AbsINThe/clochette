@@ -22,6 +22,7 @@ services:
       - 8300:3000
     environment:
       - NODE_ENV=production
+      - SECRET_KEY=${JWT_SECRET_KEY}
 
   backend:
     depends_on:
@@ -54,6 +55,10 @@ services:
       - ISSUE_LABELS=Backend,bug,bot
       - REPOSITORY_NAME=${REPOSITORY_NAME}
       - REPOSITORY_OWNER=${REPOSITORY_OWNER}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - BASE_ACCOUNT_USERNAME=${BASE_ACCOUNT_USERNAME} # Default is admin if not set
+      - BASE_ACCOUNT_PASSWORD=${BASE_ACCOUNT_PASSWORD}
+      - LOCALE=${LOCALE}
 
   database:
     image: postgres:14.5-alpine

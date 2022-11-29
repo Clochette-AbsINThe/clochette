@@ -1,19 +1,20 @@
 import { useEffect, useState } from 'react';
+import type { AxiosResponse } from 'axios';
+import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 import BuyPage from '@components/Transaction/Buy/BuyPage';
 import SellPage from '@components/Transaction/Sell/SellPage';
 import TransactionSwitch, { TransactionEnum } from '@components/Transaction/TransactionSwitch';
+import { PaymentMethodForm } from '@components/Transaction/PaymentMethodForm';
 import PopupWindows from '@components/PopupWindows';
 
 import { postNewBuyTransaction } from '@proxies/BuyPageProxies';
 import { postNewSellTransaction } from '@proxies/SellPageProxies';
 
 import type { ItemBuy, ItemSell, PaymentMethod } from '@types';
-import type { AxiosResponse } from 'axios';
-import toast from 'react-hot-toast';
+
 import { getErrorMessage } from '@utils/utils';
-import { getIcon } from '@styles/utils';
-import Link from 'next/link';
 
 /**
  * This component is in charge of displaying the transaction page.
@@ -61,8 +62,8 @@ export default function Transaction(): JSX.Element {
                 setSelectedItemsBuy([]);
             }
         } else {
-            const err = `Error ${data.status}: ${getErrorMessage(data)} on ${(data.config.baseURL as string) + (data.config.url as string)} with ${(data.config.method as string).toUpperCase()}`;
-            toast.error(err);
+            // const err = `Error ${data.status}: ${getErrorMessage(data)} on ${(data.config.baseURL as string) + (data.config.url as string)} with ${(data.config.method as string).toUpperCase()}`;
+            toast.error(`Erreur lors de la validation de la transaction: ${getErrorMessage(data)}`);
             if (transactionType === TransactionEnum.Achat) {
                 setReRender((reRender * -1) as -1 | 1);
             }
@@ -179,8 +180,10 @@ export default function Transaction(): JSX.Element {
             {renderTransaction()}
             <div className='flex justify-between mt-3 flex-row'>
                 {transactionType === TransactionEnum.Vente ? (
-                    <Link href={'/configuration/hors-stocks?id=-1'}>
-                        <a className='btn-primary'>Pour ajouter un produit hors stock manquant</a>
+                    <Link
+                        href={'/configuration/hors-stocks?id=-1'}
+                        className='btn-primary'>
+                        Pour ajouter un produit hors stock manquant
                     </Link>
                 ) : (
                     <div className='flex-grow'></div>
@@ -223,66 +226,5 @@ export default function Transaction(): JSX.Element {
                 </div>
             </div>
         </>
-    );
-}
-
-export function PaymentMethodForm({ paymentMethod, changePaymentMethod }: { paymentMethod: PaymentMethod; changePaymentMethod: (data: PaymentMethod) => void }): JSX.Element {
-    return (
-        <div className='flex flex-col space-y-3 mr-8'>
-            <label htmlFor='payment-method'>
-                <span className='text-2xl font-bold mb-2'>Moyen de paiement</span>
-            </label>
-            <div className='flex flex-row flex-wrap'>
-                <label
-                    htmlFor='cb'
-                    className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
-                    <input
-                        type='radio'
-                        id='cb'
-                        name='payment-method'
-                        value='CB'
-                        checked={paymentMethod === 'CB'}
-                        onChange={() => changePaymentMethod('CB')}
-                        className='checkbox'
-                        aria-label='cb'
-                    />
-                    {getIcon('CB')}
-                    <span>CB</span>
-                </label>
-
-                <label
-                    htmlFor='lydia'
-                    className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
-                    <input
-                        type='radio'
-                        id='lydia'
-                        name='payment-method'
-                        value='Lydia'
-                        checked={paymentMethod === 'Lydia'}
-                        onChange={() => changePaymentMethod('Lydia')}
-                        className='checkbox'
-                        aria-label='lydia'
-                    />
-                    {getIcon('Lydia')}
-                    <span>Lydia</span>
-                </label>
-                <label
-                    htmlFor='cash'
-                    className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
-                    <input
-                        type='radio'
-                        id='cash'
-                        name='payment-method'
-                        value='Cash'
-                        checked={paymentMethod === 'Espèces'}
-                        onChange={() => changePaymentMethod('Espèces')}
-                        className='checkbox'
-                        aria-label='cash'
-                    />
-                    {getIcon('Cash')}
-                    <span>Espèces</span>
-                </label>
-            </div>
-        </div>
     );
 }
