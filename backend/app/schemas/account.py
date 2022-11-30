@@ -1,4 +1,4 @@
-from pydantic import Field
+from pydantic import Field, SecretStr
 
 from app.core.config import DefaultModel
 
@@ -15,12 +15,12 @@ class AccountBase(DefaultModel):
 
 
 class AccountCreate(AccountBase):
-    password: str
+    password: SecretStr = Field(..., min_length=8, exclude=True)
     is_active: bool = Field(default=False, exclude=True)
 
 
 class AccountUpdate(AccountBase):
-    password: str
+    password: SecretStr = Field(default=None, exclude=True)
 
 
 class Account(AccountBase):
