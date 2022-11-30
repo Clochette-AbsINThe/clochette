@@ -1,3 +1,5 @@
+from pydantic import Field
+
 from app.core.config import DefaultModel
 
 
@@ -14,6 +16,7 @@ class AccountBase(DefaultModel):
 
 class AccountCreate(AccountBase):
     password: str
+    is_active: bool = Field(default=False, exclude=True)
 
 
 class AccountUpdate(AccountBase):
