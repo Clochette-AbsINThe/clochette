@@ -63,15 +63,17 @@ export default function StockBarrel(): JSX.Element {
                     <Loader />
                 ) : (
                     <>
-                        {mountedBarrels.map((mountedBarrel) => {
-                            return (
-                                <BarrelMountedCard
-                                    barrel={mountedBarrel}
-                                    key={mountedBarrel.id}
-                                    editBarrel={handleClicksMountedBarrel}
-                                />
-                            );
-                        })}
+                        <div className='flex flex-row gap-5 overflow-y-hidden hide-scroll-bar'>
+                            {mountedBarrels.map((mountedBarrel) => {
+                                return (
+                                    <BarrelMountedCard
+                                        barrel={mountedBarrel}
+                                        key={mountedBarrel.id}
+                                        editBarrel={handleClicksMountedBarrel}
+                                    />
+                                );
+                            })}
+                        </div>
                         <AddCard handleMountNewBarrel={handleMountNewBarrel} />
                     </>
                 )}
@@ -81,13 +83,16 @@ export default function StockBarrel(): JSX.Element {
                 {loadingBarrelUnique || loadingBarrel ? (
                     <Loader />
                 ) : (
-                    uniqueBarrels.map((uniqueBarrel) => (
-                        <BarrelStack
-                            barrels={barrels}
-                            uniqueBarrel={uniqueBarrel}
-                            key={uniqueBarrel.name}
-                        />
-                    ))
+                    uniqueBarrels.map((uniqueBarrel) => {
+                        return (
+                            <BarrelStack
+                                barrels={barrels}
+                                uniqueBarrel={uniqueBarrel}
+                                key={uniqueBarrel.name}
+                                handleMountNewBarrel={handleMountNewBarrel}
+                            />
+                        );
+                    })
                 )}
             </div>
         </>
