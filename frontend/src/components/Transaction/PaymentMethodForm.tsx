@@ -24,7 +24,6 @@ export function PaymentMethodForm({ paymentMethod, changePaymentMethod }: { paym
                     {getIcon('CB')}
                     <span>CB</span>
                 </label>
-
                 <label
                     htmlFor='lydia'
                     className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
@@ -56,6 +55,22 @@ export function PaymentMethodForm({ paymentMethod, changePaymentMethod }: { paym
                     />
                     {getIcon('Cash')}
                     <span>Espèces</span>
+                </label>
+                <label
+                    htmlFor='virement'
+                    className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
+                    <input
+                        type='radio'
+                        id='virement'
+                        name='payment-method'
+                        value='Virement'
+                        checked={paymentMethod === 'Virement'}
+                        onChange={() => changePaymentMethod('Virement')}
+                        className='checkbox'
+                        aria-label='virement'
+                    />
+                    {getIcon('Virement')}
+                    <span>Virement</span>
                 </label>
             </div>
         </div>
