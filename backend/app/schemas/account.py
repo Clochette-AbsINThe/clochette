@@ -48,7 +48,7 @@ def validate_password(password: str | None, values: dict | None = None) -> str:
 
 
 class AccountBase(DefaultModel):
-    username: str
+    username: str = Field(..., min_length=3, max_length=32)
     password: str
     roles: str
     is_active: bool
