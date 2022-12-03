@@ -41,8 +41,6 @@ def validate_password(password: str | None, values: dict | None = None) -> str:
     return get_password_hash(password)
 
 
-
-
 class AccountBase(DefaultModel):
     username: str
     roles: str
@@ -56,7 +54,12 @@ class AccountBase(DefaultModel):
 
 class AccountCreate(AccountBase):
     is_active: bool = False
-    password: str | None = None
+
+    @validator("is_active")
+    def is_active_must_be_false_at_creation(cls, v: bool) -> bool:
+        return False
+
+    password: str
 
     _validate_password = validator("password", allow_reuse=True)(validate_password)
 
