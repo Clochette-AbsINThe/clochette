@@ -1,13 +1,19 @@
 from datetime import datetime
+from warnings import warn
 
 from pydantic import Field, validator
 
 from app.core.config import DefaultModel
-from app.core.security import get_password_hash
+from app.core.security import get_password_hash, is_hashed_password
 
 
 def validate_password(password: str | None, values: dict | None = None) -> str:
     if password is None:
+        warn("Password is None", Warning) # TODO: Remove this line after testing because it should never happen
+        return password
+
+    if is_hashed_password(password):
+        # Password is already hashed, it should have been validated before being stored in the database so it's ok to return it
         return password
 
     # Password must be at least 8 characters long
@@ -43,6 +49,7 @@ def validate_password(password: str | None, values: dict | None = None) -> str:
 
 class AccountBase(DefaultModel):
     username: str
+    password: str
     roles: str
     is_active: bool
     last_name: str
@@ -50,6 +57,9 @@ class AccountBase(DefaultModel):
     promotion_year: int = Field(..., ge=2000, le=datetime.now().year + 3) # Promotion year must be less than 3 years in the future
     staff_name: str
     is_inducted: bool
+
+    _validate_password = validator("password", allow_reuse=True)(validate_password)
+
 
 
 class AccountCreate(AccountBase):
@@ -59,19 +69,13 @@ class AccountCreate(AccountBase):
     def is_active_must_be_false_at_creation(cls, v: bool) -> bool:
         return False
 
-    password: str
-
-    _validate_password = validator("password", allow_reuse=True)(validate_password)
-
 
 class AccountUpdate(AccountBase):
-    password: str | None = None
-
-    _validate_password = validator("password", allow_reuse=True)(validate_password)
-
+    pass
 
 class Account(AccountBase):
     id: int
+    password: str = Field(exclude=True)
 
     class Config:
         orm_mode = True
