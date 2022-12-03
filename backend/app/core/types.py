@@ -14,3 +14,4 @@ class PaymentMethod(str, Enum):
     card = 'CB'
     cash = 'Espèces'
     lydia = 'Lydia'
+    transfer = 'Virement'
