@@ -29,13 +29,21 @@ def init_db(db: Session = SessionLocal()) -> None:
             username=settings.BASE_ACCOUNT_USERNAME,
             password=settings.BASE_ACCOUNT_PASSWORD,
             roles='admin', # Useless for now
-            is_active=True,
             last_name='Admin',
             first_name='Admin',
             promotion_year=2020,
             staff_name='Admin',
             is_inducted=True,
         )
+    )
+    # Activate account
+    db_obj = accounts.read(db=db, id=1) # First account to be created
+    updated_account = account_schema.AccountUpdate(**account_schema.Account.from_orm(db_obj).dict(), password=db_obj.password)
+    updated_account.is_active = True
+    accounts.update(
+        db=db,
+        db_obj=db_obj,
+        obj_in=updated_account,
     )
     # Create 2 ecocups (out of stock item), one of null€ and one of 1€
     out_of_stock_items.create(
