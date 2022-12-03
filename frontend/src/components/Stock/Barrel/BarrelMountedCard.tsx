@@ -18,7 +18,7 @@ export function BarrelMountedCard(props: BarrelMountedCardProps): JSX.Element {
     };
 
     return (
-        <div className='flex h-60 w-40 bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 border-gray-300 bg-[#70707016] border hover:border-gray-400 group focus:bg-black relative dark:border-gray-500'>
+        <div className='flex h-64 min-w-[11rem] w-44 bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 border-gray-300 bg-[#70707016] border hover:border-gray-400 group focus:bg-black relative dark:border-gray-500'>
             <div
                 className='absolute top-1 left-1 cursor-pointer text-gray-500 hover:text-gray-700'
                 onClick={handleSetUnmounted}>
@@ -36,8 +36,8 @@ export function BarrelMountedCard(props: BarrelMountedCardProps): JSX.Element {
                     />
                 </svg>
             </div>
-            <div className='flex flex-col p-4 items-center w-full space-y-2'>
-                <h1 className='text-2xl font-semibold uppercase'>{barrel.name}</h1>
+            <div className='flex flex-col px-2 py-4 items-center w-full space-y-1 mt-2'>
+                <h1 className='text-xl font-semibold uppercase [hyphens:_auto] text-center'>{barrel.name}</h1>
                 {getIcon(barrel.icon, 'h-24 w-24 text-gray-500 dark:text-gray-100')}
                 <h2 className='text-xl'>Vente {barrel.sellPrice}€</h2>
                 <button

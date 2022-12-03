@@ -120,30 +120,29 @@ test('BuyPage renders', async () => {
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
     });
-    expect(screen.getByText('1€')).toBeInTheDocument();
-    expect(screen.getByText('Consumable 1')).toBeInTheDocument();
-
-    await userEvent.click(screen.getByLabelText('add-ecocup'));
+    // expect(screen.getByText('1€')).toBeInTheDocument();
+    expect(screen.getByText('Pizza')).toBeInTheDocument();
+    await userEvent.click(screen.getByText('Pizza'));
     expect(screen.getByText('Nombre :')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('submit'));
     expect(changeSelectedItems).toHaveBeenCalled();
 
-    await userEvent.click(screen.getAllByLabelText('edit')[0]);
+    await userEvent.click(screen.getAllByLabelText('edit')[0]!);
     expect(screen.getByText('Nombre :')).toBeInTheDocument();
     await userEvent.keyboard('{Escape}');
 
-    await userEvent.click(screen.getAllByLabelText('edit')[0]);
+    await userEvent.click(screen.getAllByLabelText('edit')[0]!);
     expect(screen.getByText('Nombre :')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('submit'));
     expect(changeSelectedItems).toHaveBeenCalled();
 
-    await userEvent.click(screen.getAllByLabelText('delete')[0]);
+    await userEvent.click(screen.getAllByLabelText('delete')[0]!);
     expect(changeSelectedItems).toHaveBeenCalled();
 });
 
-test('EcoCup error', async () => {
+test('Error on fetch', async () => {
     server.use(
-        rest.get(`https://clochette.dev/api/v1${endpoints.v1.outOfStockItemBuy}`, (req, res, ctx) => {
+        rest.get(`https://clochette.dev/api/v1${endpoints.v1.drink}`, (req, res, ctx) => {
             return res(ctx.status(500));
         })
     );
@@ -157,7 +156,7 @@ test('EcoCup error', async () => {
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 500));
     });
-    expect(screen.getByText("Erreur lors du chargement de l'écocup")).toBeInTheDocument();
+    expect(screen.getByText('Request failed with status code 500', { exact: false })).toBeInTheDocument();
 });
 
 test('updateFkID', async () => {
@@ -177,7 +176,7 @@ test('updateFkID', async () => {
 
     const selectedItems = [item, item2];
 
-    const newSelectedItems = updateFkID(barrels, consommables, outOfStock, ecoCup, selectedItems);
+    const newSelectedItems = updateFkID(barrels, consommables, outOfStock, selectedItems);
     expect(newSelectedItems).toEqual([
         item,
         {

@@ -2,13 +2,11 @@ import { useCallback, useEffect, useState } from 'react';
 
 import DropDownSelector from '@components/Transaction/Buy/DropDownSelector';
 import Form from '@components/Transaction/Buy/Form';
-import { RecapItem } from '@components/Transaction/Buy//RecapItem';
-import Loader from '@components/Loader';
+import { RecapItem } from '@components/Transaction/Buy/RecapItem';
 import PopupWindows from '@components/PopupWindows';
 
-import { getConsumables, getDrinks, getEcoCup, getOutOfStocks } from '@proxies/BuyPageProxies';
+import { getConsumables, getDrinks, getOutOfStocks } from '@proxies/BuyPageProxies';
 
-import { getIcon } from '@styles/utils';
 import type { ConsumableItem, Drink, ItemBuy, OutOfStockItemBuy, TableData } from '@types';
 
 interface BuyPageProps {
@@ -40,15 +38,9 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
     const [getDataConsommables, { loading: loadingConsommable, error: errorConsommable }] = getConsumables(setConsommables);
 
     /**
-     * This state is in charge of storing the eco cup item
-     */
-    const [ecoCup, setEcoCup] = useState<OutOfStockItemBuy>();
-    const [getDataEcoCup, { loading: loadingEcoCup, error: errorEcoCup }] = getEcoCup(setEcoCup);
-
-    /**
      * This state is in charge of storing the various data for the popup window.
      */
-    const [popUp, setPopUp] = useState<boolean>(false);
+    const [popupWindowOpen, setPopupWindowOpen] = useState<boolean>(false);
     const [popUpItem, setPopUpItem] = useState<ItemBuy>();
 
     /**
@@ -60,8 +52,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
         getDataFuts();
         getDataHorsStocks();
         getDataConsommables();
-        getDataEcoCup();
-    }, [getDataConsommables, getDataEcoCup, getDataFuts, getDataHorsStocks]);
+    }, [getDataConsommables, getDataFuts, getDataHorsStocks]);
 
     /**
      * Initialization of the data, by calling the proxies.
@@ -71,10 +62,10 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
     }, []);
 
     useEffect(() => {
-        if (loadingFuts || loadingExtras || loadingConsommable || loadingEcoCup) return;
-        const updatedItems = updateFkID(barrels, consommables, outOfStocks, ecoCup, selectedItems);
+        if (loadingFuts || loadingExtras || loadingConsommable) return;
+        const updatedItems = updateFkID(barrels, consommables, outOfStocks, selectedItems);
         props.changeSelectedItems(updatedItems);
-    }, [barrels, consommables, outOfStocks, ecoCup]);
+    }, [barrels, consommables, outOfStocks]);
 
     useEffect(() => {
         setSelectedItems(props.selectedItems);
@@ -86,7 +77,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
      * @param table The table the item belong to
      */
     const handleModalNew = (item: Drink | OutOfStockItemBuy | ConsumableItem, table: TableData): void => {
-        setPopUp(true);
+        setPopupWindowOpen(true);
         const newItem = createNewItem(item, table);
         setPopUpItem(newItem);
     };
@@ -96,7 +87,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
      * @param item The item to edit in the transaction
      */
     const handleModalEdit = (item: ItemBuy): void => {
-        setPopUp(true);
+        setPopupWindowOpen(true);
         setPopUpItem(item);
     };
 
@@ -104,7 +95,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
      * This function is closed when the modal is closed to update the popUp states.
      */
     const closePopUp = (): void => {
-        setPopUp(false);
+        setPopupWindowOpen(false);
         setPopUpItem(undefined);
     };
 
@@ -127,12 +118,12 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
         } else {
             newItems.push(...selectedItems, data);
         }
-        props.changeSelectedItems(updateFkID(barrels, consommables, outOfStocks, ecoCup, newItems));
+        props.changeSelectedItems(updateFkID(barrels, consommables, outOfStocks, newItems));
     };
 
     const handleRemoveItem = (item: ItemBuy): void => {
         const newItems = selectedItems.filter((selectedItem) => selectedItem !== item);
-        props.changeSelectedItems(updateFkID(barrels, consommables, outOfStocks, ecoCup, newItems));
+        props.changeSelectedItems(updateFkID(barrels, consommables, outOfStocks, newItems));
     };
 
     return (
@@ -141,7 +132,7 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                 className='md:grid-cols-3 flex-grow grid md:gap-2 gap-y-2 grid-cols-1'
                 aria-label='window-achat'>
                 <div className='h-full flex flex-col rounded border border-gray-800 dark:border-gray-300 p-1 justify-between'>
-                    <div className='flex flex-col space-y-4'>
+                    <div className='flex flex-col space-y-8'>
                         <h1 className='text-2xl font-bold'>Fûts :</h1>
                         <DropDownSelector
                             items={barrels}
@@ -170,39 +161,6 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
                             table={'out_of_stock'}
                         />
                     </div>
-                    <div className='flex flex-col'>
-                        <h1 className='text-2xl font-bold'>Rendu caution Ecocup :</h1>
-                        {errorEcoCup && <p className='text-red-500'>Erreur lors du chargement de l&apos;écocup</p>}
-                        {loadingEcoCup && <Loader />}
-                        {ecoCup && (
-                            <div className='flex m-4 items-center h-max rounded-xl bg-[#70707016] p-3 md:max-w-[33vw] shadow-md max-w-full flex-wrap'>
-                                <div className='flex flex-grow-[10] items-center'>
-                                    {ecoCup.icon && getIcon(ecoCup.icon, 'w-10 h-10 dark:text-white ml-2 text-black')}
-                                    <h1 className='grow lg:text-3xl mx-5 text-xl'>{ecoCup.name}</h1>
-                                    <h1 className='mr-6 text-2xl'>1€</h1>
-                                </div>
-                                <div className='flex flex-grow justify-end self-center cursor-pointer'>
-                                    <button
-                                        onClick={() => handleModalNew(ecoCup, 'out_of_stock')}
-                                        aria-label='add-ecocup'>
-                                        <svg
-                                            xmlns='http://www.w3.org/2000/svg'
-                                            fill='none'
-                                            viewBox='0 0 24 24'
-                                            strokeWidth={1}
-                                            stroke='currentColor'
-                                            className='w-10 h-10'>
-                                            <path
-                                                strokeLinecap='round'
-                                                strokeLinejoin='round'
-                                                d='M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z'
-                                            />
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-                    </div>
                 </div>
                 <div className='col-span-2 border rounded border-gray-800 dark:border-gray-300 p-1'>
                     <h1 className='text-2xl font-bold'>Récapitulatif :</h1>
@@ -218,8 +176,8 @@ export default function BuyPage(props: BuyPageProps): JSX.Element {
             </div>
             {popUpItem && (
                 <PopupWindows
-                    onOpen={popUp}
-                    callback={(state) => !state && closePopUp()}>
+                    open={popupWindowOpen}
+                    setOpen={(state) => !state && closePopUp()}>
                     <Form
                         item={popUpItem}
                         onSubmited={onSubmit}
@@ -278,13 +236,11 @@ export function createNewItem(item: Drink | OutOfStockItemBuy | ConsumableItem, 
     }
 }
 
-export function updateFkID(barrels: Drink[], consommables: ConsumableItem[], outOfStocks: OutOfStockItemBuy[], ecoCup: OutOfStockItemBuy | undefined, selectedItems: ItemBuy[]): ItemBuy[] {
-    if (ecoCup === undefined) return selectedItems;
+export function updateFkID(barrels: Drink[], consommables: ConsumableItem[], outOfStocks: OutOfStockItemBuy[], selectedItems: ItemBuy[]): ItemBuy[] {
     const fakeBarrels = barrels.map((barrel) => createNewItem(barrel, 'barrel'));
     const fakeConsommables = consommables.map((consommable) => createNewItem(consommable, 'consumable'));
     const fakeOutOfStocks = outOfStocks.map((outOfStock) => createNewItem(outOfStock, 'out_of_stock'));
-    const fakeEcoCup = createNewItem(ecoCup, 'out_of_stock');
-    const allItems = [...fakeBarrels, ...fakeConsommables, ...fakeOutOfStocks, fakeEcoCup];
+    const allItems = [...fakeBarrels, ...fakeConsommables, ...fakeOutOfStocks];
     return selectedItems.map((item) => {
         const newItem = allItems.find((i) => i.item.name === item.item.name && i.table === item.table && item.item.fkId === -1);
         if (newItem) {

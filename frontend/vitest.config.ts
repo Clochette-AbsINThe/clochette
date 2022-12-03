@@ -11,7 +11,7 @@ export default defineConfig({
         setupFiles: './tests/setupTests.ts',
         coverage: {
             include: ['src/**/*.{ts,tsx}'],
-            exclude: ['src/pages/**', 'src/types/**', 'src/layouts/base.tsx'],
+            exclude: ['src/pages/**', 'src/types/**', 'src/layouts/base.tsx', 'src/middleware.ts'],
             all: true
         },
         env: {

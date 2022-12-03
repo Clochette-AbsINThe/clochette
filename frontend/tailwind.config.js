@@ -1,3 +1,4 @@
+/** @type {import('tailwindcss').Config} */
 module.exports = {
     content: ['./src/**/*.{js,ts,jsx,tsx}'],
     theme: {
@@ -18,6 +19,7 @@ module.exports = {
             }
         }
     },
+    safelist: ['h-24', 'w-24', 'text-gray-500', 'dark:text-gray-100'],
     plugins: [],
     darkMode: 'class'
 };

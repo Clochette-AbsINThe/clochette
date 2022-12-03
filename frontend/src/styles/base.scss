@@ -117,3 +117,12 @@ body > div {
     flex-direction: column;
     min-height: 100vh;
 }
+
+.hide-scroll-bar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}

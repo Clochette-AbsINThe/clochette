@@ -23,7 +23,7 @@ export default function StockConsumable(): JSX.Element {
     return (
         <>
             <h2 className='text-2xl text-gray-500 dark:text-gray-100'>Consommables en stock</h2>
-            <div className='flex flex-row px-5 gap-5 flex-wrap'>
+            <div className='flex flex-row px-5 gap-5 hide-scroll-bar overflow-x-scroll min-h-[19rem]'>
                 {loadingConsumable || loadingConsumableUnique ? (
                     <Loader />
                 ) : (
