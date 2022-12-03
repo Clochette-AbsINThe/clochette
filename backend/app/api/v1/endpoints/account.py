@@ -3,6 +3,7 @@ from typing import Any
 
 from app.core.security import get_password_hash
 from app.core.translation import Translator
+from app.core.utils.misc import to_query_parameters
 from app.crud.crud_account import account as accounts
 from app.dependencies import get_current_account, get_db
 from app.schemas import account as account_schema
@@ -13,8 +14,8 @@ translator = Translator(element="account")
 
 
 @router.get("/", response_model=list[account_schema.Account], dependencies=[Depends(get_current_account)])
-async def read_accounts(db=Depends(get_db)) -> list:
-    return accounts.query(db)
+async def read_accounts(db=Depends(get_db), query=Depends(to_query_parameters(account_schema.AccountBase))) -> list:
+    return accounts.query(db, limit=None, **query.dict(exclude_none=True, exclude_unset=True))
 
 
 @router.post("/", response_model=account_schema.Account)
