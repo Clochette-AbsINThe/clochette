@@ -27,12 +27,12 @@ def init_db(db: Session = SessionLocal()) -> None:
         db=db,
         obj_in=account_schema.AccountCreate(
             username=settings.BASE_ACCOUNT_USERNAME,
-            password=get_password_hash(settings.BASE_ACCOUNT_PASSWORD),
+            password=settings.BASE_ACCOUNT_PASSWORD,
             roles='admin', # Useless for now
             is_active=True,
             last_name='Admin',
             first_name='Admin',
-            promotion_year=0,
+            promotion_year=2020,
             staff_name='Admin',
             is_inducted=True,
         )

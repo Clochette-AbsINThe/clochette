@@ -17,14 +17,13 @@ async def read_accounts(db=Depends(get_db)) -> list:
     return accounts.query(db)
 
 
-@router.post("/", response_model=account_schema.Account, dependencies=[Depends(get_current_account)])
+@router.post("/", response_model=account_schema.Account)
 async def create_account(account: account_schema.AccountCreate, db=Depends(get_db)) -> dict:
     if accounts.query(db, username=account.username, limit=1):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=translator.ELEMENT_ALREADY_EXISTS
         )
-    account.password = get_password_hash(account.password)
     return accounts.create(db, obj_in=account)
 
 
