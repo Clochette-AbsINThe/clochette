@@ -21,8 +21,17 @@ services:
     ports:
       - 8300:3000
     environment:
-      - NODE_ENV=production
       - SECRET_KEY=${JWT_SECRET_KEY}
+    command:
+      [
+        "pm2-runtime",
+        "start",
+        "npm",
+        "--name",
+        "clochette-frontend",
+        "--",
+        "start"
+      ]
 
   backend:
     depends_on:

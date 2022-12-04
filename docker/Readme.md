@@ -11,9 +11,4 @@
 - JWT_SECRET_KEY=\*\*\*
 - BASE_ACCOUNT_USERNAME=\*\*\*
 - BASE_ACCOUNT_PASSWORD=\*\*\*
-- LOCALE=fr #Or en
-
-## `.env.production` in the frontend/ folder
-
-- NEXT_PUBLIC_BASE_URL=\*\*\*
-- NEXT_PUBLIC_BACKEND_API_URL=\*\*\*
+- LOCALE=fr # Or en
