@@ -3,8 +3,11 @@
 name: Build and push Docker images
 
 on:
-  push:
+  workflow_run:
+    workflows: [ "Release on push" ]
     branches: [ 'main' ]
+    types:
+      - completed
 
 env:
   REGISTRY: ghcr.io
@@ -12,7 +15,7 @@ env:
 
 jobs:
   build-and-push:
-    #needs: [ release-on-push ]
+    if : ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
