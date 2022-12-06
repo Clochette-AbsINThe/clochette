@@ -1,0 +1,27 @@
+# This workflow aims to deploy the project to the production environment when a new release is published
+
+name: Deploy the project to production
+
+on:
+  push:
+    branches: [ 'main' ]
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  deploy:
+    #needs: [ build-and-push ]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to production
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            echo ${{ secrets.GITHUB_TOKEN }} | docker login ${{ env.REGISTRY }} -u ${{ github.repository_owner }} --password-stdin
+            cd clochette && rm -rf *
+            wget https://raw.githubusercontent.com/${{ github.repository_owner }}/${{ github.repository }}/main/docker/docker-compose.yml
+            docker-compose stop && docker-compose rm -f && docker-compose pull && docker-compose up -d
