@@ -1,9 +1,10 @@
-import { saveJwtInCookie, signIn } from '@utils/auth';
+import { saveJwtInCookie } from '@utils/auth_internal_api';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
 import { useAuthContext } from '@components/Context';
+import { signIn } from '@proxies/AuthProxies';
 
 export default function Login() {
     const { query, push } = useRouter();
@@ -98,6 +99,11 @@ export default function Login() {
                         Se connecter
                     </button>
                 </form>
+                <Link
+                    href={'/register'}
+                    className='text-sm text-gray-500 hover:text-gray-700'>
+                    Vous n&apos;avez pas de compte ? Inscrivez-vous
+                </Link>
             </div>
         </>
     );
