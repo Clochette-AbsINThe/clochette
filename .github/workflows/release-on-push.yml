@@ -1,0 +1,23 @@
+# This workflow aims to release a new version of the project when a commit is pushed to the main branch.
+
+name: Release on push
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  release-on-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Release a new version
+        id: release
+        uses: rymndhng/release-on-push-action@master
+        with:
+          bump_version_scheme: patch
+          tag_prefix: v
+          release_name: <RELEASE_TAG>
+          max_commits: 25
+
+      - name: Check output parameters
+        run: echo -e "Tag name ${{ steps.release.outputs.tag_name }}\nRelease version ${{ steps.release.outputs.version }}"

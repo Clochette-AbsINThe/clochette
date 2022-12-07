@@ -1,0 +1,31 @@
+# This workflow aims to build and push Docker-Compose images to the GitHub Container registry when a new release is published.
+
+name: Build and push Docker images
+
+on:
+  workflow_run:
+    workflows: ["Release on push"]
+    branches: ["main"]
+    types:
+      - completed
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker-Compose images
+        run: export RELEASE_TAG=${{ github.ref_name }} && docker-compose -f docker/docker-compose.yml build && docker-compose -f docker/docker-compose.yml push
