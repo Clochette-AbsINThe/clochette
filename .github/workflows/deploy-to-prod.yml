@@ -4,8 +4,8 @@ name: Deploy the project to production
 
 on:
   workflow_run:
-    workflows: [ "Release on push" ]
-    branches: [ 'main' ]
+    workflows: ["Release on push"]
+    branches: ["main"]
     types:
       - completed
 
@@ -14,7 +14,7 @@ env:
 
 jobs:
   deploy:
-    if : ${{ github.event.workflow_run.conclusion == 'success' }}
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to production
