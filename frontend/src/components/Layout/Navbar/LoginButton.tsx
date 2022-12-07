@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 import { useAuthContext } from '@components/Context';
-import { deleteJwtInCookie } from '@utils/auth';
+import { deleteJwtInCookie } from '@utils/auth_internal_api';
 import Link from 'next/link';
 
 export default function LoginButton(): JSX.Element {
