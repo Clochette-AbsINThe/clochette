@@ -1,5 +1,6 @@
 import { endpoints } from '@endpoints';
-import { deleteJwtInCookie, getJwtInCookie, saveJwtInCookie, signIn } from '@utils/auth';
+import { signIn } from '@proxies/AuthProxies';
+import { deleteJwtInCookie, getJwtInCookie, saveJwtInCookie } from '@utils/auth_internal_api';
 import { environmentVariable } from '@utils/settings';
 import { rest } from 'msw';
 import { jwt, server } from '../setupTests';

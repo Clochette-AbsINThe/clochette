@@ -1,5 +1,5 @@
 import { useAuthContext } from '@components/Context';
-import { getJwtInCookie } from '@utils/auth';
+import { getJwtInCookie } from '@utils/auth_internal_api';
 import { environmentVariable } from '@utils/settings';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useState } from 'react';
