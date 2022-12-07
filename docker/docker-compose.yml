@@ -5,6 +5,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/reverse-proxy/Dockerfile
+    image: "ghcr.io/Clochette-AbsINThe/reverse-proxy:latest"
     container_name: clochette-reverse-proxy
     ports:
       - 80:80
@@ -17,6 +18,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/frontend/Dockerfile
+    image: "ghcr.io/Clochette-AbsINThe/frontend:latest"
     container_name: clochette-frontend
     ports:
       - 8300:3000
@@ -39,6 +41,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/backend/Dockerfile
+    image: "ghcr.io/Clochette-AbsINThe/backend:latest"
     container_name: clochette-backend
     ports:
       - "8080:80"
