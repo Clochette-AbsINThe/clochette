@@ -125,3 +125,15 @@ export interface TransactionResponse extends ITransactionType {
     consumablesPurchase: Consumable[];
     consumablesSale: Consumable[];
 }
+
+interface IAccount {
+    readonly id?: number;
+    username: string;
+    firstName: string;
+    lastName: string;
+    promotionYear: number;
+}
+
+export interface AccountCreate extends IAccount {
+    password: string;
+}

@@ -14,7 +14,8 @@ export const endpoints = {
         transaction: '/transaction/',
         transactionSell: '/transaction/sell/',
         transactionBuy: '/transaction/buy/',
-        login: '/auth/login/'
+        login: '/auth/login/',
+        signup: '/account/'
     },
     internal: {
         saveJwtInCookie: '/api/saveJwtInCookie',
