@@ -2,7 +2,7 @@ version: "3"
 
 services:
   reverse-proxy:
-    image: ghcr.io/SamuelGuillemet/reverse-proxy:latest
+    image: ghcr.io/clochette-absinthe/reverse-proxy:latest
     container_name: clochette-reverse-proxy
     ports:
       - 80:80
@@ -14,7 +14,7 @@ services:
       - ./certbot-ssl/:/var/www/certbot/ssl/:ro
 
   frontend:
-    image: ghcr.io/SamuelGuillemet/frontend:latest
+    image: ghcr.io/clochette-absinthe/frontend:latest
     container_name: clochette-frontend
     expose:
       - 3000
@@ -34,7 +34,7 @@ services:
   backend:
     depends_on:
       - database
-    image: ghcr.io/SamuelGuillemet/backend:latest
+    image: ghcr.io/clochette-absinthe/backend:latest
     container_name: clochette-backend
     expose:
       - 8080
