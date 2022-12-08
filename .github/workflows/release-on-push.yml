@@ -1,6 +1,6 @@
 # This workflow aims to release a new version of the project when a commit is pushed to the main branch.
 
-name: Release on push to main branch and build and push Docker images
+name: Release on push to main branch, build and push Docker images and deploy to production
 
 on:
   push:
@@ -12,6 +12,8 @@ env:
 jobs:
   release-on-push:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Release a new version
         id: release
@@ -31,15 +33,17 @@ jobs:
   build-and-push:
     needs: release-on-push
     runs-on: ubuntu-latest
+    env:
+      repository_owner: clochette-absinthe
     strategy:
       matrix:
         image: [backend, frontend, reverse-proxy]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Log in to the Container registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.repository_owner }}
@@ -47,6 +51,28 @@ jobs:
 
       - name: Build and push Docker-Compose images
         run: |
-          docker build . -f docker/clochette-prod/${{ matrix.image }}/Dockerfile --tag ghcr.io/samuelguillemet/${{ matrix.image }}:${{ needs.release-on-push.outputs.version }} --tag ghcr.io/samuelguillemet/${{ matrix.image }}:latest
-          docker push ghcr.io/samuelguillemet/${{ matrix.image }}:${{ needs.release-on-push.outputs.version }}
-          docker push ghcr.io/samuelguillemet/${{ matrix.image }}:latest
+          docker build . -f docker/clochette-prod/${{ matrix.image }}/Dockerfile --tag ghcr.io/${{ env.repository_owner }}/${{ matrix.image }}:${{ needs.release-on-push.outputs.version }} --tag ghcr.io/${{ env.repository_owner }}/${{ matrix.image }}:latest
+          docker push ghcr.io/${{ env.repository_owner }}/${{ matrix.image }}:${{ needs.release-on-push.outputs.version }}
+          docker push ghcr.io/${{ env.repository_owner }}/${{ matrix.image }}:latest
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    env:
+      REGISTRY: ghcr.io
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPOSITORY_OWNER: ${{ github.repository_owner }}
+      REPOSITORY: ${{ github.repository }}
+    steps:
+      - name: Deploy to production
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: REGISTRY,GITHUB_TOKEN,REPOSITORY,REPOSITORY_OWNER
+          script: |
+            echo $GITHUB_TOKEN | docker login $REGISTRY -u $REPOSITORY_OWNER --password-stdin
+            cd clochette && rm -f docker-compose.yml
+            wget https://raw.githubusercontent.com/$REPOSITORY/main/docker/clochette-prod/docker-compose.yml
+            docker-compose pull && docker-compose up -d && docker image prune -f

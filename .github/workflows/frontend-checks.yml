@@ -1,4 +1,4 @@
-name: frontend-checks
+name: This workflow aims to check the frontend code when pushe to the dev branch with lint, format, tests and build.
 
 on:
   push:
@@ -37,5 +37,4 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: ./coverage/coverage-final.json
-          fail_ci_if_error: true
           working-directory: frontend
