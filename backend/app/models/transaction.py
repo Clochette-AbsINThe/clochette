@@ -9,7 +9,7 @@ from app.db.base_class import Base
 
 class Transaction(Base):
     id = Column(Integer, primary_key=True, index=True)
-    datetime = Column(DateTime, nullable=False)
+    datetime = Column(DateTime(timezone=True), nullable=False)
     payment_method = Column(Enum(PaymentMethod), nullable=False)
     amount = Column(Float, nullable=False)
     sale = Column(Boolean, nullable=False) # True means selling, False means buying
