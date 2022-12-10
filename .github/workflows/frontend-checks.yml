@@ -1,4 +1,4 @@
-name: This workflow aims to check the frontend code when pushe to the dev branch with lint, format, tests and build.
+name: This workflow aims to check the frontend code when push to the dev branch with lint, format, tests and build.
 
 on:
   push:

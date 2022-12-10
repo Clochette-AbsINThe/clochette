@@ -76,4 +76,6 @@ jobs:
             rm -f docker-compose.yml docker-compose.prod.yml
             wget https://raw.githubusercontent.com/$REPOSITORY/main/docker/docker-compose.yml
             wget https://raw.githubusercontent.com/$REPOSITORY/main/docker/docker-compose.prod.yml
-            docker compose pull && docker compose up -d && docker image prune -f
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+            docker image prune -f -a
