@@ -1,0 +1,31 @@
+version: "3"
+
+# This is a docker-compose file for Clochette production environment, which will override the default docker-compose.yml file.
+name: clochette_production
+
+services:
+  reverse-proxy:
+    build:
+      args:
+        - host_arg=clochette.dev
+    image: ghcr.io/clochette-absinthe/reverse-proxy:${tag:-latest}
+    volumes:
+      - ./ssl/:/etc/nginx/ssl
+
+  frontend:
+    build:
+      args:
+        - next_public_base_url=https://clochette.dev
+        - next_public_backend_api_url=https://clochette.dev/api/v1
+    image: ghcr.io/clochette-absinthe/frontend:${tag:-latest}
+    expose:
+      - 3000
+
+  backend:
+    image: ghcr.io/clochette-absinthe/backend:${tag:-latest}
+    expose:
+      - 8080
+
+  database:
+    expose:
+      - 5432
