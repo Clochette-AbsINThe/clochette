@@ -1,7 +1,7 @@
-import { endpoints } from "@endpoints";
-import { AccountCreate } from "@types";
-import { environmentVariable } from "@utils/settings";
-import axios, { AxiosError } from "axios";
+import { endpoints } from '@endpoints';
+import { AccountCreate } from '@types';
+import { environmentVariable } from '@utils/settings';
+import axios, { AxiosError } from 'axios';
 
 type responseType = {
     status: number;

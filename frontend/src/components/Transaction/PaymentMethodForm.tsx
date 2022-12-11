@@ -10,7 +10,7 @@ export function PaymentMethodForm({ paymentMethod, changePaymentMethod }: { paym
             <div className='flex flex-row flex-wrap'>
                 <label
                     htmlFor='cb'
-                    className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
+                    className='flex flex-row items-center space-x-2 p-2 m-2 ml-4'>
                     <input
                         type='radio'
                         id='cb'
@@ -26,7 +26,7 @@ export function PaymentMethodForm({ paymentMethod, changePaymentMethod }: { paym
                 </label>
                 <label
                     htmlFor='lydia'
-                    className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
+                    className='flex flex-row items-center space-x-2 p-2 m-2 ml-4'>
                     <input
                         type='radio'
                         id='lydia'
@@ -42,7 +42,7 @@ export function PaymentMethodForm({ paymentMethod, changePaymentMethod }: { paym
                 </label>
                 <label
                     htmlFor='cash'
-                    className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
+                    className='flex flex-row items-center space-x-2 p-2 m-2 ml-4'>
                     <input
                         type='radio'
                         id='cash'
@@ -58,7 +58,7 @@ export function PaymentMethodForm({ paymentMethod, changePaymentMethod }: { paym
                 </label>
                 <label
                     htmlFor='virement'
-                    className='flex flex-row items-center space-x-2 p-2 border rounded-sm m-2'>
+                    className='flex flex-row items-center space-x-2 p-2 m-2 ml-4'>
                     <input
                         type='radio'
                         id='virement'
