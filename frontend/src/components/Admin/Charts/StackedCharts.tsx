@@ -5,16 +5,25 @@ import { useEffect, useState } from 'react';
 import { getTransactionItems } from '@proxies/DashboardProxies';
 import { ItemTransactionResponse, TransactionType } from '@types';
 import { rainbowColors, groupBy, unique } from '@utils/utils';
+import Loader from '@components/Loader';
+import ReloadButton from './ReloadButton';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const options: ChartOptions = {
     maintainAspectRatio: false,
     scales: {
         y: {
-            stacked: true
+            stacked: true,
+            ticks: {
+                color: '#6e6b7b'
+            }
         },
         x: {
-            stacked: true
+            stacked: true,
+            ticks: {
+                color: '#6e6b7b',
+                stepSize: 100
+            }
         }
     },
     plugins: {
@@ -66,28 +75,36 @@ export default function StackedCharts<K>(props: StackedChartProps<K>) {
                         )
                         .reduce((a, b) => a + b, 0)
                 ),
-                backgroundColor: rainbowColors(names.length + 2, index)
+                backgroundColor: rainbowColors(names.length + 2, index),
+                borderRadius: 10,
+                animation: {
+                    duration: 500,
+                    easing: 'easeOutQuart'
+                },
+                maxBarThickness: 15
             };
         })
     };
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return <Loader />;
 
     return (
-        <>
-            <button
+        <div>
+            {/* <button
                 className='btn-primary max-w-max'
                 onClick={getData}>
-                Reload data
-            </button>
-            <div className='max-w-[40rem] max-h-[15rem]'>
-                <Bar
-                    data={data}
-                    height={400}
-                    width={600}
-                    options={options as any}
-                />
+                Recharger les données
+            </button> */}
+            <ReloadButton onClick={getData} />
+            <div className='overflow-x-scroll hide-scroll-bar'>
+                <div className='w-[40rem] h-[20rem] m-4 md:mx-12'>
+                    <Bar
+                        height={800}
+                        data={data}
+                        options={options as any}
+                    />
+                </div>
             </div>
-        </>
+        </div>
     );
 }
