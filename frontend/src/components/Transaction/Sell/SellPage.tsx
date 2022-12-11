@@ -130,7 +130,7 @@ export default function SellPage(props: SellPageProps): JSX.Element {
                 <div className='flex flex-col gap-3 justify-between grow'>
                     <div>
                         <h1 className='text-3xl font-bold mb-5'>Rendu caution Ecocup :</h1>
-                        <h2 className='text-2xl'>Montant rendu 1€</h2>
+                        <h2 className='text-2xl'>Montant rendu 1€ en espèces</h2>
                     </div>
                     {ecoCup && (
                         <button

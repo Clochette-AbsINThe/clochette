@@ -1,7 +1,7 @@
 import { getJwtInCookie } from '@utils/auth_internal_api';
 import { createContext, useContext, useEffect, useState } from 'react';
 
-export const AppContext = createContext<{ jwt: string | null; setJwt: (jwt: string | null) => void; authenticated: boolean }>({ jwt: null, setJwt: (jwt: string | null) => { }, authenticated: false });
+export const AppContext = createContext<{ jwt: string | null; setJwt: (jwt: string | null) => void; authenticated: boolean }>({ jwt: null, setJwt: (jwt: string | null) => {}, authenticated: false });
 
 const getJwt = async () => {
     const { data } = await getJwtInCookie();
