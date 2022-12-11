@@ -54,7 +54,7 @@ export function BarrelStack(props: BarrelStackProps): JSX.Element {
         moveCard(touch);
 
         const addCarRect = document.getElementById('add-card')!.getBoundingClientRect();
-        // console.log(addCarRect, touch);
+
         const inAddCard: boolean = touch!.clientX > addCarRect.left && touch!.clientX < addCarRect.right && touch!.clientY > addCarRect.top && touch!.clientY < addCarRect.bottom;
 
         if (inAddCard) {
