@@ -1,7 +1,8 @@
 import { endpoints } from '@endpoints';
 import useAxios from '@hooks/useAxios';
 import { IProxy } from '@proxiesTypes';
-import { APIItem, Barrel, Consumable, Glass, ItemTransactionResponse, ITransactionType, OutOfStockBuy, OutOfStockSell, TableData, TransactionResponse, TransactionType } from '@types';
+import { Barrel, Glass, IBarrelStatProps, IconName, ItemTransactionResponse, ITransactionType, TransactionResponse, TransactionType } from '@types';
+import { generateTransactionItemArray } from '@utils/utils';
 
 export function getTransactionItems(setItems: (item: Array<TransactionType<ItemTransactionResponse>>) => void): IProxy {
     const [{ loading: loading1, error: error1 }, getAllTransactions] = useAxios<ITransactionType[]>(endpoints.v1.transaction);
@@ -22,13 +23,7 @@ export function getTransactionItems(setItems: (item: Array<TransactionType<ItemT
                         const { data: transactionData } = await getTransaction({}, endpoints.v1.transaction + transaction.id);
                         finalResponse.push({
                             ...transaction,
-                            items: [
-                                generateQuantityArray(transactionData.barrels, 'barrel'),
-                                generateQuantityArray(transactionData.glasses, 'glass'),
-                                generateQuantityArray(transactionData.consumablesPurchase, 'consumable'),
-                                generateQuantityArray(transactionData.consumablesSale, 'consumable'),
-                                generateQuantityArray(transactionData.outOfStocks, 'out_of_stock')
-                            ].flat()
+                            items: generateTransactionItemArray(transactionData)
                         });
                         resolve();
                     });
@@ -44,19 +39,46 @@ export function getTransactionItems(setItems: (item: Array<TransactionType<ItemT
     return [getData, { loading, error }];
 }
 
-function generateQuantityArray(items: Barrel[] | Consumable[] | Array<OutOfStockBuy | OutOfStockSell> | Glass[], table: TableData): ItemTransactionResponse[] {
-    const quantityArray: ItemTransactionResponse[] = [];
-    items.forEach((item) => {
-        const element = quantityArray.find((element) => element.item.name === item.name);
-        if (element === undefined) {
-            quantityArray.push({
-                quantity: 1,
-                table: table,
-                item
-            });
-        } else {
-            element.quantity += 1;
-        }
-    });
-    return quantityArray;
+export function getBarrelsStat(setItems: (item: IBarrelStatProps[]) => void): IProxy {
+    const [{ loading: loading1, error: error1 }, getBarrels] = useAxios<Barrel[]>(endpoints.v1.barrelAll);
+    const [{ loading: loading2, error: error2 }, getGlass] = useAxios<Glass[]>('');
+
+    const loading = loading1 || loading2;
+    const error = error1 || error2;
+
+    const getDataAsync = async (): Promise<void> => {
+        setItems([]);
+        const { data } = await getBarrels();
+        const barrels = data
+            .filter((item) => item.isMounted === true || item.empty === true)
+            .map((item: Barrel) => ({
+                ...item,
+                icon: 'Barrel' as IconName
+            }));
+        const finalResponse: IBarrelStatProps[] = [];
+        await Promise.all(
+            barrels.map((barrel) => {
+                return new Promise<void>(async (resolve) => {
+                    const { data: dataGlass } = await getGlass({}, `${endpoints.v1.glass}?barrel_id=${barrel.id!}`);
+
+                    const barrelStat: IBarrelStatProps = {
+                        ...barrel,
+                        glassForBarrel: dataGlass.map((item: Glass) => ({
+                            ...item,
+                            icon: 'Glass' as IconName
+                        }))
+                    };
+                    finalResponse.push(barrelStat);
+                    resolve();
+                });
+            })
+        );
+        setItems([...finalResponse.filter((item) => item.isMounted).sort((a, b) => b.id! - a.id!), ...finalResponse.filter((item) => !item.isMounted).sort((a, b) => b.id! - a.id!)]);
+    };
+
+    const getData = (): void => {
+        getDataAsync().catch(() => {});
+    };
+
+    return [getData, { loading, error }];
 }
