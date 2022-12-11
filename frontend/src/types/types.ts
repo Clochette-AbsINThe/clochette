@@ -59,6 +59,10 @@ export interface Glass {
     sellPrice: number;
 }
 
+export interface IBarrelStatProps extends Barrel {
+    glassForBarrel: Glass[];
+}
+
 // consumable --> get // Rempli la colonne des consommables
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface Consumable {
