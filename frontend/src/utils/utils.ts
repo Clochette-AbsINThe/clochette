@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { environmentVariable } from '@utils/settings';
+import { Barrel, Consumable, OutOfStockBuy, OutOfStockSell, Glass, TableData, ItemTransactionResponse, TransactionType, TransactionResponse } from '@types';
 
 export const addIdToUrl = (id: number): void => {
     const url = new URL(window.location.href);
@@ -156,4 +157,42 @@ export function groupBy<K, V>(array: V[], grouper: (item: V) => K, sorter: (a: K
     }, new Map<K, V[]>());
     // Return res as a sorted map
     return new Map<K, V[]>(Array.from(res.entries()).sort((a, b) => sorter(a[0], b[0])));
+}
+
+function generateQuantityArray(items: Barrel[] | Consumable[] | Array<OutOfStockBuy | OutOfStockSell> | Glass[], table: TableData): ItemTransactionResponse[] {
+    const quantityArray: ItemTransactionResponse[] = [];
+    items.forEach((item) => {
+        const element = quantityArray.find((element) => element.item.name === item.name);
+        if (element === undefined) {
+            quantityArray.push({
+                quantity: 1,
+                table: table,
+                item
+            });
+        } else {
+            element.quantity += 1;
+        }
+    });
+    return quantityArray;
+}
+
+export function generateTransactionItemArray(transactionData: TransactionResponse): ItemTransactionResponse[] {
+    return [
+        generateQuantityArray(transactionData.barrels, 'barrel'),
+        generateQuantityArray(transactionData.glasses, 'glass'),
+        generateQuantityArray(transactionData.consumablesPurchase, 'consumable'),
+        generateQuantityArray(transactionData.consumablesSale, 'consumable'),
+        generateQuantityArray(transactionData.outOfStocks, 'out_of_stock')
+    ].flat();
+}
+
+export function translateTable(table: TableData, quantity: number): string {
+    switch (table) {
+        case 'barrel':
+            return 'Fût' + (quantity > 1 ? 's' : '');
+        case 'glass':
+            return 'Verre' + (quantity > 1 ? 's' : '');
+        default:
+            return '';
+    }
 }
