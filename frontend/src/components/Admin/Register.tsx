@@ -198,7 +198,6 @@ export default function Register(): JSX.Element {
                                 Confirmez votre mot de passe
                             </label>
                             <div className='relative'>
-
                                 <input
                                     type='password'
                                     name='password2'
@@ -262,7 +261,6 @@ export default function Register(): JSX.Element {
         </>
     );
 }
-
 
 function colorForPasswordValidator(score: number) {
     switch (score) {
