@@ -11,6 +11,8 @@ export const endpoints = {
         barrel: '/barrel/',
         barrelMounted: '/barrel/mounted/',
         barrelDistinct: '/barrel/distincts/',
+        barrelAll: '/barrel/all/',
+        glass: '/glass/',
         transaction: '/transaction/',
         transactionSell: '/transaction/sell/',
         transactionBuy: '/transaction/buy/',
