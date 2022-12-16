@@ -1,8 +1,9 @@
 import { endpoints } from '@endpoints';
 import useAxios from '@hooks/useAxios';
-import { IProxy } from '@proxiesTypes';
-import { Barrel, Glass, IBarrelStatProps, IconName, ItemTransactionResponse, ITransactionType, TransactionResponse, TransactionType } from '@types';
+import { IProxy, IProxyId, IProxyPost } from '@proxiesTypes';
+import { Account, Barrel, Glass, IBarrelStatProps, IconName, ItemTransactionResponse, ITransactionType, TransactionResponse, TransactionType } from '@types';
 import { generateTransactionItemArray } from '@utils/utils';
+import { AxiosResponse, AxiosError } from 'axios';
 
 export function getTransactionItems(setItems: (item: Array<TransactionType<ItemTransactionResponse>>) => void): IProxy {
     const [{ loading: loading1, error: error1 }, getAllTransactions] = useAxios<ITransactionType[]>(endpoints.v1.transaction);
@@ -81,4 +82,55 @@ export function getBarrelsStat(setItems: (item: IBarrelStatProps[]) => void): IP
     };
 
     return [getData, { loading, error }];
+}
+
+export function getAccounts(setItems: (item: any[]) => void): IProxy {
+    const [{ loading, error }, getAllAccounts] = useAxios<any[]>(endpoints.v1.account);
+
+    const getDataAsync = async (): Promise<void> => {
+        setItems([]);
+        const { data } = await getAllAccounts();
+        setItems(data);
+    };
+
+    const getData = (): void => {
+        getDataAsync().catch(() => {});
+    };
+
+    return [getData, { loading, error }];
+}
+
+export function putAccount(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPost<Account> {
+    const [{ error, loading }, put] = useAxios<Account>('', { method: 'PUT' });
+
+    const putAsync = async (data: Account): Promise<void> => {
+        const { id, ...rest } = data;
+        const response = await put({ data: rest }, endpoints.v1.account + id!);
+        callback?.(response);
+    };
+
+    const putData = (data: Account): void => {
+        putAsync(data).catch((err: AxiosError<unknown, any>) => {
+            callback?.(err.response as AxiosResponse<unknown, any>);
+        });
+    };
+
+    return [putData, { loading, error }];
+}
+
+export function deleteAccount(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyId {
+    const [{ error, loading }, del] = useAxios<Account>('', { method: 'DELETE' });
+
+    const deleteAsync = async (id: number): Promise<void> => {
+        const response = await del({}, endpoints.v1.account + id!);
+        callback?.(response);
+    };
+
+    const deleteData = (id: number): void => {
+        deleteAsync(id).catch((err: AxiosError<unknown, any>) => {
+            callback?.(err.response as AxiosResponse<unknown, any>);
+        });
+    };
+
+    return [deleteData, { loading, error }];
 }
