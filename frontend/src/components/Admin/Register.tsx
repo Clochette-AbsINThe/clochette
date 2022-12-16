@@ -42,7 +42,6 @@ export default function Register(): JSX.Element {
     const handlePassword1Change = () => {
         const res = zxcvbn(password1.current!.value, [username.current!.value, firstName.current!.value, lastName.current!.value]);
         setzxcvbnResult(res);
-        console.log(res);
         if (res.score < 4) {
             password1.current!.setCustomValidity(res.feedback.warning !== '' ? res.feedback.warning : 'Votre mot de passe ne correpond pas aux critères de sécurité');
         } else {

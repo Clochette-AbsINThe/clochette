@@ -13,7 +13,6 @@ export const links = [
     { label: 'Trésorie', to: '/account/tresory', role: ['ROLE_ADMIN'] }
 ];
 
-
 export async function getStaticPaths() {
     return {
         paths: links.map((link) => ({ params: { page: link.to.split('/').slice(2) } })),
