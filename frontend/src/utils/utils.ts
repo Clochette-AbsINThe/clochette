@@ -57,25 +57,30 @@ export interface Token {
     iat: number;
     exp: number;
     token_type: string;
+    roles?: string[];
 }
 
 /**
- * This function could throw an error if the token is invalid in its format, for example if the token is not a JWT token
+ * This function could return null if the token is invalid in its format, for example if the token is not a JWT token
  * @param token JWT token
  * @returns Inforamtions inside the token
  */
-export function parseJwt(token: string): Token {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url?.replace(/-/g, '+').replace(/_/g, '/');
-    const buffer = Buffer.from(base64 as string, 'base64');
-    const jsonPayload = decodeURIComponent(
-        buffer
-            .toString('utf-8')
-            .split('')
-            .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
-            .join('')
-    );
-    return JSON.parse(jsonPayload);
+export function parseJwt(token: string): Token | null {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url?.replace(/-/g, '+').replace(/_/g, '/');
+        const buffer = Buffer.from(base64 as string, 'base64');
+        const jsonPayload = decodeURIComponent(
+            buffer
+                .toString('utf-8')
+                .split('')
+                .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                .join('')
+        );
+        return JSON.parse(jsonPayload);
+    } catch {
+        return null;
+    }
 }
 
 export function getRedirectUrlEncoded(url: string): string {
