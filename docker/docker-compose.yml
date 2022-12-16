@@ -1,15 +1,16 @@
 version: "3"
 
+name: clochette_base_template
+
 services:
   reverse-proxy:
     build:
       context: ..
       dockerfile: ./docker/reverse-proxy/Dockerfile
-    image: ghcr.io/clochette-absinthe/reverse-proxy:${RELEASE_TAG}
-    container_name: clochette-reverse-proxy
     ports:
       - 80:80
       - 443:443
+    container_name: clochette-reverse-proxy
     depends_on:
       - frontend
       - backend
@@ -18,10 +19,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/frontend/Dockerfile
-    image: ghcr.io/clochette-absinthe/frontend:${RELEASE_TAG}
     container_name: clochette-frontend
-    ports:
-      - 8300:3000
     environment:
       - SECRET_KEY=${JWT_SECRET_KEY}
     command:
@@ -41,10 +39,7 @@ services:
     build:
       context: ..
       dockerfile: ./docker/backend/Dockerfile
-    image: ghcr.io/clochette-absinthe/backend:${RELEASE_TAG}
     container_name: clochette-backend
-    ports:
-      - "8080:80"
     command:
       [
         "uvicorn",
@@ -64,9 +59,9 @@ services:
       - ALERT_BACKEND=github # Default is terminal if not set
       - GITHUB_USER=${GITHUB_USER}
       - GITHUB_TOKEN=${GITHUB_TOKEN}
-      - ISSUE_LABELS=Backend,bug,bot
       - REPOSITORY_NAME=${REPOSITORY_NAME}
       - REPOSITORY_OWNER=${REPOSITORY_OWNER}
+      - ISSUE_LABELS=Backend,bug,bot
       - JWT_SECRET_KEY=${JWT_SECRET_KEY}
       - BASE_ACCOUNT_USERNAME=${BASE_ACCOUNT_USERNAME} # Default is admin if not set
       - BASE_ACCOUNT_PASSWORD=${BASE_ACCOUNT_PASSWORD}
@@ -75,8 +70,6 @@ services:
   database:
     image: postgres:14.5-alpine
     container_name: clochette-db
-    ports:
-      - "5432:5432"
     environment:
       - POSTGRES_USER=clochette
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}

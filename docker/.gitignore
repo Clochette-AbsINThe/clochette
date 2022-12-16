@@ -2,3 +2,4 @@
 *.sh
 *.csr
 *.ca.key
+/ssl/

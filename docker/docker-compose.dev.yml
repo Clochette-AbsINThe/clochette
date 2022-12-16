@@ -1,0 +1,27 @@
+version: "3"
+
+name: clochette_development
+
+services:
+  reverse-proxy:
+    build:
+      args:
+        - host_arg=clochette.dev
+    volumes:
+      - ./reverse-proxy/ssl:/etc/nginx/ssl
+
+  frontend:
+    build:
+      args:
+        - next_public_base_url=https://clochette.dev
+        - next_public_backend_api_url=https://clochette.dev/api/v1
+    ports:
+      - 8300:3000
+
+  backend:
+    ports:
+      - "8080:80"
+
+  database:
+    ports:
+      - "5432:5432"

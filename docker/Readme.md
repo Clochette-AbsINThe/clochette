@@ -1,4 +1,4 @@
-# When the app is set to the deployment you should add 2 important env files
+# When the app is set to the deployment you should add 1 important env files
 
 ## `.env` in the docker/ folder
 
