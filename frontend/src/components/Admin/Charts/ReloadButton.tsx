@@ -10,7 +10,7 @@ export default function ReloadButton(props: ReloadButtonProps): JSX.Element {
             className='group btn-primary max-w-max p-2'
             onClick={onClick}>
             <svg
-                className="w-5 h-5 transition-all duration-300 group-hover:rotate-[360deg] group-hover:scale-125"
+                className='w-5 h-5 transition-all duration-300 group-hover:rotate-[360deg] group-hover:scale-125'
                 viewBox='0 0 24 24'>
                 <g
                     fill='none'

@@ -1,12 +1,13 @@
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartData } from 'chart.js';
 import type { ChartOptions } from 'chart.js';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { getTransactionItems } from '@proxies/DashboardProxies';
 import { ItemTransactionResponse, TransactionType } from '@types';
 import { rainbowColors, groupBy, unique } from '@utils/utils';
 import Loader from '@components/Loader';
 import ReloadButton from './ReloadButton';
+import { useDataCaching } from '@components/Admin/Dashboard/Container';
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const options: ChartOptions = {
@@ -46,12 +47,23 @@ interface StackedChartProps<K> {
 export default function StackedCharts<K>(props: StackedChartProps<K>) {
     const { groupByCallback, sortCallback, queryFilter } = props;
 
-    const [transactions, setTransactions] = useState<Array<TransactionType<ItemTransactionResponse>>>([]);
+    const { transactionsCache, setTransactionsCache } = useDataCaching();
+
+    const [transactions, setTransactions] = useState<Array<TransactionType<ItemTransactionResponse>>>(transactionsCache);
     const [getData, { loading }] = getTransactionItems(setTransactions);
 
-    useEffect(() => {
+    const makeApiCall = useCallback(() => {
         getData();
+    }, [getData]);
+
+    useEffect(() => {
+        if (transactionsCache.length > 0) return;
+        makeApiCall();
     }, []);
+
+    useEffect(() => {
+        setTransactionsCache(transactions);
+    }, [transactions]);
 
     const names = transactions
         .map((item) => item.items.map((item) => item.item.name))

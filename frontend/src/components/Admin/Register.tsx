@@ -5,7 +5,7 @@ import { zxcvbn, zxcvbnOptions, ZxcvbnResult } from '@zxcvbn-ts/core';
 import zxcvbnCommonPackage from '@zxcvbn-ts/language-common';
 import zxcvbnFrPackage from '@zxcvbn-ts/language-fr';
 import { AccountCreate } from '@types';
-import { signUp } from '@proxies/AuthProxies';
+import { register } from '@proxies/AuthProxies';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
 import { getErrorMessage } from '@utils/utils';
@@ -59,7 +59,7 @@ export default function Register(): JSX.Element {
             lastName: lastName.current!.value,
             promotionYear: new Date().getFullYear() + 3
         };
-        const results = await signUp(account);
+        const results = await register(account);
 
         if (results.status !== 200) {
             toast.error(`Une erreur est survenue lors de la création de votre compte : ${getErrorMessage(results)}`);

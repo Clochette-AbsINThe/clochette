@@ -1,11 +1,14 @@
 import Loader from '@components/Loader';
+import { useDataCaching } from '@components/Admin/Dashboard/Container';
 import { getBarrelsStat } from '@proxies/DashboardProxies';
 import { IBarrelStatProps } from '@types';
 import { useCallback, useEffect, useState } from 'react';
 import ReloadButton from './ReloadButton';
 
 export default function BarrelStat() {
-    const [barrelsStat, setBarrelsStat] = useState<IBarrelStatProps[]>([]);
+    const { barrelsCache, setBarrelsCache } = useDataCaching();
+
+    const [barrelsStat, setBarrelsStat] = useState<IBarrelStatProps[]>(barrelsCache);
     const [getBarrelsData, { loading }] = getBarrelsStat(setBarrelsStat);
 
     const makeApiCall = useCallback(() => {
@@ -13,8 +16,13 @@ export default function BarrelStat() {
     }, [getBarrelsData]);
 
     useEffect(() => {
+        if (barrelsCache.length > 0) return;
         makeApiCall();
     }, []);
+
+    useEffect(() => {
+        setBarrelsCache(barrelsStat);
+    }, [barrelsStat]);
 
     if (loading) return <Loader />;
 
