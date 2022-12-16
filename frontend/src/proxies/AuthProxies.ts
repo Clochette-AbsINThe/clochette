@@ -16,7 +16,7 @@ type responseType = {
  * This function is used to login the user by sending a POST request to the backend with the username and password in urlencoded format
  * @returns An object containing the status of the request and the token if the request was successful, an error message otherwise
  */
-export async function signIn({ username, password }: { username: string; password: string }): Promise<responseType> {
+export async function login({ username, password }: { username: string; password: string }): Promise<responseType> {
     const data = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
     try {
         const res = await axios.request({
@@ -48,10 +48,10 @@ export async function signIn({ username, password }: { username: string; passwor
     }
 }
 
-export async function signUp(data: AccountCreate) {
+export async function register(data: AccountCreate) {
     try {
         const res = await axios.request({
-            url: environmentVariable.BACKEND_API_URL + endpoints.v1.signup,
+            url: environmentVariable.BACKEND_API_URL + endpoints.v1.account,
             method: 'POST',
             data
         });
