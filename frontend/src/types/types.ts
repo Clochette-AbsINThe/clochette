@@ -141,3 +141,10 @@ interface IAccount {
 export interface AccountCreate extends IAccount {
     password: string;
 }
+
+export interface Account extends IAccount {
+    isActive: boolean;
+    isInducted: boolean;
+    roles: string;
+    staffName: string;
+}
