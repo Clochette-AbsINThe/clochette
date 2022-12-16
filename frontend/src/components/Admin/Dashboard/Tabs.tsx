@@ -3,7 +3,6 @@ import { links } from '@pages/account/[[...page]]';
 import { parseJwt } from '@utils/utils';
 import Link from 'next/link';
 
-
 export default function Tabs({ pathname }: { pathname: string }) {
     const activeLink = links.find((link) => link.to.search(pathname) !== -1);
     let filteredLinks = [] as typeof links;

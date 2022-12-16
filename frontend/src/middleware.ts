@@ -13,7 +13,8 @@ export async function middleware(req: NextRequest) {
             const jwtResult = await jwtVerify(jwtCookie, new TextEncoder().encode(SECRET_KEY), { algorithms: ['HS256'] });
 
             // We check the role of the user to see if he has access to the page
-            if (regex.test(req.nextUrl.pathname) && jwtResult.payload?.roles === 'ADMIN') { //TODO
+            if (regex.test(req.nextUrl.pathname) && jwtResult.payload?.roles === 'ADMIN') {
+                //TODO
                 return NextResponse.redirect(environmentVariable.BASE_URL + '/account');
             }
             return NextResponse.next({ status: 200 });

@@ -32,7 +32,8 @@ export default function AccountForm(props: AccountFormProps) {
 
     const isEditable = (key: keyof Account) => {
         if (key === 'id') return false;
-        if (decodedJwt?.roles?.includes('ROLE_ADMIN')) { //TODO
+        if (decodedJwt?.roles?.includes('ROLE_ADMIN')) {
+            //TODO
             return true;
         }
         return key !== 'roles' && key !== 'isActive' && key !== 'isInducted';
