@@ -1,5 +1,5 @@
 import { endpoints } from '@endpoints';
-import { signIn } from '@proxies/AuthProxies';
+import { login } from '@proxies/AuthProxies';
 import { deleteJwtInCookie, getJwtInCookie, saveJwtInCookie } from '@utils/auth_internal_api';
 import { environmentVariable } from '@utils/settings';
 import { rest } from 'msw';
@@ -15,7 +15,7 @@ test('test signIn function', async () => {
         })
     );
 
-    expect(await signIn({ username, password })).toStrictEqual({
+    expect(await login({ username, password })).toStrictEqual({
         status: 200,
         token: {
             access_token: jwt,
@@ -34,7 +34,7 @@ test('test signIn function with wrong credentials', async () => {
         })
     );
 
-    expect(await signIn({ username, password })).toStrictEqual({
+    expect(await login({ username, password })).toStrictEqual({
         status: 401,
         token: {
             access_token: '',
@@ -56,7 +56,7 @@ test('test signIn function with server error', async () => {
         })
     );
 
-    expect(await signIn({ username, password })).toStrictEqual({
+    expect(await login({ username, password })).toStrictEqual({
         status: 500,
         token: {
             access_token: '',

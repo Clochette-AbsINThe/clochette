@@ -17,11 +17,11 @@ export const endpoints = {
         transactionSell: '/transaction/sell/',
         transactionBuy: '/transaction/buy/',
         login: '/auth/login/',
-        signup: '/account/'
+        account: '/account/'
     },
     internal: {
         saveJwtInCookie: '/api/saveJwtInCookie',
         getJwtInCookie: '/api/getJwtInCookie',
         deleteJwtInCookie: '/api/deleteJwtInCookie'
     }
-};
+} as const;
