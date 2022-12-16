@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
 import { useAuthContext } from '@components/Context';
-import { signIn } from '@proxies/AuthProxies';
+import { login } from '@proxies/AuthProxies';
 
 export default function Login() {
     const { query, push } = useRouter();
@@ -21,7 +21,7 @@ export default function Login() {
         const redirect = Array.isArray(query.redirect) ? query.redirect[0] ?? '/' : query.redirect ?? '/';
 
         // Sign in the user and get the result of the sign in process and the JWT
-        const results = await signIn({ username, password });
+        const results = await login({ username, password });
 
         if (results.status !== 200) {
             errorRef.current!.innerText = results.error?.detail as string;
