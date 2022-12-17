@@ -3,7 +3,7 @@ anyio==3.6.2
 asttokens==2.1.0
 autopep8==2.0.0
 bcrypt==4.0.1
-certifi==2022.9.24
+certifi==2022.12.7
 cffi==1.15.1
 charset-normalizer==2.1.1
 click==8.1.3
