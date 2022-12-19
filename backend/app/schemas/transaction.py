@@ -10,18 +10,17 @@ from app.schemas.out_of_stock import OutOfStock
 
 
 class TransactionBase(DefaultModel):
+    datetime: datetime.datetime
     payment_method: PaymentMethod
     sale: bool
 
 
 class TransactionCreate(TransactionBase):
     treasury_id: int = 1
-    datetime: datetime.datetime
     amount: float
 
 
 class TransactionFrontCreate(TransactionBase):
-    datetime: datetime.datetime
     amount: float
     items: list[Item]
 
@@ -33,7 +32,6 @@ class TransactionUpdate(TransactionBase):
 class Transaction(TransactionBase):
     id: int
     treasury_id: int
-    datetime: datetime.datetime
     amount: float
 
     class Config:
