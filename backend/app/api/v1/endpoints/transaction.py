@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.core.translation import Translator
-from app.core.utils.misc import to_query_parameters
+from app.core.utils.misc import process_query_parameters, to_query_parameters
 from app.crud.crud_transaction import transaction as transactions
 from app.dependencies import get_current_account, get_db
 from app.schemas import transaction as transaction_schema
@@ -12,8 +12,9 @@ translator = Translator(element="transaction")
 
 
 @router.get("/", response_model=list[transaction_schema.Transaction], dependencies=[Depends(get_current_account)])
-async def read_transactions(db=Depends(get_db), query=Depends(to_query_parameters(transaction_schema.TransactionBase))) -> list[transaction_schema.Transaction]:
-    return transactions.query(db, limit=None, **query.dict(exclude_none=True, exclude_unset=True))
+async def read_transactions(db=Depends(get_db), query=Depends(to_query_parameters(transaction_schema.TransactionBase, comparison=True))) -> list[transaction_schema.Transaction]:
+    print(process_query_parameters(query))
+    return transactions.query(db, limit=None, **process_query_parameters(query))
 
 
 @router.post("/", response_model=transaction_schema.Transaction, dependencies=[Depends(get_current_account)])
