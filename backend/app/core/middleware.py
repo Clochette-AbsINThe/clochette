@@ -33,7 +33,6 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
             return await call_next(request)
         except Exception as e:
             body = await self.get_body(request)
-            print(type(self.alert_backend))
             task = BackgroundTask(
                 self.alert_backend,
                 e,
