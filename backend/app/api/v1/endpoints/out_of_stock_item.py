@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 
 from app.core.translation import Translator
+from app.core.utils.misc import process_query_parameters, to_query_parameters
 from app.crud.crud_out_of_stock_item import out_of_stock_item as out_of_stock_items
 from app.crud.crud_out_of_stock import out_of_stock as out_of_stocks
 from app.dependencies import get_current_account, get_db
@@ -12,13 +13,13 @@ translator = Translator(element="out_of_stock_item")
 
 
 @router.get("/buy/", response_model=list[out_of_stock_item_schema.OutOfStockItem], response_model_exclude_none=True, dependencies=[Depends(get_current_account)])
-async def read_out_of_stock_items_buy(db=Depends(get_db)) -> list:
-    return out_of_stock_items.query(db, limit=None, buy_or_sell=True)
+async def read_out_of_stock_items_buy(db=Depends(get_db), query=Depends(to_query_parameters(out_of_stock_item_schema.OutOfStockItemBase))) -> list:
+    return out_of_stock_items.query(db, limit=None, buy_or_sell=True, **process_query_parameters(query))
 
 
 @router.get("/sell/", response_model=list[out_of_stock_item_schema.OutOfStockItem], response_model_exclude_none=True, dependencies=[Depends(get_current_account)])
-async def read_out_of_stock_items_sell(db=Depends(get_db)) -> list:
-    return out_of_stock_items.query(db, limit=None, buy_or_sell=False)
+async def read_out_of_stock_items_sell(db=Depends(get_db), query=Depends(to_query_parameters(out_of_stock_item_schema.OutOfStockItemBase))) -> list:
+    return out_of_stock_items.query(db, limit=None, buy_or_sell=False, **process_query_parameters(query))
 
 
 @router.get("/{out_of_stock_item_id}", response_model=out_of_stock_item_schema.OutOfStockItem, response_model_exclude_none=True, dependencies=[Depends(get_current_account)])
