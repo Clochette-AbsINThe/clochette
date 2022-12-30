@@ -27,11 +27,11 @@ def validate_password(password: str | None, values: dict | None = None) -> str:
 
 class AccountBase(DefaultModel):
     username: str = Field(..., min_length=3, max_length=32)
+    last_name: str
+    first_name: str
     password: str
     roles: str
     is_active: bool
-    last_name: str
-    first_name: str
     promotion_year: int = Field(..., ge=2000, le=datetime.now().year + 3) # Promotion year must be less than 3 years in the future
 
     _validate_password = validator("password", allow_reuse=True)(validate_password)
