@@ -10,3 +10,4 @@ class Token(BaseModel):
 
 class TokenData(DefaultModel):
     username: str | None = None
+    scopes: list[str] = []
