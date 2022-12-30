@@ -13,5 +13,3 @@ class Account(Base):
     last_name = Column(String(256), nullable=False)
     first_name = Column(String(256), nullable=False)
     promotion_year = Column(Integer, nullable=False)
-    staff_name = Column(String(256), nullable=False)
-    is_inducted = Column(Boolean, nullable=False)
