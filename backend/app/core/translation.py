@@ -71,6 +71,16 @@ class Translator:
         "fr": "Authentification requise"
     })
 
+    INSUFFICIENT_PERMISSIONS: TranslatedString = TranslatedString({
+        "en": "Insufficient permissions",
+        "fr": "Permissions insuffisantes"
+    })
+
+    INACTIVE_ACCOUNT: TranslatedString = TranslatedString({
+        "en": "Account is inactive",
+        "fr": "Le compte est inactif"
+    })
+
     def __getattribute__(self, __name: str) -> str:
         """ Get the translated string. """
         attr = super().__getattribute__(__name)
