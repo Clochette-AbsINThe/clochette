@@ -1,7 +1,7 @@
 from datetime import datetime
 from warnings import warn
 
-from pydantic import conlist, Field, validator
+from pydantic import Field, validator
 from zxcvbn import zxcvbn
 
 from app.core.config import DefaultModel
@@ -31,7 +31,7 @@ class AccountBase(DefaultModel):
     last_name: str
     first_name: str
     password: str
-    scopes: SecurityScopes
+    scope: SecurityScopes
     is_active: bool
     promotion_year: int = Field(..., ge=2000, le=datetime.now().year + 3) # Promotion year must be less than 3 years in the future
 
