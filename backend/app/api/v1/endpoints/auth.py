@@ -1,11 +1,11 @@
 from fastapi.security import OAuth2PasswordRequestForm
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Security, status
 from typing import Any
 
 from app.core.security import create_access_token, verify_password
 from app.core.translation import Translator
 from app.crud.crud_account import account as accounts
-from app.dependencies import get_current_account, get_db
+from app.dependencies import get_current_active_account, get_db
 from app.schemas import account as account_schema
 from app.schemas import token as token_schema
 
@@ -27,5 +27,5 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(g
 
 
 @router.get("/me/", response_model=account_schema.Account)
-def read_account_me(current_account: account_schema.Account = Depends(get_current_account)) -> Any:
+def read_account_me(current_account: account_schema.Account = Security(get_current_active_account)) -> Any:
     return current_account
