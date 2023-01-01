@@ -5,7 +5,7 @@ from fastapi.security import SecurityScopes
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
-from app.core.auth import oauth2_scheme
+from app.core.auth import oauth2_scheme, check_scopes
 from app.core.config import settings
 from app.core.translation import Translator
 from app.crud.crud_account import account as accounts
@@ -73,14 +73,13 @@ async def get_current_account(security_scopes: SecurityScopes, db: Session = Dep
     if account is None:
         # Raise an exception if the account does not exist
         raise credentials_exception
-    for scope in security_scopes.scopes:
-        if scope not in token_data.scopes:
-            # Raise an exception if the token does not have the required scope
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=translator.INSUFFICIENT_PERMISSIONS,
-                headers={"WWW-Authenticate": authenticate_value},
-            )
+    if not check_scopes(security_scopes, token_data.scopes):
+        # Raise an exception if the token does not have the required scope
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=translator.INSUFFICIENT_PERMISSIONS,
+            headers={"WWW-Authenticate": authenticate_value},
+        )
     # Return the account
     return account
 
