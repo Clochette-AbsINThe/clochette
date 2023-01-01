@@ -28,12 +28,12 @@ def init_db(db: Session = SessionLocal()) -> None:
         obj_in=account_schema.AccountCreate(
             username=settings.BASE_ACCOUNT_USERNAME,
             password=settings.BASE_ACCOUNT_PASSWORD,
-            scopes=SecurityScopes.president,
+            scope=SecurityScopes.president,
             last_name='Admin',
             first_name='Admin',
             promotion_year=2020,
             staff_name='Admin',
-            is_inducted=True,
+            is_inducted=True, # Will be set to False by pydantic
         )
     )
     # Activate account
