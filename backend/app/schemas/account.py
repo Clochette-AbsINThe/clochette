@@ -30,7 +30,7 @@ class AccountBase(DefaultModel):
     last_name: str
     first_name: str
     password: str
-    roles: str
+    scopes: str
     is_active: bool
     promotion_year: int = Field(..., ge=2000, le=datetime.now().year + 3) # Promotion year must be less than 3 years in the future
 
