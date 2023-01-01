@@ -1,6 +1,7 @@
 from typing import Generator
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Security, status
+from fastapi.security import SecurityScopes
 from jose import JWTError, jwt
 from sqlalchemy.orm import Session
 
@@ -32,14 +33,20 @@ def get_db() -> Generator:
         db.close()
 
 
-def get_current_account(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)) -> Account:
+async def get_current_account(security_scopes: SecurityScopes, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)) -> Account:
     """
     Get the current account associated with the JWT token in the authorization header.
 
+    :param security_scopes: The security scopes
     :param db: The database session (dependency injected)
     :param token: The JWT token in the authorization header (dependency injected)
+
     :return: The account associated with the JWT token if the token is valid
     """
+    if security_scopes.scopes:
+        authenticate_value = f'Bearer scope={security_scopes.scope_str}'
+    else:
+        authenticate_value = 'Bearer'
     # Create an exception to be raised if the token is invalid (i.e. invalid credentials)
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
@@ -54,8 +61,10 @@ def get_current_account(db: Session = Depends(get_db), token: str = Depends(oaut
         if username is None:
             # Raise an exception if the username is not in the payload
             raise credentials_exception
+        # Get the scopes from the payload
+        token_scopes = payload.get("scopes", [])
         # Create a `TokenData`` object from the username
-        token_data = token_schema.TokenData(username=username)
+        token_data = token_schema.TokenData(scopes=token_scopes, username=username)
     except JWTError as e:
         # Raise an exception if the token cannot be decoded
         raise credentials_exception
@@ -64,5 +73,29 @@ def get_current_account(db: Session = Depends(get_db), token: str = Depends(oaut
     if account is None:
         # Raise an exception if the account does not exist
         raise credentials_exception
+    for scope in security_scopes.scopes:
+        if scope not in token_data.scopes:
+            # Raise an exception if the account does not have the required scope
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=translator.INSUFFICIENT_PERMISSIONS,
+                headers={"WWW-Authenticate": authenticate_value},
+            )
     # Return the account
     return account
+
+
+async def get_current_active_account(current_account: Account = Security(get_current_account, scopes=['staff'])) -> Account:
+    """
+    Get the current active account associated with the JWT token in the authorization header.
+
+    :param current_account: The account associated with the JWT token (dependency injected)
+
+    :return: The account associated with the JWT token if the token is valid and the account is active
+    """
+    if not current_account.is_active:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=translator.INACTIVE_ACCOUNT,
+        )
+    return current_account
