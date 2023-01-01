@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
 from app.core.config import settings
-from app.core.security import get_password_hash
+from app.core.types import SecurityScopes
 from app.crud.crud_account import account as accounts
 from app.crud.crud_out_of_stock_item import out_of_stock_item as out_of_stock_items
 from app.crud.crud_treasury import treasury as treasuries
@@ -28,7 +28,7 @@ def init_db(db: Session = SessionLocal()) -> None:
         obj_in=account_schema.AccountCreate(
             username=settings.BASE_ACCOUNT_USERNAME,
             password=settings.BASE_ACCOUNT_PASSWORD,
-            roles='admin', # Useless for now
+            scopes=SecurityScopes.president,
             last_name='Admin',
             first_name='Admin',
             promotion_year=2020,
