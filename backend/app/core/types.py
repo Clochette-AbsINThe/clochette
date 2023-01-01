@@ -15,3 +15,9 @@ class PaymentMethod(str, Enum):
     cash = 'Espèces'
     lydia = 'Lydia'
     transfer = 'Virement'
+
+
+class SecurityScopes(str, Enum):
+    staff = 'staff'
+    treasurer = 'treasurer'
+    president = 'president'
