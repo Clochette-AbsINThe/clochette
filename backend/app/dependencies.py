@@ -75,7 +75,7 @@ async def get_current_account(security_scopes: SecurityScopes, db: Session = Dep
         raise credentials_exception
     for scope in security_scopes.scopes:
         if scope not in token_data.scopes:
-            # Raise an exception if the account does not have the required scope
+            # Raise an exception if the token does not have the required scope
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail=translator.INSUFFICIENT_PERMISSIONS,
