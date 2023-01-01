@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, Security, HTTPException, status
 from typing import Any
 
-from app.core.security import get_password_hash
 from app.core.translation import Translator
 from app.core.utils.misc import to_query_parameters
 from app.crud.crud_account import account as accounts
@@ -53,7 +52,6 @@ async def update_account(account_id: int, account: account_schema.AccountUpdate,
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=translator.ELEMENT_ALREADY_EXISTS
         )
-    account.password = get_password_hash(account.password)
     return accounts.update(db, db_obj=old_account, obj_in=account)
 
 
@@ -65,4 +63,4 @@ async def delete_account(account_id: int, db=Depends(get_db)) -> Any:
             status_code=status.HTTP_404_NOT_FOUND,
             detail=translator.ELEMENT_NOT_FOUND
         )
-    return accounts.delete(db, account_id)
+    return accounts.delete(db, id=account_id)
