@@ -2,6 +2,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import APIRouter, Depends, HTTPException, Security, status
 from typing import Any
 
+from app.core.auth import scopes_hierarchy
 from app.core.security import create_access_token, verify_password
 from app.core.translation import Translator
 from app.core.types import SecurityScopes
@@ -18,14 +19,24 @@ translator = Translator(element="auth")
 @router.post("/login/", response_model=token_schema.Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(get_db)) -> Any:
     account = (accounts.query(db, username=form_data.username, limit=1)[0:1] or [None])[0]
+    # Check if account exists, if password is correct and if account is active
     if account is None or not verify_password(form_data.password, account.password) or not account.is_active:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=translator.INVALID_CREDENTIALS,
             headers={"WWW-Authenticate": "Bearer"},
         )
+    # Check if requested scopes exist
     for scope in form_data.scopes:
         if scope not in SecurityScopes.__members__:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail=translator.INVALID_CREDENTIALS,
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    # Check if account has requested scopes
+    for scope in form_data.scopes:
+        if scope not in scopes_hierarchy[account.scope.value]: # `value` atribute is important because `account.scope` is an Enum!
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail=translator.INVALID_CREDENTIALS,
