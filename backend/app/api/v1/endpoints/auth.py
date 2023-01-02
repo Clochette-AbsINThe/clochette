@@ -48,3 +48,15 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(g
 @router.get("/me/", response_model=account_schema.Account)
 def read_account_me(current_account: account_schema.Account = Security(get_current_active_account)) -> Any:
     return current_account
+
+@router.put("/me/", response_model=account_schema.Account)
+def update_account_me(account_in: account_schema.AccountUpdate, current_account: account_schema.Account = Security(get_current_active_account), db = Depends(get_db)) -> Any:
+    # Check if username is already taken
+    if account_in.username and account_in.username != current_account.username:
+        if accounts.query(db, username=account_in.username):
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail=translator.USERNAME_UNAVAILABLE,
+            )
+    account = accounts.update(db, db_obj=current_account, obj_in=account_in)
+    return account
