@@ -81,6 +81,11 @@ class Translator:
         "fr": "Le compte est inactif"
     })
 
+    USERNAME_UNAVAILABLE: TranslatedString = TranslatedString({
+        "en": "Username is unavailable",
+        "fr": "Le nom d'utilisateur est indisponible"
+    })
+
     def __getattribute__(self, __name: str) -> str:
         """ Get the translated string. """
         attr = super().__getattribute__(__name)
