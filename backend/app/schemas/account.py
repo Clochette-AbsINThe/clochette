@@ -6,6 +6,7 @@ from zxcvbn import zxcvbn
 
 from app.core.config import DefaultModel
 from app.core.security import get_password_hash, is_hashed_password
+from app.core.types import SecurityScopes
 
 
 def validate_password(password: str | None, values: dict | None = None) -> str:
@@ -30,7 +31,7 @@ class AccountBase(DefaultModel):
     last_name: str
     first_name: str
     password: str
-    roles: str
+    scope: SecurityScopes
     is_active: bool
     promotion_year: int = Field(..., ge=2000, le=datetime.now().year + 3) # Promotion year must be less than 3 years in the future
 
