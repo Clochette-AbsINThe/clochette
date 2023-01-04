@@ -73,7 +73,7 @@ async def get_current_account(security_scopes: SecurityScopes, db: Session = Dep
     if account is None:
         # Raise an exception if the account does not exist
         raise credentials_exception
-    if not check_scopes(security_scopes, token_data.scopes):
+    if not token_scopes or not check_scopes(security_scopes, token_data.scopes):
         # Raise an exception if the token does not have the required scope
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
