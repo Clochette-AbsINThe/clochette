@@ -26,23 +26,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db = Depends(g
             detail=translator.INVALID_CREDENTIALS,
             headers={"WWW-Authenticate": "Bearer"},
         )
-    # Check if requested scopes exist
-    for scope in form_data.scopes:
-        if scope not in SecurityScopes.__members__:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=translator.INVALID_CREDENTIALS,
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-    # Check if account has requested scopes
-    for scope in form_data.scopes:
-        if scope not in scopes_hierarchy[account.scope.value]: # `value` atribute is important because `account.scope` is an Enum!
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail=translator.INVALID_CREDENTIALS,
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-    return {'access_token': create_access_token(subject=account.username, scopes=form_data.scopes)}
+    return {'access_token': create_access_token(subject=account.username, scopes=[account.scope.value])}
 
 
 @router.get("/me/", response_model=account_schema.Account)
