@@ -40,7 +40,8 @@ class AccountBase(DefaultModel):
 
 
 class AccountCreate(AccountBase):
-    is_active: bool = False
+    is_active: bool | None = False
+    scope: SecurityScopes | None = SecurityScopes.staff
 
     @validator("is_active")
     def is_active_must_be_false_at_creation(cls, v: bool) -> bool:
