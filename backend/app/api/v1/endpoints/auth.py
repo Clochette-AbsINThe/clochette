@@ -4,7 +4,6 @@ from typing import Any
 
 from app.core.security import create_access_token, verify_password
 from app.core.translation import Translator
-from app.core.types import SecurityScopes
 from app.crud.crud_account import account as accounts
 from app.dependencies import get_current_active_account, get_db
 from app.schemas import account as account_schema
