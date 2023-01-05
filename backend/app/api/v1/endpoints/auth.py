@@ -2,7 +2,6 @@ from fastapi.security import OAuth2PasswordRequestForm
 from fastapi import APIRouter, Depends, HTTPException, Security, status
 from typing import Any
 
-from app.core.auth import scopes_hierarchy
 from app.core.security import create_access_token, verify_password
 from app.core.translation import Translator
 from app.core.types import SecurityScopes
