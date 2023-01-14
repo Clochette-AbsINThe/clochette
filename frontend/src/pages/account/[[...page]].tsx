@@ -7,15 +7,15 @@ import IndexPage from './_index';
 import TresoryPage from './_tresory';
 
 export const links = [
-    { label: 'Accueil', to: '/account', role: ['ROLE_USER'] },
-    { label: 'Tableau de bord', to: '/account/dashboard', role: ['ROLE_ADMIN'] },
-    { label: 'Comptes utilisateurs', to: '/account/users', role: ['ROLE_ADMIN'] },
-    { label: 'Trésorie', to: '/account/tresory', role: ['ROLE_ADMIN'] }
+    { label: 'Accueil', href: '/account', scopes: ['staff', 'treasurer', 'president'] },
+    { label: 'Tableau de bord', href: '/account/dashboard', scopes: ['president', 'treasurer'] },
+    { label: 'Comptes utilisateurs', href: '/account/users', scopes: ['president'] },
+    { label: 'Trésorie', href: '/account/tresory', scopes: ['president', 'treasurer'] }
 ];
 
 export async function getStaticPaths() {
     return {
-        paths: links.map((link) => ({ params: { page: link.to.split('/').slice(2) } })),
+        paths: links.map((link) => ({ params: { page: link.href.split('/').slice(2) } })),
         fallback: false
     };
 }
@@ -43,7 +43,7 @@ const AccountPage: NextPage<{ page: string }> = ({ page }: { page: string }) => 
 
     return (
         <Base
-            title='Dashboard'
+            title='Panneau de configuration'
             description=''>
             <Container pathname={page}>{generatePage()}</Container>
         </Base>
