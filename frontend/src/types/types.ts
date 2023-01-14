@@ -144,7 +144,5 @@ export interface AccountCreate extends IAccount {
 
 export interface Account extends IAccount {
     isActive: boolean;
-    isInducted: boolean;
-    roles: string;
-    staffName: string;
+    scope: string;
 }

@@ -64,7 +64,6 @@ export default function AccountTable() {
                             <th className='border-y text-start px-4 py-2 border-l'>Id</th>
                             <th className='border-y text-start px-4 py-2'>Nom</th>
                             <th className='border-y text-start px-4 py-2'>Prénom</th>
-                            <th className='border-y text-start px-4 py-2'>Surnom</th>
                             <th className='border-y text-start px-4 py-2'>Rôle</th>
                             <th className='border-y text-start px-4 py-2'>Actif</th>
                             <th className='border-y text-center px-4 py-2 w-max border-r'>Action </th>
@@ -76,8 +75,7 @@ export default function AccountTable() {
                                 <td className='border-b border-l px-4 py-2'>{account.id}</td>
                                 <td className='border-b px-4 py-2'>{account.lastName}</td>
                                 <td className='border-b px-4 py-2'>{account.firstName}</td>
-                                <td className='border-b px-4 py-2'>{account.staffName}</td>
-                                <td className='border-b px-4 py-2'>{account.roles}</td>
+                                <td className='border-b px-4 py-2'>{account.scope}</td>
                                 <td className='border-b px-4 py-2 font-bold text-red-600'>{'✗'}</td>
                                 <td className='border-b border-r px-4 py-2 text-center'>
                                     <button
@@ -107,8 +105,7 @@ export default function AccountTable() {
                                 <td className='border-b border-l px-4 py-2'>{account.id}</td>
                                 <td className='border-b px-4 py-2'>{account.lastName}</td>
                                 <td className='border-b px-4 py-2'>{account.firstName}</td>
-                                <td className='border-b px-4 py-2'>{account.staffName}</td>
-                                <td className='border-b px-4 py-2'>{account.roles}</td>
+                                <td className='border-b px-4 py-2'>{account.scope}</td>
                                 <td className='border-b px-4 py-2 font-bold text-green-600'>{'✓'}</td>
                                 <td className='border-b border-r px-4 py-2 text-center'>
                                     <button
