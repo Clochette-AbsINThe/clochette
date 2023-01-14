@@ -57,7 +57,7 @@ export interface Token {
     iat: number;
     exp: number;
     token_type: string;
-    roles?: string[];
+    scopes?: string[];
 }
 
 /**
@@ -86,10 +86,6 @@ export function parseJwt(token: string): Token | null {
 export function getRedirectUrlEncoded(url: string): string {
     return encodeURIComponent(environmentVariable.BASE_URL + url);
 }
-
-// export const unique = (value: any, index: any, self: any[]) => {
-//     return self.indexOf(value) === index;
-// };
 
 /**
  * @param numOfSteps: Total number steps to get color, means total colors
@@ -146,9 +142,9 @@ export function rainbowColors(numOfSteps: number, step: number): string {
     return '#' + ('00' + (~~((red + m) * 255)).toString(16)).slice(-2) + ('00' + (~~((green + m) * 255)).toString(16)).slice(-2) + ('00' + (~~((blue + m) * 255)).toString(16)).slice(-2) + 'DF';
 }
 
-export const unique = (value: any, index: any, self: any[]) => {
+export function unique<T>(value: T, index: number, self: T[]): boolean {
     return self.indexOf(value) === index;
-};
+}
 
 export function groupBy<K, V>(array: V[], grouper: (item: V) => K, sorter: (a: K, b: K) => number): Map<K, V[]> {
     const res = array.reduce((store, item) => {
@@ -164,7 +160,7 @@ export function groupBy<K, V>(array: V[], grouper: (item: V) => K, sorter: (a: K
     return new Map<K, V[]>(Array.from(res.entries()).sort((a, b) => sorter(a[0], b[0])));
 }
 
-function generateQuantityArray(items: Barrel[] | Consumable[] | Array<OutOfStockBuy | OutOfStockSell> | Glass[], table: TableData): ItemTransactionResponse[] {
+export function generateQuantityArray(items: Barrel[] | Consumable[] | Array<OutOfStockBuy | OutOfStockSell> | Glass[], table: TableData): ItemTransactionResponse[] {
     const quantityArray: ItemTransactionResponse[] = [];
     items.forEach((item) => {
         const element = quantityArray.find((element) => element.item.name === item.name);
