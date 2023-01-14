@@ -134,3 +134,19 @@ export function deleteAccount(callback?: (data: AxiosResponse<unknown, any>) => 
 
     return [deleteData, { loading, error }];
 }
+
+export function getPersonnalAccount(setItem: (item: Account | null) => void): IProxy {
+    const [{ loading, error }, getAccount] = useAxios<Account>(endpoints.v1.accountMe);
+
+    const getDataAsync = async (): Promise<void> => {
+        setItem(null);
+        const { data } = await getAccount();
+        setItem(data);
+    };
+
+    const getData = (): void => {
+        getDataAsync().catch(() => {});
+    };
+
+    return [getData, { loading, error }];
+}
