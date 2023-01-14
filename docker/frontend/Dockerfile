@@ -2,8 +2,6 @@ FROM node:18-alpine
 
 WORKDIR /code
 
-ENV NODE_ENV=production
-
 ARG next_public_base_url
 ENV NEXT_PUBLIC_BASE_URL=${next_public_base_url}
 
@@ -21,5 +19,7 @@ RUN npm set progress=false
 RUN npm install
 
 COPY ./frontend .
+
+ENV NODE_ENV=production
 
 RUN npm run build
