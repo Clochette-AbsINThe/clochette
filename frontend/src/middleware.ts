@@ -1,6 +1,7 @@
 import { environmentVariable, SECRET_KEY } from '@utils/settings';
 import { jwtVerify } from 'jose';
 import { NextRequest, NextResponse } from 'next/server';
+import { links } from '@pages/account/[[...page]]';
 
 const regex = /\/account\/(?!\/)[^\/]*/;
 
@@ -13,8 +14,10 @@ export async function middleware(req: NextRequest) {
             const jwtResult = await jwtVerify(jwtCookie, new TextEncoder().encode(SECRET_KEY), { algorithms: ['HS256'] });
 
             // We check the role of the user to see if he has access to the page
-            if (regex.test(req.nextUrl.pathname) && jwtResult.payload?.roles === 'ADMIN') {
-                //TODO
+            const allowedScopes = links.find(link => link.href === req.nextUrl.pathname)!.scopes;
+            const jwtScopes = jwtResult.payload?.scopes as string[];
+
+            if (regex.test(req.nextUrl.pathname) && !allowedScopes.some((role) => jwtScopes.includes(role))) {
                 return NextResponse.redirect(environmentVariable.BASE_URL + '/account');
             }
             return NextResponse.next({ status: 200 });
@@ -30,5 +33,13 @@ export async function middleware(req: NextRequest) {
 
 // All thoses paths require authentification
 export const config = {
-    matcher: ['/transaction', '/stock', '/configuration/:path*', '/account/:path*']
+    matcher: [
+        '/transaction',
+        '/stock',
+        '/configuration/:path*',
+        '/account',
+        '/account/dashboard',
+        '/account/users',
+        'account/tresory'
+    ]
 };

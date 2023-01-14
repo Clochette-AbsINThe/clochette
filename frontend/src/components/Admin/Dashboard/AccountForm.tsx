@@ -13,10 +13,8 @@ const TranslateAccountKeys: Record<keyof Account, string> = {
     id: 'ID',
     firstName: 'Prénom',
     lastName: 'Nom',
-    staffName: 'Surnom',
-    roles: 'Roles',
+    scope: 'Role',
     isActive: 'Membre actif',
-    isInducted: 'Intronisé',
     promotionYear: 'Année de promotion',
     username: 'Username'
 };
@@ -32,11 +30,10 @@ export default function AccountForm(props: AccountFormProps) {
 
     const isEditable = (key: keyof Account) => {
         if (key === 'id') return false;
-        if (decodedJwt?.roles?.includes('ROLE_ADMIN')) {
-            //TODO
+        if (decodedJwt?.scopes?.includes('president')) {
             return true;
         }
-        return key !== 'roles' && key !== 'isActive' && key !== 'isInducted';
+        return key !== 'scope' && key !== 'isActive';
     };
     const keys = keysWithTypes.filter((key) => isEditable(key));
 
@@ -149,7 +146,7 @@ export default function AccountForm(props: AccountFormProps) {
                 <h1 className='text-2xl font-bold mb-6'>Modification du compte</h1>
             </div>
             {/*// TODO */}
-            {decodedJwt?.roles?.includes('ROLE_ADMIN') && (
+            {decodedJwt?.scopes?.includes('president') && (
                 <div className='flex flex-col items-end justify-center'>
                     <button
                         className='btn-danger'

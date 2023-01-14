@@ -4,14 +4,14 @@ import { parseJwt } from '@utils/utils';
 import Link from 'next/link';
 
 export default function Tabs({ pathname }: { pathname: string }) {
-    const activeLink = links.find((link) => link.to.search(pathname) !== -1);
+    const activeLink = links.find((link) => link.href.search(pathname) !== -1);
     let filteredLinks = [] as typeof links;
 
     const { jwt } = useAuthContext();
     if (jwt) {
-        const userRoles = parseJwt(jwt)!.roles ?? [];
-        filteredLinks = links.filter((link) => link.role.some((role) => userRoles.includes(role)));
-        filteredLinks = links; //TODO
+        const userRoles = parseJwt(jwt)!.scopes ?? [];
+        filteredLinks = links.filter((link) => link.scopes.some((role) => userRoles.includes(role)));
+        filteredLinks = links;
     }
 
     return (
@@ -19,8 +19,8 @@ export default function Tabs({ pathname }: { pathname: string }) {
             <div className='w-full max-w-md flex justify-start items-center md:items-start md:flex-col flex-row mb-2 md:mb-0'>
                 {filteredLinks.map((link) => (
                     <Link
-                        href={link.to}
-                        key={link.to}
+                        href={link.href}
+                        key={link.href}
                         className={`px-3 py-2 text-sm w-full font-medium ${activeLink === link ? 'bg-slate-400 dark:bg-gray-800' : 'text-gray-900 hover:bg-slate-300 dark:text-gray-300 dark:hover:bg-gray-700'}`}>
                         {link.label}
                     </Link>
