@@ -1,6 +1,6 @@
 import ConfigurationDrink from '@components/ConfigurationPage/ConfigurationDrink';
 import { addIdToUrl } from '@utils/utils';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { rest } from 'msw';
 import { act } from 'react-dom/test-utils';
@@ -28,10 +28,7 @@ test('Render ConfigurationDrink', async () => {
     );
     render(<ConfigurationDrink />);
     expect(screen.getByText('Modification des boissons')).toBeInTheDocument();
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
-    });
-    expect(screen.getByText('Rouge')).toBeInTheDocument();
+    await waitFor(() => expect(screen.getByText('Rouge')).toBeInTheDocument());
 });
 
 test('Edit a drink succes', async () => {
