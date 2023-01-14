@@ -8,6 +8,8 @@ import { rainbowColors, groupBy, unique } from '@utils/utils';
 import Loader from '@components/Loader';
 import ReloadButton from './ReloadButton';
 import { useDataCaching } from '@components/Admin/Dashboard/Container';
+import DateRangePicker from '../Dashboard/DateRangePicker';
+
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const options: ChartOptions = {
@@ -38,19 +40,23 @@ const options: ChartOptions = {
     }
 };
 
+const date = new Date();
+date.setMonth(date.getMonth() - 1);
+
 interface StackedChartProps<K> {
     groupByCallback: (item: TransactionType<ItemTransactionResponse>) => K;
     sortCallback: (a: K, b: K) => number;
-    queryFilter: string;
 }
 
 export default function StackedCharts<K>(props: StackedChartProps<K>) {
-    const { groupByCallback, sortCallback, queryFilter } = props;
+    const { groupByCallback, sortCallback } = props;
 
     const { transactionsCache, setTransactionsCache } = useDataCaching();
 
     const [transactions, setTransactions] = useState<Array<TransactionType<ItemTransactionResponse>>>(transactionsCache);
     const [getData, { loading }] = getTransactionItems(setTransactions);
+
+    const [dateRange, setDateRange] = useState<[Date, Date]>([date, new Date()]);
 
     const makeApiCall = useCallback(() => {
         getData();
@@ -98,25 +104,30 @@ export default function StackedCharts<K>(props: StackedChartProps<K>) {
         })
     };
 
-    if (loading) return <Loader />;
+    //if (loading) return <Loader />;
 
     return (
         <div>
-            {/* <button
-                className='btn-primary max-w-max'
-                onClick={getData}>
-                Recharger les données
-            </button> */}
-            <ReloadButton onClick={getData} />
-            <div className='overflow-x-scroll hide-scroll-bar'>
-                <div className='w-[40rem] h-[20rem] m-4 md:mx-12'>
-                    <Bar
-                        height={800}
-                        data={data}
-                        options={options as any}
-                    />
-                </div>
+            <div className='flex justify-between'>
+                <ReloadButton onClick={getData} />
+                <DateRangePicker
+                    startDate={dateRange[0]}
+                    endDate={dateRange[1]}
+                    setDateRange={setDateRange} />
             </div>
+            {loading ?
+                <Loader />
+                :
+                <div className='overflow-x-scroll hide-scroll-bar'>
+                    <div className='w-[40rem] h-[20rem] m-4 md:mx-12'>
+                        <Bar
+                            height={800}
+                            data={data}
+                            options={options as any}
+                        />
+                    </div>
+                </div>
+            }
         </div>
     );
 }

@@ -15,7 +15,6 @@ const DashboardPage: NextPage = () => {
                     <StackedCharts
                         groupByCallback={(item) => new Date(item.datetime).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                         sortCallback={(a: string, b: string) => createDateFromString(a).getTime() - createDateFromString(b).getTime()}
-                        queryFilter='te'
                     />
                 </div>
                 <div className='max-w-full'>
@@ -23,7 +22,6 @@ const DashboardPage: NextPage = () => {
                     <StackedCharts
                         groupByCallback={(item) => createSliceOf30Minutes(item)}
                         sortCallback={(a: string, b: string) => (a > b ? 1 : -1)}
-                        queryFilter='te'
                     />
                 </div>
             </div>
