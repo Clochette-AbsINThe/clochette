@@ -16,7 +16,7 @@ engine = create_engine(
 SessionLocal = sessionmaker(
     # Do not commit changes automatically
     autocommit=False,
-    # Do not flush changes to the daabase automatically
+    # Do not flush changes to the database automatically
     autoflush=False,
     # Bind the session maker to the engine
     bind=engine,
