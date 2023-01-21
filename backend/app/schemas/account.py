@@ -38,7 +38,6 @@ class AccountBase(DefaultModel):
     _validate_password = validator("password", allow_reuse=True)(validate_password)
 
 
-
 class AccountCreate(AccountBase):
     is_active: bool | None = False
     scope: SecurityScopes | None = SecurityScopes.staff
@@ -50,6 +49,12 @@ class AccountCreate(AccountBase):
 
 class AccountUpdate(AccountBase):
     pass
+
+
+class OwnAccountUpdate(AccountUpdate):
+    is_active: bool = Field(exclude=True)
+    scope: SecurityScopes = Field(exclude=True)
+
 
 class Account(AccountBase):
     id: int
