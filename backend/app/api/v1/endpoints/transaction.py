@@ -13,18 +13,17 @@ translator = Translator(element="transaction")
 
 @router.get("/", response_model=list[transaction_schema.Transaction], dependencies=[Security(get_current_active_account)])
 async def read_transactions(db=Depends(get_db), query=Depends(to_query_parameters(transaction_schema.TransactionBase, comparison=True))) -> list[transaction_schema.Transaction]:
-    print(process_query_parameters(query))
-    return transactions.query(db, limit=None, **process_query_parameters(query))
+    return await transactions.query(db, limit=None, **process_query_parameters(query))
 
 
 @router.post("/", response_model=transaction_schema.Transaction, dependencies=[Security(get_current_active_account)])
 async def create_transaction(transaction: transaction_schema.TransactionFrontCreate, db=Depends(get_db)) -> dict:
-    return transactions.create(db, obj_in=transaction)
+    return await transactions.create(db, obj_in=transaction)
 
 
 @router.get("/{transaction_id}", response_model=transaction_schema.TransactionSingle, response_model_exclude_none=True, dependencies=[Security(get_current_active_account)])
 async def read_transaction(transaction_id: int, db=Depends(get_db)) -> dict:
-    transaction = transactions.read(db, id=transaction_id)
+    transaction = await transactions.read(db, id=transaction_id)
     if transaction is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -35,9 +34,9 @@ async def read_transaction(transaction_id: int, db=Depends(get_db)) -> dict:
 
 @router.delete("/{transaction_id}", response_model=transaction_schema.Transaction, dependencies=[Security(get_current_active_account, scopes=['treasurer'])])
 async def delete_transaction(transaction_id: int, db=Depends(get_db)) -> dict:
-    if transactions.read(db, id=transaction_id) is None:
+    if await transactions.read(db, id=transaction_id) is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=translator.ELEMENT_NOT_FOUND
         )
-    return transactions.delete(db, id=transaction_id)
+    return await transactions.delete(db, id=transaction_id)
