@@ -3,7 +3,8 @@ from typing import Any, Generic, Optional, Type, TypeVar
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.sql.expression import select, Select
 
 from app.core.decorator import handle_exceptions
 from app.core.translation import Translator
@@ -32,7 +33,7 @@ class CRUDBase(
         """
         self.model = model
 
-    def read(self, db: Session, id: Any) -> Optional[ModelType]:
+    async def read(self, db: AsyncSession, id: Any) -> Optional[ModelType]:
         """
         Get a record by id.
 
@@ -41,21 +42,9 @@ class CRUDBase(
 
         :return: The record
         """
-        return db.query(self.model).filter(self.model.id == id).first()
+        return await db.get(self.model, id)
 
-    def read_multi(self, db: Session, *, skip: int = 0, limit: int = 100) -> list[ModelType]: # TODO: remove this method
-        """
-        Get multiple records.
-
-        :param db: The database session
-        :param skip: The number of records to skip
-        :param limit: The number of records to return
-
-        :return: The list of records
-        """
-        return db.query(self.model).offset(skip).limit(limit).all()
-
-    def query(self, db: Session, distinct: str | None = None, skip: int = 0, limit: int = 100, **filters) -> list[ModelType]:
+    async def query(self, db: AsyncSession, distinct: str | None = None, skip: int = 0, limit: int = 100, **filters) -> list[ModelType]:
         """
         Get multiple records with filters and distinct option.
 
@@ -75,7 +64,7 @@ class CRUDBase(
         # limit parameters. Finally, the query.all method is used to execute the query and
         # return the results as a list of records.
 
-        query = db.query(self.model)
+        query: Select = select(self.model)
 
         for column, value in filters.items():
             if isinstance(value, dict): # Check whether the value of the filter is a dictionary
@@ -84,18 +73,18 @@ class CRUDBase(
                     # (e.g. > and <), and the operand variable is used as the operand for
                     # the filter. For example, if the value dictionary contained the items {gt: 10},
                     # (the operator comes from the operator module) the filter applied would be column > 10.
-                    query = query.filter(operator(getattr(self.model, column), operand))
+                    query = query.where(operator(getattr(self.model, column), operand))
             else:
-                query = query.filter(getattr(self.model, column) == value)
+                query = query.where(getattr(self.model, column) == value)
 
         if distinct:
             # Apply the DISTINCT option if specified
             query = query.distinct(distinct)
 
-        return query.offset(skip).limit(limit).all()
+        return (await db.execute(query.offset(skip).limit(limit))).scalars().all()
 
     @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
-    def create(self, db: Session, *, obj_in: CreateSchemaType) -> ModelType:
+    async def create(self, db: AsyncSession, *, obj_in: CreateSchemaType) -> ModelType:
         """
         Create a new record.
 
@@ -106,19 +95,19 @@ class CRUDBase(
         """
         # The jsonable_encoder function is used to convert the Pydantic schema to a dictionary
         obj_in_data = jsonable_encoder(obj_in, by_alias=False) # by_alias=False means that the keys of the dictionary will be the same as the field names in the Pydantic schema in order to match the column names in the database
-        # Create a new model instance from the inpt data
+        # Create a new model instance from the input data
         db_obj = self.model(**obj_in_data)
         # Add the new model instance to the database session
         db.add(db_obj)
         # Commit the session to persist the model instance in the database
-        db.commit()
+        await db.commit()
         # Refresh the model instance to reflect the latest state from the database
-        db.refresh(db_obj)
+        await db.refresh(db_obj)
         # Return the created model instance
         return db_obj
 
     @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
-    def update(self, db: Session, *, db_obj: ModelType, obj_in: UpdateSchemaType | dict[str, Any]) -> ModelType:
+    async def update(self, db: AsyncSession, *, db_obj: ModelType, obj_in: UpdateSchemaType | dict[str, Any]) -> ModelType:
         """
         Update a record.
 
@@ -146,11 +135,11 @@ class CRUDBase(
                 setattr(db_obj, field, update_data[field])
 
         db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
+        await db.commit()
+        await db.refresh(db_obj)
         return db_obj
 
-    def delete(self, db: Session, *, id: int) -> ModelType:
+    async def delete(self, db: AsyncSession, *, id: int) -> ModelType:
         """
         Delete a record.
 
@@ -160,7 +149,7 @@ class CRUDBase(
         :return: The deleted record
         """
 
-        obj = db.query(self.model).get(id)
+        obj = await db.get(self.model, id)
         db.delete(obj)
-        db.commit()
+        await db.commit()
         return obj
