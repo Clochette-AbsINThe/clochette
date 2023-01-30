@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.translation import Translator
 from app.core.types import PaymentMethod
@@ -13,7 +13,7 @@ translator = Translator(element="treasury")
 
 
 class CRUDTreasury(CRUDBase[Treasury, TreasuryCreate, TreasuryUpdate]):
-    def add_transaction(self, db: Session, *, obj_in: TransactionCreate) -> Treasury:
+    async def add_transaction(self, db: AsyncSession, *, obj_in: TransactionCreate) -> Treasury:
         """
         Add a transaction to a treasury.
 
@@ -23,7 +23,7 @@ class CRUDTreasury(CRUDBase[Treasury, TreasuryCreate, TreasuryUpdate]):
         :return: The updated treasury.
         """
         # Get the treasury with the given id
-        treasury: Treasury = self.read(db, obj_in.treasury_id)
+        treasury: Treasury = await self.read(db, obj_in.treasury_id)
         # If the treasury does not exist, raise a 404 error
         if treasury is None:
             raise HTTPException(
@@ -42,7 +42,7 @@ class CRUDTreasury(CRUDBase[Treasury, TreasuryCreate, TreasuryUpdate]):
                     detail=translator.NEGATIVE_CASH_AMOUNT
                 )
         # Update the treasury in the database and return it
-        return self.update(db, db_obj=treasury, obj_in=TreasuryUpdate.from_orm(treasury))
+        return await self.update(db, db_obj=treasury, obj_in=TreasuryUpdate.from_orm(treasury))
 
 
 treasury = CRUDTreasury(Treasury)
