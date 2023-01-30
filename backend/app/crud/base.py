@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Any, Generic, Optional, Type, TypeVar
 
 from fastapi.encoders import jsonable_encoder
@@ -94,7 +95,14 @@ class CRUDBase(
         :return: The created record
         """
         # The jsonable_encoder function is used to convert the Pydantic schema to a dictionary
-        obj_in_data = jsonable_encoder(obj_in, by_alias=False) # by_alias=False means that the keys of the dictionary will be the same as the field names in the Pydantic schema in order to match the column names in the database
+        obj_in_data = jsonable_encoder(
+            obj_in,
+            by_alias=False, # by_alias=False means that the keys of the dictionary will be the same as the field names in the Pydantic schema in order to match the column names in the database
+            custom_encoder={
+                # Do not convert datetime objects to strings
+                datetime: lambda v: v,
+            }
+        )
         # Create a new model instance from the input data
         db_obj = self.model(**obj_in_data)
         # Add the new model instance to the database session
@@ -118,7 +126,13 @@ class CRUDBase(
         :return: The updated record
         """
         # Encode the database object as a dictionary
-        obj_data = jsonable_encoder(db_obj)
+        obj_data = jsonable_encoder(
+            db_obj,
+            custom_encoder={
+                # Do not convert datetime objects to strings
+                datetime: lambda v: v,
+            }
+        )
         # If the input data is a dictionary, use it as the update data
         # otherwise encode the input data as a dictionary to get the update data
         if isinstance(obj_in, dict):
