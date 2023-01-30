@@ -54,13 +54,14 @@ class Settings(BaseSettings):
     POSTGRES_USER: str = os.environ.get('POSTGRES_USER')
     POSTGRES_PASSWORD: str = os.environ.get('POSTGRES_PASSWORD')
     
-    SQLALCHEMY_DATABASE_URI: str | None = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
+    SQLALCHEMY_DATABASE_URI: str | None = 'postgresql+asyncpg://{user}:{password}@{host}:{port}/{db}'.format(
         user=POSTGRES_USER,
         password=POSTGRES_PASSWORD,
         host=POSTGRES_HOST,
         port=POSTGRES_PORT,
         db=POSTGRES_DB
     )
+    ALEMBIC_DATABASE_URI: str | None = SQLALCHEMY_DATABASE_URI.replace('asyncpg', 'psycopg2')
 
     ###
 
