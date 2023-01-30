@@ -5,12 +5,14 @@ import subprocess
 
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from sqlalchemy.ext.asyncio import AsyncSession
 from time import sleep
 
 from app.api.v1.api import api_v1_router
 from app.core.config import settings
 from app.core.middleware import ExceptionMonitorMiddleware
 from app.core.utils.backend.alert_backend import alert_backend
+from app.dependencies import get_db
 from app.initial_data import init_db
 
 
@@ -32,7 +34,7 @@ api_router = APIRouter(
 
 
 @app.on_event("startup")
-def run_migrations():
+async def run_migrations():
     # Wait for db to start
     if os.environ.get("MIGRATE") == 'True':
         while True:
@@ -89,9 +91,14 @@ def run_migrations():
                     raise e
 
             print("Populating database with initial data...")
-            init_db()
+            await init_db()
             print("Database populated.")
             break
+
+
+@app.on_event("startup")
+async def setup_database() -> None:
+    get_db.setup()
 
 
 @api_router.get("/", status_code=200)
