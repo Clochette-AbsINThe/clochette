@@ -7,7 +7,7 @@ const TransactionHistoryPage: NextPage = () => {
         <Base
             title='Historique transactions'
             description='La page pour gérer les transactions'>
-            <Table />
+            <Table showTreasuryTransaction={false} />
         </Base>
     );
 };
