@@ -39,6 +39,8 @@ export default function useAxios<T>(url: string, _config?: AxiosRequestConfig): 
             acces_token = data.jwt;
         }
 
+        // TODO : Add a offset and limit to the request to handle pagination and big data
+
         try {
             const response = await API.request({ ..._config, ...config, url: _url ?? url, headers: { Authorization: `Bearer ${acces_token}` } });
             setResponse(response);
