@@ -4,10 +4,11 @@ import { Consumable } from '@types';
 interface ConsumableStackProps {
     consumables: Consumable[];
     uniqueConsumable: Consumable;
+    onEdit: (consumable: Consumable) => void;
 }
 
 export function ConsumableStack(props: ConsumableStackProps): JSX.Element {
-    const { consumables, uniqueConsumable } = props;
+    const { consumables, uniqueConsumable, onEdit } = props;
     const stack = consumables.filter((c) => c.name === uniqueConsumable.name);
     if (stack.length === 0) return <></>;
     const smallStack = stack.slice(0, 5);
@@ -32,6 +33,7 @@ export function ConsumableStack(props: ConsumableStackProps): JSX.Element {
                         {getIcon(_consumable.icon, 'h-24 w-24 text-gray-500 dark:text-gray-100')}
                         <h2 className='text-xl'>Vente {_consumable.sellPrice}€</h2>
                         <h2>{stack.length} en stock</h2>
+                        <button className='btn-primary' onClick={() => onEdit(uniqueConsumable)}>Modifier</button>
                     </div>
                 </div>
             ))}
