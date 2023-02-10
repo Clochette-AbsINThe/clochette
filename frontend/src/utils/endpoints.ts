@@ -18,7 +18,8 @@ export const endpoints = {
         transactionBuy: '/transaction/buy/',
         login: '/auth/login/',
         account: '/account/',
-        accountMe: '/auth/me/'
+        accountMe: '/auth/me/',
+        tresory: '/treasury/'
     },
     internal: {
         saveJwtInCookie: '/api/saveJwtInCookie',

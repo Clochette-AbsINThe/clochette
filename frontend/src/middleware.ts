@@ -13,12 +13,14 @@ export async function middleware(req: NextRequest) {
             // This function verfies the token with the same secret key as the one used to sign it in the backend
             const jwtResult = await jwtVerify(jwtCookie, new TextEncoder().encode(SECRET_KEY), { algorithms: ['HS256'] });
 
-            // We check the role of the user to see if he has access to the page
-            const allowedScopes = links.find(link => link.href === req.nextUrl.pathname)!.scopes;
-            const jwtScopes = jwtResult.payload?.scopes as string[];
+            if (regex.test(req.nextUrl.pathname)) {
+                // We check the role of the user to see if he has access to the page
+                const allowedScopes = links.find((link) => link.href === req.nextUrl.pathname)!.scopes;
+                const jwtScopes = jwtResult.payload?.scopes as string[];
 
-            if (regex.test(req.nextUrl.pathname) && !allowedScopes.some((role) => jwtScopes.includes(role))) {
-                return NextResponse.redirect(environmentVariable.BASE_URL + '/account');
+                if (!allowedScopes.some((role) => jwtScopes.includes(role))) {
+                    return NextResponse.redirect(environmentVariable.BASE_URL + '/account');
+                }
             }
             return NextResponse.next({ status: 200 });
         } catch (error) {
@@ -40,6 +42,6 @@ export const config = {
         '/account',
         '/account/dashboard',
         '/account/users',
-        'account/tresory'
+        '/account/tresory'
     ]
 };
