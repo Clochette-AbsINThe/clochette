@@ -11,12 +11,11 @@ export default function Tabs({ pathname }: { pathname: string }) {
     if (jwt) {
         const userRoles = parseJwt(jwt)!.scopes ?? [];
         filteredLinks = links.filter((link) => link.scopes.some((role) => userRoles.includes(role)));
-        filteredLinks = links;
     }
 
     return (
         <div className='flex justify-center pr-2 md:border-r md:border-b-0 border-b md:mr-4 mb-4 md:mb-0'>
-            <div className='w-full max-w-md flex justify-start items-center md:items-start md:flex-col flex-row mb-2 md:mb-0'>
+            <div className='w-full max-w-md md:w-max flex justify-start items-center md:items-start md:flex-col flex-row mb-2 md:mb-0'>
                 {filteredLinks.map((link) => (
                     <Link
                         href={link.href}

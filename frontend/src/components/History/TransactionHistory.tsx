@@ -1,3 +1,4 @@
+import ReloadButton from '@components/Admin/Charts/ReloadButton';
 import Loader from '@components/Loader';
 import PopupWindows from '@components/PopupWindows';
 import { getTransactionItemsById, getTransactions } from '@proxies/TransactionHistoryProxies';
@@ -5,7 +6,13 @@ import { ItemTransactionResponse, ITransactionType } from '@types';
 import { translateTable } from '@utils/utils';
 import { useCallback, useEffect, useState } from 'react';
 
-export default function TransactionHistory() {
+interface TransactionHistoryProps {
+    showTreasuryTransaction: boolean;
+}
+
+export default function TransactionHistory(props: TransactionHistoryProps) {
+    const { showTreasuryTransaction } = props;
+
     const [transactions, setTransactions] = useState<ITransactionType[]>([]);
     const [getTransactionsData, { loading }] = getTransactions(setTransactions);
 
@@ -34,6 +41,7 @@ export default function TransactionHistory() {
 
     return (
         <>
+            <ReloadButton onClick={makeApiCall} />
             <div className='overflow-x-auto md:mx-12'>
                 <table className='table-auto w-full'>
                     <thead>
@@ -41,6 +49,7 @@ export default function TransactionHistory() {
                             <th className='border-y text-start px-4 py-2 border-l'>Id</th>
                             <th className='border-y text-start px-4 py-2'>Date</th>
                             <th className='border-y text-start px-4 py-2'>Heure</th>
+                            {showTreasuryTransaction && <th className='border-y text-start px-4 py-2'>Type de transaction</th>}
                             <th className='border-y text-start px-4 py-2'>Moyen de paiment</th>
                             <th className='border-y text-start px-4 py-2'>Montant</th>
                             <th className='border-y text-start px-4 py-2'></th>
@@ -55,6 +64,7 @@ export default function TransactionHistory() {
                                     <td className='border-b border-l px-4 py-2'>{transaction.id}</td>
                                     <td className='border-b px-4 py-2'>{new Date(transaction.datetime).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' })}</td>
                                     <td className='border-b px-4 py-2'>{new Date(transaction.datetime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</td>
+                                    {showTreasuryTransaction && <td className='border-b px-4 py-2'>{/** TODO  */}</td>}
                                     <td className='border-b px-4 py-2'>{transaction.paymentMethod}</td>
                                     <td className='border-b px-4 py-2 text-xl font-bold'>
                                         {transaction.sale ? '+' : '-'} {transaction.amount} €
@@ -106,6 +116,7 @@ export default function TransactionHistory() {
                 <div className='flex flex-col mx-4 my-3 flex-grow'>
                     <div className='text-3xl font-bold mb-2 border-b-2 border-neutral-400'>Récapitulatif de la commande :</div>
                     {loadingItems && <Loader />}
+                    {showTreasuryTransaction && <div className='text-xl mb-2'>{/** TODO */}</div>}
                     {transactionItems.map((item) => {
                         return (
                             <li
