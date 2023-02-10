@@ -2,8 +2,8 @@ import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ChartData } from 'chart.js';
 import type { ChartOptions } from 'chart.js';
 import { useCallback, useEffect, useState } from 'react';
-import { getTransactionItems } from '@proxies/DashboardProxies';
-import { ItemTransactionResponse, TransactionType } from '@types';
+import { getTransactionItem, getTransactionItems, getTransactions } from '@proxies/DashboardProxies';
+import { ItemTransactionResponse, ITransactionType, TransactionType } from '@types';
 import { rainbowColors, groupBy, unique } from '@utils/utils';
 import Loader from '@components/Loader';
 import ReloadButton from './ReloadButton';
@@ -31,8 +31,7 @@ const options: ChartOptions = {
     },
     plugins: {
         legend: {
-            position: 'left',
-            fullSize: true
+            position: 'right'
         },
         tooltip: {
             enabled: true
@@ -53,37 +52,72 @@ export default function StackedCharts<K>(props: StackedChartProps<K>) {
 
     const { transactionsCache, setTransactionsCache } = useDataCaching();
 
-    const [transactions, setTransactions] = useState<Array<TransactionType<ItemTransactionResponse>>>(transactionsCache);
-    const [getData, { loading }] = getTransactionItems(setTransactions);
+    const [transactions, setTransactions] = useState<Array<TransactionType<ItemTransactionResponse>>>([]);
+    const setter = (item: TransactionType<ItemTransactionResponse>) => {
+        if (!transactionsCache.has(item.id!)) {
+            setTransactionsCache((old) => {
+                const newMap = new Map(old);
+                newMap.set(item.id!, item);
+                return newMap;
+            });
+        }
+        if (transactions.some((transaction) => transaction.id === item.id)) return;
+        if (item.sale === false) return;
+        setTransactions((old) => [...old, item]);
+    };
+    const [getTransactionData] = getTransactionItem(setter);
+
+    // Those data are the list of all the transactions without the detail of the items
+    const [allTransactions, setAllTransactions] = useState<ITransactionType[]>([]);
+    const [getAllTransactionsData] = getTransactions(setAllTransactions);
+
+    const [names, setNames] = useState<string[]>([]);
+    const [dataset, setDataset] = useState<Map<K, Array<TransactionType<ItemTransactionResponse>>>>(new Map());
+
+    useEffect(() => {
+        setNames(
+            transactions
+                .map((item) => item.items.map((item) => item.item.name))
+                .flat()
+                .filter(unique)
+        );
+
+        setDataset(groupBy(transactions, groupByCallback, sortCallback));
+    }, [transactions]);
 
     const [dateRange, setDateRange] = useState<[Date, Date]>([date, new Date()]);
 
     const makeApiCall = useCallback(() => {
-        getData();
-    }, [getData]);
+        const startDate = new Date(dateRange[0].toISOString());
+        startDate.setHours(0, 0, 0, 0);
+        const endDate = new Date(dateRange[1].toISOString());
+        endDate.setHours(23, 59, 59, 999);
+        getAllTransactionsData({ datetime__gt: startDate.toISOString(), datetime__lt: endDate.toISOString() });
+    }, [getAllTransactionsData]);
 
     useEffect(() => {
-        if (transactionsCache.length > 0) return;
+        setTransactions([]);
+        allTransactions.forEach((transaction) => {
+            if (transaction.sale === false) return;
+            if (transactionsCache.has(transaction.id!)) {
+                setTransactions((old) => [...old, transactionsCache.get(transaction.id!)!]);
+            } else {
+                // Need to refresh the cache
+                getTransactionData(transaction.id!);
+            }
+        });
+    }, [allTransactions]);
+
+    useEffect(() => {
         makeApiCall();
-    }, []);
-
-    useEffect(() => {
-        setTransactionsCache(transactions);
-    }, [transactions]);
-
-    const names = transactions
-        .map((item) => item.items.map((item) => item.item.name))
-        .flat()
-        .filter(unique);
-
-    const testDatasets = groupBy(transactions, groupByCallback, sortCallback);
+    }, [dateRange]);
 
     const data: ChartData<'bar'> = {
-        labels: Array.from(testDatasets.keys()),
+        labels: Array.from(dataset.keys()),
         datasets: names.sort().map((name, index) => {
             return {
                 label: name,
-                data: Array.from(testDatasets.values()).map((transactionArrayForAGivenFilter) =>
+                data: Array.from(dataset.values()).map((transactionArrayForAGivenFilter) =>
                     transactionArrayForAGivenFilter
                         .map((transaction) =>
                             transaction.items
@@ -104,30 +138,25 @@ export default function StackedCharts<K>(props: StackedChartProps<K>) {
         })
     };
 
-    //if (loading) return <Loader />;
-
     return (
         <div>
-            <div className='flex justify-between'>
-                <ReloadButton onClick={getData} />
+            <div className='flex justify-between flex-wrap'>
+                <ReloadButton onClick={makeApiCall} />
                 <DateRangePicker
                     startDate={dateRange[0]}
                     endDate={dateRange[1]}
-                    setDateRange={setDateRange} />
+                    setDateRange={setDateRange}
+                />
             </div>
-            {loading ?
-                <Loader />
-                :
-                <div className='overflow-x-scroll hide-scroll-bar'>
-                    <div className='w-[40rem] h-[20rem] m-4 md:mx-12'>
-                        <Bar
-                            height={800}
-                            data={data}
-                            options={options as any}
-                        />
-                    </div>
+            <div className='overflow-x-scroll hide-scroll-bar'>
+                <div className='w-[40rem] h-[20rem] m-4 md:mx-12'>
+                    <Bar
+                        height={800}
+                        data={data}
+                        options={options as any}
+                    />
                 </div>
-            }
+            </div>
         </div>
     );
 }
