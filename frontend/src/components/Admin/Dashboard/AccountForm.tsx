@@ -7,6 +7,7 @@ interface AccountFormProps {
     account: Account;
     editAccount: (account: Account) => void;
     deleteAccount?: (id: number) => void;
+    deleteButton?: boolean;
 }
 
 const TranslateAccountKeys: Record<keyof Account, string> = {
@@ -50,10 +51,40 @@ export default function AccountForm(props: AccountFormProps) {
     };
 
     const createInput = (key: keyof Account) => {
-        if (isCheckbox(key)) {
+        if (key === 'scope') {
             return (
                 <div
-                    className='flex items-center md:gap-4 gap-2 flex-wrap'
+                    className='flex items-center md:gap-4 gap-2 flex-wrap justify-between'
+                    key={key}>
+                    <label
+                        htmlFor={key}
+                        className='text-xl'>
+                        {TranslateAccountKeys[key]}
+                    </label>
+                    <select
+                        id={key}
+                        name={key}
+                        aria-label={key}
+                        className='input w-60'
+                        value={account[key] as string}
+                        onChange={(e) =>
+                            setAccount({
+                                ...account,
+                                [key]: e.target.value
+                            })
+                        }
+                        onBlur={(e) => e.target.classList.add('input-error')}
+                        required>
+                        <option value='staff'>Membre</option>
+                        <option value='treasurer'>Trésorier</option>
+                        <option value='president'>Président</option>
+                    </select>
+                </div>
+            );
+        } else if (isCheckbox(key)) {
+            return (
+                <div
+                    className='flex items-center md:gap-4 gap-2 flex-wrap justify-between'
                     key={key}>
                     <label
                         htmlFor={key}
@@ -79,7 +110,7 @@ export default function AccountForm(props: AccountFormProps) {
         } else if (isString(key)) {
             return (
                 <div
-                    className='flex items-center md:gap-4 gap-2 flex-wrap'
+                    className='flex items-center md:gap-4 gap-2 flex-wrap justify-between'
                     key={key}>
                     <label
                         htmlFor={key}
@@ -107,7 +138,7 @@ export default function AccountForm(props: AccountFormProps) {
         } else if (isNumber(key)) {
             return (
                 <div
-                    className='flex items-center md:gap-4 gap-2 flex-wrap'
+                    className='flex items-center md:gap-4 gap-2 flex-wrap justify-between'
                     key={key}>
                     <label
                         htmlFor={key}
@@ -142,11 +173,7 @@ export default function AccountForm(props: AccountFormProps) {
 
     return (
         <div className='flex flex-grow flex-col'>
-            <div className='flex flex-col items-center justify-center'>
-                <h1 className='text-2xl font-bold mb-6'>Modification du compte</h1>
-            </div>
-            {/*// TODO */}
-            {decodedJwt?.scopes?.includes('president') && (
+            {decodedJwt?.scopes?.includes('president') && props.deleteButton && (
                 <div className='flex flex-col items-end justify-center'>
                     <button
                         className='btn-danger'
@@ -157,7 +184,7 @@ export default function AccountForm(props: AccountFormProps) {
             )}
             <form
                 onSubmit={handleSubmit}
-                className='flex flex-col self-start md:space-y-4 space-y-2 p-4 grow w-full'>
+                className='flex flex-col self-start md:space-y-6 space-y-4 p-4 grow w-full'>
                 {keys.map((key) => createInput(key))}
                 <div className='grow'></div>
                 <button

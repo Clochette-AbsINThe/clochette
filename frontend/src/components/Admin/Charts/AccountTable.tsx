@@ -132,11 +132,17 @@ export default function AccountTable() {
                 open={showModal}
                 setOpen={setShowModal}>
                 {selectedAccount !== undefined ? (
-                    <AccountForm
-                        account={selectedAccount}
-                        editAccount={editAccount}
-                        deleteAccount={delAccount}
-                    />
+                    <>
+                        <div className='flex flex-col items-center justify-center'>
+                            <h1 className='text-2xl font-bold mb-6'>Modification du compte</h1>
+                        </div>
+                        <AccountForm
+                            account={selectedAccount}
+                            editAccount={editAccount}
+                            deleteAccount={delAccount}
+                            deleteButton={true}
+                        />
+                    </>
                 ) : (
                     <></>
                 )}
