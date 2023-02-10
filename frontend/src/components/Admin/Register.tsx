@@ -254,7 +254,7 @@ export default function Register(): JSX.Element {
                 <Link
                     href={'/login'}
                     className='text-sm text-gray-500 hover:text-gray-700'>
-                    Vous avez déjà un compte ? Connectez-vous
+                    Vous avez déjà un compte ? <span className='underline'>Connectez-vous</span>
                 </Link>
             </div>
         </>

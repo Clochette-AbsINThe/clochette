@@ -95,14 +95,14 @@ export default function Login() {
                     <button
                         type='submit'
                         role={'submit'}
-                        className='btn-primary w-full'>
+                        className='btn-primary w-full mt-4'>
                         Se connecter
                     </button>
                 </form>
                 <Link
                     href={'/register'}
                     className='text-sm text-gray-500 hover:text-gray-700'>
-                    Vous n&apos;avez pas de compte ? Inscrivez-vous
+                    Vous n&apos;avez pas de compte ? <span className='underline'>Inscrivez-vous</span>
                 </Link>
             </div>
         </>
