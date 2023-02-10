@@ -1,7 +1,7 @@
 import StackedCharts from '@components/Admin/Charts/StackedCharts';
 import type { NextPage } from 'next';
 import BarrelStat from '@components/Admin/Charts/BarrelTable';
-import { ItemTransactionResponse, TransactionType } from '@types';
+import { createDateFromString, createSliceOf30Minutes } from '@utils/date';
 
 const DashboardPage: NextPage = () => {
     return (
@@ -30,23 +30,3 @@ const DashboardPage: NextPage = () => {
 };
 
 export default DashboardPage;
-
-function createDateFromString(dateString: string): Date {
-    const day = parseInt(dateString.substring(0, 2));
-    const month = parseInt(dateString.substring(3, 5));
-    const year = parseInt(dateString.substring(6, 10));
-    const hour = parseInt(dateString.substring(12, 14));
-    return new Date(year, month - 1, day, hour);
-}
-
-function createSliceOf30Minutes(item: TransactionType<ItemTransactionResponse>): string {
-    const date = new Date(item.datetime);
-    const startHour = ('00' + date.getHours()).slice(-2);
-    const startMinutes = date.getMinutes() >= 30 ? '30' : '00';
-
-    const endDate = new Date(date.getTime() + 30 * 60000);
-    const endHour = ('00' + endDate.getHours()).slice(-2);
-    const endMinutes = endDate.getMinutes() >= 30 ? '30' : '00';
-
-    return `${startHour}:${startMinutes} - ${endHour}:${endMinutes}`;
-}
