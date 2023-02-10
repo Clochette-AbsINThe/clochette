@@ -30,7 +30,7 @@ export default function LoginButton(): JSX.Element {
                     Se déconnecter
                 </button>
                 <Link
-                    href='/account/dashboard'
+                    href='/account'
                     className='ml-4 rounded-xl bg-green-700 p-1 text-gray-200 flex justify-center items-center'>
                     <svg
                         className='w-7 h-7'
