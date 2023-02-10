@@ -146,3 +146,9 @@ export interface Account extends IAccount {
     isActive: boolean;
     scope: string;
 }
+
+export interface Tresory {
+    id: number;
+    totalAmount: number;
+    cashAmount: number;
+}

@@ -32,3 +32,16 @@ export type IProxyPost<T> = [
         error?: AxiosError | null;
     }
 ];
+
+export type IProxyParam<T> = [
+    (data?: T) => void,
+    {
+        loading: boolean;
+        error?: AxiosError | null;
+    }
+];
+
+export type QueryType = {
+    datetime__gt: string;
+    datetime__lt: string;
+};
