@@ -75,7 +75,6 @@ export default function TresoryButtons() {
         });
     };
 
-
     const handlePopupShow = (type: PopupType) => {
         setShowPopup(true);
         setPopupType(type);
@@ -200,7 +199,9 @@ export default function TresoryButtons() {
                                         <span className='font-medium text-lg ml-2'>%</span>
                                     </div>
                                 ) : (
-                                    <span className='font-medium text-lg'>{1.5} % {/**TODO: get from db */}</span>
+                                    <span className='font-medium text-lg'>
+                                        {1.5} % {/**TODO: get from db */}
+                                    </span>
                                 )}
                             </div>
                         </div>

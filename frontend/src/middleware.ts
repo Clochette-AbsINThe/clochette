@@ -35,13 +35,5 @@ export async function middleware(req: NextRequest) {
 
 // All thoses paths require authentification
 export const config = {
-    matcher: [
-        '/transaction',
-        '/stock',
-        '/configuration/:path*',
-        '/account',
-        '/account/dashboard',
-        '/account/users',
-        '/account/tresory'
-    ]
+    matcher: ['/transaction', '/stock', '/configuration/:path*', '/account', '/account/dashboard', '/account/users', '/account/tresory']
 };

@@ -42,7 +42,6 @@ export function BarrelMountedCard(props: BarrelMountedCardProps): JSX.Element {
         setShowPopup(false);
     };
 
-
     return (
         <>
             <div className='flex bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 border-gray-300 bg-[#70707016] border hover:border-gray-400 group focus:bg-black relative dark:border-gray-500'>
@@ -86,12 +85,8 @@ export function BarrelMountedCard(props: BarrelMountedCardProps): JSX.Element {
                 setOpen={setShowPopup}>
                 <div className='flex flex-col gap-10 grow'>
                     <div>
-                        {popupType === 'modify' && (
-                            <h1 className='text-3xl font-bold mb-5'>Modifier le fût</h1>
-                        )}
-                        {popupType === 'empty' && (
-                            <h1 className='text-3xl font-bold mb-5'>Décalrer le fût comme vide ?</h1>
-                        )}
+                        {popupType === 'modify' && <h1 className='text-3xl font-bold mb-5'>Modifier le fût</h1>}
+                        {popupType === 'empty' && <h1 className='text-3xl font-bold mb-5'>Décalrer le fût comme vide ?</h1>}
                     </div>
                     {popupType === 'modify' && (
                         <form

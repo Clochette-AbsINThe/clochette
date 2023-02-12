@@ -21,7 +21,7 @@ export function getBarrels(setItem: (value: Barrel[]) => void): IProxy {
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -42,7 +42,7 @@ export function getBarrelsMounted(setItem: (value: Barrel[]) => void): IProxy {
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -63,7 +63,7 @@ export function getBarrelsDistincts(setItem: (value: Barrel[]) => void): IProxy 
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -97,7 +97,7 @@ export function getConsumables(setItem: (value: Consumable[]) => void): IProxy {
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
@@ -113,7 +113,7 @@ export function getConsumablesDistincts(setItem: (value: Consumable[]) => void):
     };
 
     const getData = (): void => {
-        getDataAsync().catch(() => { });
+        getDataAsync().catch(() => {});
     };
 
     return [getData, { loading, error }];
