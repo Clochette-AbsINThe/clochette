@@ -34,7 +34,7 @@ export function AddCard(props: AddCardProps): JSX.Element {
             onDrop={handleDrop}
             onDragOver={(e) => e.preventDefault()}
             onDragEnter={hanleDragEnter}>
-            <div className='flex h-64 w-44 border-dashed border-gray-300 rounded bg-[#70707016] border-2 group-[.over]:border-gray-400'>
+            <div className='flex h-full min-h-[16rem] w-44 border-dashed border-gray-300 rounded bg-[#70707016] border-2 group-[.over]:border-gray-400'>
                 <div className='flex flex-col justify-center items-center w-full'>
                     <div className='flex flex-row justify-center items-center'>
                         <svg
