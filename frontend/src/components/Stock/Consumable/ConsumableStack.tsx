@@ -33,7 +33,11 @@ export function ConsumableStack(props: ConsumableStackProps): JSX.Element {
                         {getIcon(_consumable.icon, 'h-24 w-24 text-gray-500 dark:text-gray-100')}
                         <h2 className='text-xl'>Vente {_consumable.sellPrice}€</h2>
                         <h2>{stack.length} en stock</h2>
-                        <button className='btn-primary' onClick={() => onEdit(uniqueConsumable)}>Modifier</button>
+                        <button
+                            className='btn-primary'
+                            onClick={() => onEdit(uniqueConsumable)}>
+                            Modifier
+                        </button>
                     </div>
                 </div>
             ))}

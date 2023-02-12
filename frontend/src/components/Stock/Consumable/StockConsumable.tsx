@@ -1,6 +1,6 @@
 import { getConsumables, getConsumablesDistincts, putConsumable } from '@proxies/StockProxies';
 import { Consumable } from '@types';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { ConsumableStack } from '@components/Stock/Consumable/ConsumableStack';
 import Loader from '@components/Loader';
 import PopupWindows from '@components/PopupWindows';
@@ -33,7 +33,8 @@ export default function StockConsumable(): JSX.Element {
         setConsumableToEdit(consumable);
     }
 
-    function onEditConsumableSubmit(): void {
+    function onEditConsumableSubmit(e: FormEvent): void {
+        e.preventDefault();
         if (consumableToEdit && inputPriceRef.current) {
             const consumablesOfType = consumables.filter((c) => c.name === consumableToEdit.name);
             consumablesOfType.forEach((c) => {
@@ -65,8 +66,12 @@ export default function StockConsumable(): JSX.Element {
                 )}
             </div>
             {consumableToEdit && (
-                <PopupWindows open={openPopup} setOpen={setOpenPopup}>
-                    <div className='flex flex-col gap-10 grow'>
+                <PopupWindows
+                    open={openPopup}
+                    setOpen={setOpenPopup}>
+                    <form
+                        className='flex flex-col gap-10 grow'
+                        onSubmit={onEditConsumableSubmit}>
                         <h2 className='text-2xl text-gray-500 dark:text-gray-100'>Modifier le prix de vente du consommable</h2>
                         <div className='flex flex-row gap-5 items-center'>
                             {getIcon(consumableToEdit!.icon, 'w-10 h-10 dark:text-white text-black')}
@@ -84,19 +89,37 @@ export default function StockConsumable(): JSX.Element {
                         </div>
                         <div className='flex flex-row gap-5 items-center'>
                             <label htmlFor='name'>Actuel prix de vente :</label>
-                            <input type='number' id='name' className='input' value={consumableToEdit?.sellPrice} disabled readOnly />
+                            <input
+                                type='number'
+                                id='name'
+                                className='input'
+                                value={consumableToEdit?.sellPrice}
+                                disabled
+                                readOnly
+                            />
                             <span>€</span>
                         </div>
                         <div className='flex flex-row gap-5 items-center'>
                             <label htmlFor='name'>Nouveau prix de vente :</label>
-                            <input type='number' id='name' className='input' ref={inputPriceRef} />
+                            <input
+                                type='number'
+                                id='name'
+                                className='input'
+                                min={0.01}
+                                step={0.01}
+                                required
+                                ref={inputPriceRef}
+                            />
                             <span>€</span>
                         </div>
-                        <div className="grow"></div>
-                        <button className='btn-primary' disabled={loadingPutConsumable} onClick={onEditConsumableSubmit}>
+                        <div className='grow'></div>
+                        <button
+                            className='btn-primary'
+                            disabled={loadingPutConsumable}
+                            type='submit'>
                             Modifier
                         </button>
-                    </div>
+                    </form>
                 </PopupWindows>
             )}
         </>
