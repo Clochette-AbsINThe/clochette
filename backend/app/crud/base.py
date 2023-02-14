@@ -115,8 +115,6 @@ class CRUDBase(
                 session.add(db_obj)
                 # Commit the session to persist the model instance in the database
                 await session.commit()
-                # Refresh the model instance to reflect the latest state from the database
-                #await session.refresh(db_obj)
                 # Return the created model instance
                 return db_obj
 
@@ -157,7 +155,6 @@ class CRUDBase(
             async with session.begin():
                 session.add(db_obj)
                 await session.commit()
-                #await session.refresh(db_obj)
                 return db_obj
 
     async def delete(self, db: AsyncSession, *, id: int) -> ModelType:
