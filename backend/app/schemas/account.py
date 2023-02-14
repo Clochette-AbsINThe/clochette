@@ -48,7 +48,7 @@ class AccountCreate(AccountBase):
 
 
 class AccountUpdate(AccountBase):
-    pass
+    password: str | None
 
 
 class OwnAccountUpdate(AccountUpdate):
