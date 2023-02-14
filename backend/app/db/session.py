@@ -37,4 +37,5 @@ class PostgresDatabase(Database):
         self.async_sessionmaker = sessionmaker(
             async_engine,
             class_=AsyncSession,
+            expire_on_commit=False,
         )
