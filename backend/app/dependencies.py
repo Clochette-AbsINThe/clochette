@@ -1,15 +1,13 @@
-from typing import Generator
-
 from fastapi import Depends, HTTPException, Security, status
 from fastapi.security import SecurityScopes
 from jose import JWTError, jwt
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import oauth2_scheme, check_scopes
 from app.core.config import settings
 from app.core.translation import Translator
 from app.crud.crud_account import account as accounts
-from app.db.session import SessionLocal
+from app.db.session import PostgresDatabase
 from app.models.account import Account
 from app.schemas import token as token_schema
 
@@ -17,23 +15,12 @@ from app.schemas import token as token_schema
 translator = Translator()
 
 
-def get_db() -> Generator:
-    """
-    Get a database session.
 
-    :return: A database session
-    """
-    # Create a database session
-    db = SessionLocal()
-    try:
-        # Yield the session to the calling function
-        yield db
-    finally:
-        # Close the session after it is no longer needed
-        db.close()
+# Create a database session (dependency injected)
+get_db = PostgresDatabase()
 
 
-async def get_current_account(security_scopes: SecurityScopes, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)) -> Account:
+async def get_current_account(security_scopes: SecurityScopes, db: AsyncSession = Depends(get_db), token: str = Depends(oauth2_scheme)) -> Account:
     """
     Get the current account associated with the JWT token in the authorization header.
 
@@ -69,11 +56,11 @@ async def get_current_account(security_scopes: SecurityScopes, db: Session = Dep
         # Raise an exception if the token cannot be decoded
         raise credentials_exception
     # Get the account associated with the username
-    account = (accounts.query(db, limit=1, username=token_data.username)[0:1] or [None])[0]
+    account = ((await accounts.query(db, limit=1, username=token_data.username))[0:1] or [None])[0]
     if account is None:
         # Raise an exception if the account does not exist
         raise credentials_exception
-    if not check_scopes(security_scopes, token_data.scopes):
+    if not token_scopes or not check_scopes(security_scopes, token_data.scopes):
         # Raise an exception if the token does not have the required scope
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

@@ -11,4 +11,4 @@ router = APIRouter(tags=["glass"])
 
 @router.get("/", response_model=list[glass_schema.Glass], dependencies=[Security(get_current_active_account)])
 async def read_glasses(db=Depends(get_db), query=Depends(to_query_parameters(glass_schema.GlassBase))) -> list:
-    return glasses.query(db, limit=None, **query.dict(exclude_none=True, exclude_unset=True))
+    return await glasses.query(db, limit=None, **query.dict(exclude_none=True, exclude_unset=True))
