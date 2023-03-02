@@ -43,9 +43,7 @@ class CRUDBase(
 
         :return: The record
         """
-        async with db as session:
-            async with session.begin():
-                return await session.get(self.model, id)
+        return await db.get(self.model, id)
 
     async def query(self, db: AsyncSession, distinct: str | None = None, skip: int = 0, limit: int = 100, **filters) -> list[ModelType]:
         """
@@ -84,9 +82,7 @@ class CRUDBase(
             # Apply the DISTINCT option if specified
             query = query.distinct(distinct)
 
-        async with db as session:
-            async with session.begin():
-                return (await session.execute(query.offset(skip).limit(limit))).scalars().all()
+        return (await db.execute(query.offset(skip).limit(limit))).scalars().all()
 
     @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
     async def create(self, db: AsyncSession, *, obj_in: CreateSchemaType) -> ModelType:
@@ -109,14 +105,12 @@ class CRUDBase(
         )
         # Create a new model instance from the input data
         db_obj = self.model(**obj_in_data)
-        async with db as session:
-            async with session.begin():
-                # Add the new model instance to the database session
-                session.add(db_obj)
-                # Commit the session to persist the model instance in the database
-                await session.commit()
-                # Return the created model instance
-                return db_obj
+        # Add the new model instance to the database session
+        db.add(db_obj)
+        # Commit the session to persist the model instance in the database
+        await db.commit()
+        # Return the created model instance
+        return db_obj
 
     @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
     async def update(self, db: AsyncSession, *, db_obj: ModelType, obj_in: UpdateSchemaType | dict[str, Any]) -> ModelType:
@@ -151,11 +145,9 @@ class CRUDBase(
                 # It means: db_obj.field = update_data[field],
                 # i.e. set the value of the field of the database object to the value of the field in the update data
                 setattr(db_obj, field, update_data[field])
-        async with db as session:
-            async with session.begin():
-                session.add(db_obj)
-                await session.commit()
-                return db_obj
+        db.add(db_obj)
+        await db.commit()
+        return db_obj
 
     async def delete(self, db: AsyncSession, *, id: int) -> ModelType:
         """
@@ -166,9 +158,7 @@ class CRUDBase(
 
         :return: The deleted record
         """
-        async with db as session:
-            async with session.begin():
-                obj = await session.get(self.model, id)
-                session.delete(obj)
-                await session.commit()
-                return obj
+        obj = await db.get(self.model, id)
+        db.delete(obj)
+        await db.commit()
+        return obj

@@ -10,4 +10,4 @@ class ConsumableItem(Base):
     name = Column(String, nullable=False)
     icon = Column(Enum(IconName), nullable=False)
 
-    consumables = relationship("Consumable", back_populates="consumable_item")
+    consumables = relationship("Consumable", back_populates="consumable_item", lazy="selectin")

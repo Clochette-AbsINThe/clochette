@@ -9,7 +9,7 @@ class OutOfStock(Base):
     unit_price = Column(Float, nullable=True)
 
     item_id = Column(Integer, ForeignKey("outofstockitem.id"))
-    item = relationship("OutOfStockItem", back_populates="outofstocks")
+    item = relationship("OutOfStockItem", back_populates="outofstocks", lazy="selectin")
 
     transaction_id = Column(Integer, ForeignKey("transaction.id"))
-    transaction = relationship("Transaction", back_populates="out_of_stocks")
+    transaction = relationship("Transaction", back_populates="out_of_stocks", lazy="selectin")

@@ -11,12 +11,12 @@ class Barrel(Base):
     empty = Column(Boolean, nullable=False)
 
     drink_id = Column(Integer, ForeignKey("drink.id"))
-    drink = relationship("Drink", back_populates="barrels")
+    drink = relationship("Drink", back_populates="barrels", lazy="selectin")
 
     stock_id = Column(Integer, ForeignKey("stock.id"))
-    stock = relationship("Stock", back_populates="barrels")
+    stock = relationship("Stock", back_populates="barrels", lazy="selectin")
 
     transaction_id = Column(Integer, ForeignKey("transaction.id"))
-    transaction = relationship("Transaction", back_populates="barrels")
+    transaction = relationship("Transaction", back_populates="barrels", lazy="selectin")
 
-    glasses = relationship("Glass", back_populates="barrel")
+    glasses = relationship("Glass", back_populates="barrel", lazy="selectin")

@@ -31,7 +31,8 @@ class TransactionCreate(ConsumableBase):
 
 
 class ConsumableUpdate(ConsumableBase):
-    transaction_id_sale: int = Field(0, alias='transaction_id')
+    consumable_item_id: int = Field(exclude=True, alias='fkId')
+    transaction_id_sale: int = Field(exclude=True, alias='transaction_id')
 
 
 class Consumable(ConsumableBase):

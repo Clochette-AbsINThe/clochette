@@ -56,7 +56,9 @@ async def get_current_account(security_scopes: SecurityScopes, db: AsyncSession 
         # Raise an exception if the token cannot be decoded
         raise credentials_exception
     # Get the account associated with the username
-    account = ((await accounts.query(db, limit=1, username=token_data.username))[0:1] or [None])[0]
+    async with db as session:
+        async with session.begin():
+            account = ((await accounts.query(session, limit=1, username=token_data.username))[0:1] or [None])[0]
     if account is None:
         # Raise an exception if the account does not exist
         raise credentials_exception

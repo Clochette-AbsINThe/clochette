@@ -23,7 +23,7 @@ def alert_to_terminal(exception: Exception, **request: dict) -> None:
     print("############## Request ##############")
     pprint(request)
     print("############# Exception #############")
-    #format_exception(type(exception), exception, exception.__traceback__)
+    format_exception(type(exception), exception, exception.__traceback__)
     pprint(exception)
 
 
