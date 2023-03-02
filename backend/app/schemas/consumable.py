@@ -34,8 +34,8 @@ class ConsumableUpdate(ConsumableBase):
     unit_price: float | None = Field(gt=0)
     sell_price: float | None = Field(gt=0)
     empty: bool | None
-    consumable_item_id: int = Field(exclude=True, alias='fkId')
-    transaction_id_sale: int = Field(exclude=True, alias='transaction_id')
+    consumable_item_id: int | None = Field(exclude=True, alias='fkId')
+    transaction_id_sale: int | None = Field(exclude=True, alias='transaction_id')
 
 
 class Consumable(ConsumableBase):
