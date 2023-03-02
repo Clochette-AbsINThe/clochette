@@ -14,7 +14,7 @@ cryptography==39.0.1
 devtools==0.9.0
 ecdsa==0.18.0
 executing==0.10.0
-fastapi==0.87.0
+fastapi==0.92.0
 greenlet==2.0.1
 h11==0.14.0
 httpcore==0.16.2
