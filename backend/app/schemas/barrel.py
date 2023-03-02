@@ -21,7 +21,11 @@ class TransactionCreate(BarrelCreate):
 
 
 class BarrelUpdate(BarrelBase):
-    pass
+    drink_id: int | None = Field(alias='fkId')
+    empty: bool | None = False
+    is_mounted: bool | None = False
+    sell_price: float | None = Field(gt=0)
+    unit_price: float | None = Field(gt=0)
 
 
 class Barrel(BarrelBase):
