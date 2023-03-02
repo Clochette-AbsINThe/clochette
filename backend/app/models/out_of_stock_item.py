@@ -13,4 +13,4 @@ class OutOfStockItem(Base):
     icon = Column(Enum(IconName), nullable=False)
     sell_price = Column(Float, nullable=True)
 
-    outofstocks = relationship("OutOfStock", back_populates="item")
+    outofstocks = relationship("OutOfStock", back_populates="item", lazy="selectin")

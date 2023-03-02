@@ -9,4 +9,4 @@ class Treasury(Base):
     total_amount = Column(Float, nullable=False)
     cash_amount = Column(Float, nullable=False)
 
-    transactions = relationship("Transaction", back_populates="treasury")
+    transactions = relationship("Transaction", back_populates="treasury", lazy="selectin")
