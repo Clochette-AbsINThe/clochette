@@ -1,10 +1,11 @@
 import Loader from '@components/Loader';
-import { getPersonnalAccount } from '@proxies/DashboardProxies';
+import { getPersonnalAccount, putPersonnalAccount } from '@proxies/DashboardProxies';
 import { Account } from '@types';
+import { getErrorMessage } from '@utils/utils';
 import { useCallback, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import AccountForm from './AccountForm';
 
-// TODO: Add modification of account when backend is ready
 export default function ProfilePage() {
     const [account, setAccount] = useState<Account | null>(null);
     const [getAccountData, { loading }] = getPersonnalAccount(setAccount);
@@ -17,7 +18,18 @@ export default function ProfilePage() {
         makeApiCall();
     }, []);
 
-    if (loading || account === null) return <Loader />;
+    const [editAccount, { loading: editLoading }] = putPersonnalAccount((data) => {
+        if (data.status === 200) {
+            const item = data.data as Account;
+            toast.success(`${item.firstName} modifié avec succès !`);
+            makeApiCall();
+        } else {
+            const detail = getErrorMessage(data);
+            toast.error(`Erreur lors de la modification de ${account!.firstName}. ${detail}`);
+        }
+    });
+
+    if (loading || account === null || editLoading) return <Loader />;
 
     return (
         <>
@@ -28,7 +40,7 @@ export default function ProfilePage() {
                     </div>
                     <AccountForm
                         account={account}
-                        editAccount={(account) => console.log(account)}
+                        editAccount={editAccount}
                     />
                 </div>
             </div>
