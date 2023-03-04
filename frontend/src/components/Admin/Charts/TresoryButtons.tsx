@@ -1,11 +1,12 @@
 import Loader from '@components/Loader';
 import PopupWindows from '@components/PopupWindows';
+import useOnEchap from '@hooks/useOnEchap';
 import { getTresory, postNewTransaction, putTreasury } from '@proxies/DashboardProxies';
 import { getIcon } from '@styles/utils';
-import { ITransactionType, TransactionType, Tresory } from '@types';
+import { ITransactionType, Tresory } from '@types';
 import { getErrorMessage } from '@utils/utils';
 import { AxiosResponse } from 'axios';
-import { useState, useCallback, useEffect, useRef } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
 enum PopupType {
@@ -18,6 +19,7 @@ enum PopupType {
 export default function TresoryButtons() {
     const [tresory, setTresory] = useState<Tresory>({
         cashAmount: 0,
+        lydiaRate: 0,
         totalAmount: 0,
         id: 0
     });
@@ -50,6 +52,10 @@ export default function TresoryButtons() {
 
     const [isEditingTreasuryRate, setIsEditingTreasuryRate] = useState(false);
 
+    useOnEchap(() => {
+        setIsEditingTreasuryRate(false);
+    });
+
     const [changeLydiaRate] = putTreasury((data: AxiosResponse<any, any>) => {
         if (data.status === 200) {
             toast.success('Modification du taux de Lydia effectuée avec succès');
@@ -67,11 +73,18 @@ export default function TresoryButtons() {
             toast.error('Le taux de Lydia doit être un nombre');
             return;
         }
+        if (newLydiaRate < 0) {
+            toast.error('Le taux de Lydia doit être positif');
+            return;
+        }
+        if (newLydiaRate > 100) {
+            toast.error('Le taux de Lydia doit être inférieur à 100%');
+            return;
+        }
+        const lydiaRate = newLydiaRate / 100;
         changeLydiaRate({
             id: tresory.id,
-            //lydiaRate: newLydiaRate
-            totalAmount: tresory.totalAmount, //TODO make this optional
-            cashAmount: tresory.cashAmount //TODO make this optional
+            lydiaRate: newLydiaRate
         });
     };
 
@@ -113,9 +126,6 @@ export default function TresoryButtons() {
             }
         }
         if (popupType === PopupType.WithdrawCash) {
-            // if (Number(value) > tresory.totalAmount) {
-            //     value = tresory.totalAmount.toString();
-            // }
             if (Number(value) < 0) {
                 setAmount(NaN);
                 return;
@@ -133,24 +143,24 @@ export default function TresoryButtons() {
         const description = formData.get('description') as string;
 
         if (amount_cb !== 0) {
-            const transaction: TransactionType<null> = {
+            const transaction: ITransactionType = {
                 amount: Math.abs(amount_cb),
                 paymentMethod: 'CB',
-                //description: 'Modification du solde',
+                description: 'Modification du solde',
                 datetime: new Date().toISOString(),
                 sale: amount_cb > 0 ? true : false,
-                items: []
+                type: 'Tresory'
             };
             postTransaction(transaction);
         }
         if (amount_cash !== 0) {
-            const transaction: TransactionType<null> = {
+            const transaction: ITransactionType = {
                 amount: Math.abs(amount_cash),
                 paymentMethod: 'Espèces',
-                //description: 'Modification du solde',
+                description: 'Modification du solde',
                 datetime: new Date().toISOString(),
                 sale: amount_cash > 0 ? true : false,
-                items: []
+                type: 'Tresory'
             };
             postTransaction(transaction);
         }
@@ -194,14 +204,12 @@ export default function TresoryButtons() {
                                             name='lydiaRate'
                                             min={0}
                                             max={100}
-                                            defaultValue={1.5} // TODO: get from db
+                                            defaultValue={tresory.lydiaRate * 100}
                                         />
                                         <span className='font-medium text-lg ml-2'>%</span>
                                     </div>
                                 ) : (
-                                    <span className='font-medium text-lg'>
-                                        {1.5} % {/**TODO: get from db */}
-                                    </span>
+                                    <span className='font-medium text-lg'>{tresory.lydiaRate * 100} %</span>
                                 )}
                             </div>
                         </div>
