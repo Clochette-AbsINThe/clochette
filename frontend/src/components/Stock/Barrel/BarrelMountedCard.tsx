@@ -1,7 +1,7 @@
 import PopupWindows from '@components/PopupWindows';
 import { getIcon } from '@styles/utils';
 import { Barrel } from '@types';
-import { useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 interface BarrelMountedCardProps {
     barrel: Barrel;
@@ -35,7 +35,8 @@ export function BarrelMountedCard(props: BarrelMountedCardProps): JSX.Element {
         setShowPopup(false);
     };
 
-    const handleSubmitModify = () => {
+    const handleSubmitModify = (e: React.FormEvent) => {
+        e.preventDefault();
         if (inputPriceRef.current) {
             editBarrel({ ...barrel, sellPrice: Number(inputPriceRef.current.value) });
         }
