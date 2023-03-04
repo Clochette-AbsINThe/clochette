@@ -25,3 +25,8 @@ class SecurityScopesHierarchy(Enum):
 
 
 SecurityScopes = convert_enum_to_str(SecurityScopesHierarchy, name='SecurityScopes')
+
+
+class TransactionType(str, Enum):
+    transaction = 'transaction'
+    tresorery = 'tresorery'
