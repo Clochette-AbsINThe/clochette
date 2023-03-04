@@ -114,6 +114,8 @@ export interface ITransactionType {
     amount: number;
     sale: boolean; // true = vente, false = achat
     paymentMethod: PaymentMethod;
+    type: 'Tresory' | 'transaction';
+    description: string;
 }
 
 // transaction/ --> get // Utile pour l'appli de l'historique des transactions
@@ -151,4 +153,5 @@ export interface Tresory {
     id: number;
     totalAmount: number;
     cashAmount: number;
+    lydiaRate: number;
 }
