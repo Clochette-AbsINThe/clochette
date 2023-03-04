@@ -26,11 +26,11 @@ class TransactionCreate(TransactionBase):
 
 class TransactionFrontCreate(TransactionBase):
     amount: float
-    items: list[Item] | None
+    items: list[Item] = []
 
     @validator('items')
     def none_only_if_tresorery_type(cls, v, values):
-        if v is None and values['type'] != TransactionType.tresorery:
+        if v == [] and values['type'] != TransactionType.tresorery:
             raise ValueError('items must be provided if type is not "tresorery"')
 
 
