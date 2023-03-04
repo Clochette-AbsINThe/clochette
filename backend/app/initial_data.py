@@ -24,6 +24,7 @@ async def init_db() -> None:
             obj_in=treasury_schema.TreasuryCreate(
                 total_amount=0,
                 cash_amount=0,
+                lydia_rate=0.015, # Lydia take 1.5% of the transaction
             )
         )
         # Create account
