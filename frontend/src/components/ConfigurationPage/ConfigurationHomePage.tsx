@@ -17,13 +17,13 @@ export default function ConfigurationHomePage(): JSX.Element {
                 <Card
                     icon={['Soft', 'Food']}
                     title='Consommables'
-                    description="Les produits consommables sont les produits qui sont vendus sous la même forme qu'ils sont acheté, comme par exemple les softs où les pizzas."
+                    description="Les produits consommables apparaissent dans la gestion du stock. Il sont les produits qui sont vendus sous la même forme qu'ils sont achetés, comme par exemple les softs où les pizzas."
                     link='/configuration/consommables'
                 />
                 <Card
                     icon={['Misc', 'Glass']}
                     title='Produits hors-stock'
-                    description="Les produits hors stock sont les produits qui n'apparaitrons pas dans la gestion des stocks comme les planchette de charcuterie."
+                    description="Les produits hors stock sont les produits qui n'apparaitrons pas dans la gestion des stocks comme les planchettes de charcuterie."
                     link='/configuration/hors-stocks'
                 />
             </div>
