@@ -1,7 +1,7 @@
 import datetime
 
 from app.core.config import DefaultModel
-from app.core.types import PaymentMethod
+from app.core.types import PaymentMethod, TransactionType
 from app.schemas.barrel import Barrel
 from app.schemas.consumable import Consumable
 from app.schemas.glass import Glass
@@ -13,6 +13,8 @@ class TransactionBase(DefaultModel):
     datetime: datetime.datetime
     payment_method: PaymentMethod
     sale: bool
+    type: TransactionType = TransactionType.transaction
+    description: str | None
 
 
 class TransactionCreate(TransactionBase):
