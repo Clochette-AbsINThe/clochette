@@ -159,6 +159,6 @@ class CRUDBase(
         :return: The deleted record
         """
         obj = await db.get(self.model, id)
-        db.delete(obj)
+        await db.delete(obj)
         await db.commit()
         return obj
