@@ -1,8 +1,9 @@
 import ReloadButton from '@components/Admin/Charts/ReloadButton';
 import Loader from '@components/Loader';
 import PopupWindows from '@components/PopupWindows';
+import { getTresory } from '@proxies/DashboardProxies';
 import { getTransactionItemsById, getTransactions } from '@proxies/TransactionHistoryProxies';
-import { ItemTransactionResponse, ITransactionType } from '@types';
+import { ItemTransactionResponse, ITransactionType, Tresory } from '@types';
 import { translateTable } from '@utils/utils';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -16,6 +17,9 @@ export default function TransactionHistory(props: TransactionHistoryProps) {
     const [transactions, setTransactions] = useState<ITransactionType[]>([]);
     const [getTransactionsData, { loading }] = getTransactions(setTransactions);
 
+    const [tresory, setTresory] = useState<Tresory>();
+    const [getTresoryData] = getTresory(setTresory);
+
     const [transactionItems, setTransactionItems] = useState<ItemTransactionResponse[]>([]);
     const [transactionId, setTransactionId] = useState<ITransactionType>();
     const [getTransactionItemsData, { loading: loadingItems }] = getTransactionItemsById(setTransactionItems);
@@ -23,7 +27,8 @@ export default function TransactionHistory(props: TransactionHistoryProps) {
 
     const makeApiCall = useCallback(() => {
         getTransactionsData();
-    }, [getTransactionsData]);
+        getTresoryData();
+    }, [getTransactionsData, getTresoryData]);
 
     useEffect(() => {
         makeApiCall();
@@ -52,6 +57,7 @@ export default function TransactionHistory(props: TransactionHistoryProps) {
                             {showTreasuryTransaction && <th className='border-y text-start px-4 py-2'>Type de transaction</th>}
                             <th className='border-y text-start px-4 py-2'>Moyen de paiment</th>
                             <th className='border-y text-start px-4 py-2'>Montant</th>
+                            {showTreasuryTransaction && <th className='border-y text-start px-4 py-2'>Montant spécifique Lydia</th>}
                             <th className='border-y text-start px-4 py-2'></th>
                             <th className='border-y text-start px-4 py-2 w-0 border-r'></th>
                         </tr>
@@ -64,11 +70,12 @@ export default function TransactionHistory(props: TransactionHistoryProps) {
                                     <td className='border-b border-l px-4 py-2'>{transaction.id}</td>
                                     <td className='border-b px-4 py-2'>{new Date(transaction.datetime).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' })}</td>
                                     <td className='border-b px-4 py-2'>{new Date(transaction.datetime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</td>
-                                    {showTreasuryTransaction && <td className='border-b px-4 py-2'>{/** TODO  */}</td>}
+                                    {showTreasuryTransaction && <td className='border-b px-4 py-2'>{transaction.type}</td>}
                                     <td className='border-b px-4 py-2'>{transaction.paymentMethod}</td>
                                     <td className='border-b px-4 py-2 text-xl font-bold'>
                                         {transaction.sale ? '+' : '-'} {transaction.amount} €
                                     </td>
+                                    {showTreasuryTransaction && <td className='border-b px-4 py-2 text-xl font-bold'>{transaction.sale && transaction.paymentMethod === 'Lydia' ? '+' + transaction.amount * (tresory?.lydiaRate ?? 1) + '€' : null}</td>}
                                     <td className='border-b px-4 py-2'>
                                         {transaction.sale ? (
                                             <svg
@@ -116,7 +123,7 @@ export default function TransactionHistory(props: TransactionHistoryProps) {
                 <div className='flex flex-col mx-4 my-3 flex-grow'>
                     <div className='text-3xl font-bold mb-2 border-b-2 border-neutral-400'>Récapitulatif de la commande :</div>
                     {loadingItems && <Loader />}
-                    {showTreasuryTransaction && <div className='text-xl mb-2'>{/** TODO */}</div>}
+                    {showTreasuryTransaction && <div className='text-xl mb-2'>{transactionId?.description}</div>}
                     {transactionItems.map((item) => {
                         return (
                             <li
