@@ -18,18 +18,16 @@ export function getTransactionItems(setItems: (item: Array<TransactionType<ItemT
         const finalResponse: Array<TransactionType<ItemTransactionResponse>> = [];
         const { data } = await getAllTransactions({ params: query });
         await Promise.all(
-            data
-                // .filter((transaction) => transaction.sale === true)
-                .map((transaction) => {
-                    return new Promise<void>(async (resolve) => {
-                        const { data: transactionData } = await getTransaction({}, endpoints.v1.transaction + transaction.id);
-                        finalResponse.push({
-                            ...transaction,
-                            items: generateTransactionItemArray(transactionData)
-                        });
-                        resolve();
+            data.map((transaction) => {
+                return new Promise<void>(async (resolve) => {
+                    const { data: transactionData } = await getTransaction({}, endpoints.v1.transaction + transaction.id);
+                    finalResponse.push({
+                        ...transaction,
+                        items: generateTransactionItemArray(transactionData)
                     });
-                })
+                    resolve();
+                });
+            })
         );
         setItems(finalResponse);
     };
@@ -221,15 +219,15 @@ export function getTresory(setItem: (item: Tresory) => void): IProxy {
     return [getData, { loading, error }];
 }
 
-export function postNewTransaction(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPost<TransactionType<null>> {
-    const [{ error, loading }, post] = useAxios<TransactionType<null>>('', { method: 'POST' });
+export function postNewTransaction(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPost<ITransactionType> {
+    const [{ error, loading }, post] = useAxios<ITransactionType>('', { method: 'POST' });
 
-    const postAsync = async (data: TransactionType<null>): Promise<void> => {
+    const postAsync = async (data: ITransactionType): Promise<void> => {
         const response = await post({ data }, endpoints.v1.transaction);
         callback?.(response);
     };
 
-    const postData = (data: TransactionType<null>): void => {
+    const postData = (data: ITransactionType): void => {
         postAsync(data).catch((err: AxiosError<unknown, any>) => {
             callback?.(err.response as AxiosResponse<unknown, any>);
         });
@@ -238,16 +236,16 @@ export function postNewTransaction(callback?: (data: AxiosResponse<unknown, any>
     return [postData, { loading, error }];
 }
 
-export function putTreasury(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPost<Tresory> {
+export function putTreasury(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPost<Partial<Tresory>> {
     const [{ error, loading }, put] = useAxios<Tresory>('', { method: 'PUT' });
 
-    const putAsync = async (data: Tresory): Promise<void> => {
+    const putAsync = async (data: Partial<Tresory>): Promise<void> => {
         const { id, ...rest } = data;
         const response = await put({ data: rest }, endpoints.v1.tresory + id!);
         callback?.(response);
     };
 
-    const putData = (data: Tresory): void => {
+    const putData = (data: Partial<Tresory>): void => {
         putAsync(data).catch((err: AxiosError<unknown, any>) => {
             callback?.(err.response as AxiosResponse<unknown, any>);
         });

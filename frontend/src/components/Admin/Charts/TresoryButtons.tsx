@@ -149,7 +149,7 @@ export default function TresoryButtons() {
                 description: 'Modification du solde',
                 datetime: new Date().toISOString(),
                 sale: amount_cb > 0 ? true : false,
-                type: 'Tresory'
+                type: 'tresorery'
             };
             postTransaction(transaction);
         }
@@ -160,7 +160,7 @@ export default function TresoryButtons() {
                 description: 'Modification du solde',
                 datetime: new Date().toISOString(),
                 sale: amount_cash > 0 ? true : false,
-                type: 'Tresory'
+                type: 'tresorery'
             };
             postTransaction(transaction);
         }

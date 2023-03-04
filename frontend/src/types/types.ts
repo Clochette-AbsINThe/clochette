@@ -114,7 +114,7 @@ export interface ITransactionType {
     amount: number;
     sale: boolean; // true = vente, false = achat
     paymentMethod: PaymentMethod;
-    type: 'Tresory' | 'transaction';
+    type: 'tresorery' | 'transaction';
     description: string;
 }
 
