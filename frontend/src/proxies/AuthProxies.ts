@@ -17,7 +17,7 @@ type responseType = {
  * @returns An object containing the status of the request and the token if the request was successful, an error message otherwise
  */
 export async function login({ username, password }: { username: string; password: string }): Promise<responseType> {
-    const data = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`; // &scope=president`; // TODO : remove scope=president
+    const data = `username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`;
     try {
         const res = await axios.request({
             url: environmentVariable.BACKEND_API_URL + endpoints.v1.login,
