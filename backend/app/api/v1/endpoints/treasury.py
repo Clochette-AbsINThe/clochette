@@ -24,3 +24,14 @@ async def create_treasury(treasury: treasury_schema.TreasuryCreate, db=Depends(g
             detail=translator.ELEMENT_ALREADY_EXISTS
         )
     return await treasuries.create(db, obj_in=treasury)
+
+@router.put("/", response_model=treasury_schema.Treasury, dependencies=[Security(get_current_active_account, scopes=['treasurer'])])
+async def update_treasury(treasury: treasury_schema.TreasuryUpdate, db=Depends(get_db)) -> dict:
+    # If no treasury exists, raise an error
+    old_treasury = ((await treasuries.query(db, limit=1))[0:1] or [None])[0]
+    if not old_treasury:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=translator.ELEMENT_NOT_FOUND
+        )
+    return await treasuries.update(db, db_obj=old_treasury, obj_in=treasury)
