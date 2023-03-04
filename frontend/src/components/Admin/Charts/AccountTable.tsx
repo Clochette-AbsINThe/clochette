@@ -3,6 +3,7 @@ import PopupWindows from '@components/PopupWindows';
 import { deleteAccount, getAccounts, putAccount } from '@proxies/DashboardProxies';
 import { Account } from '@types';
 import { getErrorMessage } from '@utils/utils';
+import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import AccountForm from '../Dashboard/AccountForm';
@@ -18,10 +19,16 @@ export default function AccountTable() {
 
     const [selectedAccount, setSelectedAccount] = useState<Account>();
 
+    const makeApiCall = useCallback(() => {
+        getAccountsData();
+    }, [getAccountsData]);
+
     const [editAccount] = putAccount((data) => {
         if (data.status === 200) {
             const item = data.data as Account;
             toast.success(`${item.firstName} modifié avec succès !`);
+            setShowModal(false);
+            makeApiCall();
         } else {
             const detail = getErrorMessage(data);
             toast.error(`Erreur lors de la modification de ${selectedAccount!.firstName}. ${detail}`);
@@ -32,15 +39,13 @@ export default function AccountTable() {
         if (data.status === 200) {
             const item = data.data as Account;
             toast.success(`${item.firstName} supprimé avec succès !`);
+            setShowModal(false);
+            makeApiCall();
         } else {
             const detail = getErrorMessage(data);
             toast.error(`Erreur lors de la suppression de ${selectedAccount!.firstName}. ${detail}`);
         }
     });
-
-    const makeApiCall = useCallback(() => {
-        getAccountsData();
-    }, [getAccountsData]);
 
     const handleAccountClick = (account: Account) => {
         setSelectedAccount(account);
@@ -57,6 +62,11 @@ export default function AccountTable() {
 
     return (
         <>
+            <Link
+                href='/register'
+                className='btn-primary place-self-end m-4'>
+                Ajouter un compte
+            </Link>
             <div className='overflow-x-auto md:mx-12 hide-scroll-bar'>
                 <table className='table-auto w-full'>
                     <thead>
