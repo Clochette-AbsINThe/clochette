@@ -149,7 +149,9 @@ export function postNewSellTransaction(callback?: (data: AxiosResponse<unknown, 
             sale: true,
             paymentMethod,
             amount: totalPrice,
-            items: newItems
+            items: newItems,
+            type: 'transaction',
+            description: ''
         };
         const response = await postTransaction({ data });
         callback?.(response);
