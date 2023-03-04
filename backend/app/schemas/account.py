@@ -7,6 +7,7 @@ from zxcvbn import zxcvbn
 from app.core.config import DefaultModel
 from app.core.security import get_password_hash, is_hashed_password
 from app.core.types import SecurityScopes
+from app.core.utils.misc import to_query_parameters
 
 
 def validate_password(password: str | None, values: dict | None = None) -> str:
@@ -48,12 +49,20 @@ class AccountCreate(AccountBase):
 
 
 class AccountUpdate(AccountBase):
+    username: str | None = Field(min_length=3, max_length=32)
+    last_name: str | None
+    first_name: str | None
     password: str | None
+    scope: SecurityScopes | None
+    is_active: bool | None
+    promotion_year: int | None = Field(ge=2000, le=datetime.now().year + 3) # Promotion year must be less than 3 years in the future
+
+    _validate_password = validator("password", allow_reuse=True)(validate_password)
 
 
 class OwnAccountUpdate(AccountUpdate):
-    is_active: bool = Field(exclude=True)
-    scope: SecurityScopes = Field(exclude=True)
+    is_active: bool | None = Field(exclude=True)
+    scope: SecurityScopes | None = Field(exclude=True)
 
 
 class Account(AccountBase):

@@ -12,7 +12,8 @@ class ConsumableItemCreate(ConsumableItemBase):
 
 
 class ConsumableItemUpdate(ConsumableItemBase):
-    pass
+    name: str | None
+    icon: IconName | None
 
 
 class ConsumableItem(ConsumableItemBase):
