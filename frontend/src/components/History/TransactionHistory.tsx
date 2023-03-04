@@ -65,17 +65,18 @@ export default function TransactionHistory(props: TransactionHistoryProps) {
                     <tbody>
                         {transactions
                             .sort((a, b) => new Date(b.datetime).getTime() - new Date(a.datetime).getTime())
+                            .filter((transaction) => showTreasuryTransaction || transaction.type !== 'tresorery')
                             .map((transaction) => (
                                 <tr key={transaction.id}>
                                     <td className='border-b border-l px-4 py-2'>{transaction.id}</td>
                                     <td className='border-b px-4 py-2'>{new Date(transaction.datetime).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: '2-digit' })}</td>
                                     <td className='border-b px-4 py-2'>{new Date(transaction.datetime).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}</td>
-                                    {showTreasuryTransaction && <td className='border-b px-4 py-2'>{transaction.type}</td>}
+                                    {showTreasuryTransaction && <td className='border-b px-4 py-2'>{transaction.type === 'transaction' ? 'Transaction classique' : 'Transaction de trésorerie'}</td>}
                                     <td className='border-b px-4 py-2'>{transaction.paymentMethod}</td>
                                     <td className='border-b px-4 py-2 text-xl font-bold'>
                                         {transaction.sale ? '+' : '-'} {transaction.amount} €
                                     </td>
-                                    {showTreasuryTransaction && <td className='border-b px-4 py-2 text-xl font-bold'>{transaction.sale && transaction.paymentMethod === 'Lydia' ? '+' + transaction.amount * (tresory?.lydiaRate ?? 1) + '€' : null}</td>}
+                                    {showTreasuryTransaction && <td className='border-b px-4 py-2 text-xl font-bold'>{transaction.sale && transaction.paymentMethod === 'Lydia' ? '+' + transaction.amount * (1 - (tresory?.lydiaRate ?? 0)) + '€' : null}</td>}
                                     <td className='border-b px-4 py-2'>
                                         {transaction.sale ? (
                                             <svg

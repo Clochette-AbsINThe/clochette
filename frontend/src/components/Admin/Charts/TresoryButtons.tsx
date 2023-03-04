@@ -81,10 +81,10 @@ export default function TresoryButtons() {
             toast.error('Le taux de Lydia doit être inférieur à 100%');
             return;
         }
-        const lydiaRate = newLydiaRate / 100;
+        const lydiaRate = (newLydiaRate / 100).toFixed(3);
         changeLydiaRate({
             id: tresory.id,
-            lydiaRate: newLydiaRate
+            lydiaRate: Number(lydiaRate)
         });
     };
 
@@ -146,7 +146,7 @@ export default function TresoryButtons() {
             const transaction: ITransactionType = {
                 amount: Math.abs(amount_cb),
                 paymentMethod: 'CB',
-                description: 'Modification du solde',
+                description,
                 datetime: new Date().toISOString(),
                 sale: amount_cb > 0 ? true : false,
                 type: 'tresorery'
@@ -157,7 +157,7 @@ export default function TresoryButtons() {
             const transaction: ITransactionType = {
                 amount: Math.abs(amount_cash),
                 paymentMethod: 'Espèces',
-                description: 'Modification du solde',
+                description,
                 datetime: new Date().toISOString(),
                 sale: amount_cash > 0 ? true : false,
                 type: 'tresorery'
@@ -204,12 +204,12 @@ export default function TresoryButtons() {
                                             name='lydiaRate'
                                             min={0}
                                             max={100}
-                                            defaultValue={tresory.lydiaRate * 100}
+                                            defaultValue={Number((tresory.lydiaRate * 100).toFixed(3))}
                                         />
                                         <span className='font-medium text-lg ml-2'>%</span>
                                     </div>
                                 ) : (
-                                    <span className='font-medium text-lg'>{tresory.lydiaRate * 100} %</span>
+                                    <span className='font-medium text-lg'>{Number((tresory.lydiaRate * 100).toFixed(3))} %</span>
                                 )}
                             </div>
                         </div>

@@ -53,7 +53,7 @@ function reducer(acc: number, transaction: ITransactionType, lydiaRate?: number)
     // Vente
     if (transaction.sale === true) {
         if (transaction.paymentMethod === 'Lydia') {
-            return acc + transaction.amount * (lydiaRate ?? 1);
+            return acc + transaction.amount * (1 - (lydiaRate ?? 0));
         }
         return acc + transaction.amount;
     } else {
