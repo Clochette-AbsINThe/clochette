@@ -29,9 +29,10 @@ class TransactionFrontCreate(TransactionBase):
     items: list[Item] = []
 
     @validator('items')
-    def none_only_if_tresorery_type(cls, v, values):
+    def empty_only_if_tresorery_type(cls, v, values):
         if v == [] and values['type'] != TransactionType.tresorery:
             raise ValueError('items must be provided if type is not "tresorery"')
+        return v
 
 
 class TransactionUpdate(TransactionBase):
