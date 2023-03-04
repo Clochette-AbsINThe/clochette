@@ -49,9 +49,12 @@ function sortCallback(a: string, b: string) {
     return createDateFromString(a).getTime() - createDateFromString(b).getTime();
 }
 
-function reducer(acc: number, transaction: ITransactionType) {
+function reducer(acc: number, transaction: ITransactionType, lydiaRate?: number) {
     // Vente
     if (transaction.sale === true) {
+        if (transaction.paymentMethod === 'Lydia') {
+            return acc + transaction.amount * (lydiaRate ?? 1);
+        }
         return acc + transaction.amount;
     } else {
         return acc - transaction.amount;
@@ -61,11 +64,15 @@ function reducer(acc: number, transaction: ITransactionType) {
 export default function TresoryChart() {
     // Those data are the list of all the transactions without the detail of the items
     const [allTransactions, setAllTransactions] = useState<ITransactionType[]>([]);
-    const [getAllTransactionsData, { loading }] = getTransactions(setAllTransactions);
+    const [getAllTransactionsData] = getTransactions(setAllTransactions);
+
+    const [tresory, setTresory] = useState<Tresory>();
+    const [getTresoryData] = getTresory(setTresory);
 
     const makeApiCall = useCallback(() => {
         getAllTransactionsData();
-    }, [getAllTransactionsData]);
+        getTresoryData();
+    }, [getAllTransactionsData, getTresoryData]);
 
     useEffect(() => {
         makeApiCall();
@@ -75,7 +82,7 @@ export default function TresoryChart() {
 
     const EspecesData = [0, ...Array.from(dataset.values()).map((transactions) => transactions.filter((transaction) => transaction.paymentMethod === 'Espèces').reduce(reducer, 0))];
 
-    const CompteData = [0, ...Array.from(dataset.values()).map((transactions) => transactions.filter((transaction) => transaction.paymentMethod !== 'Espèces').reduce(reducer, 0))];
+    const CompteData = [0, ...Array.from(dataset.values()).map((transactions) => transactions.filter((transaction) => transaction.paymentMethod !== 'Espèces').reduce((acc, transaction) => reducer(acc, transaction, tresory?.lydiaRate ?? 1), 0))];
 
     const data: ChartData<'line'> = {
         labels: ['Init', ...Array.from(dataset.keys())],
