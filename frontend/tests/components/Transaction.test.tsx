@@ -134,11 +134,11 @@ test('Verify error on post on BuyPage', async () => {
     );
     render(<Transaction />);
     await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 400));
     });
     await userEvent.click(screen.getByLabelText('Achat'));
     await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 400));
     });
     expect(screen.queryByText('Nombre', { exact: false })).toBeNull();
     const dropdowns = screen.getAllByLabelText('dropdown-button');
