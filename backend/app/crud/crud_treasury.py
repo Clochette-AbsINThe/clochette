@@ -31,7 +31,10 @@ class CRUDTreasury(CRUDBase[Treasury, TreasuryCreate, TreasuryUpdate]):
                 detail=translator.ELEMENT_NOT_FOUND
             )
         # Update the total amount of the treasury based on the transaction amount and whether it is a sale or a purchase
-        treasury.total_amount += obj_in.amount if obj_in.sale else -obj_in.amount
+        if obj_in.payment_method == PaymentMethod.lydia and obj_in.sale: # If the payment method is Lydia, update the total amount less the fee
+            treasury.total_amount += round(obj_in.amount * (1 - treasury.lydia_rate), 2) # Round the amount to 2 decimals as cents are 2 decimals
+        else:
+            treasury.total_amount += obj_in.amount if obj_in.sale else -obj_in.amount
         # If the payment method is cash, update the cash amount of the treasury
         if obj_in.payment_method == PaymentMethod.cash:
             treasury.cash_amount += obj_in.amount if obj_in.sale else -obj_in.amount
