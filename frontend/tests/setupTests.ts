@@ -48,32 +48,32 @@ export const server = setupServer(
             ctx.delay(100)
         );
     }),
-    rest.get(`https://clochette.dev/api/v1${endpoints.v1.barrelMounted}`, (req, res, ctx) => {
-        return res(
-            ctx.json([
-                {
-                    id: 1,
-                    fkId: 1,
-                    name: 'boisson 1',
-                    sellPrice: 2,
-                    unitPrice: 1,
-                    isMounted: true,
-                    empty: false
-                },
-                {
-                    id: 2,
-                    fkId: 2,
-                    name: 'boisson 2',
-                    sellPrice: 2,
-                    unitPrice: 1,
-                    isMounted: true,
-                    empty: false
-                }
-            ] as Barrel[]),
-            ctx.status(200),
-            ctx.delay(50)
-        );
-    }),
+    // rest.get(`https://clochette.dev/api/v1${endpoints.v1.barrelMounted}`, (req, res, ctx) => {
+    //     return res(
+    //         ctx.json([
+    //             {
+    //                 id: 1,
+    //                 fkId: 1,
+    //                 name: 'boisson 1',
+    //                 sellPrice: 2,
+    //                 unitPrice: 1,
+    //                 isMounted: true,
+    //                 empty: false
+    //             },
+    //             {
+    //                 id: 2,
+    //                 fkId: 2,
+    //                 name: 'boisson 2',
+    //                 sellPrice: 2,
+    //                 unitPrice: 1,
+    //                 isMounted: true,
+    //                 empty: false
+    //             }
+    //         ] as Barrel[]),
+    //         ctx.status(200),
+    //         ctx.delay(50)
+    //     );
+    // }),
     rest.get(`https://clochette.dev/api/v1${endpoints.v1.outOfStockItemSell}`, (req, res, ctx) => {
         return res(
             ctx.json([
@@ -344,6 +344,32 @@ export const server = setupServer(
         );
     }),
     rest.get(`https://clochette.dev/api/v1${endpoints.v1.barrel}`, (req, res, ctx) => {
+        if (req.url.searchParams.get('mounted') === 'true') {
+            return res(
+                ctx.json([
+                    {
+                        id: 1,
+                        fkId: 1,
+                        name: 'boisson 1',
+                        sellPrice: 2,
+                        unitPrice: 1,
+                        isMounted: true,
+                        empty: false
+                    },
+                    {
+                        id: 2,
+                        fkId: 2,
+                        name: 'boisson 2',
+                        sellPrice: 2,
+                        unitPrice: 1,
+                        isMounted: true,
+                        empty: false
+                    }
+                ] as Barrel[]),
+                ctx.status(200),
+                ctx.delay(50)
+            );
+        }
         return res(
             ctx.json([
                 {
