@@ -5,7 +5,6 @@ import subprocess
 
 from fastapi import APIRouter, FastAPI
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from sqlalchemy.ext.asyncio import AsyncSession
 from time import sleep
 
 from app.api.v1.api import api_v1_router
