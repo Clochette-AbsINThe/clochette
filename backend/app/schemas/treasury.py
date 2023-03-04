@@ -13,8 +13,8 @@ class TreasuryCreate(TreasuryBase):
 
 
 class TreasuryUpdate(TreasuryBase):
-    total_amount: float = Field(exclude=True)
-    cash_amount: float = Field(exclude=True)
+    total_amount: float | None = Field(exclude=True)
+    cash_amount: float | None = Field(exclude=True)
     lydia_rate: float | None = Field(ge=0, le=1)
     class Config:
         orm_mode = True
