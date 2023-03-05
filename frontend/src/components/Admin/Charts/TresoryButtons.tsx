@@ -153,7 +153,7 @@ export default function TresoryButtons() {
             };
             postTransaction(transaction);
         }
-        if (amount_cash !== 0) {
+        else if (amount_cash !== 0) {
             const transaction: ITransactionType = {
                 amount: Math.abs(amount_cash),
                 paymentMethod: 'Espèces',
@@ -163,6 +163,8 @@ export default function TresoryButtons() {
                 type: 'tresorery'
             };
             postTransaction(transaction);
+        } else {
+            toast.error('Le montant de modification doit être différent de 0');
         }
     };
 
@@ -174,10 +176,17 @@ export default function TresoryButtons() {
                 <div className='border p-6 bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-500 flex flex-col grow sm:grow-0'>
                     <h6 className='text-xl font-medium mb-4'>Total</h6>
                     <div className='flex items-center mb-4'>
+                        <div className='bg-[#0e7c7c28] p-2 rounded-md max-w-max'>{getIcon('Virement', 'text-[#0e7c7c] w-8 h-8')}</div>
+                        <div className='flex flex-col ml-2'>
+                            <span className='text-sm text-gray-400'>Total de la trésorerie</span>
+                            <span className='font-medium text-lg'>{tresory.totalAmount} €</span>
+                        </div>
+                    </div>
+                    <div className='flex items-center mb-4'>
                         <div className='bg-[#28C76F28] p-2 rounded-md max-w-max'>{getIcon('CB', 'text-[#28C76F] w-8 h-8')}</div>
                         <div className='flex flex-col ml-2'>
                             <span className='text-sm text-gray-400'>Compte</span>
-                            <span className='font-medium text-lg'>{tresory.totalAmount} €</span>
+                            <span className='font-medium text-lg'>{tresory.totalAmount - tresory.cashAmount} €</span>
                         </div>
                     </div>
                     <div className='flex items-center mb-2'>
@@ -236,7 +245,7 @@ export default function TresoryButtons() {
                         <h6 className='text-xl font-medium mb-4'>Total compte</h6>
                         <div className='flex justify-center'>
                             <div className='bg-[#47445050] rounded-md py-1 px-2 max-w-max'>
-                                <span>{tresory.totalAmount} €</span>
+                                <span>{tresory.totalAmount - tresory.cashAmount} €</span>
                             </div>
                         </div>
                     </div>
@@ -338,7 +347,7 @@ export default function TresoryButtons() {
                                             <div className='bg-[#28C76F28] p-2 rounded-md max-w-max'>{getIcon('CB', 'text-[#28C76F] w-8 h-8')}</div>
                                             <div className='flex flex-col ml-2'>
                                                 <span className='text-sm text-gray-400'>Compte</span>
-                                                <span className='font-medium text-lg'>{tresory.totalAmount} €</span>
+                                                <span className='font-medium text-lg'>{tresory.totalAmount - tresory.cashAmount} €</span>
                                             </div>
                                         </div>
                                         <div className='flex items-center mb-2'>
@@ -360,7 +369,7 @@ export default function TresoryButtons() {
                                                     {popupType === PopupType.ModifyTotal ? (
                                                         <span className='font-medium text-lg'>{Amount} €</span>
                                                     ) : (
-                                                        <span className='font-medium text-lg'>{tresory.totalAmount + specificPopupAmount(popupType, 'CB')} €</span>
+                                                        <span className='font-medium text-lg'>{(tresory.totalAmount - tresory.cashAmount) + specificPopupAmount(popupType, 'CB')} €</span>
                                                     )}
                                                 </div>
                                             </div>
@@ -369,15 +378,15 @@ export default function TresoryButtons() {
                                                     {popupType === PopupType.ModifyTotal ? (
                                                         <>
                                                             <span>
-                                                                {Amount - tresory.totalAmount >= 0 ? '+' : ''}
-                                                                {Amount - tresory.totalAmount} €
+                                                                {Amount - (tresory.totalAmount - tresory.cashAmount) >= 0 ? '+' : ''}
+                                                                {(Amount - (tresory.totalAmount - tresory.cashAmount)).toFixed(2)} €
                                                             </span>
                                                             <input
                                                                 type='number'
                                                                 hidden
                                                                 className='sr-only'
                                                                 readOnly
-                                                                value={Amount - tresory.totalAmount}
+                                                                value={(Amount - (tresory.totalAmount - tresory.cashAmount)).toFixed(2)}
                                                                 name='amount_cb'
                                                             />
                                                         </>

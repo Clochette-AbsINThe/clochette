@@ -80,12 +80,12 @@ export default function TresoryChart() {
 
     let dataset = groupBy(allTransactions, groupByCallback, sortCallback);
 
-    const EspecesData = [0, ...Array.from(dataset.values()).map((transactions) => transactions.filter((transaction) => transaction.paymentMethod === 'Espèces').reduce(reducer, 0))];
+    const EspecesData = [...Array.from(dataset.values()).map((transactions) => transactions.filter((transaction) => transaction.paymentMethod === 'Espèces').reduce(reducer, 0))];
 
-    const CompteData = [0, ...Array.from(dataset.values()).map((transactions) => transactions.filter((transaction) => transaction.paymentMethod !== 'Espèces').reduce((acc, transaction) => reducer(acc, transaction, tresory?.lydiaRate ?? 1), 0))];
+    const CompteData = [...Array.from(dataset.values()).map((transactions) => transactions.filter((transaction) => transaction.paymentMethod !== 'Espèces').reduce((acc, transaction) => reducer(acc, transaction, tresory?.lydiaRate ?? 1), 0))];
 
     const data: ChartData<'line'> = {
-        labels: ['Init', ...Array.from(dataset.keys())],
+        labels: [...Array.from(dataset.keys())],
         datasets: [
             {
                 label: 'Montant espcèce',
@@ -103,7 +103,7 @@ export default function TresoryChart() {
     };
 
     const data2: ChartData<'line'> = {
-        labels: ['Init', ...Array.from(dataset.keys())],
+        labels: [...Array.from(dataset.keys())],
         datasets: [
             {
                 label: 'Montant compte',

@@ -136,8 +136,8 @@ export default function TransactionHistory(props: TransactionHistoryProps) {
                                         {translateTable(item.table, item.quantity)} {item.item.name}
                                     </div>
                                 </div>
-                                {transactionId!.sale && <div className='text-green-600'>+{item.item.sellPrice! * item.quantity} €</div>}
-                                {!transactionId!.sale && <div className='text-red-600'>-{'unitPrice' in item.item && item.item.unitPrice * item.quantity} €</div>}
+                                {transactionId!.sale && <div className='text-green-600'>+{(item.item.sellPrice! * item.quantity).toFixed(2)} €</div>}
+                                {!transactionId!.sale && <div className='text-red-600'>-{'unitPrice' in item.item && (item.item.unitPrice * item.quantity).toFixed(2)} €</div>}
                             </li>
                         );
                     })}
