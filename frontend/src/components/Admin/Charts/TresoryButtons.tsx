@@ -152,8 +152,7 @@ export default function TresoryButtons() {
                 type: 'tresorery'
             };
             postTransaction(transaction);
-        }
-        else if (amount_cash !== 0) {
+        } else if (amount_cash !== 0) {
             const transaction: ITransactionType = {
                 amount: Math.abs(amount_cash),
                 paymentMethod: 'Espèces',
@@ -369,7 +368,7 @@ export default function TresoryButtons() {
                                                     {popupType === PopupType.ModifyTotal ? (
                                                         <span className='font-medium text-lg'>{Amount} €</span>
                                                     ) : (
-                                                        <span className='font-medium text-lg'>{(tresory.totalAmount - tresory.cashAmount) + specificPopupAmount(popupType, 'CB')} €</span>
+                                                        <span className='font-medium text-lg'>{tresory.totalAmount - tresory.cashAmount + specificPopupAmount(popupType, 'CB')} €</span>
                                                     )}
                                                 </div>
                                             </div>
