@@ -1,3 +1,4 @@
+from asyncio import wait_for
 from collections.abc import Callable
 from fastapi.requests import Request
 from fastapi.responses import Response
@@ -53,9 +54,12 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
         :param request: The request whose body is being retrieved.
         :return: The body of the request as bytes.
         """
-        body = await request.body()
-        self.set_body(request, body)
-        return body
+        try:
+            body = await wait_for(request.body(), timeout=10) # Wait for the body of the request for 10 seconds
+            self.set_body(request, body)
+            return body
+        except TimeoutError:
+            return b'Timeout while retrieving request body'
 
 
     async def dispatch(self, request: Request, call_next):

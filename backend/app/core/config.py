@@ -70,7 +70,7 @@ class Settings(BaseSettings):
     GITHUB_USER: str = os.environ.get('GITHUB_USER')
     GITHUB_TOKEN: str = os.environ.get('GITHUB_TOKEN')
 
-    ISSUE_LABELS: str = os.environ.get('ISSUES_LABELS')
+    ISSUE_LABELS: str = os.environ.get('ISSUES_LABELS', default='Backend,bug,bot')
     REPOSITORY_NAME: str = os.environ.get('REPOSITORY_NAME')
     REPOSITORY_OWNER: str = os.environ.get('REPOSITORY_OWNER')
 
