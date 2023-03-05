@@ -81,6 +81,8 @@ const transactionItems: ItemBuy[] = [
 
 const data: TransactionType<ItemBuy> = {
     datetime: date.toISOString(),
+    description: '',
+    type: 'transaction',
     sale: false,
     paymentMethod: 'CB',
     amount: 10,

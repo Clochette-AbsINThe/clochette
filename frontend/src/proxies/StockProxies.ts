@@ -118,3 +118,21 @@ export function getConsumablesDistincts(setItem: (value: Consumable[]) => void):
 
     return [getData, { loading, error }];
 }
+
+export function putConsumable(callback?: (data: AxiosResponse<unknown, any>) => void): IProxyPost<Consumable> {
+    const [{ error, loading }, put] = useAxios<Consumable>('', { method: 'PUT' });
+
+    const putDataAsync = async (data: Consumable): Promise<void> => {
+        const { id, ...rest } = data;
+        const response = await put({ data: rest }, `${endpoints.v1.consumable}${id as number}`);
+        callback?.(response);
+    };
+
+    const putData = (data: Consumable): void => {
+        putDataAsync(data).catch((err: AxiosError<unknown, any>) => {
+            callback?.(err.response as AxiosResponse<unknown, any>);
+        });
+    };
+
+    return [putData, { loading, error }];
+}

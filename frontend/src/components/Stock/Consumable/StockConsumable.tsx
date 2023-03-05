@@ -1,8 +1,10 @@
-import { getConsumables, getConsumablesDistincts } from '@proxies/StockProxies';
+import { getConsumables, getConsumablesDistincts, putConsumable } from '@proxies/StockProxies';
 import { Consumable } from '@types';
-import { useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { ConsumableStack } from '@components/Stock/Consumable/ConsumableStack';
 import Loader from '@components/Loader';
+import PopupWindows from '@components/PopupWindows';
+import { getIcon } from '@styles/utils';
 
 export default function StockConsumable(): JSX.Element {
     const [consumables, setConsumables] = useState<Consumable[]>([]);
@@ -10,6 +12,12 @@ export default function StockConsumable(): JSX.Element {
 
     const [uniqueConsumables, setUniqueConsumables] = useState<Consumable[]>([]);
     const [getConsumableUniqueData, { loading: loadingConsumableUnique }] = getConsumablesDistincts(setUniqueConsumables);
+
+    const [consumableToEdit, setConsumableToEdit] = useState<Consumable>();
+    const [putConsumableData, { loading: loadingPutConsumable }] = putConsumable();
+
+    const inputPriceRef = useRef<HTMLInputElement>(null);
+    const [openPopup, setOpenPopup] = useState(false);
 
     const makeApiCalls = useCallback((): void => {
         getConsumableData();
@@ -19,6 +27,24 @@ export default function StockConsumable(): JSX.Element {
     useEffect(() => {
         makeApiCalls();
     }, []);
+
+    function onEditConsumable(consumable: Consumable): void {
+        setOpenPopup(true);
+        setConsumableToEdit(consumable);
+    }
+
+    function onEditConsumableSubmit(e: FormEvent): void {
+        e.preventDefault();
+        if (consumableToEdit && inputPriceRef.current) {
+            const consumablesOfType = consumables.filter((c) => c.name === consumableToEdit.name);
+            consumablesOfType.forEach((c) => {
+                c.sellPrice = Number(inputPriceRef.current!.value);
+                putConsumableData(c);
+            });
+
+            setOpenPopup(false);
+        }
+    }
 
     return (
         <>
@@ -33,11 +59,69 @@ export default function StockConsumable(): JSX.Element {
                                 consumables={consumables}
                                 uniqueConsumable={uniqueConsumable}
                                 key={uniqueConsumable.name}
+                                onEdit={onEditConsumable}
                             />
                         );
                     })
                 )}
             </div>
+            {consumableToEdit && (
+                <PopupWindows
+                    open={openPopup}
+                    setOpen={setOpenPopup}>
+                    <form
+                        className='flex flex-col gap-10 grow'
+                        onSubmit={onEditConsumableSubmit}>
+                        <h2 className='text-2xl text-gray-500 dark:text-gray-100'>Modifier le prix de vente du consommable</h2>
+                        <div className='flex flex-row gap-5 items-center'>
+                            {getIcon(consumableToEdit!.icon, 'w-10 h-10 dark:text-white text-black')}
+                            <label htmlFor='name'>Nom :</label>
+                            <input
+                                type='text'
+                                id='name'
+                                name='name'
+                                aria-label='name'
+                                className='input w-64'
+                                value={consumableToEdit?.name}
+                                readOnly
+                                disabled
+                            />
+                        </div>
+                        <div className='flex flex-row gap-5 items-center'>
+                            <label htmlFor='name'>Actuel prix de vente :</label>
+                            <input
+                                type='number'
+                                id='name'
+                                className='input'
+                                value={consumableToEdit?.sellPrice}
+                                disabled
+                                readOnly
+                            />
+                            <span>€</span>
+                        </div>
+                        <div className='flex flex-row gap-5 items-center'>
+                            <label htmlFor='name'>Nouveau prix de vente :</label>
+                            <input
+                                type='number'
+                                id='name'
+                                className='input'
+                                min={0.01}
+                                step={0.01}
+                                required
+                                ref={inputPriceRef}
+                            />
+                            <span>€</span>
+                        </div>
+                        <div className='grow'></div>
+                        <button
+                            className='btn-primary'
+                            disabled={loadingPutConsumable}
+                            type='submit'>
+                            Modifier
+                        </button>
+                    </form>
+                </PopupWindows>
+            )}
         </>
     );
 }

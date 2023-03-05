@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import dynamic from 'next/dynamic';
-import LoginButton from '@components/LoginButton';
+import LoginButton from '@components/Layout/Navbar/LoginButton';
 import { useAuthContext } from '@components/Context';
 import { getRedirectUrlEncoded } from '@utils/utils';
 
@@ -13,7 +13,7 @@ const navitems = {
 };
 
 // Import Dark mode dynamically to avoid SSR issues
-const DarkMode = dynamic(() => import('@components/DarkMode').then((mod) => mod.DarkMode), { ssr: false });
+const DarkMode = dynamic(() => import('@components/Layout/Navbar/DarkMode').then((mod) => mod.DarkMode), { ssr: false });
 
 export default function Navbar(): JSX.Element {
     const [isOpen, setIsOpen] = useState(false);

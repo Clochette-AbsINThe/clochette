@@ -1,8 +1,8 @@
-import Footer from '@include/Footer';
+import Footer from '@components/Layout/Footer';
 import Head from 'next/head';
 import Script from 'next/script';
 import { Toaster } from 'react-hot-toast';
-import Navbar from '@include/Navbar';
+import Navbar from '@components/Layout/Navbar/Navbar';
 
 export interface Props {
     title: string;

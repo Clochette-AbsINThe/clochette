@@ -62,20 +62,18 @@ export default function StockBarrel(): JSX.Element {
                 {loadingBarrelMounted ? (
                     <Loader />
                 ) : (
-                    <>
-                        <div className='flex flex-row gap-5 overflow-y-hidden hide-scroll-bar'>
-                            {mountedBarrels.map((mountedBarrel) => {
-                                return (
-                                    <BarrelMountedCard
-                                        barrel={mountedBarrel}
-                                        key={mountedBarrel.id}
-                                        editBarrel={handleClicksMountedBarrel}
-                                    />
-                                );
-                            })}
-                        </div>
+                    <div className='flex flex-row gap-5 flex-wrap py-4'>
+                        {mountedBarrels.map((mountedBarrel) => {
+                            return (
+                                <BarrelMountedCard
+                                    barrel={mountedBarrel}
+                                    key={mountedBarrel.id}
+                                    editBarrel={handleClicksMountedBarrel}
+                                />
+                            );
+                        })}
                         <AddCard handleMountNewBarrel={handleMountNewBarrel} />
-                    </>
+                    </div>
                 )}
             </div>
             <h2 className='text-2xl text-gray-500 dark:text-gray-100'>Fûts en stock</h2>

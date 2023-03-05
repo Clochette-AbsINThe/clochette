@@ -52,10 +52,10 @@ export default function PopupWindows(props: PopupWindowsProps): JSX.Element {
 
     if (isOpen) {
         return (
-            <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-[#88888888] px-3'>
+            <div className='fixed top-0 left-0 w-full h-full flex items-center justify-center bg-[#88888888] p-3 z-50'>
                 <div
                     ref={ref}
-                    className='bg-gray-100 dark:bg-slate-900 rounded-lg p-4 flex flex-col border-2 dark:border-white border-black min-w-[75vw] min-h-[75vh] opacity-100'
+                    className='bg-gray-100 dark:bg-slate-900 rounded-lg p-4 flex flex-col min-w-[75vw] min-h-[75vh] opacity-100 max-w-[100vw] max-h-full overflow-auto'
                     key='popup'
                     id='PopUp'
                     aria-label='PopUp'

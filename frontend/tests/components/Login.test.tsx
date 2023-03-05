@@ -1,4 +1,4 @@
-import Login from '@components/Login';
+import Login from '@components/Admin/Login';
 import { endpoints } from '@endpoints';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';

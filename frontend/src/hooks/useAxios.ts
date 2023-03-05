@@ -1,5 +1,5 @@
 import { useAuthContext } from '@components/Context';
-import { getJwtInCookie } from '@utils/auth';
+import { getJwtInCookie } from '@utils/auth_internal_api';
 import { environmentVariable } from '@utils/settings';
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { useState } from 'react';
@@ -38,6 +38,8 @@ export default function useAxios<T>(url: string, _config?: AxiosRequestConfig): 
             setJwt(data.jwt);
             acces_token = data.jwt;
         }
+
+        // TODO : Add a offset and limit to the request to handle pagination and big data
 
         try {
             const response = await API.request({ ..._config, ...config, url: _url ?? url, headers: { Authorization: `Bearer ${acces_token}` } });
