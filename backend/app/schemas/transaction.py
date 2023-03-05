@@ -15,17 +15,20 @@ class TransactionBase(DefaultModel):
     datetime: datetime.datetime
     payment_method: PaymentMethod
     sale: bool
+    amount: float
     type: TransactionType = TransactionType.transaction
     description: str | None
+
+    @validator('amount')
+    def amount_must_have_two_decimals(cls, v):
+        return round(v, 2)
 
 
 class TransactionCreate(TransactionBase):
     treasury_id: int = 1
-    amount: float
 
 
 class TransactionFrontCreate(TransactionBase):
-    amount: float
     items: list[Item] = []
 
     @validator('items')
@@ -42,7 +45,6 @@ class TransactionUpdate(TransactionBase):
 class Transaction(TransactionBase):
     id: int
     treasury_id: int
-    amount: float
 
     class Config:
         orm_mode = True
