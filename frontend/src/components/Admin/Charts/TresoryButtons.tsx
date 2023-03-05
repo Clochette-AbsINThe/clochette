@@ -142,6 +142,8 @@ export default function TresoryButtons() {
         const amount_cash = Number(formData.get('amount_cash') as string);
         const description = formData.get('description') as string;
 
+        let transactionDone = false;
+
         if (amount_cb !== 0) {
             const transaction: ITransactionType = {
                 amount: Math.abs(amount_cb),
@@ -152,7 +154,9 @@ export default function TresoryButtons() {
                 type: 'tresorery'
             };
             postTransaction(transaction);
-        } else if (amount_cash !== 0) {
+            transactionDone = true;
+        }
+        if (amount_cash !== 0) {
             const transaction: ITransactionType = {
                 amount: Math.abs(amount_cash),
                 paymentMethod: 'Espèces',
@@ -162,7 +166,9 @@ export default function TresoryButtons() {
                 type: 'tresorery'
             };
             postTransaction(transaction);
-        } else {
+            transactionDone = true;
+        }
+        if (!transactionDone) {
             toast.error('Le montant de modification doit être différent de 0');
         }
     };
