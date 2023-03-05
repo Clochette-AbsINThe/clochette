@@ -1,7 +1,9 @@
 import datetime
 
+from pydantic import validator
+
 from app.core.config import DefaultModel
-from app.core.types import PaymentMethod
+from app.core.types import PaymentMethod, TransactionType
 from app.schemas.barrel import Barrel
 from app.schemas.consumable import Consumable
 from app.schemas.glass import Glass
@@ -13,16 +15,27 @@ class TransactionBase(DefaultModel):
     datetime: datetime.datetime
     payment_method: PaymentMethod
     sale: bool
+    amount: float
+    type: TransactionType = TransactionType.transaction
+    description: str | None
+
+    @validator('amount')
+    def amount_must_have_two_decimals(cls, v):
+        return round(v, 2)
 
 
 class TransactionCreate(TransactionBase):
     treasury_id: int = 1
-    amount: float
 
 
 class TransactionFrontCreate(TransactionBase):
-    amount: float
-    items: list[Item]
+    items: list[Item] = []
+
+    @validator('items')
+    def empty_only_if_tresorery_type(cls, v, values):
+        if v == [] and values['type'] != TransactionType.tresorery:
+            raise ValueError('items must be provided if type is not "tresorery"')
+        return v
 
 
 class TransactionUpdate(TransactionBase):
@@ -32,7 +45,6 @@ class TransactionUpdate(TransactionBase):
 class Transaction(TransactionBase):
     id: int
     treasury_id: int
-    amount: float
 
     class Config:
         orm_mode = True

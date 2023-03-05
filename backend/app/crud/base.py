@@ -136,7 +136,7 @@ class CRUDBase(
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
-            update_data = obj_in.dict(exclude_unset=True) # exclude_unset=True means that only the fields that are set in the input data will be updated
+            update_data = obj_in.dict(exclude_unset=True) # exclude_unset=True means that only the fields that are explicitly set in the input data will be updated
 
         # Update the fields of the database object with the corresponding
         # values from the update data
@@ -159,6 +159,6 @@ class CRUDBase(
         :return: The deleted record
         """
         obj = await db.get(self.model, id)
-        db.delete(obj)
+        await db.delete(obj)
         await db.commit()
         return obj

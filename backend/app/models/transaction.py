@@ -1,9 +1,7 @@
-import enum
-
-from sqlalchemy import Boolean, Column, DateTime, Enum, Integer, Float, ForeignKey
+from sqlalchemy import Boolean, Column, DateTime, Enum, Integer, Float, ForeignKey, UnicodeText
 from sqlalchemy.orm import relationship
 
-from app.core.types import PaymentMethod
+from app.core.types import PaymentMethod, TransactionType
 from app.db.base_class import Base
 
 
@@ -13,6 +11,8 @@ class Transaction(Base):
     payment_method = Column(Enum(PaymentMethod), nullable=False)
     amount = Column(Float, nullable=False)
     sale = Column(Boolean, nullable=False) # True means selling, False means buying
+    type = Column(Enum(TransactionType), nullable=False)
+    description = Column(UnicodeText, nullable=True)
 
     treasury_id = Column(Integer, ForeignKey("treasury.id"))
     treasury = relationship("Treasury", back_populates="transactions", lazy="selectin")
