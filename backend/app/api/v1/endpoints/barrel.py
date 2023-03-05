@@ -12,7 +12,7 @@ translator = Translator(element="barrel")
 
 @router.get("/", response_model=list[barrel_schema.Barrel], dependencies=[Security(get_current_active_account)])
 async def read_barrels(db=Depends(get_db), all: bool = False, mounted: bool = False) -> list:
-    return await barrels.query(db, is_mounted=mounted, limit=None) if all else await barrels.query(db, is_mounted=mounted, empty=False, limit=None)
+    return await barrels.query(db, limit=None) if all else await barrels.query(db, is_mounted=mounted, empty=False, limit=None)
 
 
 @router.get("/distincts/", response_model=list[barrel_schema.Barrel], dependencies=[Security(get_current_active_account)])
