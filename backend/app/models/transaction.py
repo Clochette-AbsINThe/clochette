@@ -15,7 +15,6 @@ class Transaction(Base):
     description = Column(UnicodeText, nullable=True)
 
     treasury_id = Column(Integer, ForeignKey("treasury.id"))
-    treasury = relationship("Treasury", back_populates="transactions", lazy="selectin")
 
     barrels = relationship("Barrel", back_populates="transaction", cascade="all, delete-orphan", lazy="selectin")
     consumables_purchase = relationship("Consumable", foreign_keys="Consumable.transaction_id_purchase", cascade="all, delete-orphan", lazy="selectin")

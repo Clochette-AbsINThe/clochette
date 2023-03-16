@@ -1,7 +1,7 @@
 import os
 
 from humps import camelize
-from pydantic import AnyHttpUrl, BaseModel, BaseSettings, EmailStr, validator
+from pydantic import AnyHttpUrl, BaseModel, BaseSettings, validator
 
 class DefaultModel(BaseModel):
     class Config:
