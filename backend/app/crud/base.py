@@ -9,6 +9,7 @@ from sqlalchemy.sql.expression import select, Select
 
 from app.core.decorator import handle_exceptions
 from app.core.translation import Translator
+from app.core.types import SynchronizedClass
 from app.db.base_class import Base
 
 
@@ -24,7 +25,8 @@ class CRUDBase(
         ModelType,
         CreateSchemaType,
         UpdateSchemaType,
-    ]
+    ],
+    SynchronizedClass
 ):
     def __init__(self, model: Type[ModelType]):
         """
@@ -32,6 +34,7 @@ class CRUDBase(
 
         :param model: A SQLAlchemy model class
         """
+        super().__init__()
         self.model = model
 
     async def read(self, db: AsyncSession, id: Any) -> Optional[ModelType]:
