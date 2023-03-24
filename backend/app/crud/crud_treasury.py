@@ -1,6 +1,7 @@
 from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.core.decorator import synchronized
 from app.core.translation import Translator
 from app.core.types import PaymentMethod
 from app.crud.base import CRUDBase
@@ -13,6 +14,7 @@ translator = Translator(element="treasury")
 
 
 class CRUDTreasury(CRUDBase[Treasury, TreasuryCreate, TreasuryUpdate]):
+    @synchronized
     async def add_transaction(self, db: AsyncSession, *, obj_in: TransactionCreate) -> Treasury:
         """
         Add a transaction to a treasury.
