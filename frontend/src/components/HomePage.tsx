@@ -12,25 +12,25 @@ export default function HomePage(): JSX.Element {
                     <Card
                         icon={['CB', 'Cash']}
                         title='Gestion des transactions'
-                        description='Gestion des différents transactions du bar; les commandes et les ventes'
+                        description='Gestion des différents transactions du bar, les commandes et les ventes'
                         link='/transaction'
                     />
                     <Card
                         icon={['Barrel', 'Soft']}
                         title='Gestion des stocks'
-                        description='Gestion des différents stocks du bar; les boissons et les consommables'
+                        description='Gestion du stock du bar, les fûts et les consommables'
                         link='/stock'
                     />
                     <Card
                         icon={['Misc']}
                         title='Historique des transactions'
-                        description='Historique des transactions du bar; les commandes et les ventes'
+                        description='Historique des transactions du bar, les commandes et les ventes'
                         link='/transaction_history'
                     />
                     <Card
                         icon={['Setting']}
                         title='Configuration'
-                        description='Configuration des élements du bar; les boissons, les consommables et les produits hors-stock'
+                        description='Configuration des élements du bar, les boissons, les consommables et les produits hors-stock'
                         link='/configuration'
                     />
                 </div>
