@@ -118,11 +118,14 @@ test('BuyPage renders', async () => {
         />
     );
     await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 1000));
+        await new Promise((resolve) => setTimeout(resolve, 500));
     });
     // expect(screen.getByText('1€')).toBeInTheDocument();
     expect(screen.getByText('Pizza')).toBeInTheDocument();
     await userEvent.click(screen.getByText('Pizza'));
+    await act(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 100));
+    });
     expect(screen.getByText('Nombre :')).toBeInTheDocument();
     await userEvent.click(screen.getByRole('submit'));
     expect(changeSelectedItems).toHaveBeenCalled();
