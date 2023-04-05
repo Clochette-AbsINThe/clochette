@@ -90,55 +90,60 @@ export function BarrelMountedCard(props: BarrelMountedCardProps): JSX.Element {
                         {popupType === 'empty' && <h1 className='text-3xl font-bold mb-5'>Décalrer le fût comme vide ?</h1>}
                     </div>
                     {popupType === 'modify' && (
-                        <form
-                            className='flex flex-col gap-10 grow'
-                            onSubmit={handleSubmitModify}>
-                            <div className='flex flex-row gap-5 items-center'>
-                                {getIcon(barrel.icon, 'w-10 h-10 dark:text-white text-black')}
-                                <label htmlFor='name'>Nom :</label>
-                                <input
-                                    type='text'
-                                    id='name'
-                                    name='name'
-                                    aria-label='name'
-                                    className='input w-64'
-                                    value={barrel.name}
-                                    readOnly
-                                    disabled
-                                />
-                            </div>
-                            <div className='flex flex-row gap-5 items-center'>
-                                <label htmlFor='name'>Actuel prix de vente :</label>
-                                <input
-                                    type='number'
-                                    id='name'
-                                    className='input'
-                                    value={barrel.sellPrice}
-                                    disabled
-                                    readOnly
-                                />
-                                <span>€</span>
-                            </div>
-                            <div className='flex flex-row gap-5 items-center'>
-                                <label htmlFor='name'>Nouveau prix de vente (n&apos;inclut pas le prix de l&apos;écocup):</label>
-                                <input
-                                    type='number'
-                                    id='name'
-                                    className='input'
-                                    min={0.01}
-                                    step={0.01}
-                                    required
-                                    ref={inputPriceRef}
-                                />
-                                <span>€</span>
-                            </div>
-                            <div className='grow'></div>
-                            <button
-                                className='btn-primary'
-                                type='submit'>
-                                Modifier
-                            </button>
-                        </form>
+                        <div className='flex flex-col gap-1 grow'>
+                            <h3 className='text-xl font-bold'>Attention,</h3>
+                            <p className='text-xl'>Une modification du prix de vente sur un fût déjà en service entraînera un problème au niveau des statistiques sur ce fût.</p>
+                            <p className='text-xl'>Si aucun verre n&apos;a été vendu sur ce fût, il n&apos;y a pas de problème.</p>
+                            <form
+                                className='flex flex-col gap-10 grow mt-10'
+                                onSubmit={handleSubmitModify}>
+                                <div className='flex flex-row gap-5 items-center'>
+                                    {getIcon(barrel.icon, 'w-10 h-10 dark:text-white text-black')}
+                                    <label htmlFor='name'>Nom :</label>
+                                    <input
+                                        type='text'
+                                        id='name'
+                                        name='name'
+                                        aria-label='name'
+                                        className='input w-64'
+                                        value={barrel.name}
+                                        readOnly
+                                        disabled
+                                    />
+                                </div>
+                                <div className='flex flex-row gap-5 items-center'>
+                                    <label htmlFor='name'>Actuel prix de vente :</label>
+                                    <input
+                                        type='number'
+                                        id='name'
+                                        className='input'
+                                        value={barrel.sellPrice}
+                                        disabled
+                                        readOnly
+                                    />
+                                    <span>€</span>
+                                </div>
+                                <div className='flex flex-row gap-5 items-center'>
+                                    <label htmlFor='name'>Nouveau prix de vente (n&apos;inclut pas le prix de l&apos;écocup):</label>
+                                    <input
+                                        type='number'
+                                        id='name'
+                                        className='input'
+                                        min={0.01}
+                                        step={0.01}
+                                        required
+                                        ref={inputPriceRef}
+                                    />
+                                    <span>€</span>
+                                </div>
+                                <div className='grow'></div>
+                                <button
+                                    className='btn-primary'
+                                    type='submit'>
+                                    Modifier
+                                </button>
+                            </form>
+                        </div>
                     )}
                     {popupType === 'empty' && (
                         <>
