@@ -2,6 +2,7 @@ import functools
 
 from fastapi import HTTPException, status
 
+from app.core.types import SynchronizedClass
 
 def handle_exceptions(detail, *exceptions):
     """
@@ -23,3 +24,17 @@ def handle_exceptions(detail, *exceptions):
                 raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'{detail}')
         return wrapper
     return decorator
+
+
+def synchronized(method):
+    """
+    Decorator to synchronize a method.
+
+    :param method: The method to synchronize
+
+    :return: The decorated method
+    """
+    def wrapper(self: SynchronizedClass, *arg, **kwargs):
+        with self.lock:
+            return method(self, *arg, **kwargs)
+    return wrapper

@@ -9,14 +9,18 @@ from sqlalchemy.sql.expression import select, Select
 
 from app.core.decorator import handle_exceptions
 from app.core.translation import Translator
+from app.core.types import SynchronizedClass
 from app.db.base_class import Base
 
 
 translator = Translator()
 
-ModelType = TypeVar("ModelType", bound=Base) # SQLAlchemy model representing the object
-CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel) # Pydantic validation schema for creating the object
-UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel) # Pydantic validation schema for updating the object
+# SQLAlchemy model representing the object
+ModelType = TypeVar("ModelType", bound=Base)
+# Pydantic validation schema for creating the object
+CreateSchemaType = TypeVar("CreateSchemaType", bound=BaseModel)
+# Pydantic validation schema for updating the object
+UpdateSchemaType = TypeVar("UpdateSchemaType", bound=BaseModel)
 
 
 class CRUDBase(
@@ -24,7 +28,8 @@ class CRUDBase(
         ModelType,
         CreateSchemaType,
         UpdateSchemaType,
-    ]
+    ],
+    SynchronizedClass
 ):
     def __init__(self, model: Type[ModelType]):
         """
@@ -32,18 +37,20 @@ class CRUDBase(
 
         :param model: A SQLAlchemy model class
         """
+        super().__init__()
         self.model = model
 
-    async def read(self, db: AsyncSession, id: Any) -> Optional[ModelType]:
+    async def read(self, db: AsyncSession, id: Any, for_update: bool = False) -> Optional[ModelType]:
         """
         Get a record by id.
 
         :param db: The database session
         :param id: The record id
+        :param for_update: Whether to lock the record for update
 
         :return: The record
         """
-        return await db.get(self.model, id)
+        return await db.get(self.model, id, with_for_update=for_update)
 
     async def query(self, db: AsyncSession, distinct: str | None = None, skip: int = 0, limit: int = 100, **filters) -> list[ModelType]:
         """
@@ -68,13 +75,14 @@ class CRUDBase(
         query: Select = select(self.model)
 
         for column, value in filters.items():
-            if isinstance(value, dict): # Check whether the value of the filter is a dictionary
-                for operator, operand in value.items(): # Iterate over the items in the value dictionary, which should contain operator-operand pairs
+            if isinstance(value, dict):  # Check whether the value of the filter is a dictionary
+                for operator, operand in value.items():  # Iterate over the items in the value dictionary, which should contain operator-operand pairs
                     # The operator variable is used to specify the operator to use in the filter
                     # (e.g. > and <), and the operand variable is used as the operand for
                     # the filter. For example, if the value dictionary contained the items {gt: 10},
                     # (the operator comes from the operator module) the filter applied would be column > 10.
-                    query = query.where(operator(getattr(self.model, column), operand))
+                    query = query.where(
+                        operator(getattr(self.model, column), operand))
             else:
                 query = query.where(getattr(self.model, column) == value)
 
@@ -97,7 +105,7 @@ class CRUDBase(
         # The jsonable_encoder function is used to convert the Pydantic schema to a dictionary
         obj_in_data = jsonable_encoder(
             obj_in,
-            by_alias=False, # by_alias=False means that the keys of the dictionary will be the same as the field names in the Pydantic schema in order to match the column names in the database
+            by_alias=False,  # by_alias=False means that the keys of the dictionary will be the same as the field names in the Pydantic schema in order to match the column names in the database
             custom_encoder={
                 # Do not convert datetime objects to strings
                 datetime: lambda v: v,
@@ -136,7 +144,8 @@ class CRUDBase(
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
-            update_data = obj_in.dict(exclude_unset=True) # exclude_unset=True means that only the fields that are explicitly set in the input data will be updated
+            # exclude_unset=True means that only the fields that are explicitly set in the input data will be updated
+            update_data = obj_in.dict(exclude_unset=True)
 
         # Update the fields of the database object with the corresponding
         # values from the update data
