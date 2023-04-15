@@ -12,7 +12,7 @@ export default function Form(props: FormProps): JSX.Element {
     const [quantity, setQuantity] = useState(props.item.quantity);
     const [unitPrice, setUnitPrice] = useState(props.item.item.unitPrice);
     const [totalPrice, setTotalPrice] = useState(0);
-    const [sellPrice, setSellPrice] = useState(props.item.item.sellPrice ?? 0);
+    const [sellPrice, setSellPrice] = useState(0);
     const [name, setName] = useState(props.item.item.name);
     const [icon, setIcon] = useState(props.item.item.icon);
 
@@ -21,9 +21,9 @@ export default function Form(props: FormProps): JSX.Element {
      */
     useEffect(() => {
         if (priceSelected === 'price_unit') {
-            setTotalPrice(Number((unitPrice * quantity).toFixed(2)));
+            setTotalPrice(Number(unitPrice * quantity));
         } else {
-            setUnitPrice(Number((totalPrice / quantity).toFixed(2)));
+            setUnitPrice(Number(totalPrice / quantity));
         }
     }, [quantity, unitPrice, totalPrice, priceSelected]);
 
@@ -177,7 +177,7 @@ export default function Form(props: FormProps): JSX.Element {
                                 onChange={() => setPriceSelected('price_unit')}
                                 className='checkbox'
                             />
-                            <label htmlFor='unitPrice'>Prix à l&apos;unité :</label>
+                            <label htmlFor='unitPriceSelected'>Prix à l&apos;unité :</label>
                             <input
                                 type='number'
                                 id='unitPrice'
@@ -202,7 +202,7 @@ export default function Form(props: FormProps): JSX.Element {
                                 onChange={() => setPriceSelected('price_total')}
                                 className='checkbox'
                             />
-                            <label htmlFor='totalPrice'>Prix total :</label>
+                            <label htmlFor='totalPriceSelected'>Prix total :</label>
                             <input
                                 type='number'
                                 id='totalPrice'

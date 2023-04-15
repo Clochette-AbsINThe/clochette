@@ -8,5 +8,4 @@ class Treasury(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     total_amount = Column(Float, nullable=False)
     cash_amount = Column(Float, nullable=False)
-
-    transactions = relationship("Transaction", back_populates="treasury")
+    lydia_rate = Column(Float, nullable=False)

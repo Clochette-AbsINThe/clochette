@@ -62,13 +62,28 @@ class Translator:
     })
 
     INTERNAL_SERVER_ERROR: TranslatedString = TranslatedString({
-        "en": "Internal server error, administrator has been notified",
-        "fr": "Erreur interne du serveur, l'administrateur a été notifié"
+        "en": "Internal server error",
+        "fr": "Erreur interne du serveur"
     })
 
     AUTHENTICATION_REQUIRED: TranslatedString = TranslatedString({
         "en": "Authentication required",
         "fr": "Authentification requise"
+    })
+
+    INSUFFICIENT_PERMISSIONS: TranslatedString = TranslatedString({
+        "en": "Insufficient permissions",
+        "fr": "Permissions insuffisantes"
+    })
+
+    INACTIVE_ACCOUNT: TranslatedString = TranslatedString({
+        "en": "Account is inactive",
+        "fr": "Le compte est inactif"
+    })
+
+    USERNAME_UNAVAILABLE: TranslatedString = TranslatedString({
+        "en": "Username is unavailable",
+        "fr": "Le nom d'utilisateur est indisponible"
     })
 
     def __getattribute__(self, __name: str) -> str:

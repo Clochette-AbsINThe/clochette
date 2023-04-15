@@ -8,4 +8,4 @@ class Drink(Base):
     id = Column(Integer, primary_key=True, nullable=False)
     name = Column(String(256), nullable=False)
 
-    barrels = relationship("Barrel", back_populates="drink")
+    barrels = relationship("Barrel", back_populates="drink", lazy="selectin")

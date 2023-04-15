@@ -10,7 +10,7 @@ class DrinkCreate(DrinkBase):
 
 
 class DrinkUpdate(DrinkBase):
-    pass
+    name: str | None
 
 
 class Drink(DrinkBase):

@@ -11,7 +11,7 @@ class Consumable(Base):
     empty = Column(Boolean, nullable=False)
 
     consumable_item_id = Column(Integer, ForeignKey("consumableitem.id"))
-    consumable_item = relationship("ConsumableItem", back_populates="consumables")
+    consumable_item = relationship("ConsumableItem", back_populates="consumables", lazy="selectin")
 
     stock_id = Column(Integer, ForeignKey("stock.id"))
     stock = relationship("Stock", back_populates="consumables")

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { AxiosResponse } from 'axios';
 import toast from 'react-hot-toast';
-import Link from 'next/link';
 
 import BuyPage from '@components/Transaction/Buy/BuyPage';
 import SellPage from '@components/Transaction/Sell/SellPage';
@@ -31,7 +30,7 @@ export default function Transaction(): JSX.Element {
     const [totalPrice, setTotalPrice] = useState(0);
 
     /**
-     * An array whit all the items.
+     * An array with all the items.
      */
     const [selectedItemsSell, setSelectedItemsSell] = useState<ItemSell[]>([]);
     const [selectedItemsBuy, setSelectedItemsBuy] = useState<ItemBuy[]>([]);
@@ -111,6 +110,7 @@ export default function Transaction(): JSX.Element {
         if (transactionType === TransactionEnum.Vente) {
             return (
                 <SellPage
+                    postNewBuyTransactionForEcoCup={newBuyTransaction}
                     setItems={setSelectedItemsSell}
                     key={reRender}
                 />
@@ -153,19 +153,21 @@ export default function Transaction(): JSX.Element {
         } else {
             return (
                 <div className='flex flex-col mx-4 my-3 flex-grow'>
-                    {selectedItemsBuy.map((item) => {
-                        return (
-                            <li
-                                className='text-2xl flex justify-between mb-2 border-b border-b-gray-300'
-                                key={item.item.name + item.table}>
-                                <div className='flex'>
-                                    <div className='mr-2'>{item.quantity}</div>
-                                    <div>{item.item.name}</div>
-                                </div>
-                                <div>{Number((item.quantity * item.item.unitPrice).toFixed(2))}€</div>
-                            </li>
-                        );
-                    })}
+                    {selectedItemsBuy
+                        .sort((a, b) => b.item.unitPrice * b.quantity - a.item.unitPrice * a.quantity)
+                        .map((item) => {
+                            return (
+                                <li
+                                    className='text-2xl flex justify-between mb-2 border-b border-b-gray-300'
+                                    key={item.item.name + item.table}>
+                                    <div className='flex'>
+                                        <div className='mr-2'>{item.quantity}</div>
+                                        <div>{item.item.name}</div>
+                                    </div>
+                                    <div>{Number((item.quantity * item.item.unitPrice).toFixed(2))}€</div>
+                                </li>
+                            );
+                        })}
                 </div>
             );
         }
@@ -178,53 +180,47 @@ export default function Transaction(): JSX.Element {
                 startTransactionType={transactionType}
             />
             {renderTransaction()}
-            <div className='flex justify-between mt-3 flex-row'>
-                {transactionType === TransactionEnum.Vente ? (
-                    <Link
-                        href={'/configuration/hors-stocks?id=-1'}
-                        className='btn-primary'>
-                        Pour ajouter un produit hors stock manquant
-                    </Link>
-                ) : (
-                    <div className='flex-grow'></div>
-                )}
-                <div className='flex'>
-                    <div
-                        className='text-2xl font-bold mr-8'
-                        aria-label='total-price'>
-                        Total: <span>{totalPrice}</span>€
-                    </div>
-                    <PopupWindows
-                        trigger={{ className: 'btn-primary', content: 'Valider' }}
-                        onOpen={popupWindowOpen}
-                        callback={(state) => setPopupWindowOpen(state)}>
-                        <div className='flex flex-col flex-grow'>
-                            <div className='text-3xl font-bold pb-2 border-b-2 border-neutral-400'>Récapitulatif de la commande :</div>
-                            {renderRecap()}
-                            <div className='flex justify-between flex-wrap'>
-                                <PaymentMethodForm
-                                    changePaymentMethod={setPaymentMethod}
-                                    paymentMethod={paymentMethod}
-                                />
-                                <div className='flex pt-3 self-end space-x-5'>
-                                    <div
-                                        className='text-2xl font-bold mr-8'
-                                        aria-label='total-price'>
-                                        Total: {totalPrice}€
-                                    </div>
-                                    <button
-                                        id='submit-btn'
-                                        className='btn-primary'
-                                        onClick={handlePostData}
-                                        disabled={loadingBuy || loadingSell}>
-                                        Valider le paiment
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </PopupWindows>
+            <div className='flex justify-end mt-3 flex-row'>
+                <div
+                    className='text-2xl font-bold mr-8'
+                    aria-label='total-price'>
+                    Total: <span>{totalPrice}</span>€
                 </div>
+                <button
+                    className='btn-primary'
+                    aria-label='button-popup'
+                    onClick={() => setPopupWindowOpen(true)}>
+                    Valider
+                </button>
             </div>
+            <PopupWindows
+                open={popupWindowOpen}
+                setOpen={(state) => setPopupWindowOpen(state)}>
+                <div className='flex flex-col flex-grow'>
+                    <div className='text-3xl font-bold pb-2 border-b-2 border-neutral-400'>Récapitulatif de la commande :</div>
+                    {renderRecap()}
+                    <div className='flex justify-between flex-wrap'>
+                        <PaymentMethodForm
+                            changePaymentMethod={setPaymentMethod}
+                            paymentMethod={paymentMethod}
+                        />
+                        <div className='flex pt-3 self-end space-x-5'>
+                            <div
+                                className='text-2xl font-bold mr-8'
+                                aria-label='total-price'>
+                                Total: {totalPrice}€
+                            </div>
+                            <button
+                                id='submit-btn'
+                                className='btn-primary'
+                                onClick={handlePostData}
+                                disabled={loadingBuy || loadingSell}>
+                                Valider le paiment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </PopupWindows>
         </>
     );
 }

@@ -8,6 +8,7 @@
 /* Chrome, Edge, and Safari */
 *::-webkit-scrollbar {
     width: 6px;
+    height: 6px;
 }
 
 *::-webkit-scrollbar-track {
@@ -49,12 +50,20 @@
     }
 
     .input {
-        @apply block p-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-500 dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white dark:disabled:bg-gray-800 dark:disabled:border-gray-700 disabled:bg-gray-300 disabled:border-gray-200 disabled:text-gray-400 dark:disabled:text-gray-500;
+        @apply block p-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-500 dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white dark:disabled:bg-gray-800 dark:disabled:border-gray-700 dark:disabled:text-gray-500 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none;
     }
 
     .checkbox {
         @apply appearance-none w-4 h-4 rounded border text-green-500 bg-gray-300 border-gray-500 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 checked:bg-green-700 checked:border-transparent focus:outline-none dark:checked:bg-green-500;
     }
+
+    .input-error {
+        @apply invalid:border-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500;
+    }
+}
+
+.checkbox:checked {
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 16 16' fill='%23fff' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L6.5 9.086l4.293-4.293a1 1 0 0 1 1.414 0z'/%3E%3C/svg%3E");
 }
 
 #hamburger-menu {
@@ -116,4 +125,46 @@ body > div {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+}
+
+.hide-scroll-bar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
+table {
+    text-indent: 0;
+    border-color: inherit;
+    border-collapse: separate;
+    border-spacing: 0;
+}
+
+/* top-left border-radius */
+table tr:first-child th:first-child {
+    border-top-left-radius: 1rem;
+}
+
+/* top-right border-radius */
+table tr:first-child th:last-child {
+    border-top-right-radius: 1rem;
+}
+
+/* bottom-left border-radius */
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 1rem;
+}
+
+/* bottom-right border-radius */
+table tr:last-child td:last-child {
+    border-bottom-right-radius: 1rem;
+}
+
+html.dark {
+    canvas {
+        filter: invert(1) hue-rotate(180deg);
+    }
 }

@@ -10,16 +10,14 @@ import { PaymentMethodForm } from '@components/Transaction/PaymentMethodForm';
 test('Change Transaction Type', async () => {
     render(<Transaction />);
     await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 400));
     });
     await act(async () => {
         await userEvent.click(screen.getByLabelText('Vente'));
     });
-    const transaction = screen.getByLabelText('window-vente');
-    expect(transaction).toBeInTheDocument();
-    const type = screen.getByLabelText('Achat');
+    expect(screen.getByLabelText('window-vente')).toBeInTheDocument();
     await act(async () => {
-        await userEvent.click(type);
+        await userEvent.click(screen.getByLabelText('Achat'));
     });
     expect(screen.getByLabelText('window-achat')).toBeInTheDocument();
 });
@@ -47,17 +45,17 @@ test('Verify total for SellPage', async () => {
     await userEvent.click(screen.getByText('Valider le paiment'));
     await userEvent.keyboard('{Escape}');
     await act(async () => {
-        await userEvent.click(plus[0]);
-        await userEvent.click(minus[1]);
+        await userEvent.click(plus[0]!);
+        await userEvent.click(minus[1]!);
     });
     expect(total).toHaveTextContent('Total: 3€');
     await act(async () => {
-        await userEvent.click(minus[2]);
-        await userEvent.click(minus[0]);
+        await userEvent.click(minus[2]!);
+        await userEvent.click(minus[0]!);
     });
     expect(total).toHaveTextContent('Total: 0€');
     await act(async () => {
-        await userEvent.click(plus[3]);
+        await userEvent.click(plus[3]!);
     });
     expect(total).toHaveTextContent('Total: 5€');
     await act(async () => {
@@ -73,9 +71,6 @@ test('Verify total for SellPage', async () => {
 test('Verify search for BuyPage', async () => {
     render(<Toaster />);
     render(<Transaction />);
-    await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 400));
-    });
     await userEvent.click(screen.getByLabelText('Achat'));
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 400));
@@ -90,26 +85,26 @@ test('Verify search for BuyPage', async () => {
     const dropdowns = screen.getAllByLabelText('dropdown-button');
     expect(screen.getByText('Rouge')).not.toBeVisible();
     await act(async () => {
-        await userEvent.click(dropdowns[0]);
+        await userEvent.click(dropdowns[0]!);
     });
     expect(screen.getByText('Rouge')).toBeVisible();
     await act(async () => {
-        await userEvent.type(screen.getAllByLabelText('search')[0], 'Rou');
+        await userEvent.type(screen.getAllByLabelText('search')[0]!, 'Rou');
     });
     expect(screen.getByText('Rouge')).toBeVisible();
     const dropdownItems = screen.getAllByLabelText('dropdown-item');
     await act(async () => {
-        await userEvent.click(dropdownItems[0]);
+        await userEvent.click(dropdownItems[0]!);
     });
     expect(screen.getAllByText('Prix', { exact: false })).not.toBeNull();
     await act(async () => {
         await userEvent.keyboard('{Escape}');
-        await userEvent.click(dropdowns[0]);
-        await userEvent.type(screen.getAllByLabelText('search')[0], 'fg');
+        await userEvent.click(dropdowns[0]!);
+        await userEvent.type(screen.getAllByLabelText('search')[0]!, 'fg');
     });
     expect(screen.queryByText('Rouge')).toBeNull();
     await act(async () => {
-        await userEvent.click(screen.getAllByLabelText('dropdown-missing-item')[0]);
+        await userEvent.click(screen.getAllByLabelText('dropdown-missing-item')[0]!);
     });
     await userEvent.type(screen.getByLabelText('name'), 'test');
     await userEvent.type(screen.getByLabelText('unitPrice'), '50');
@@ -123,9 +118,6 @@ test('Verify search for BuyPage', async () => {
     });
     await userEvent.click(screen.getByText('Valider le paiment'));
     await new Promise((resolve) => setTimeout(resolve, 10));
-    await act(async () => {
-        await userEvent.click(screen.getByLabelText('button-popup'));
-    });
     await userEvent.click(screen.getByText('Valider le paiment'));
     await act(async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
@@ -142,16 +134,16 @@ test('Verify error on post on BuyPage', async () => {
     );
     render(<Transaction />);
     await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 400));
     });
     await userEvent.click(screen.getByLabelText('Achat'));
     await act(async () => {
-        await new Promise((resolve) => setTimeout(resolve, 200));
+        await new Promise((resolve) => setTimeout(resolve, 400));
     });
     expect(screen.queryByText('Nombre', { exact: false })).toBeNull();
     const dropdowns = screen.getAllByLabelText('dropdown-button');
-    await userEvent.click(dropdowns[0]);
-    await userEvent.click(screen.getAllByLabelText('dropdown-item')[0]);
+    await userEvent.click(dropdowns[0]!);
+    await userEvent.click(screen.getAllByLabelText('dropdown-item')[0]!);
     await act(async () => {
         await userEvent.type(screen.getByLabelText('unitPrice'), '2');
         await userEvent.type(screen.getByLabelText('sellPrice'), '5');
@@ -184,7 +176,7 @@ test('Verify error on post on SalePage', async () => {
         await new Promise((resolve) => setTimeout(resolve, 200));
     });
     await act(async () => {
-        await userEvent.click(screen.queryAllByLabelText('plus')[0]);
+        await userEvent.click(screen.queryAllByLabelText('plus')[0]!);
     });
     await act(async () => {
         await userEvent.click(screen.getByLabelText('button-popup'));

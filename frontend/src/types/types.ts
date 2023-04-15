@@ -1,6 +1,6 @@
 export type TableData = 'out_of_stock' | 'glass' | 'barrel' | 'consumable';
-export type PaymentMethod = 'CB' | 'Espèces' | 'Lydia';
-export type IconName = 'Glass' | 'Beer' | 'Food' | 'Soft' | 'Barrel' | 'Misc' | 'Lydia' | 'Cash' | 'CB' | 'Setting';
+export type PaymentMethod = 'CB' | 'Espèces' | 'Lydia' | 'Virement';
+export type IconName = 'Glass' | 'Beer' | 'Food' | 'Soft' | 'Barrel' | 'Misc' | 'Lydia' | 'Cash' | 'CB' | 'Setting' | 'Virement';
 
 // drink/ --> get // Rempli le dropdown des fûts
 // drink/ --> post // Ajoute une nouvelle boisson manquante dans la base de données
@@ -59,6 +59,10 @@ export interface Glass {
     sellPrice: number;
 }
 
+export interface IBarrelStatProps extends Barrel {
+    glassForBarrel: Glass[];
+}
+
 // consumable --> get // Rempli la colonne des consommables
 // Pas de post car on n'ajoute un verre qu'avec une transaction
 export interface Consumable {
@@ -104,13 +108,50 @@ export type ItemBuy = APIItem<Barrel | OutOfStockBuy | Consumable>;
 
 export type ItemTransactionResponse = APIItem<Barrel | Glass | OutOfStockSell | OutOfStockBuy | Consumable>;
 
-// transaction/ --> get // Utile pour l'appli de l'historique des transactions
-// transaction/ --> post // Ajoute une nouvelle transaction dans la base de données
-export interface TransactionType<T> {
+export interface ITransactionType {
     readonly id?: number;
     datetime: string;
     amount: number;
     sale: boolean; // true = vente, false = achat
     paymentMethod: PaymentMethod;
+    type: 'tresorery' | 'transaction';
+    description: string;
+}
+
+// transaction/ --> get // Utile pour l'appli de l'historique des transactions
+// transaction/ --> post // Ajoute une nouvelle transaction dans la base de données
+export interface TransactionType<T> extends ITransactionType {
     items: T[];
+}
+
+export interface TransactionResponse extends ITransactionType {
+    barrels: Barrel[];
+    glasses: Glass[];
+    outOfStocks: Array<OutOfStockBuy | OutOfStockSell>;
+    consumablesPurchase: Consumable[];
+    consumablesSale: Consumable[];
+}
+
+interface IAccount {
+    readonly id?: number;
+    username: string;
+    firstName: string;
+    lastName: string;
+    promotionYear: number;
+}
+
+export interface AccountCreate extends IAccount {
+    password: string;
+}
+
+export interface Account extends IAccount {
+    isActive: boolean;
+    scope: string;
+}
+
+export interface Tresory {
+    id: number;
+    totalAmount: number;
+    cashAmount: number;
+    lydiaRate: number;
 }

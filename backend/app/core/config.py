@@ -1,7 +1,7 @@
 import os
 
 from humps import camelize
-from pydantic import AnyHttpUrl, BaseModel, BaseSettings, EmailStr, validator
+from pydantic import AnyHttpUrl, BaseModel, BaseSettings, validator
 
 class DefaultModel(BaseModel):
     class Config:
@@ -48,19 +48,20 @@ class Settings(BaseSettings):
 
     ### Database config
 
-    POSTGRES_HOST = os.environ.get('POSTGRES_HOST')
-    POSTGRES_PORT = os.environ.get('POSTGRES_PORT')
-    POSTGRES_DB = os.environ.get('POSTGRES_DB')
-    POSTGRES_USER = os.environ.get('POSTGRES_USER')
-    POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+    POSTGRES_HOST: str = os.environ.get('POSTGRES_HOST')
+    POSTGRES_PORT: str = os.environ.get('POSTGRES_PORT')
+    POSTGRES_DB: str = os.environ.get('POSTGRES_DB')
+    POSTGRES_USER: str = os.environ.get('POSTGRES_USER')
+    POSTGRES_PASSWORD: str = os.environ.get('POSTGRES_PASSWORD')
     
-    SQLALCHEMY_DATABASE_URI: str | None = 'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
+    SQLALCHEMY_DATABASE_URI: str | None = 'postgresql+asyncpg://{user}:{password}@{host}:{port}/{db}'.format(
         user=POSTGRES_USER,
         password=POSTGRES_PASSWORD,
         host=POSTGRES_HOST,
         port=POSTGRES_PORT,
         db=POSTGRES_DB
     )
+    ALEMBIC_DATABASE_URI: str | None = SQLALCHEMY_DATABASE_URI.replace('asyncpg', 'psycopg2')
 
     ###
 
@@ -69,7 +70,7 @@ class Settings(BaseSettings):
     GITHUB_USER: str = os.environ.get('GITHUB_USER')
     GITHUB_TOKEN: str = os.environ.get('GITHUB_TOKEN')
 
-    ISSUE_LABELS: str = os.environ.get('ISSUES_LABELS')
+    ISSUE_LABELS: str = os.environ.get('ISSUES_LABELS', default='Backend,bug,bot')
     REPOSITORY_NAME: str = os.environ.get('REPOSITORY_NAME')
     REPOSITORY_OWNER: str = os.environ.get('REPOSITORY_OWNER')
 

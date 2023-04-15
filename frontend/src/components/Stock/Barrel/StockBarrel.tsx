@@ -62,7 +62,7 @@ export default function StockBarrel(): JSX.Element {
                 {loadingBarrelMounted ? (
                     <Loader />
                 ) : (
-                    <>
+                    <div className='flex flex-row gap-5 flex-wrap py-4'>
                         {mountedBarrels.map((mountedBarrel) => {
                             return (
                                 <BarrelMountedCard
@@ -73,7 +73,7 @@ export default function StockBarrel(): JSX.Element {
                             );
                         })}
                         <AddCard handleMountNewBarrel={handleMountNewBarrel} />
-                    </>
+                    </div>
                 )}
             </div>
             <h2 className='text-2xl text-gray-500 dark:text-gray-100'>Fûts en stock</h2>
@@ -81,13 +81,16 @@ export default function StockBarrel(): JSX.Element {
                 {loadingBarrelUnique || loadingBarrel ? (
                     <Loader />
                 ) : (
-                    uniqueBarrels.map((uniqueBarrel) => (
-                        <BarrelStack
-                            barrels={barrels}
-                            uniqueBarrel={uniqueBarrel}
-                            key={uniqueBarrel.name}
-                        />
-                    ))
+                    uniqueBarrels.map((uniqueBarrel) => {
+                        return (
+                            <BarrelStack
+                                barrels={barrels}
+                                uniqueBarrel={uniqueBarrel}
+                                key={uniqueBarrel.name}
+                                handleMountNewBarrel={handleMountNewBarrel}
+                            />
+                        );
+                    })
                 )}
             </div>
         </>

@@ -23,7 +23,7 @@ def alert_to_terminal(exception: Exception, **request: dict) -> None:
     print("############## Request ##############")
     pprint(request)
     print("############# Exception #############")
-    #format_exception(type(exception), exception, exception.__traceback__)
+    format_exception(type(exception), exception, exception.__traceback__)
     pprint(exception)
 
 
@@ -59,13 +59,51 @@ def alert_to_github_issues(exception: Exception, **request: dict) -> None:
     import requests
     import json
 
+    # Authenticate with github
+    session = requests.Session()
+    session.auth = (settings.GITHUB_USER, settings.GITHUB_TOKEN)
+
+    # Before creating it, check if there is already an issue with the same title
     url = "https://api.github.com/repos/{owner}/{repo}/issues".format(
         owner=settings.REPOSITORY_OWNER,
         repo=settings.REPOSITORY_NAME
     )
 
-    session = requests.Session()
-    session.auth = (settings.GITHUB_USER, settings.GITHUB_TOKEN)
+    response = session.get(url)
+
+    if response.status_code != 200:
+        print("Failed to get issues from github: {status_code}".format(
+            status_code=response.status_code
+        ))
+        print(response.content)
+        print("Falling back to terminal alert")
+        alert_to_terminal(exception, **request)
+        return
+
+    existing_issue = next(
+        (
+            issue
+            for issue in response.json()
+            if issue["title"] == "{type}: {msg}".format(
+                type=exception.__class__.__name__,
+                msg=str(exception)
+            )
+        ),
+        None
+    )
+
+    if existing_issue:
+        print("Issue already exists on github: {url}".format(
+            url=existing_issue["html_url"]
+        ))
+        return
+
+    # Create the issue
+
+    url = "https://api.github.com/repos/{owner}/{repo}/issues".format(
+        owner=settings.REPOSITORY_OWNER,
+        repo=settings.REPOSITORY_NAME
+    )
 
     payload = {
         "title": "{type}: {msg}".format(

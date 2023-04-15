@@ -23,6 +23,8 @@ class OutOfStockItemCreateFront(OutOfStockItemBase):
 
 
 class OutOfStockItemUpdate(OutOfStockItemBase):
+    name: str | None = Field(min_length=1)
+    icon: IconName | None
     buy_or_sell: bool | None
 
     # Exclude_unset option removing dynamic default setted on a validator #1399,
@@ -33,7 +35,8 @@ class OutOfStockItemUpdate(OutOfStockItemBase):
 
 
 class OutOfStockItemUpdateFront(OutOfStockItemBase):
-    pass
+    name: str | None = Field(min_length=1)
+    icon: IconName | None
 
 
 class OutOfStockItem(OutOfStockItemBase):

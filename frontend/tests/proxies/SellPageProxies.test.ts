@@ -43,8 +43,10 @@ const transactionItems: ItemSell[] = [
 
 const data = {
     datetime: date.toISOString(),
+    description: '',
     sale: true,
     paymentMethod: 'CB',
+    type: 'transaction',
     amount: 10,
     items: [
         {

@@ -1,9 +1,10 @@
-import { saveJwtInCookie, signIn } from '@utils/auth';
+import { saveJwtInCookie } from '@utils/auth_internal_api';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useRef } from 'react';
 import { useAuthContext } from '@components/Context';
+import { login } from '@proxies/AuthProxies';
 
 export default function Login() {
     const { query, push } = useRouter();
@@ -20,7 +21,7 @@ export default function Login() {
         const redirect = Array.isArray(query.redirect) ? query.redirect[0] ?? '/' : query.redirect ?? '/';
 
         // Sign in the user and get the result of the sign in process and the JWT
-        const results = await signIn({ username, password });
+        const results = await login({ username, password });
 
         if (results.status !== 200) {
             errorRef.current!.innerText = results.error?.detail as string;
@@ -94,10 +95,15 @@ export default function Login() {
                     <button
                         type='submit'
                         role={'submit'}
-                        className='btn-primary w-full'>
+                        className='btn-primary w-full mt-4'>
                         Se connecter
                     </button>
                 </form>
+                <Link
+                    href={'/register'}
+                    className='text-sm text-gray-500 hover:text-gray-700'>
+                    Vous n&apos;avez pas de compte ? <span className='underline'>Inscrivez-vous</span>
+                </Link>
             </div>
         </>
     );

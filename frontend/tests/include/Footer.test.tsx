@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react';
-import Footer from '@include/Footer';
+import Footer from '@components/Layout/Footer';
 
 test('Render footer', () => {
     render(<Footer />);
