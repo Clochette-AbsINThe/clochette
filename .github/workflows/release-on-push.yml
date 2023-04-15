@@ -48,6 +48,7 @@ jobs:
 
       - name: Build and push Docker-Compose images
         run: |
+          cd docker
           docker compose -f docker-compose.yml -f docker-compose.prod.yml build
           docker compose -f docker-compose.yml -f docker-compose.prod.yml push
           export tag=${{ needs.release-on-push.outputs.tag_name }}
