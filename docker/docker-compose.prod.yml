@@ -10,8 +10,8 @@ services:
         - host_arg=clochette.h.minet.net
     image: ghcr.io/clochette-absinthe/reverse-proxy:${tag:-latest}
     volumes:
-      - ./ssl/clochette.h.minet.net.crt:/etc/ssl/clochette.h.minet.net.crt
-      - ./ssl/clochette.h.minet.net.key:/etc/ssl/clochette.h.minet.net.key
+      - ./ssl/clochette.h.minet.net.crt:/etc/nginx/ssl/clochette.h.minet.net.crt
+      - ./ssl/clochette.h.minet.net.key:/etc/nginx/ssl/clochette.h.minet.net.key
 
   frontend:
     build:
