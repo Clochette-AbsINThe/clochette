@@ -7,7 +7,7 @@ services:
   reverse-proxy:
     build:
       args:
-        - host_arg=clochette.dev
+        - host_arg=clochette.h.minet.net
     image: ghcr.io/clochette-absinthe/reverse-proxy:${tag:-latest}
     volumes:
       - ./ssl/:/etc/nginx/ssl
@@ -15,8 +15,8 @@ services:
   frontend:
     build:
       args:
-        - next_public_base_url=https://clochette.dev
-        - next_public_backend_api_url=https://clochette.dev/api/v1
+        - next_public_base_url=https://clochette.h.minet.net
+        - next_public_backend_api_url=https://clochette.h.minet.net/api/v1
     image: ghcr.io/clochette-absinthe/frontend:${tag:-latest}
     expose:
       - 3000
