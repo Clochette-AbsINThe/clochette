@@ -89,6 +89,7 @@ export default function TresoryButtons() {
     };
 
     const handlePopupShow = (type: PopupType) => {
+        setAmount(0);
         setShowPopup(true);
         setPopupType(type);
     };
@@ -178,6 +179,7 @@ export default function TresoryButtons() {
     return (
         <>
             <div className='flex gap-10 flex-wrap my-4 justify-around'>
+                {/* Carte récapitulative des montants */}
                 <div className='border p-6 bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-500 flex flex-col grow sm:grow-0'>
                     <h6 className='text-xl font-medium mb-4'>Total</h6>
                     <div className='flex items-center mb-4'>
@@ -202,6 +204,7 @@ export default function TresoryButtons() {
                         </div>
                     </div>
                 </div>
+                {/* Carte taux Lydia */}
                 <div className='border p-6 bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-500 flex flex-col grow sm:grow-0'>
                     <h6 className='text-xl font-medium mb-4'>Taux Lydia</h6>
                     <form
@@ -244,6 +247,7 @@ export default function TresoryButtons() {
                         </div>
                     </form>
                 </div>
+                {/* Carte totale du compte */}
                 <div className='border p-6 bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-500 flex sm:flex-row flex-col grow sm:grow-0'>
                     <div className='flex flex-col sm:pr-4 sm:border-r pb-4 border-b sm:pb-0 sm:border-b-0'>
                         <div className='bg-[#28C76F28] p-2 rounded-md max-w-max mb-3'>{getIcon('CB', 'text-[#28C76F] w-8 h-8')}</div>
@@ -265,6 +269,7 @@ export default function TresoryButtons() {
                         </div>
                     </div>
                 </div>
+                {/* Carte du total des espèces */}
                 <div className='border p-6 bg-gray-50 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-500 flex sm:flex-row flex-col grow sm:grow-0'>
                     <div className='flex flex-col sm:pr-4 sm:border-r pb-4 border-b sm:pb-0 sm:border-b-0'>
                         <div className='bg-[#FF9F4328] p-2 rounded-md max-w-max mb-3'>{getIcon('Cash', 'text-[#FF9F43] w-8 h-8')}</div>
@@ -280,6 +285,7 @@ export default function TresoryButtons() {
                         <div className='flex flex-col mt-6'>
                             <button
                                 className='btn-primary'
+                                disabled={tresory.cashAmount === 0}
                                 onClick={() => handlePopupShow(PopupType.DepositCash)}>
                                 Déposer du liquide
                             </button>
