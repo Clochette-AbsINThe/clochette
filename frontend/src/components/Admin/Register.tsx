@@ -1,5 +1,4 @@
 import { useRef, useState } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { zxcvbn, zxcvbnOptions, ZxcvbnResult } from '@zxcvbn-ts/core';
 import zxcvbnCommonPackage from '@zxcvbn-ts/language-common';
@@ -75,16 +74,8 @@ export default function Register(): JSX.Element {
                 <Link
                     href='/'
                     className='flex self-center text-2xl font-semibold'>
-                    <>
-                        <Image
-                            className='mr-2 mb-3'
-                            src='/absinthe.png'
-                            alt='logo'
-                            width={32}
-                            height={32}
-                        />
-                        <span>Absinthe</span>
-                    </>
+                    <img src='/absinthe.png' alt='logo' width={32} height={32} className='mr-2 mb-3' />
+                    <span>Absinthe</span>
                 </Link>
                 <h1 className='text-xl font-bold md:text-2xl'>Création du compte</h1>
                 <form
