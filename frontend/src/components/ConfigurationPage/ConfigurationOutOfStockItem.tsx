@@ -247,6 +247,7 @@ export default function ConfigurationOutOfStockItem(): JSX.Element {
                                     aria-label='sellPrice'
                                     className='input w-64'
                                     min={0}
+                                    step={0.01}
                                     disabled={!sellPriceCheckbox.current?.checked && outOfStockItem.sellPrice === undefined}
                                     required
                                     value={outOfStockItem.sellPrice ?? ''}
