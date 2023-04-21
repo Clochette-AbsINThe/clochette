@@ -43,7 +43,13 @@ export default function Login() {
                 <Link
                     href='/'
                     className='flex self-center text-2xl font-semibold'>
-                    <img src='/absinthe.png' alt='logo' width={32} height={32} className='mr-2' />
+                    <img
+                        src='/absinthe.png'
+                        alt='logo'
+                        width={32}
+                        height={32}
+                        className='mr-2'
+                    />
                     <span>Absinthe</span>
                 </Link>
                 <h1 className='text-xl font-bold md:text-2xl'>Connectez-vous</h1>
