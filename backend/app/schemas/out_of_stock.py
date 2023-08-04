@@ -1,11 +1,13 @@
-from pydantic import Field, validator
+from typing import cast
 
-from app.core.config import DefaultModel
+from pydantic import ConfigDict, Field, computed_field, model_validator
+
+from app.schemas.base import DefaultModel, ExcludedField
 from app.schemas.out_of_stock_item import OutOfStockItem
 
 
 class OutOfStockBase(DefaultModel):
-    item_id: int = Field(..., alias='fkId')
+    item_id: int = Field(..., alias="fkId")
     unit_price: float | None = Field(default=None, gt=0)
 
 
@@ -23,25 +25,33 @@ class OutOfStockUpdate(OutOfStockBase):
 
 class OutOfStock(OutOfStockBase):
     id: int
-    item: OutOfStockItem = Field(..., exclude=True)
+    item: OutOfStockItem | None = ExcludedField
 
-    name: str | None
+    @computed_field  # type: ignore[misc]
+    @property
+    def name(self) -> str:
+        return self.item.name if self.item else "N/A"
 
-    @validator('name', always=True)
-    def populate_name(cls, v, values):
-        return values['item'].name
+    @computed_field  # type: ignore[misc]
+    @property
+    def icon(self) -> str:
+        return self.item.icon if self.item else "N/A"
 
-    icon: str | None
+    @computed_field  # type: ignore[misc]
+    @property
+    def sell_price(self) -> float | None:
+        return self.item.sell_price if self.item else None
 
-    @validator('icon', always=True)
-    def populate_icon(cls, v, values):
-        return values['item'].icon
+    @model_validator(mode="after")
+    @classmethod
+    def validate_sell_price_or_unit_price(cls, _model):
+        model = cast(OutOfStock, _model)
+        unit_price = model.unit_price
+        sell_price = model.sell_price
+        if sell_price is not None and unit_price is not None:
+            raise ValueError("Cannot have both sell_price and unit_price")
+        if sell_price is None and unit_price is None:
+            raise ValueError("Must have either sell_price or unit_price")
+        return _model
 
-    sell_price: float | None = Field(default=None)
-
-    @validator('sell_price', always=True)
-    def populate_sell_price(cls, v, values):
-        return values['item'].sell_price
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

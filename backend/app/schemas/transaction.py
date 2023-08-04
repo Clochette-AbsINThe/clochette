@@ -1,10 +1,10 @@
-import datetime
+from datetime import datetime as _datetime
 
-from pydantic import validator
+from pydantic import ConfigDict, FieldValidationInfo, computed_field, field_validator
 
-from app.core.config import DefaultModel
 from app.core.types import PaymentMethod, TransactionType
 from app.schemas.barrel import Barrel
+from app.schemas.base import DefaultModel
 from app.schemas.consumable import Consumable
 from app.schemas.glass import Glass
 from app.schemas.item import Item
@@ -12,28 +12,37 @@ from app.schemas.out_of_stock import OutOfStock
 
 
 class TransactionBase(DefaultModel):
-    datetime: datetime.datetime
+    datetime: _datetime
     payment_method: PaymentMethod
     sale: bool
     amount: float
-    type: TransactionType = TransactionType.transaction
-    description: str | None
+    type: TransactionType = TransactionType.TRANSACTION
+    description: str | None = None
 
-    @validator('amount')
+    @field_validator("amount")
+    @classmethod
     def amount_must_have_two_decimals(cls, v):
-        return round(v, 2)
+        if v is not None:
+            return round(v, 2)
+        return v
 
 
 class TransactionCreate(TransactionBase):
-    treasury_id: int = 1
+    @computed_field  # type: ignore[misc]
+    @property
+    def treasury_id(self) -> int:
+        """In v1, the treasury_id is always 1."""
+        return 1
 
 
 class TransactionFrontCreate(TransactionBase):
     items: list[Item] = []
 
-    @validator('items')
-    def empty_only_if_tresorery_type(cls, v, values):
-        if v == [] and values['type'] != TransactionType.tresorery:
+    @field_validator("items")
+    @classmethod
+    def empty_only_if_tresorery_type(cls, v, info: FieldValidationInfo):
+        values = info.data
+        if v == [] and values["type"] != TransactionType.TRESORERY:
             raise ValueError('items must be provided if type is not "tresorery"')
         return v
 
@@ -46,8 +55,7 @@ class Transaction(TransactionBase):
     id: int
     treasury_id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 class TransactionSingle(Transaction):
@@ -57,6 +65,4 @@ class TransactionSingle(Transaction):
     consumables_purchase: list[Consumable] | None
     consumables_sale: list[Consumable] | None
 
-    class Config:
-        exclude_none = True
-    
+    model_config = ConfigDict(from_attributes=True)

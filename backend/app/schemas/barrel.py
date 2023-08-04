@@ -1,13 +1,11 @@
-from pydantic import Field, validator
+from pydantic import ConfigDict, Field, computed_field
 
-from app.core.config import DefaultModel
+from app.schemas.base import DefaultModel, ExcludedField
 from app.schemas.drink import Drink
 
 
 class BarrelBase(DefaultModel):
-    drink_id: int | None = Field(..., alias='fkId')
-    empty: bool = False
-    is_mounted: bool = False
+    drink_id: int | None = Field(..., alias="fkId")
     sell_price: float = Field(..., gt=0)
     unit_price: float = Field(..., gt=0)
 
@@ -15,27 +13,38 @@ class BarrelBase(DefaultModel):
 class BarrelCreate(BarrelBase):
     transaction_id: int = 0
 
+    @computed_field  # type: ignore[misc]
+    @property
+    def empty(self) -> bool:
+        return False
+
+    @computed_field  # type: ignore[misc]
+    @property
+    def is_mounted(self) -> bool:
+        return False
+
 
 class TransactionCreate(BarrelCreate):
-    pass
+    """Used to create a transaction."""
 
 
 class BarrelUpdate(BarrelBase):
-    drink_id: int | None = Field(alias='fkId')
+    drink_id: int | None = Field(default=None, alias="fkId")
     empty: bool | None = False
     is_mounted: bool | None = False
-    sell_price: float | None = Field(gt=0)
-    unit_price: float | None = Field(gt=0)
+    sell_price: float | None = Field(default=None, gt=0)
+    unit_price: float | None = Field(default=None, gt=0)
 
 
 class Barrel(BarrelBase):
     id: int
-    drink: Drink | None = Field(..., exclude=True)
-    name: str | None
+    drink: Drink | None = ExcludedField
+    empty: bool
+    is_mounted: bool
 
-    @validator('name', always=True)
-    def populate_name(cls, v, values):
-        return values['drink'].name
+    @computed_field  # type: ignore[misc]
+    @property
+    def name(self) -> str:
+        return self.drink.name if self.drink else "N/A"
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

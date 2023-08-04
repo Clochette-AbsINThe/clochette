@@ -1,5 +1,7 @@
-from app.core.config import DefaultModel
+from pydantic import ConfigDict
+
 from app.core.types import IconName
+from app.schemas.base import DefaultModel
 
 
 class ConsumableItemBase(DefaultModel):
@@ -12,12 +14,11 @@ class ConsumableItemCreate(ConsumableItemBase):
 
 
 class ConsumableItemUpdate(ConsumableItemBase):
-    name: str | None
-    icon: IconName | None
+    name: str | None = None
+    icon: IconName | None = None
 
 
 class ConsumableItem(ConsumableItemBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

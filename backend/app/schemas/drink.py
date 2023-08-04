@@ -1,4 +1,6 @@
-from app.core.config import DefaultModel
+from pydantic import ConfigDict
+
+from app.schemas.base import DefaultModel
 
 
 class DrinkBase(DefaultModel):
@@ -10,12 +12,10 @@ class DrinkCreate(DrinkBase):
 
 
 class DrinkUpdate(DrinkBase):
-    name: str | None
+    name: str | None = None
 
 
 class Drink(DrinkBase):
     id: int
 
-    class Config:
-        orm_mode = True
-
+    model_config = ConfigDict(from_attributes=True)
