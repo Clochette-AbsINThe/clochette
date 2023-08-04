@@ -1,0 +1,138 @@
+[tool.poetry]
+name = "clochette"
+version = "2.1.1"
+description = "Fast API app for clochette backend"
+authors = [
+    "Samuel Guillemet <samuel.guillemet@telecom-sudparis.eu>",
+    "Benoit Marzelleau <benoit.marzelleau@telecom-sudparis.eu>",
+]
+readme = "../README.md"
+packages = [{ include = "app" }]
+
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = { extras = ["all"], version = "^0.100.0" }
+pydantic-settings = "^2.0.2"
+zxcvbn = "^4.4.28"
+sqlalchemy = "^2.0.19"
+pyhumps = "^3.8.0"
+python-jose = "^3.3.0"
+alembic = "^1.11.1"
+passlib = { extras = ["bcrypt"], version = "^1.7.4" }
+requests = "^2.31.0"
+types-requests = "^2.31.0.2"
+asyncpg = "^0.28.0"
+alembic-autogenerate-enums = "^0.1.2"
+tenacity = "^8.2.2"
+aiosqlite = "^0.19.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.7.0"
+flake8 = "^6.0.0"
+isort = "^5.12.0"
+pre-commit = "^3.3.3"
+mypy = "^1.4.1"
+mypy-extensions = "^1.0.0"
+pylint = "^2.17.4"
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+pylint-pydantic = "^0.2.2"
+pytest-env = "^0.8.2"
+pytest-asyncio = "^0.21.1"
+httpx = "^0.24.1"
+pytest-xdist = "^3.3.1"
+flake8-pyproject = "^1.2.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+
+[tool.isort]
+profile = "black"
+
+
+[tool.mypy]
+no_strict_optional = true
+ignore_missing_imports = true
+
+
+[tool.flake8]
+max-line-length = 120
+extend-exclude = [
+    ".venv",
+    ".git",
+    "__pycache__",
+    "__init__.py",
+    ".mypy_cache",
+    ".pytest_cache",
+]
+
+
+[tool.pylint.main]
+load-plugins = ["pylint_pydantic"]
+ignore = ["tests/*", "app/db/base.py", "app/plugins/*"]
+disable = [
+    "missing-module-docstring",
+    "missing-function-docstring",
+    "missing-class-docstring",
+    "too-few-public-methods",
+    "too-many-arguments",
+    "too-many-instance-attributes",
+    "too-many-locals",
+    "logging-fstring-interpolation",
+]
+
+
+[tool.pylint.basic]
+good-names = [
+    "i",
+    "j",
+    "k",
+    "ex",
+    "Run",
+    "_",
+    "pk",
+    "x",
+    "y",
+    "e",
+    "f",
+    "v",
+    "db",
+]
+
+
+[tool.pylint.format]
+max-line-length = 120
+
+
+[tool.pylint.typecheck]
+ignored-classes = ["FieldInfo"]
+
+
+[tool.pytest.ini_options]
+norecursedirs = [
+    ".venv",
+    ".git",
+    "__pycache__",
+    "__init__.py",
+    ".mypy_cache",
+    ".pytest_cache",
+]
+addopts = ["--cov=app", "--cov-report=term-missing", "--cov-report=xml"]
+env = ["ENVIRONMENT=test"]
+log_cli = false
+log_cli_level = "INFO"
+filterwarnings = "ignore::DeprecationWarning"
+
+
+[tool.coverage.run]
+omit = [
+    "app/plugins/*",
+    "app/commands/*",
+    "app/db/base_class.py",
+    "app/db/base.py",
+]
