@@ -1,10 +1,10 @@
-name: This workflow aims to check the frontend code when push to the dev branch with lint, format, tests and build.
+name: Frontend Checks
 
 on:
   push:
     branches: [dev]
   pull_request:
-    branches: [dev]
+    branches: [dev, main]
 
 defaults:
   run:
@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-          cache-dependency-path: frontend/package.json
+          cache-dependency-path: package.json
           cache: "npm"
 
       - name: Install dependencies
@@ -39,4 +39,4 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           files: ./coverage/coverage-final.json
-          working-directory: frontend
+          flags: frontend
