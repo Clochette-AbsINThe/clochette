@@ -16,4 +16,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v3
+      - name: Copy pre-commit config
+        run: cp .pre-commit-config.yaml ../.pre-commit-config.yaml
       - uses: pre-commit/action@v3.0.0
