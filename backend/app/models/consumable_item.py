@@ -1,8 +1,8 @@
-from sqlalchemy import Column, Enum, Integer, String
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
 from app.core.types import IconName
-from app.db.base_class import Base
+from app.db.base_class import Base, Enum
 
 
 class ConsumableItem(Base):
@@ -10,4 +10,6 @@ class ConsumableItem(Base):
     name = Column(String, nullable=False)
     icon = Column(Enum(IconName), nullable=False)
 
-    consumables = relationship("Consumable", back_populates="consumable_item", lazy="selectin")
+    consumables = relationship(
+        "Consumable", back_populates="consumable_item", lazy="selectin"
+    )

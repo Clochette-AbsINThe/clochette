@@ -1,7 +1,7 @@
-from sqlalchemy import Boolean, Column, Enum, Integer, String
+from sqlalchemy import Boolean, Column, Integer, String
 
 from app.core.types import SecurityScopes
-from app.db.base_class import Base
+from app.db.base_class import Base, Enum
 
 
 class Account(Base):
