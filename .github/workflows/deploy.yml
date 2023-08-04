@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   workflow_run:
-    workflows: ["Release on push to main branch"]
+    workflows: ["Build and push Docker images"]
     branches: [main]
     types:
       - completed
