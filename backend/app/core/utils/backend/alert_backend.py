@@ -11,6 +11,10 @@ from app.core.config import settings
 logger = logging.getLogger("app.core.utils.backend.alert_backend")
 
 
+class TestException(Exception):
+    pass
+
+
 class Alert(Protocol):  # pragma: no cover
     def __call__(
         self, exception: Exception, method: str, url: URL, headers: Headers, body: bytes
@@ -33,6 +37,11 @@ def alert_backend() -> Alert:
 def alert_to_terminal(
     exception: Exception, method: str, url: URL, headers: Headers, body: bytes
 ) -> None:
+    if (
+        isinstance(exception, TestException) and settings.ENVIRONMENT == "production"
+    ):  # pragma: no cover
+        return None
+
     logger.error("### An exception has been raised! ###")
     logger.error("############## Request ##############")
     logger.error(f"{method} {url}")
@@ -49,6 +58,9 @@ def alert_to_terminal(
 def alert_to_github_issues(
     exception: Exception, method: str, url: URL, headers: Headers, body: bytes
 ) -> None:
+    if isinstance(exception, TestException):  # pragma: no cover
+        return None
+
     issue_name = f"{exception.__class__.__name__}: {str(exception)}"
     # Format the exception and request to markdown
     markdown = f"# {issue_name}\n\n"
