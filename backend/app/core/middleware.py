@@ -1,15 +1,18 @@
+import logging
 from asyncio import wait_for
-from collections.abc import Callable
+
+from fastapi import status
 from fastapi.requests import Request
 from fastapi.responses import Response
-from fastapi import status
 from starlette.background import BackgroundTask
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.core.translation import Translator
-
+from app.core.utils.backend.alert_backend import Alert
 
 translator = Translator()
+
+logger = logging.getLogger("app.core.middleware")
 
 
 class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
@@ -24,7 +27,7 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
     backend function in the background as a `BackgroundTask`.
     """
 
-    def __init__(self, app, alert_backend: Callable[[Exception, dict], None]):
+    def __init__(self, app, alert_backend: Alert):
         """
         Initialize the middleware with the given FastAPI app and alert backend
         function.
@@ -34,7 +37,7 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
         """
         super().__init__(app)
         self.alert_backend = alert_backend
-    
+
     async def set_body(self, request: Request, body: bytes):
         """
         Set the body of the given request to the given bytes.
@@ -42,10 +45,11 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
         :param request: The request whose body is being set.
         :param body: The bytes to be set as the body of the request.
         """
-        async def receive():
+
+        async def receive():  # pragma: no cover
             return body
 
-        request._receive = receive
+        request._receive = receive  # type: ignore
 
     async def get_body(self, request: Request) -> bytes:
         """
@@ -55,12 +59,14 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
         :return: The body of the request as bytes.
         """
         try:
-            body = await wait_for(request.body(), timeout=10) # Wait for the body of the request for 10 seconds
-            self.set_body(request, body)
+            body = await wait_for(
+                request.body(), timeout=5
+            )  # Wait for the body of the request for 5 seconds
+            await self.set_body(request, body)  # Set the body of the request
             return body
-        except TimeoutError:
-            return b'Timeout while retrieving request body'
-
+        except TimeoutError:  # pragma: no cover
+            logger.warning("Timeout while retrieving request body")
+            return b"Timeout while retrieving request body"
 
     async def dispatch(self, request: Request, call_next):
         """
@@ -68,25 +74,31 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
 
         :param request: The request being dispatched.
         :param call_next: The next middleware in the chain.
-        :return: The response from the next middleware in the chain, or a default error response if an exception is raised.
+        :return: The response from the next middleware in the chain,
+        or a default error response if an exception is raised.
         """
         try:
             return await call_next(request)
-        except Exception as e: # An unhanded exception was raised during the processing of the request
+        except (
+            Exception
+        ) as e:  # An unhanded exception was raised during the processing of the request
             # Get the body of the request as bytes
-            body = await self.get_body(request)
+            body: bytes = await self.get_body(request)
             # Create a background task to call the alert backend function with the exception and request details
             task = BackgroundTask(
                 self.alert_backend,
-                e,
+                exception=e,
                 method=request.method,
                 url=request.url,
                 headers=request.headers,
                 body=body,
             )
+            logger.debug(
+                f"Exception raised during processing of request {request.method} {request.url}: {e}"
+            )
             # Return a default error response with the background task
             return Response(
                 content=translator.INTERNAL_SERVER_ERROR,
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                background=task
+                background=task,
             )
