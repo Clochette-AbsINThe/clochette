@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.routing import APIRoute
 
 from app.api.utils.endpoints import base_router
 from app.api.v1.api import api_v1_router
@@ -23,6 +24,13 @@ setup_logs("sqlalchemy", level=logging.WARNING)
 
 
 logger = logging.getLogger("app.main")
+
+
+def custom_generate_unique_id(route: APIRoute) -> str:
+    """
+    Generate a unique id for each request.
+    """
+    return f"{route.name}"
 
 
 @asynccontextmanager
@@ -54,6 +62,7 @@ app = FastAPI(
             "content": {"text/plain": {"example": "Internal server error"}},
         },
     },
+    generate_unique_id_function=custom_generate_unique_id,
 )
 
 app.add_middleware(ExceptionMonitorMiddleware, alert_backend=alert_backend())
