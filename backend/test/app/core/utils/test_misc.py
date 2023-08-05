@@ -63,7 +63,7 @@ def test_to_query_parameters():
     )
 
     # Test with comparison
-    NewModel = to_query_parameters(User, comparison=True)
+    NewModel = to_query_parameters(User, comparaison=True)
     assert NewModel.model_fields.get("id", None) is None
     assert NewModel.model_fields.get("password", None) is None
     assert NewModel.model_fields["username"].is_required() is False

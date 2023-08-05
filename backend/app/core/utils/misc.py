@@ -25,7 +25,7 @@ ComparaisonTypes = (
 
 def to_query_parameters(
     model: Type[DefaultModel],
-    comparison: bool = False,
+    comparaison: bool = False,
     exclude: list[str] | None = None,
 ) -> type[BaseModel]:
     """Function that creates a new Pydantic model with all the fields of the original model,
@@ -61,7 +61,7 @@ def to_query_parameters(
         field.metadata = value.metadata
         field.rebuild_annotation()
 
-        if _type in ComparaisonTypes and comparison is True:
+        if _type in ComparaisonTypes and comparaison is True:
             for suffix in ComparaisonSuffix:
                 field_copy = deepcopy(field)
                 field_copy.alias = f"{key}{suffix}"

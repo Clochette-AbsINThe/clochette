@@ -21,7 +21,9 @@ logger = logging.getLogger("app.api.v1.transaction")
 )
 async def read_transactions(
     db=Depends(get_db),
-    query=Depends(to_query_parameters(transaction_schema.TransactionBase)),
+    query=Depends(
+        to_query_parameters(transaction_schema.TransactionBase, comparaison=True)
+    ),
 ):
     query_parameters = process_query_parameters(query)
     logger.debug(f"Query parameters: {query_parameters}")
