@@ -13,12 +13,13 @@ from app.core.middleware import ExceptionMonitorMiddleware
 from app.core.utils.backend.alert_backend import alert_backend
 from app.db.pre_start import pre_start
 from app.dependencies import get_db
+from app.schemas.base import HTTPError
 from app.utils.get_version import get_version
 from app.utils.logger import setup_logs
 
 setup_logs("app")
-setup_logs("uvicorn.access", overwrite=True)
-setup_logs("sqlalchemy", overwrite=True, silent=True, level=logging.WARNING)
+setup_logs("uvicorn.access")
+setup_logs("sqlalchemy", level=logging.WARNING)
 
 
 logger = logging.getLogger("app.main")
@@ -44,6 +45,15 @@ app = FastAPI(
     openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
     version=get_version(),
     lifespan=lifespan,
+    responses={
+        400: {"description": "Bad request", "model": HTTPError},
+        401: {"description": "Unauthorized", "model": HTTPError},
+        404: {"description": "Not found", "model": HTTPError},
+        500: {
+            "description": "Internal server error",
+            "content": {"text/plain": {"example": "Internal server error"}},
+        },
+    },
 )
 
 app.add_middleware(ExceptionMonitorMiddleware, alert_backend=alert_backend())
