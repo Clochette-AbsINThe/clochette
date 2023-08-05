@@ -41,8 +41,6 @@ class ColoredFormatter(logging.Formatter):
 
 def setup_logs(
     logger_name: str,
-    overwrite: bool = False,
-    silent=False,
     level=None,
 ):
     """
@@ -67,8 +65,6 @@ def setup_logs(
         logger=logger,
         formatter=color_formatter,
         log_level=settings.LOG_LEVEL,
-        overwrite=overwrite,
-        silent=silent,
     )
 
 
@@ -76,8 +72,6 @@ def configure_stdout_logging(
     logger: logging.Logger,
     formatter: Optional[logging.Formatter] = None,
     log_level: int = logging.DEBUG,
-    overwrite: bool = False,
-    silent=False,
 ):
     """
     Configures the logger to log to stdout with the specified logger, formatter and log level.
@@ -92,8 +86,5 @@ def configure_stdout_logging(
     stream_handler.setFormatter(formatter)
     stream_handler.setLevel(log_level)
 
-    if overwrite:
-        logger.handlers = []
+    logger.handlers = []
     logger.addHandler(stream_handler)
-    if not silent:
-        print(f"Logging {str(logger)} to stdout -> True")

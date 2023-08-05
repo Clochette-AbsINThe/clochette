@@ -10,7 +10,7 @@ from app.core.config import settings
 from app.db.base import Base
 from app.utils.logger import setup_logs
 
-setup_logs("alembic", overwrite=True, silent=True, level=logging.INFO)
+setup_logs("alembic", level=logging.INFO)
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
