@@ -5,6 +5,7 @@ import sys
 
 from app.commands.init_db import init_db
 from app.commands.migrate_db import migrate_db
+from app.commands.open_api import open_api
 from app.commands.reset_db import reset_db
 from app.db.pre_start import pre_start
 from app.dependencies import get_db
@@ -64,14 +65,27 @@ migrate_parser.add_argument(
     default=False,
 )
 
+open_api_parser = subparsers.add_parser(
+    "openapi",
+    help="Generate OpenAPI schema",
+)
+open_api_parser.add_argument(
+    "-o",
+    "--output",
+    type=str,
+    help="Output file",
+    default="openapi.json",
+)
+
 PROMPT_MESSAGE = (
     "Are you sure you want to reset the database, this will delete all data? [y/N] "
 )
 
 
 async def main(command: str) -> None:
-    logger.info(f"Running command: {command}")
     args = parser.parse_args()
+
+    logger.info(f"Running command: {command}")
 
     get_db.setup()
     await pre_start()
@@ -88,6 +102,8 @@ async def main(command: str) -> None:
                 logger.info("Aborted")
         case "migrate":
             await migrate_db(bypass_revision=args.bypass_revision, force=args.force)
+        case "openapi":
+            open_api(args.output)
 
 
 if __name__ == "__main__":  # pragma: no cover
@@ -95,5 +111,5 @@ if __name__ == "__main__":  # pragma: no cover
         parser.print_help()
         sys.exit(1)
 
-    setup_logs("app", silent=True, level=logging.INFO)
+    setup_logs("app", level=logging.INFO)
     asyncio.run(main(sys.argv[1]))

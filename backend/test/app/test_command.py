@@ -42,3 +42,12 @@ async def test_migrate_db(mock_migrate_db):
     with patch("sys.argv", args):
         await main("migrate")
     mock_migrate_db.assert_called_once_with(bypass_revision=True, force=True)
+
+
+@pytest.mark.asyncio
+@patch("app.command.open_api")
+async def test_open_api(mock_open_api):
+    args = ["test", "openapi", "--output", "test.json"]
+    with patch("sys.argv", args):
+        await main("openapi")
+    mock_open_api.assert_called_once_with("test.json")
