@@ -16,13 +16,13 @@ class ConsumableBase(DefaultModel):
         The sell price of the consumable item, meaning the price of sell.
     """
 
+    consumable_item_id: int = Field(..., alias="fkId")
     unit_price: float = Field(..., gt=0)
     sell_price: float = Field(..., gt=0)
 
 
 class ConsumableCreate(ConsumableBase):
     id: int | None = None
-    consumable_item_id: int = Field(..., alias="fkId")
 
     @computed_field  # type: ignore[misc]
     @property

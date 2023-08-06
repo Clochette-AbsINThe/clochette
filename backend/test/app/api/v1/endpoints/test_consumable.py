@@ -66,6 +66,7 @@ class TestConsumable(BaseTest):
     async def test_update_consumable(self):
         # Arrange
         consumable_update = ConsumableUpdate(
+            fkId=self.consumable_item_db.id,
             sell_price=3,
         )
 
@@ -88,6 +89,7 @@ class TestConsumable(BaseTest):
     def test_update_consumable_not_found(self):
         # Arrange
         consumable_update = ConsumableUpdate(
+            fkId=self.consumable_item_db.id,
             sell_price=3,
         )
 
