@@ -117,7 +117,7 @@ class TestCRUDTransaction(BaseTest):
 
                 consumable_in_db = await crud_consumable.query(session)
                 item_consumable_purchase = self.item_consumable
-                item_consumable_purchase.item.id = consumable_in_db[0].id
+                item_consumable_purchase.computed_item.id = consumable_in_db[0].id
                 transaction_create = TransactionFrontCreate(
                     amount=10,
                     type=TransactionType.TRANSACTION,

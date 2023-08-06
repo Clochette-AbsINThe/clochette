@@ -50,7 +50,7 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
             # Iterate over the number of items
             for _ in range(item.quantity):
                 # Get the item's data
-                item_data = item.item
+                item_data = item.computed_item
                 # If the item is a consumable item, create a `ConsumableCreatePurchase` or `ConsumableCreateSale` object
                 # from the item data depending on wheher the transaction is a sale or a purchase
                 if item.table == "consumable":
