@@ -90,7 +90,7 @@ class TestTransaction(BaseTest):
         assert response.json() == [
             self.transaction.model_dump(
                 by_alias=True, mode="json"
-            )  # Mode json is used to trigger the datetime format
+            )  # Mode json is used to convert value (like datetime) to strings
         ]
 
     async def test_create_transaction(self):

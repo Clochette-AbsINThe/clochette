@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Generic, Optional, Sequence, Type, TypeVar
 
 from fastapi.encoders import jsonable_encoder
@@ -10,6 +10,8 @@ from sqlalchemy.sql.expression import Select, select
 from app.core.decorator import handle_exceptions
 from app.core.translation import Translator
 from app.db.base_class import Base
+from app.db.databases.sqlite import SqliteDatabase
+from app.db.select_db import select_db
 from app.schemas.base import DefaultModel
 
 translator = Translator()
@@ -20,6 +22,43 @@ ModelT = TypeVar("ModelT", bound=Base)
 CreateSchemaT = TypeVar("CreateSchemaT", bound=DefaultModel)
 # Pydantic validation schema for updating the object
 UpdateSchemaT = TypeVar("UpdateSchemaT", bound=DefaultModel)
+
+
+def patch_timezone_sqlite(obj: ModelT) -> ModelT:
+    """
+    Patch the timezone of a datetime object to UTC.
+    If the database is not SQLite, the object is returned unchanged.
+
+    :param obj: The object to patch
+    :return: The patched object
+    """
+    if not isinstance(select_db(), SqliteDatabase):
+        return obj
+
+    for attr in dir(obj):
+        if not attr.startswith("_"):
+            value = getattr(obj, attr)
+            if isinstance(value, datetime):
+                setattr(obj, attr, value.replace(tzinfo=timezone.utc))
+    return obj
+
+
+def apply_distinct(query: Select, distinct: ColumnElement[Any] | None) -> Select:
+    """
+    Apply a distinct clause to a query.
+    With SQLite, the distinct clause is applied using the group_by method, while with
+    PostgreSQL, the distinct clause is applied using the distinct method.
+
+    :param query: The query to apply the distinct clause to
+    :param distinct: The column to apply the distinct clause to
+    :return: The query with the distinct clause applied
+    """
+    if distinct is not None:
+        if isinstance(select_db(), SqliteDatabase):
+            query = query.group_by(distinct)
+        else:
+            query = query.distinct(distinct)  # pragma: no cover
+    return query
 
 
 class CRUDBase(
@@ -50,7 +89,8 @@ class CRUDBase(
 
         :return: The record
         """
-        return await db.get(self.model, id, with_for_update=for_update)
+        obj = await db.get(self.model, id, with_for_update=for_update)
+        return patch_timezone_sqlite(obj) if obj else None
 
     async def query(
         self,
@@ -58,7 +98,7 @@ class CRUDBase(
         distinct: ColumnElement[Any] | None = None,
         skip: int = 0,
         limit: int | None = 100,
-        **filters
+        **filters,
     ) -> Sequence[ModelT]:
         """
         Get multiple records with filters and distinct option.
@@ -99,11 +139,10 @@ class CRUDBase(
             else:
                 query = query.where(getattr(self.model, column) == value)
 
-        if distinct is not None:
-            # Apply the DISTINCT option if specified
-            query = query.distinct(distinct).group_by(distinct)
+        query = apply_distinct(query, distinct)
 
-        return (await db.execute(query.offset(skip).limit(limit))).scalars().all()
+        objs = await db.execute(query.offset(skip).limit(limit))
+        return [patch_timezone_sqlite(obj) for obj in objs.scalars().all()]
 
     @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
     async def create(self, db: AsyncSession, *, obj_in: CreateSchemaT) -> ModelT:
@@ -128,7 +167,7 @@ class CRUDBase(
         # Refresh the model instance to get the default values for the columns
         await db.refresh(db_obj)
         # Return the created model instance
-        return db_obj
+        return patch_timezone_sqlite(db_obj)
 
     @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
     async def update(
@@ -136,7 +175,7 @@ class CRUDBase(
         db: AsyncSession,
         *,
         db_obj: ModelT,
-        obj_in: UpdateSchemaT | dict[str, Any]
+        obj_in: UpdateSchemaT | dict[str, Any],
     ) -> ModelT:
         """
         Update a record.
@@ -173,7 +212,7 @@ class CRUDBase(
         db.add(db_obj)
         await db.commit()
         await db.refresh(db_obj)
-        return db_obj
+        return patch_timezone_sqlite(db_obj)
 
     async def delete(self, db: AsyncSession, *, id: int) -> ModelT | None:
         """

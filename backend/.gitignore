@@ -4,3 +4,5 @@ __pycache__
 **/*_deprecated*
 .env
 coverage.xml
+.coverage
+openapi.json

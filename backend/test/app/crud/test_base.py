@@ -2,11 +2,13 @@ from datetime import datetime as _datetime
 from operator import gt
 from test.base_test import BaseTest
 from typing import Optional, cast
+from unittest.mock import patch
 
 from sqlalchemy import Column, DateTime, Integer, String
 
-from app.crud.base import CRUDBase
+from app.crud.base import CRUDBase, patch_timezone_sqlite
 from app.db.base_class import Base
+from app.db.databases.postgres import PostgresDatabase
 from app.dependencies import get_db
 from app.schemas.base import DefaultModel
 
@@ -166,3 +168,26 @@ class TestBaseCRUD(BaseTest):
             assert cast(str, result.email) == "user1@example.com"
 
             assert await self.crud.read(session, id=1) is None
+
+
+def test_patch_timezone_sqlite():
+    create_model = ModelUser.create(
+        email="user1@example.com",
+        password="password1",
+        datetime=_datetime.now(),
+    )
+    model = patch_timezone_sqlite(create_model)
+
+    assert model.datetime.tzinfo is not None
+
+
+@patch("app.crud.base.select_db", PostgresDatabase)
+def test_patch_timezone_sqlite_postgres():
+    create_model = ModelUser.create(
+        email="user1@example.com",
+        password="password1",
+        datetime=_datetime.now(),
+    )
+    model = patch_timezone_sqlite(create_model)
+
+    assert model.datetime.tzinfo is None
