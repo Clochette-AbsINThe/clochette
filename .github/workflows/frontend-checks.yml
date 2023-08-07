@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download coverage report
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: coverage-report-frontend
           path: ./frontend/coverage
