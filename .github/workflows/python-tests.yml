@@ -57,4 +57,3 @@ jobs:
         with:
           fail_ci_if_error: true
           files: ./backend/coverage.xml
-          flags: backend

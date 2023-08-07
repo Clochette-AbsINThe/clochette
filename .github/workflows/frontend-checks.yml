@@ -56,4 +56,3 @@ jobs:
         with:
           fail_ci_if_error: true
           files: ./frontend/coverage/coverage-final.json
-          flags: frontend
