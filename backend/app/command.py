@@ -4,6 +4,7 @@ import logging
 import sys
 
 from app.commands.dump_db import dump_db
+from app.commands.execute_sql import execute_sql_command
 from app.commands.init_db import init_db
 from app.commands.load_db import load_db
 from app.commands.migrate_db import migrate_db
@@ -103,6 +104,16 @@ load_db_parser.add_argument(
     default="dump.json",
 )
 
+execute_parser = subparsers.add_parser(
+    "execute",
+    help="Execute SQL command",
+)
+execute_parser.add_argument(
+    "command",
+    type=str,
+    help="SQL command",
+)
+
 PROMPT_MESSAGE = (
     "Are you sure you want to reset the database, this will delete all data? [y/N] "
 )
@@ -134,6 +145,8 @@ async def main(command: str) -> None:
             await dump_db(args.output)
         case "load":
             await load_db(args.input)
+        case "execute":
+            await execute_sql_command(args.command)
 
 
 if __name__ == "__main__":  # pragma: no cover

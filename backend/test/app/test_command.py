@@ -69,3 +69,12 @@ async def test_load_db(mock_load_db):
     with patch("sys.argv", args):
         await main("load")
     mock_load_db.assert_called_once_with("test.json")
+
+
+@pytest.mark.asyncio
+@patch("app.command.execute_sql_command")
+async def test_execute_sql_command(mock_execute_sql_command):
+    args = ["test", "execute", "SELECT * FROM users"]
+    with patch("sys.argv", args):
+        await main("execute")
+    mock_execute_sql_command.assert_called_once_with("SELECT * FROM users")
