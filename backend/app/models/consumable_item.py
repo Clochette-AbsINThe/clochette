@@ -1,15 +1,18 @@
-from sqlalchemy import Column, Integer, String
+from typing import TYPE_CHECKING, List
+
 from sqlalchemy.orm import relationship
 
 from app.core.types import IconName
-from app.db.base_class import Base, Enum
+from app.db.base_class import Base, Mapped, Str256
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .consumable import Consumable
 
 
 class ConsumableItem(Base):
-    id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(String, nullable=False)
-    icon = Column(Enum(IconName), nullable=False)
+    name: Mapped[Str256]
+    icon: Mapped[IconName]
 
-    consumables = relationship(
-        "Consumable", back_populates="consumable_item", lazy="selectin"
+    consumables: Mapped[List["Consumable"]] = relationship(
+        back_populates="consumable_item", lazy="selectin"
     )

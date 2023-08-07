@@ -1,7 +1,6 @@
 import os
 from typing import Any
 
-from sqlalchemy import MetaData
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -56,7 +55,7 @@ class SqliteDatabase(DatabaseInterface):
             connection = session.connection()
             return method(connection)
 
-        metadata: MetaData = Base.metadata  # type: ignore
+        metadata = Base.metadata
         async with self.get_session() as session:
             async with session.begin():
                 if not no_drop:

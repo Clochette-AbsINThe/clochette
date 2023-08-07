@@ -7,8 +7,8 @@ from app.schemas.glass import Glass
 
 
 def test_glass_computed_field():
-    drink_model = DrinkModel.create(id=1, name="Coke")
-    barrel_model = BarrelModel.create(
+    drink_model = DrinkModel(id=1, name="Coke")
+    barrel_model = BarrelModel(
         id=1,
         sell_price=2.5,
         unit_price=1.5,
@@ -17,7 +17,7 @@ def test_glass_computed_field():
         empty=False,
         drink=drink_model,
     )
-    glass_model = GlassModel.create(id=1, barrel_id=1, barrel=barrel_model)
+    glass_model = GlassModel(id=1, barrel_id=1, barrel=barrel_model)
 
     glass = Glass.model_validate(glass_model).model_dump()
 

@@ -1,7 +1,15 @@
-from sqlalchemy import Column, Float, ForeignKey, Integer
-from sqlalchemy.orm import relationship
+from typing import TYPE_CHECKING
 
-from app.db.base_class import Base
+from sqlalchemy.orm import Mapped, relationship
+
+from app.db.base_class import Base, build_fk_annotation
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .out_of_stock_item import OutOfStockItem
+    from .transaction import Transaction
+
+outofstockitem_fk = build_fk_annotation("outofstockitem")
+transaction_fk = build_fk_annotation("transaction")
 
 
 class OutOfStock(Base):
@@ -13,13 +21,14 @@ class OutOfStock(Base):
         - If this item is meant to be bought, the price will be a float, and the `sell_price` of the item will be None.
     """
 
-    id = Column(Integer, primary_key=True, nullable=False)
-    unit_price = Column(Float, nullable=True)
+    unit_price: Mapped[float | None]
 
-    item_id = Column(Integer, ForeignKey("outofstockitem.id"))
-    item = relationship("OutOfStockItem", back_populates="outofstocks", lazy="selectin")
+    item_id: Mapped[outofstockitem_fk]
+    item: Mapped["OutOfStockItem"] = relationship(
+        back_populates="outofstocks", lazy="selectin"
+    )
 
-    transaction_id = Column(Integer, ForeignKey("transaction.id"))
-    transaction = relationship(
-        "Transaction", back_populates="out_of_stocks", lazy="selectin"
+    transaction_id: Mapped[transaction_fk]
+    transaction: Mapped["Transaction"] = relationship(
+        back_populates="out_of_stocks", lazy="selectin"
     )

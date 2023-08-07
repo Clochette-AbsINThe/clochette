@@ -52,7 +52,7 @@ class Item(DefaultModel):
         transaction_scheme.model_validate(v)
         return v
 
-    @computed_field  # type: ignore
+    @computed_field  # type: ignore[misc]
     @property
     def computed_item(
         self,

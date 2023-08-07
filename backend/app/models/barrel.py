@@ -1,20 +1,32 @@
-from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer
-from sqlalchemy.orm import relationship
+from typing import TYPE_CHECKING, List
 
-from app.db.base_class import Base
+from sqlalchemy.orm import Mapped, relationship
+
+from app.db.base_class import Base, build_fk_annotation
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .drink import Drink
+    from .glass import Glass
+    from .transaction import Transaction
+
+drink_fk = build_fk_annotation("drink")
+transaction_fk = build_fk_annotation("transaction")
 
 
 class Barrel(Base):
-    id = Column(Integer, primary_key=True, nullable=False)
-    unit_price = Column(Float, nullable=False)
-    sell_price = Column(Float, nullable=False)
-    is_mounted = Column(Boolean, nullable=False)
-    empty = Column(Boolean, nullable=False)
+    unit_price: Mapped[float]
+    sell_price: Mapped[float]
+    is_mounted: Mapped[bool]
+    empty: Mapped[bool]
 
-    drink_id = Column(Integer, ForeignKey("drink.id"))
-    drink = relationship("Drink", back_populates="barrels", lazy="selectin")
+    drink_id: Mapped[drink_fk]
+    drink: Mapped["Drink"] = relationship(back_populates="barrels", lazy="selectin")
 
-    transaction_id = Column(Integer, ForeignKey("transaction.id"))
-    transaction = relationship("Transaction", back_populates="barrels", lazy="selectin")
+    transaction_id: Mapped[transaction_fk]
+    transaction: Mapped["Transaction"] = relationship(
+        back_populates="barrels", lazy="selectin"
+    )
 
-    glasses = relationship("Glass", back_populates="barrel", lazy="selectin")
+    glasses: Mapped[List["Glass"]] = relationship(
+        back_populates="barrel", lazy="selectin"
+    )

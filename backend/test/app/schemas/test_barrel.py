@@ -6,8 +6,8 @@ from app.schemas.barrel import Barrel, BarrelCreate
 
 
 def test_barrel_computed_field():
-    drink_model = DrinkModel.create(id=1, name="Coke")
-    barrel_model = BarrelModel.create(
+    drink_model = DrinkModel(id=1, name="Coke")
+    barrel_model = BarrelModel(
         id=1,
         sell_price=2.5,
         unit_price=1.5,

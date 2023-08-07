@@ -1,20 +1,25 @@
-from sqlalchemy import Boolean, Column, Float, ForeignKey, Integer
-from sqlalchemy.orm import relationship
+from typing import TYPE_CHECKING
 
-from app.db.base_class import Base
+from sqlalchemy.orm import Mapped, relationship
+
+from app.db.base_class import Base, build_fk_annotation
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .consumable_item import ConsumableItem
+
+consumableitem_fk = build_fk_annotation("consumableitem")
+transaction_fk = build_fk_annotation("transaction")
 
 
 class Consumable(Base):
-    id = Column(Integer, primary_key=True, nullable=False)
-    sell_price = Column(Float, nullable=False)
-    unit_price = Column(Float, nullable=False)
-    empty = Column(Boolean, nullable=False)
+    sell_price: Mapped[float]
+    unit_price: Mapped[float]
+    empty: Mapped[bool]
 
-    consumable_item_id = Column(Integer, ForeignKey("consumableitem.id"))
-    consumable_item = relationship(
-        "ConsumableItem", back_populates="consumables", lazy="selectin"
+    consumable_item_id: Mapped[consumableitem_fk]
+    consumable_item: Mapped["ConsumableItem"] = relationship(
+        back_populates="consumables", lazy="selectin"
     )
 
-    transaction_id_purchase = Column(Integer, ForeignKey("transaction.id"))
-
-    transaction_id_sale = Column(Integer, ForeignKey("transaction.id"))
+    transaction_id_purchase: Mapped[transaction_fk | None]
+    transaction_id_sale: Mapped[transaction_fk | None]

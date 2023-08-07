@@ -7,10 +7,8 @@ from app.schemas.consumable import Consumable, ConsumableCreate
 
 
 def test_consumable_computed_field():
-    consumable_item_model = ConsumableItemModel.create(
-        id=1, name="Coke", icon=IconName.SOFT
-    )
-    consumable_model = ConsumableModel.create(
+    consumable_item_model = ConsumableItemModel(id=1, name="Coke", icon=IconName.SOFT)
+    consumable_model = ConsumableModel(
         id=1,
         sell_price=2.5,
         unit_price=1.5,

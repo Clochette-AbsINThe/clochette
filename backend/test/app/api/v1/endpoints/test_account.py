@@ -23,12 +23,9 @@ class TestAccount(BaseTest):
                 await crud_account.create(session, obj_in=self.account_create)
             )
 
-    async def read_account_from_db(self, id: int) -> Account | None:
+    async def read_account_from_db(self, id: int):
         async with get_db.get_session() as session:
-            account_in_db = await crud_account.read(session, id)
-            if account_in_db is None:
-                return None
-            return Account.model_validate(account_in_db)
+            return await crud_account.read(session, id)
 
     def test_read_accounts(self):
         # Arrange

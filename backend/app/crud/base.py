@@ -1,10 +1,9 @@
 from datetime import datetime, timezone
-from typing import Any, Generic, Optional, Sequence, Type, TypeVar
+from typing import Any, Generic, Sequence, Tuple, Type, TypeVar
 
-from fastapi.encoders import jsonable_encoder
-from sqlalchemy import ColumnElement
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import InstrumentedAttribute
 from sqlalchemy.sql.expression import Select, select
 
 from app.core.decorator import handle_exceptions
@@ -43,7 +42,9 @@ def patch_timezone_sqlite(obj: ModelT) -> ModelT:
     return obj
 
 
-def apply_distinct(query: Select, distinct: ColumnElement[Any] | None) -> Select:
+def apply_distinct(
+    query: Select[Tuple[ModelT]], distinct: InstrumentedAttribute[Any] | None
+) -> Select[Tuple[ModelT]]:
     """
     Apply a distinct clause to a query.
     With SQLite, the distinct clause is applied using the group_by method, while with
@@ -79,7 +80,7 @@ class CRUDBase(
 
     async def read(
         self, db: AsyncSession, id: Any, for_update: bool = False
-    ) -> Optional[ModelT]:
+    ) -> ModelT | None:
         """
         Get a record by id.
 
@@ -95,7 +96,7 @@ class CRUDBase(
     async def query(
         self,
         db: AsyncSession,
-        distinct: ColumnElement[Any] | None = None,
+        distinct: InstrumentedAttribute[Any] | None = None,
         skip: int = 0,
         limit: int | None = 100,
         **filters,
@@ -157,7 +158,7 @@ class CRUDBase(
         # The jsonable_encoder function is used to convert the Pydantic schema to a dictionary
         # by_alias=False means that the keys of the dictionary will be the same as the field names in
         # the Pydantic schema in order to match the column names in the database
-        obj_in_data = obj_in.model_dump(by_alias=False)
+        obj_in_data = obj_in.model_dump()
         # Create a new model instance from the input data
         db_obj = self.model(**obj_in_data)
         # Add the new model instance to the database session
@@ -186,14 +187,6 @@ class CRUDBase(
 
         :return: The updated record
         """
-        # Encode the database object as a dictionary
-        obj_data = jsonable_encoder(
-            db_obj,
-            custom_encoder={
-                # Do not convert datetime objects to strings
-                datetime: lambda v: v,
-            },
-        )
         # If the input data is a dictionary, use it as the update data
         # otherwise encode the input data as a dictionary to get the update data
         if isinstance(obj_in, dict):
@@ -204,11 +197,12 @@ class CRUDBase(
 
         # Update the fields of the database object with the corresponding
         # values from the update data
-        for field in obj_data:
+        for field, _ in db_obj.attributes:
             if field in update_data:
                 # It means: db_obj.field = update_data[field],
                 # i.e. set the value of the field of the database object to the value of the field in the update data
                 setattr(db_obj, field, update_data[field])
+
         db.add(db_obj)
         await db.commit()
         await db.refresh(db_obj)

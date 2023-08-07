@@ -1,23 +1,20 @@
 from datetime import datetime as _datetime
 from operator import gt
 from test.base_test import BaseTest
-from typing import Optional, cast
+from typing import Optional
 from unittest.mock import patch
 
-from sqlalchemy import Column, DateTime, Integer, String
-
 from app.crud.base import CRUDBase, patch_timezone_sqlite
-from app.db.base_class import Base
+from app.db.base_class import Base, Datetime, Mapped, Str256, Str512
 from app.db.databases.postgres import PostgresDatabase
 from app.dependencies import get_db
 from app.schemas.base import DefaultModel
 
 
 class ModelUser(Base):
-    id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(256), nullable=False)
-    password = Column(String(512), nullable=False)
-    datetime = Column(DateTime(timezone=True), nullable=False)
+    email: Mapped[Str256]
+    password: Mapped[Str512]
+    datetime: Mapped[Datetime]
 
 
 class UserCreate(DefaultModel):
@@ -68,8 +65,8 @@ class TestBaseCRUD(BaseTest):
                 result = await self.crud.create(session, obj_in=user_in)
 
                 assert result.id == id
-                assert cast(str, result.email) == user_in.email
-                assert cast(str, result.password) == user_in.password
+                assert result.email == user_in.email
+                assert result.password == user_in.password
 
     async def test_get(self):
         async with get_db.get_session() as session:
@@ -80,8 +77,8 @@ class TestBaseCRUD(BaseTest):
                 assert result is not None
 
                 assert result.id == id
-                assert cast(str, result.email) == user_in.email
-                assert cast(str, result.password) == user_in.password
+                assert result.email == user_in.email
+                assert result.password == user_in.password
 
     async def test_get_all(self):
         async with get_db.get_session() as session:
@@ -91,8 +88,8 @@ class TestBaseCRUD(BaseTest):
             # Assert
             assert len(result) == 3
             assert result[0].id == 1
-            assert cast(str, result[0].email) == "user1@example.com"
-            assert cast(str, result[0].password) == "password1"
+            assert result[0].email == "user1@example.com"
+            assert result[0].password == "password1"
 
     async def test_get_filter(self):
         async with get_db.get_session() as session:
@@ -102,7 +99,7 @@ class TestBaseCRUD(BaseTest):
             # Assert
             assert len(result) == 1
             assert result[0].id == 1
-            assert cast(str, result[0].email) == "user1@example.com"
+            assert result[0].email == "user1@example.com"
 
     async def test_get_filter_operator(self):
         async with get_db.get_session() as session:
@@ -112,7 +109,7 @@ class TestBaseCRUD(BaseTest):
             # Assert
             assert len(result) == 1
             assert result[0].id == 3
-            assert cast(str, result[0].email) == "user3@example.com"
+            assert result[0].email == "user3@example.com"
 
     async def test_get_distinct(self):
         async with get_db.get_session() as session:
@@ -136,7 +133,7 @@ class TestBaseCRUD(BaseTest):
 
             assert result is not None
             assert result.id == 1
-            assert cast(str, result.email) == "modified@example.com"
+            assert result.email == "modified@example.com"
 
     async def test_update_with_model(self):
         async with get_db.get_session() as session:
@@ -155,7 +152,7 @@ class TestBaseCRUD(BaseTest):
             assert result is not None
             assert result == await self.crud.read(session, id=1)
             assert result.id == 1
-            assert cast(str, result.email) == "modified@example.com"
+            assert result.email == "modified@example.com"
 
     async def test_delete(self):
         async with get_db.get_session() as session:
@@ -165,13 +162,13 @@ class TestBaseCRUD(BaseTest):
             # Assert
             assert result is not None
             assert result.id == 1
-            assert cast(str, result.email) == "user1@example.com"
+            assert result.email == "user1@example.com"
 
             assert await self.crud.read(session, id=1) is None
 
 
 def test_patch_timezone_sqlite():
-    create_model = ModelUser.create(
+    create_model = ModelUser(
         email="user1@example.com",
         password="password1",
         datetime=_datetime.now(),
@@ -183,7 +180,7 @@ def test_patch_timezone_sqlite():
 
 @patch("app.crud.base.select_db", PostgresDatabase)
 def test_patch_timezone_sqlite_postgres():
-    create_model = ModelUser.create(
+    create_model = ModelUser(
         email="user1@example.com",
         password="password1",
         datetime=_datetime.now(),

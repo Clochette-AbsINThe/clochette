@@ -1,8 +1,12 @@
-from sqlalchemy import Boolean, Column, Float, Integer, String
-from sqlalchemy.orm import relationship
+from typing import TYPE_CHECKING
+
+from sqlalchemy.orm import Mapped, relationship
 
 from app.core.types import IconName
-from app.db.base_class import Base, Enum
+from app.db.base_class import Base, Str256
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .out_of_stock import OutOfStock
 
 
 class OutOfStockItem(Base):
@@ -15,10 +19,11 @@ class OutOfStockItem(Base):
         - False means sell (The `sell_price` will be a float)
     """
 
-    id = Column(Integer, primary_key=True, nullable=False)
-    buy_or_sell = Column(Boolean, nullable=False)
-    name = Column(String, nullable=False)
-    icon = Column(Enum(IconName), nullable=False)
-    sell_price = Column(Float, nullable=True)
+    name: Mapped[Str256]
+    buy_or_sell: Mapped[bool]
+    icon: Mapped[IconName]
+    sell_price: Mapped[float | None]
 
-    outofstocks = relationship("OutOfStock", back_populates="item", lazy="selectin")
+    outofstocks: Mapped[list["OutOfStock"]] = relationship(
+        back_populates="item", lazy="selectin"
+    )

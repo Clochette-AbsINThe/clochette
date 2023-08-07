@@ -8,10 +8,10 @@ from app.schemas.out_of_stock import OutOfStock
 
 
 def test_out_of_stock_computed_field():
-    out_of_stock_item_model = OutOfStockItemModel.create(
+    out_of_stock_item_model = OutOfStockItemModel(
         id=1, name="Coke", icon=IconName.SOFT, sell_price=2.5, buy_or_sell=False
     )
-    out_of_stock_model = OutOfStockModel.create(
+    out_of_stock_model = OutOfStockModel(
         id=1,
         item_id=1,
         item=out_of_stock_item_model,
@@ -21,7 +21,7 @@ def test_out_of_stock_computed_field():
     with pytest.raises(ValidationError):
         out_of_stock = OutOfStock.model_validate(out_of_stock_model).model_dump()
 
-    out_of_stock_model = OutOfStockModel.create(
+    out_of_stock_model = OutOfStockModel(
         id=1,
         item_id=1,
         item=out_of_stock_item_model,
@@ -34,10 +34,10 @@ def test_out_of_stock_computed_field():
     with pytest.raises(KeyError):
         out_of_stock["out_of_stock_item"]
 
-    out_of_stock_item_model = OutOfStockItemModel.create(
+    out_of_stock_item_model = OutOfStockItemModel(
         id=1, name="Coke", icon=IconName.SOFT, buy_or_sell=True
     )
-    out_of_stock_model = OutOfStockModel.create(
+    out_of_stock_model = OutOfStockModel(
         id=1,
         item_id=1,
         item=out_of_stock_item_model,
@@ -46,7 +46,7 @@ def test_out_of_stock_computed_field():
     with pytest.raises(ValidationError):
         out_of_stock = OutOfStock.model_validate(out_of_stock_model).model_dump()
 
-    out_of_stock_model = OutOfStockModel.create(
+    out_of_stock_model = OutOfStockModel(
         id=1,
         item_id=1,
         item=out_of_stock_item_model,

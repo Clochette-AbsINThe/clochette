@@ -1,5 +1,5 @@
 import logging
-from typing import Any, cast
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Security, status
 from fastapi.security import OAuth2PasswordRequestForm
@@ -53,7 +53,7 @@ async def login(
         )
     return {
         "access_token": create_access_token(
-            subject=cast(str, account.username), scopes=[account.scope.value]
+            subject=account.username, scopes=[account.scope.value]
         )
     }
 
