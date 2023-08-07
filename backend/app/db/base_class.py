@@ -4,7 +4,7 @@ from typing import Annotated
 from sqlalchemy import DateTime, ForeignKey, String, UnicodeText, inspect
 from sqlalchemy.orm import DeclarativeBase, Mapped, declared_attr, mapped_column
 
-PrimaryKey = Annotated[int, mapped_column(primary_key=True, index=True, nullable=False)]
+PrimaryKey = Annotated[int, mapped_column(primary_key=True, nullable=False)]
 Str256 = Annotated[str, mapped_column(String(256), nullable=False)]
 Str512 = Annotated[str, mapped_column(String(512), nullable=False)]
 Datetime = Annotated[datetime, mapped_column(DateTime(timezone=True), nullable=False)]

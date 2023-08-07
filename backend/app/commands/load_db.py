@@ -1,10 +1,13 @@
 import datetime
 import json
 import logging
+from typing import Any, Tuple
 
-from sqlalchemy import inspect
+from sqlalchemy import Table, inspect, text
 
 from app.db.base_class import Base
+from app.db.databases.postgres import PostgresDatabase
+from app.db.select_db import select_db
 from app.dependencies import get_db
 
 logger = logging.getLogger("app.command")
@@ -21,7 +24,7 @@ async def load_db(input_file: str) -> None:
         # The data needs to be loaded in the reverse order of the dump file
         # to avoid foreign key constraint errors
         tables = Base.metadata.sorted_tables
-        tables_to_load = []
+        tables_to_load: list[Tuple[Table, Any]] = []
         for table in reversed(tables):
             table_name = table.name
             if table_name not in data:
@@ -56,6 +59,18 @@ async def load_db(input_file: str) -> None:
                             row[column.name]
                         )
                 await session.execute(table.insert().values(**row))
+
+            # Update the sequence for the primary key
+            # This is needed to avoid duplicate primary key errors
+            # when loading data into the database
+            if table.primary_key and isinstance(select_db(), PostgresDatabase):
+                pk_name = table.primary_key.columns.values()[0].name
+                await session.execute(
+                    text(
+                        f"SELECT setval(pg_get_serial_sequence('{table.name}', '{pk_name}'), "
+                        f"coalesce(max({pk_name}), 0)) FROM {table.name}"
+                    )
+                )
 
         await session.commit()
 

@@ -193,7 +193,7 @@ class CRUDBase(
             update_data = obj_in
         else:
             # exclude_unset=True means that only the fields that are explicitly set in the input data will be updated
-            update_data = obj_in.model_dump(exclude_unset=True, exclude_defaults=True)
+            update_data = obj_in.model_dump(exclude_unset=True, exclude_none=True)
 
         # Update the fields of the database object with the corresponding
         # values from the update data
