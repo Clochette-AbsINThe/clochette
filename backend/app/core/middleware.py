@@ -1,5 +1,4 @@
 import logging
-from asyncio import wait_for
 
 from fastapi import status
 from fastapi.requests import Request
@@ -38,35 +37,15 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
         super().__init__(app)
         self.alert_backend = alert_backend
 
-    async def set_body(self, request: Request, body: bytes):
-        """
-        Set the body of the given request to the given bytes.
+    # TODO: Remove this when starlette 0.28.0 is released
+    async def set_body(self, request: Request):
+        """Pre-consume the request body to avoid issues with the body being consumed multiple times."""
+        receive_ = await request.receive()
 
-        :param request: The request whose body is being set.
-        :param body: The bytes to be set as the body of the request.
-        """
-
-        async def receive():  # pragma: no cover
-            return body
+        async def receive():
+            return receive_
 
         request._receive = receive  # type: ignore
-
-    async def get_body(self, request: Request) -> bytes:
-        """
-        Get the body of the given request as bytes.
-
-        :param request: The request whose body is being retrieved.
-        :return: The body of the request as bytes.
-        """
-        try:
-            body = await wait_for(
-                request.body(), timeout=5
-            )  # Wait for the body of the request for 5 seconds
-            await self.set_body(request, body)  # Set the body of the request
-            return body
-        except TimeoutError:  # pragma: no cover
-            logger.warning("Timeout while retrieving request body")
-            return b"Timeout while retrieving request body"
 
     async def dispatch(self, request: Request, call_next):
         """
@@ -78,12 +57,16 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
         or a default error response if an exception is raised.
         """
         try:
+            # TODO: Remove this when starlette 0.28.0 is released
+            await self.set_body(request)
             return await call_next(request)
-        except (
-            Exception
-        ) as e:  # An unhanded exception was raised during the processing of the request
+        # An unhanded exception was raised during the processing of the request
+        except Exception as e:
+            logger.debug(
+                f"Exception raised during processing of request {request.method} {request.url}: {e}"
+            )
             # Get the body of the request as bytes
-            body: bytes = await self.get_body(request)
+            body: bytes = await request.body()
             # Create a background task to call the alert backend function with the exception and request details
             task = BackgroundTask(
                 self.alert_backend,
@@ -92,9 +75,6 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
                 url=request.url,
                 headers=request.headers,
                 body=body,
-            )
-            logger.debug(
-                f"Exception raised during processing of request {request.method} {request.url}: {e}"
             )
             # Return a default error response with the background task
             return Response(
