@@ -21,8 +21,6 @@ async def migrate_db(bypass_revision: bool = False, force: bool = False) -> None
     # If force is true, we need to bypass revision and regenerate the migration
     logger.info("Migrating database")
 
-    get_db.setup()
-
     if isinstance(get_db, SqliteDatabase):
         logger.info("Using SQLite database, skipping alembic")
         await get_db.create_all()

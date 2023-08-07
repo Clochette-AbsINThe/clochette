@@ -16,7 +16,7 @@ logger = logging.getLogger("app.command")
 
 async def init_db() -> None:
     logger.info("Creating initial data")
-    get_db.setup()
+
     async with get_db.get_session() as session:
         # Create treasury
         await treasuries.create(

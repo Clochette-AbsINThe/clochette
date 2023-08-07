@@ -3,7 +3,9 @@ import asyncio
 import logging
 import sys
 
+from app.commands.dump_db import dump_db
 from app.commands.init_db import init_db
+from app.commands.load_db import load_db
 from app.commands.migrate_db import migrate_db
 from app.commands.open_api import open_api
 from app.commands.reset_db import reset_db
@@ -77,6 +79,30 @@ open_api_parser.add_argument(
     default="openapi.json",
 )
 
+dump_db_parser = subparsers.add_parser(
+    "dump",
+    help="Dump database",
+)
+dump_db_parser.add_argument(
+    "-o",
+    "--output",
+    type=str,
+    help="Output file",
+    default="dump.json",
+)
+
+load_db_parser = subparsers.add_parser(
+    "load",
+    help="Load database",
+)
+load_db_parser.add_argument(
+    "-i",
+    "--input",
+    type=str,
+    help="Input file",
+    default="dump.json",
+)
+
 PROMPT_MESSAGE = (
     "Are you sure you want to reset the database, this will delete all data? [y/N] "
 )
@@ -104,6 +130,10 @@ async def main(command: str) -> None:
             await migrate_db(bypass_revision=args.bypass_revision, force=args.force)
         case "openapi":
             open_api(args.output)
+        case "dump":
+            await dump_db(args.output)
+        case "load":
+            await load_db(args.input)
 
 
 if __name__ == "__main__":  # pragma: no cover

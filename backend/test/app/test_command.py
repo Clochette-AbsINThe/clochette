@@ -51,3 +51,21 @@ async def test_open_api(mock_open_api):
     with patch("sys.argv", args):
         await main("openapi")
     mock_open_api.assert_called_once_with("test.json")
+
+
+@pytest.mark.asyncio
+@patch("app.command.dump_db")
+async def test_dump_db(mock_dump_db):
+    args = ["test", "dump", "--output", "test.json"]
+    with patch("sys.argv", args):
+        await main("dump")
+    mock_dump_db.assert_called_once_with("test.json")
+
+
+@pytest.mark.asyncio
+@patch("app.command.load_db")
+async def test_load_db(mock_load_db):
+    args = ["test", "load", "--input", "test.json"]
+    with patch("sys.argv", args):
+        await main("load")
+    mock_load_db.assert_called_once_with("test.json")
