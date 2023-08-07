@@ -66,7 +66,11 @@ def alert_to_github_issues(
     markdown = f"# {issue_name}\n\n"
     markdown += f"{method} {url}\n\n"
     markdown += "## Request headers\n"
-    markdown += "\n".join(f"- **{key}**: {value}" for key, value in headers.items())
+    markdown += "\n".join(
+        f"- **{key}**: {value}"
+        for key, value in headers.items()
+        if key != "Authorization"
+    )
     markdown += "\n\n"
     markdown += "## Request body\n"
     markdown += "```\n"

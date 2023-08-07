@@ -12,6 +12,61 @@ SupportedEnvironments = Literal["development", "production", "test"]
 
 
 class Settings(BaseSettings):
+    """
+    This class defines the application settings and configurations.
+
+    Attributes:
+    -----------
+    ALERT_BACKEND : str
+        The alert backend to use.
+    API_V1_PREFIX : str
+        The prefix for API v1 routes.
+    LOCALE : SupportedLocales
+        The supported locale for the application.
+    ALLOWED_HOSTS : list[str]
+        The list of allowed hosts for the application.
+    LOG_LEVEL : int
+        The log level for the application.
+    ENVIRONMENT : SupportedEnvironments
+        The environment for the application.
+
+    ACCESS_TOKEN_EXPIRE_MINUTES : int
+        The expiration time for access tokens in minutes.
+    JWT_SECRET_KEY : str
+        The secret key for JWT authentication.
+    ALGORITHM : str
+        The algorithm to use for JWT authentication.
+
+    BASE_ACCOUNT_USERNAME : str
+        The username for the base account.
+    BASE_ACCOUNT_PASSWORD : str
+        The password for the base account.
+
+    POSTGRES_HOST : str | None
+        The host for the PostgreSQL database.
+    POSTGRES_PORT : int
+        The port for the PostgreSQL database.
+    POSTGRES_DB : str | None
+        The name of the PostgreSQL database.
+    POSTGRES_USER : str | None
+        The username for the PostgreSQL database.
+    POSTGRES_PASSWORD : str | None
+        The password for the PostgreSQL database.
+    DATABASE_URI : str
+        The URI for the database.
+
+    GITHUB_USER : str
+        The username for the GitHub account.
+    GITHUB_TOKEN : str
+        The token for the GitHub account.
+    ISSUE_LABELS : str
+        The labels for GitHub issues.
+    REPOSITORY_NAME : str
+        The name of the GitHub repository.
+    REPOSITORY_OWNER : str
+        The owner of the GitHub repository.
+    """
+
     ALERT_BACKEND: str
     API_V1_PREFIX: str = "/api/v1"
     LOCALE: SupportedLocales
@@ -21,18 +76,18 @@ class Settings(BaseSettings):
     LOG_LEVEL: int
     ENVIRONMENT: SupportedEnvironments
 
-    """ Authentication config"""
+    # Authentication config
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 1  # 1 day
     JWT_SECRET_KEY: str
     ALGORITHM: str = "HS256"  # TODO: Change to ES256 in the future
 
-    """Base account config """
+    # Base account config
 
     BASE_ACCOUNT_USERNAME: str
     BASE_ACCOUNT_PASSWORD: str
 
-    """Database config"""
+    # Database config
 
     POSTGRES_HOST: str | None = None
     POSTGRES_PORT: int = 5432
@@ -42,13 +97,10 @@ class Settings(BaseSettings):
 
     DATABASE_URI: str
 
-    ###
-
-    """Github config"""
+    # Github config
 
     GITHUB_USER: str
     GITHUB_TOKEN: str
-
     ISSUE_LABELS: str
     REPOSITORY_NAME: str
     REPOSITORY_OWNER: str
@@ -138,11 +190,11 @@ class ConfigProduction(Settings):
 
     """Database config"""
 
-    POSTGRES_HOST: str | None = os.environ.get("POSTGRES_HOST")
+    POSTGRES_HOST: str = os.environ.get("POSTGRES_HOST")  # type: ignore
     POSTGRES_PORT: int = int(os.environ.get("POSTGRES_PORT", default=5432))
-    POSTGRES_DB: str | None = os.environ.get("POSTGRES_DB")
-    POSTGRES_USER: str | None = os.environ.get("POSTGRES_USER")
-    POSTGRES_PASSWORD: str | None = os.environ.get("POSTGRES_PASSWORD")
+    POSTGRES_DB: str = os.environ.get("POSTGRES_DB")  # type: ignore
+    POSTGRES_USER: str = os.environ.get("POSTGRES_USER")  # type: ignore
+    POSTGRES_PASSWORD: str = os.environ.get("POSTGRES_PASSWORD")  # type: ignore
 
     """Github config"""
 
