@@ -9,13 +9,32 @@ from app.core.config import (
 
 
 def test_env_dev(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setenv("JWT_SECRET_KEY", "FAKE_VALUE")
-
+    select_settings.cache_clear()
     assert isinstance(select_settings("development"), ConfigDevelopment)
 
 
+def test_env_dev_override_db_type(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("DB_TYPE", "POSTGRES")
+    select_settings.cache_clear()
+    assert isinstance(select_settings("development"), ConfigDevelopment)
+    assert (
+        select_settings("development").DATABASE_URI
+        == ConfigDevelopment.POSTGRES_DATABASE_URI
+    )
+
+
+def test_env_dev_override_db_type_sqlite(monkeypatch: pytest.MonkeyPatch):
+    monkeypatch.setenv("DB_TYPE", "SQLITE")
+    select_settings.cache_clear()
+    assert isinstance(select_settings("development"), ConfigDevelopment)
+    assert (
+        select_settings("development").DATABASE_URI
+        == ConfigDevelopment.SQLITE_DATABASE_URI
+    )
+
+
 def test_env_prod(monkeypatch: pytest.MonkeyPatch):
-    monkeypatch.setenv("JWT_SECRET_KEY", "FAKE_VALUE")
+    monkeypatch.setenv("SECRET_KEY", "FAKE_VALUE")
     monkeypatch.setenv("BASE_ACCOUNT_PASSWORD", "FAKE_VALUE")
     monkeypatch.setenv("POSTGRES_HOST", "localhost")
     monkeypatch.setenv("POSTGRES_DB", "FAKE_VALUE")
