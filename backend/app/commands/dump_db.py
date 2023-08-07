@@ -26,8 +26,7 @@ async def dump_db(output_file: str) -> None:
             for row in await session.execute(table.select()):
                 data[table.name]["data"].append(row.tuple()._asdict())
 
-    print(data)
     with open(output_file, "w", encoding="utf-8") as f:
-        json.dump(data, f, indent=2)
+        json.dump(data, f, indent=2, default=str)
 
     logger.info("Dump of data created")
