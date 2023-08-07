@@ -6,7 +6,7 @@ authors = [
     "Samuel Guillemet <samuel.guillemet@telecom-sudparis.eu>",
     "Benoit Marzelleau <benoit.marzelleau@telecom-sudparis.eu>",
 ]
-readme = "../README.md"
+readme = "README.md"
 packages = [{ include = "app" }]
 
 
