@@ -36,7 +36,7 @@ jobs:
         run: npm run coverage
 
       - name: Save coverage report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: coverage-report-frontend
           path: ./frontend/coverage/coverage-final.json
@@ -45,6 +45,8 @@ jobs:
     needs: frontend-checks
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
+
       - name: Download coverage report
         uses: actions/download-artifact@v3
         with:
