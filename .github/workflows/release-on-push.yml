@@ -1,13 +1,10 @@
 # This workflow aims to release a new version of the project when a commit is pushed to the main branch.
 
-name: Release on push to main branch, build and push Docker images and deploy to production
+name: Release on push to main branch
 
 on:
   push:
-    branches: ["main"]
-
-env:
-  REGISTRY: ghcr.io
+    branches: [main]
 
 jobs:
   release-on-push:
@@ -29,54 +26,3 @@ jobs:
     outputs:
       tag_name: ${{ steps.release.outputs.tag_name }}
       version: ${{ steps.release.outputs.version }}
-
-  build-and-push:
-    needs: release-on-push
-    runs-on: ubuntu-latest
-    env:
-      repository_owner: clochette-absinthe
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - name: Log in to the Container registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and push Docker-Compose images
-        run: |
-          cd docker
-          docker compose -f docker-compose.yml -f docker-compose.prod.yml build
-          docker compose -f docker-compose.yml -f docker-compose.prod.yml push
-          export tag=${{ needs.release-on-push.outputs.tag_name }}
-          docker compose -f docker-compose.yml -f docker-compose.prod.yml build
-          docker compose -f docker-compose.yml -f docker-compose.prod.yml push
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build-and-push
-    env:
-      REGISTRY: ghcr.io
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      REPOSITORY_OWNER: ${{ github.repository_owner }}
-      REPOSITORY: ${{ github.repository }}
-    steps:
-      - name: Deploy to production
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.SSH_HOST }}
-          username: ${{ secrets.SSH_USERNAME }}
-          key: ${{ secrets.SSH_KEY }}
-          envs: REGISTRY,GITHUB_TOKEN,REPOSITORY,REPOSITORY_OWNER
-          script: |
-            echo $GITHUB_TOKEN | docker login $REGISTRY -u $REPOSITORY_OWNER --password-stdin
-            cd clochette 
-            rm -f docker-compose.yml docker-compose.prod.yml
-            wget https://raw.githubusercontent.com/$REPOSITORY/main/docker/docker-compose.yml
-            wget https://raw.githubusercontent.com/$REPOSITORY/main/docker/docker-compose.prod.yml
-            docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-            docker image prune -f -a

@@ -3,7 +3,9 @@ from app.models.consumable_item import ConsumableItem
 from app.schemas.consumable_item import ConsumableItemCreate, ConsumableItemUpdate
 
 
-class CRUDConsumableItem(CRUDBase[ConsumableItem, ConsumableItemCreate, ConsumableItemUpdate]):
+class CRUDConsumableItem(
+    CRUDBase[ConsumableItem, ConsumableItemCreate, ConsumableItemUpdate]
+):
     ...
 
 

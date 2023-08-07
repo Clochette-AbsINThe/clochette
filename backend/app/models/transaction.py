@@ -1,23 +1,52 @@
-from sqlalchemy import Boolean, Column, DateTime, Enum, Integer, Float, ForeignKey, UnicodeText
-from sqlalchemy.orm import relationship
+from typing import TYPE_CHECKING, List
+
+from sqlalchemy.orm import Mapped, relationship
 
 from app.core.types import PaymentMethod, TransactionType
-from app.db.base_class import Base
+from app.db.base_class import Base, Datetime, Text, build_fk_annotation
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .barrel import Barrel
+    from .consumable import Consumable
+    from .glass import Glass
+    from .out_of_stock import OutOfStock
+
+
+treasury_fk = build_fk_annotation("treasury")
 
 
 class Transaction(Base):
-    id = Column(Integer, primary_key=True, index=True)
-    datetime = Column(DateTime(timezone=True), nullable=False)
-    payment_method = Column(Enum(PaymentMethod), nullable=False)
-    amount = Column(Float, nullable=False)
-    sale = Column(Boolean, nullable=False) # True means selling, False means buying
-    type = Column(Enum(TransactionType), nullable=False)
-    description = Column(UnicodeText, nullable=True)
+    datetime: Mapped[Datetime]
+    payment_method: Mapped[PaymentMethod]
+    amount: Mapped[float]
+    sale: Mapped[bool]  # ! True means selling, False means buying
+    type: Mapped[TransactionType]
+    description: Mapped[Text]
 
-    treasury_id = Column(Integer, ForeignKey("treasury.id"))
+    treasury_id: Mapped[treasury_fk]
 
-    barrels = relationship("Barrel", back_populates="transaction", cascade="all, delete-orphan", lazy="selectin")
-    consumables_purchase = relationship("Consumable", foreign_keys="Consumable.transaction_id_purchase", cascade="all, delete-orphan", lazy="selectin")
-    consumables_sale = relationship("Consumable", foreign_keys="Consumable.transaction_id_sale", cascade="all, delete-orphan", lazy="selectin")
-    glasses = relationship("Glass", back_populates="transaction", cascade="all, delete-orphan", lazy="selectin")
-    out_of_stocks = relationship("OutOfStock", back_populates="transaction", cascade="all, delete-orphan", lazy="selectin")
+    barrels: Mapped[List["Barrel"]] = relationship(
+        back_populates="transaction",
+        lazy="selectin",
+        cascade="all, delete-orphan",
+    )
+    consumables_purchase: Mapped[List["Consumable"]] = relationship(
+        foreign_keys="Consumable.transaction_id_purchase",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+    consumables_sale: Mapped[List["Consumable"]] = relationship(
+        foreign_keys="Consumable.transaction_id_sale",
+        cascade="all, delete-orphan",
+        lazy="selectin",
+    )
+    glasses: Mapped[List["Glass"]] = relationship(
+        back_populates="transaction",
+        lazy="selectin",
+        cascade="all, delete-orphan",
+    )
+    out_of_stocks: Mapped[List["OutOfStock"]] = relationship(
+        back_populates="transaction",
+        lazy="selectin",
+        cascade="all, delete-orphan",
+    )

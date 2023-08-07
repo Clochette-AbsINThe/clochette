@@ -1,0 +1,21 @@
+name: pre-commit
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+defaults:
+  run:
+    working-directory: ./backend
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+      - name: Copy pre-commit config
+        run: cp .pre-commit-config.yaml ../.pre-commit-config.yaml
+      - uses: pre-commit/action@v3.0.0

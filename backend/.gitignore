@@ -1,2 +1,9 @@
 __pycache__
-alembic/versions/*.py
+.venv
+**/*.db
+**/*_deprecated*
+.env
+coverage.xml
+.coverage
+openapi.json
+dump.json

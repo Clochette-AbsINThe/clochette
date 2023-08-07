@@ -1,111 +1,81 @@
-import os
-import psycopg2
-import shlex
-import subprocess
+""" Main module of the API."""
 
-from fastapi import APIRouter, FastAPI
+import logging
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from time import sleep
+from fastapi.routing import APIRoute
 
+from app.api.utils.endpoints import base_router
 from app.api.v1.api import api_v1_router
 from app.core.config import settings
 from app.core.middleware import ExceptionMonitorMiddleware
 from app.core.utils.backend.alert_backend import alert_backend
+from app.db.pre_start import pre_start
 from app.dependencies import get_db
-from app.initial_data import init_db
+from app.schemas.base import HTTPError
+from app.utils.get_version import get_version
+from app.utils.logger import setup_logs
+
+setup_logs("app")
+setup_logs("uvicorn.access")
+setup_logs("sqlalchemy", level=logging.WARNING)
+
+
+logger = logging.getLogger("app.main")
+
+
+def custom_generate_unique_id(route: APIRoute) -> str:
+    """
+    Generate a unique id for each request.
+    """
+    return f"{route.name}"
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):  # pragma: no cover
+    """
+    Context manager to run startup and shutdown events.
+    """
+    logger.info("Initializing database connection...")
+    get_db.setup()
+    await pre_start()
+    logger.info("Database connection established.")
+    yield
+    logger.info("Closing database connection...")
+    await get_db.shutdown()
+    logger.info("Database connection closed.")
 
 
 app = FastAPI(
     title="Clochette API",
-    openapi_url="{prefix}/openapi.json".format(prefix=settings.API_V1_PREFIX),
+    openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
+    version=get_version(),
+    lifespan=lifespan,
+    responses={
+        400: {"description": "Bad request", "model": HTTPError},
+        401: {"description": "Unauthorized", "model": HTTPError},
+        404: {"description": "Not found", "model": HTTPError},
+        500: {
+            "description": "Internal server error",
+            "content": {"text/plain": {"example": "Internal server error"}},
+        },
+    },
+    generate_unique_id_function=custom_generate_unique_id,
 )
 
+app.add_middleware(ExceptionMonitorMiddleware, alert_backend=alert_backend())
+app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.ALLOWED_HOSTS)
 app.add_middleware(
-    ExceptionMonitorMiddleware, alert_backend=alert_backend()
-)
-app.add_middleware(
-    TrustedHostMiddleware, allowed_hosts=settings.ALLOWED_HOSTS
-)
-
-api_router = APIRouter(
-    prefix=settings.API_V1_PREFIX,
+    CORSMiddleware,
+    allow_origins=settings.ALLOWED_HOSTS,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
-@app.on_event("startup")
-async def run_migrations():
-    # Wait for db to start
-    if os.environ.get("MIGRATE") == 'True':
-        while True:
-            try:
-                conn = psycopg2.connect(
-                    host=settings.POSTGRES_HOST,
-                    port=settings.POSTGRES_PORT,
-                    user=settings.POSTGRES_USER,
-                    password=settings.POSTGRES_PASSWORD,
-                    database='postgres',
-                )
-                print("Postgres is up -- starting migrations")
-                # If some tables with enum type already exists in the database, migrations won't work: https://github.com/sqlalchemy/alembic/issues/278
-                # If this bug happen, it is necessary to clean up the database and then run migrations again.
-                # So let's clear the db and recreate all tables
-                print("Trying to drop {db} database if it exists...".format(db=settings.POSTGRES_DB))
-                cur = conn.cursor()
-                conn.autocommit = True # CREATE/DROP DATABASE cannot run inside a transaction block because it is irreversible
-                cur.execute(
-                    "DROP DATABASE IF EXISTS {db};".format(
-                        db=settings.POSTGRES_DB
-                        
-                    )
-                )
-                print("Database {db} dropped".format(db=settings.POSTGRES_DB))
-                print("Trying to create {db} database...".format(db=settings.POSTGRES_DB))
-                cur.execute(
-                    "CREATE DATABASE {db};".format(
-                        db=settings.POSTGRES_DB
-                    )
-                )
-                print("Database {db} created".format(db=settings.POSTGRES_DB))
-                conn.close()
-                # Run alembic migrations
-                print("Running migrations...")
-                subprocess.run(
-                    shlex.split("alembic stamp head"),
-                    check=True
-                )
-                subprocess.run(
-                    shlex.split("alembic revision --autogenerate"),
-                    check=True
-                )
-                subprocess.run(
-                    shlex.split("alembic upgrade head"),
-                    check=True
-                )
-            except psycopg2.OperationalError as e:
-                if e.pgcode is None or e.pgcode.startswith("08"):
-                    print("Postgres is unavailable -- sleeping (receiving error code {code})".format(code=e.pgcode))
-                    sleep(1)
-                    continue
-                else:
-                    raise e
-
-            print("Populating database with initial data...")
-            await init_db()
-            print("Database populated.")
-            break
-
-
-@app.on_event("startup")
-async def setup_database() -> None:
-    get_db.setup()
-
-
-@api_router.get("/", status_code=200)
-async def root() -> dict:
-    return {
-        "msg": "Hello, World!",
-    }
-
-
-app.include_router(api_router)
+app.include_router(base_router, prefix=settings.API_V1_PREFIX)
 app.include_router(api_v1_router, prefix=settings.API_V1_PREFIX)

@@ -1,57 +1,75 @@
-from pydantic import Field, root_validator, validator
+from pydantic import ConfigDict, Field, computed_field
 
-from app.core.config import DefaultModel
+from app.schemas.base import DefaultModel, ExcludedField
 from app.schemas.consumable_item import ConsumableItem
 
 
 class ConsumableBase(DefaultModel):
-    consumable_item_id: int = Field(..., alias='fkId')
+    """
+    Base schema for a consumable item.
+
+    Attributes:
+    -----------
+    unit_price : float
+        The unit price of the consumable item, meaning the price of buy.
+    sell_price : float
+        The sell price of the consumable item, meaning the price of sell.
+    """
+
+    consumable_item_id: int = Field(..., alias="fkId")
     unit_price: float = Field(..., gt=0)
     sell_price: float = Field(..., gt=0)
-    empty: bool
 
 
 class ConsumableCreate(ConsumableBase):
     id: int | None = None
 
-    class Config:
-        exclude_none = True
+    @computed_field  # type: ignore[misc]
+    @property
+    def empty(self) -> bool:
+        return False
 
 
-class ConsumableCreatePurchase(ConsumableCreate):
-    transaction_id_purchase: int = Field(0, alias='transaction_id')
-
-
-class ConsumableCreateSale(ConsumableCreate):
-    transaction_id_sale: int = Field(0, alias='transaction_id')
-
-
-class TransactionCreate(ConsumableBase):
+class TransactionCreate(ConsumableCreate):
     pass
 
 
 class ConsumableUpdate(ConsumableBase):
-    unit_price: float | None = Field(gt=0)
-    sell_price: float | None = Field(gt=0)
-    empty: bool | None
-    consumable_item_id: int | None = Field(exclude=True, alias='fkId')
-    transaction_id_sale: int | None = Field(alias='transaction_id')
+    unit_price: float | None = Field(default=None, gt=0)
+    sell_price: float | None = Field(default=None, gt=0)
+
+
+class ConsumableCreatePurchase(ConsumableCreate):
+    transaction_id_purchase: int = Field(0, alias="transaction_id")
+
+    @computed_field  # type: ignore[misc]
+    @property
+    def empty(self) -> bool:
+        return False
+
+
+class ConsumableCreateSale(ConsumableCreate):
+    transaction_id_sale: int = Field(0, alias="transaction_id")
+
+    @computed_field  # type: ignore[misc]
+    @property
+    def empty(self) -> bool:
+        return True
 
 
 class Consumable(ConsumableBase):
     id: int
-    consumable_item: ConsumableItem = Field(..., exclude=True)
-    name: str | None
+    consumable_item: ConsumableItem | None = ExcludedField
+    empty: bool
 
-    @validator('name', always=True)
-    def populate_name(cls, v, values):
-        return values['consumable_item'].name
+    @computed_field  # type: ignore[misc]
+    @property
+    def name(self) -> str:
+        return self.consumable_item.name if self.consumable_item else "N/A"
 
-    icon: str | None
+    @computed_field  # type: ignore[misc]
+    @property
+    def icon(self) -> str:
+        return self.consumable_item.icon if self.consumable_item else "N/A"
 
-    @validator('icon', always=True)
-    def populate_icon(cls, v, values):
-        return values['consumable_item'].icon
-
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

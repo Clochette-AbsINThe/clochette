@@ -8,16 +8,22 @@ from app.core.translation import Translator
 from app.crud.base import CRUDBase
 from app.crud.crud_treasury import treasury as treasuries
 from app.models.transaction import Transaction
-from app.schemas.consumable import ConsumableCreatePurchase, ConsumableCreateSale, ConsumableUpdate
-from app.schemas.transaction import TransactionCreate, TransactionFrontCreate, TransactionUpdate
-
+from app.schemas.consumable import ConsumableCreatePurchase, ConsumableCreateSale
+from app.schemas.item import Item
+from app.schemas.transaction import (
+    TransactionCreate,
+    TransactionFrontCreate,
+    TransactionUpdate,
+)
 
 translator = Translator()
 
 
 class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate]):
     @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
-    async def create(self, db: AsyncSession, *, obj_in: TransactionFrontCreate) -> Transaction:
+    async def create(
+        self, db: AsyncSession, *, obj_in: TransactionFrontCreate
+    ) -> Transaction:
         """
         Create a new transaction in the database.
 
@@ -27,39 +33,52 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
         :return: The created transaction.
         """
         # Create a `TransactionCreate` object from the input data
-        transaction_create = TransactionCreate(**obj_in.dict())
+        transaction_create = TransactionCreate(**obj_in.model_dump())
         # Update treasury
         await treasuries.add_transaction(db, obj_in=transaction_create)
         # Store transaction using the super method
-        transaction = await super().create(db, obj_in=transaction_create)
+        transaction_created = await super().create(db, obj_in=transaction_create)
         # Get the items from the input data
-        items = obj_in.items
+        items: list[Item] = obj_in.items
         # Iterate over the items
-        for i in range(len(items)):
+        for item in items:
             # Get the CRUD utility corresponding to the item's table
-            crud_table: CRUDBase = getattr(importlib.import_module(f'app.crud.crud_{items[i].table}'), items[i].table)
+            crud_table: CRUDBase = getattr(
+                importlib.import_module(f"app.crud.crud_{item.table}"),
+                item.table,
+            )
             # Iterate over the number of items
-            for _ in range(items[i].quantity):
+            for _ in range(item.quantity):
                 # Get the item's data
-                obj_in = items[i].item
+                item_data = item.computed_item
                 # If the item is a consumable item, create a `ConsumableCreatePurchase` or `ConsumableCreateSale` object
                 # from the item data depending on wheher the transaction is a sale or a purchase
-                if items[i].table == 'consumable':
-                    obj_in = ConsumableCreateSale(**obj_in.dict(), transaction_id=transaction.id) if transaction.sale else ConsumableCreatePurchase(**obj_in.dict(), transaction_id=transaction.id)
-                    # If the transaction is a sale, update the consumable item using the update method of the CRUD
-                    # utility, otherwise create a new consumable item using the create method of the CRUD utility
-                    if transaction.sale:
-                        await crud_table.update(db, db_obj=(await crud_table.read(db, id=obj_in.id)), obj_in=ConsumableUpdate(**obj_in.dict()))
+                if item.table == "consumable":
+                    if transaction_created.sale is True:
+                        consumable_sale = ConsumableCreateSale(
+                            **item_data.model_dump(),
+                            transaction_id=transaction_created.id,
+                        )
+                        await crud_table.update(
+                            db,
+                            db_obj=(await crud_table.read(db, id=item_data.id)),  # type: ignore
+                            obj_in=consumable_sale,
+                        )
                     else:
-                        await crud_table.create(db, obj_in=obj_in)
+                        consumable_purchase = ConsumableCreatePurchase(
+                            **item_data.model_dump(),
+                            transaction_id=transaction_created.id,
+                        )
+                        await crud_table.create(db, obj_in=consumable_purchase)
+
                 else:
                     # Set the transaction id of the item data to the transaction's id
-                    obj_in.transaction_id = transaction.id
+                    item_data.transaction_id = transaction_created.id
                     # Create a new item using the create method of the CRUD utility
-                    await crud_table.create(db, obj_in=obj_in)
-        
+                    await crud_table.create(db, obj_in=item_data)
+
         # Return the created transaction
-        return transaction
+        return transaction_created
 
 
 transaction = CRUDTransaction(Transaction)

@@ -1,10 +1,10 @@
-name: This workflow aims to check the frontend code when push to the dev branch with lint, format, tests and build.
+name: Frontend Checks
 
 on:
   push:
     branches: [dev]
   pull_request:
-    branches: [dev]
+    branches: [dev, main]
 
 defaults:
   run:
@@ -20,7 +20,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "18"
-          cache-dependency-path: frontend/package.json
+          cache-dependency-path: frontend/package-lock.json
           cache: "npm"
 
       - name: Install dependencies
@@ -35,8 +35,25 @@ jobs:
       - name: Test frontend and get coverage
         run: npm run coverage
 
+      - name: Save coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report-frontend
+          path: ./frontend/coverage/coverage-final.json
+
+  coverage:
+    needs: frontend-checks
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download coverage report
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage-report-frontend
+          path: ./frontend/coverage
+
       - name: Upload coverage reports to Codecov with GitHub Action
         uses: codecov/codecov-action@v3
         with:
-          files: ./coverage/coverage-final.json
-          working-directory: frontend
+          fail_ci_if_error: true
+          files: ./frontend/coverage/coverage-final.json
+          flags: frontend

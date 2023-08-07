@@ -1,23 +1,20 @@
 from enum import Enum
 
-from threading import Lock
-
-from app.core.utils.misc import convert_enum_to_str
 
 class IconName(str, Enum):
-    glass = 'Glass'
-    beer = 'Beer'
-    food = 'Food'
-    soft = 'Soft'
-    barrel = 'Barrel'
-    misc = 'Misc'
+    GLASS = "Glass"
+    BEER = "Beer"
+    FOOD = "Food"
+    SOFT = "Soft"
+    BARREL = "Barrel"
+    MISC = "Misc"
 
 
 class PaymentMethod(str, Enum):
-    card = 'CB'
-    cash = 'Espèces'
-    lydia = 'Lydia'
-    transfer = 'Virement'
+    CARD = "CB"
+    CASH = "Espèces"
+    LYDIA = "Lydia"
+    TRANSFER = "Virement"
 
 
 class SecurityScopesHierarchy(Enum):
@@ -26,17 +23,12 @@ class SecurityScopesHierarchy(Enum):
     president = 3
 
 
-SecurityScopes = convert_enum_to_str(SecurityScopesHierarchy, name='SecurityScopes')
+class SecurityScopes(str, Enum):
+    STAFF = "staff"
+    TREASURER = "treasurer"
+    PRESIDENT = "president"
 
 
 class TransactionType(str, Enum):
-    transaction = 'transaction'
-    tresorery = 'tresorery'
-
-
-class SynchronizedClass:
-    """
-    Class to synchronize methods.
-    """
-    def __init__(self):
-        self.lock = Lock()
+    TRANSACTION = "transaction"
+    TRESORERY = "tresorery"

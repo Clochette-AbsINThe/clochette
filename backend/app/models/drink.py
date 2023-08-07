@@ -1,11 +1,16 @@
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.orm import relationship
+from typing import TYPE_CHECKING, List
 
-from app.db.base_class import Base
+from sqlalchemy.orm import Mapped, relationship
+
+from app.db.base_class import Base, Str256
+
+if TYPE_CHECKING:  # pragma: no cover
+    from .barrel import Barrel
 
 
 class Drink(Base):
-    id = Column(Integer, primary_key=True, nullable=False)
-    name = Column(String(256), nullable=False)
+    name: Mapped[Str256]
 
-    barrels = relationship("Barrel", back_populates="drink", lazy="selectin")
+    barrels: Mapped[List["Barrel"]] = relationship(
+        back_populates="drink", lazy="selectin"
+    )

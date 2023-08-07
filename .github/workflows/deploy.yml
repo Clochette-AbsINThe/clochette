@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: ["Build and push Docker images"]
+    branches: [main]
+    types:
+      - completed
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      REGISTRY: ghcr.io
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPOSITORY_OWNER: ${{ github.repository_owner }}
+      REPOSITORY: ${{ github.repository }}
+    steps:
+      - name: Deploy to production
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          envs: REGISTRY,GITHUB_TOKEN,REPOSITORY,REPOSITORY_OWNER
+          script: |
+            echo $GITHUB_TOKEN | docker login $REGISTRY -u $REPOSITORY_OWNER --password-stdin
+            cd clochette 
+            rm -f docker-compose.yml docker-compose.prod.yml
+            wget https://raw.githubusercontent.com/$REPOSITORY/main/docker/docker-compose.yml
+            wget https://raw.githubusercontent.com/$REPOSITORY/main/docker/docker-compose.prod.yml
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+            docker image prune -f -a

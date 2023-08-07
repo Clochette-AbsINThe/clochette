@@ -1,11 +1,9 @@
-from sqlalchemy import Column, Integer, Float
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import Mapped
 
 from app.db.base_class import Base
 
 
 class Treasury(Base):
-    id = Column(Integer, primary_key=True, nullable=False)
-    total_amount = Column(Float, nullable=False)
-    cash_amount = Column(Float, nullable=False)
-    lydia_rate = Column(Float, nullable=False)
+    total_amount: Mapped[float]
+    cash_amount: Mapped[float]
+    lydia_rate: Mapped[float]
