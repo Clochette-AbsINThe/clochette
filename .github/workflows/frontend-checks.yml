@@ -36,7 +36,7 @@ jobs:
         run: npm run coverage
 
       - name: Save coverage report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: coverage-report-frontend
           path: ./frontend/coverage/coverage-final.json
