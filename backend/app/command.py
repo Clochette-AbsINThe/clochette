@@ -124,6 +124,12 @@ async def main(command: str) -> None:
 
     logger.info(f"Running command: {command}")
 
+    # OpenAPI schema generation is a special case
+    # because it doesn't require a database connection
+    if command == "openapi":
+        open_api(args.output)
+        return
+
     get_db.setup()
     await pre_start()
 
@@ -139,8 +145,6 @@ async def main(command: str) -> None:
                 logger.info("Aborted")
         case "migrate":
             await migrate_db(bypass_revision=args.bypass_revision, force=args.force)
-        case "openapi":
-            open_api(args.output)
         case "dump":
             await dump_db(args.output)
         case "load":
