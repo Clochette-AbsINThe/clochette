@@ -2,6 +2,7 @@ from typing import cast
 
 from pydantic import ConfigDict, Field, computed_field, model_validator
 
+from app.core.types import IconName
 from app.schemas.base import DefaultModel, ExcludedField
 from app.schemas.out_of_stock_item import OutOfStockItem
 
@@ -34,8 +35,8 @@ class OutOfStock(OutOfStockBase):
 
     @computed_field  # type: ignore[misc]
     @property
-    def icon(self) -> str:
-        return self.item.icon if self.item else "N/A"
+    def icon(self) -> IconName:
+        return self.item.icon if self.item else IconName.MISC
 
     @computed_field  # type: ignore[misc]
     @property

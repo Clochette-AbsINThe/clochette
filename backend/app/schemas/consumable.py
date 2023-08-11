@@ -1,5 +1,6 @@
 from pydantic import ConfigDict, Field, computed_field
 
+from app.core.types import IconName
 from app.schemas.base import DefaultModel, ExcludedField
 from app.schemas.consumable_item import ConsumableItem
 
@@ -16,12 +17,12 @@ class ConsumableBase(DefaultModel):
         The sell price of the consumable item, meaning the price of sell.
     """
 
-    consumable_item_id: int = Field(..., alias="fkId")
     unit_price: float = Field(..., gt=0)
     sell_price: float = Field(..., gt=0)
 
 
 class ConsumableCreate(ConsumableBase):
+    consumable_item_id: int = Field(..., alias="fkId")
     id: int | None = None
 
     @computed_field  # type: ignore[misc]
@@ -69,7 +70,7 @@ class Consumable(ConsumableBase):
 
     @computed_field  # type: ignore[misc]
     @property
-    def icon(self) -> str:
-        return self.consumable_item.icon if self.consumable_item else "N/A"
+    def icon(self) -> IconName:
+        return self.consumable_item.icon if self.consumable_item else IconName.MISC
 
     model_config = ConfigDict(from_attributes=True)
