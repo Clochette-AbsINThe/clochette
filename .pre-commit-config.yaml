@@ -20,5 +20,5 @@ repos:
     hooks:
       - id: mypy
         args: [--no-strict-optional, --ignore-missing-imports]
-        files: ^(app/|tests/)
+        files: ^backend/(app/|tests/)
         additional_dependencies: ["types-requests"]
