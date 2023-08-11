@@ -38,6 +38,18 @@ class Base(DeclarativeBase):
         for key, value in inspect(self).attrs.items():
             yield key, value.value
 
+    @classmethod
+    def is_optional(cls, attr: str) -> bool:
+        """Check if an attribute is optional.
+
+        Args:
+            attr (str): The name of the attribute.
+
+        Returns:
+            bool: True if the attribute is optional, False otherwise.
+        """
+        return inspect(cls).attrs[attr].columns[0].nullable
+
 
 def build_fk_annotation(class_name: str):
     """
