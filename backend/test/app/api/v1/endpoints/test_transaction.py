@@ -139,7 +139,7 @@ class TestTransaction(BaseTest):
         assert response.status_code == 200
         assert response.json() == TransactionSingle.model_validate(
             transaction_in_db
-        ).model_dump(by_alias=True, mode="json", exclude_none=True)
+        ).model_dump(by_alias=True, mode="json")
 
     async def test_read_transaction_not_found(self):
         # Arrange

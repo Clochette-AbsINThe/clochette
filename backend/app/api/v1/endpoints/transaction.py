@@ -44,7 +44,6 @@ async def create_transaction(
 @router.get(
     "/{transaction_id}",
     response_model=transaction_schema.TransactionSingle,
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def read_transaction(transaction_id: int, db=Depends(get_db)):

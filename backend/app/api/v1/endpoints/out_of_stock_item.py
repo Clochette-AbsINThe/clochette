@@ -18,7 +18,6 @@ logger = logging.getLogger("app.api.v1.out_of_stock_item")
 @router.get(
     "/buy/",
     response_model=list[out_of_stock_item_schema.OutOfStockItem],
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def read_out_of_stock_items_buy(
@@ -45,7 +44,6 @@ async def read_out_of_stock_items_buy(
 @router.get(
     "/sell/",
     response_model=list[out_of_stock_item_schema.OutOfStockItem],
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def read_out_of_stock_items_sell(
@@ -72,7 +70,6 @@ async def read_out_of_stock_items_sell(
 @router.get(
     "/{out_of_stock_item_id}",
     response_model=out_of_stock_item_schema.OutOfStockItem,
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def read_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)):
@@ -101,7 +98,6 @@ async def read_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)):
 @router.post(
     "/",
     response_model=out_of_stock_item_schema.OutOfStockItem,
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def create_out_of_stock_item(
@@ -138,7 +134,6 @@ async def create_out_of_stock_item(
 @router.put(
     "/{out_of_stock_item_id}",
     response_model=out_of_stock_item_schema.OutOfStockItem,
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def update_out_of_stock_item(
@@ -186,7 +181,6 @@ async def update_out_of_stock_item(
 @router.delete(
     "/{out_of_stock_item_id}",
     response_model=out_of_stock_item_schema.OutOfStockItem,
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def delete_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)):

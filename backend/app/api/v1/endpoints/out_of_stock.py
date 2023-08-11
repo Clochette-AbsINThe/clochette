@@ -10,7 +10,6 @@ router = APIRouter(tags=["out_of_stock"], prefix="/out_of_stock")
 @router.get(
     "/",
     response_model=list[out_of_stock_schema.OutOfStock],
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def read_out_of_stocks(db=Depends(get_db)):
