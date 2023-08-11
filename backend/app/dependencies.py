@@ -61,9 +61,9 @@ async def get_current_account(
         # Create a `TokenData`` object from the username
         token_data = token_schema.TokenData(scopes=token_scopes, username=username)
 
-    except JWTError:
+    except JWTError as e:
         # Raise an exception if the token cannot be decoded
-        logger.debug("Token could not be parsed")
+        logger.debug("Token could not be parsed", e)
         raise credentials_exception
 
     # Get the account associated with the username
