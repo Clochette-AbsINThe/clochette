@@ -24,7 +24,7 @@ requests = "^2.31.0"
 types-requests = "^2.31.0.2"
 asyncpg = "^0.28.0"
 alembic-autogenerate-enums = "^0.1.2"
-tenacity = "^8.2.2"
+tenacity = "^8.2.3"
 aiosqlite = "^0.19.0"
 
 
