@@ -15,7 +15,7 @@ python = "^3.11"
 fastapi = { extras = ["all"], version = "^0.101.0" }
 pydantic-settings = "^2.0.2"
 zxcvbn = "^4.4.28"
-sqlalchemy = "^2.0.19"
+sqlalchemy = "^2.0.20"
 pyhumps = "^3.8.0"
 python-jose = "^3.3.0"
 alembic = "^1.11.1"
