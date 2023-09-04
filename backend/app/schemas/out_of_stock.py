@@ -13,7 +13,7 @@ class OutOfStockBase(DefaultModel):
 
 
 class OutOfStockCreate(OutOfStockBase):
-    transaction_id: int = 0
+    transaction_v1_id: int = Field(default=0, alias="transaction_id")
 
 
 class TransactionCreate(OutOfStockBase):
