@@ -36,6 +36,15 @@ class TreasuryTest(BaseTest):
         assert response.status_code == 200
         assert response.json() == [self.treasury_db.model_dump(by_alias=True)]
 
+    def test_read_last_treasury(self):
+        # Arrange
+        # Act
+        response = self._client.get("/api/v1/treasury/last")
+
+        # Assert
+        assert response.status_code == 200
+        assert response.json() == self.treasury_db.model_dump(by_alias=True)
+
     async def test_update_treasury(self):
         # Arrange
         treasury_update = TreasuryUpdate(

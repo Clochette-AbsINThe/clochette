@@ -33,6 +33,26 @@ async def read_treasuries(db=Depends(get_db)):
     return await treasuries.query(db, limit=None)
 
 
+@router.get(
+    "/last",
+    response_model=treasury_schema.Treasury,
+    dependencies=[Security(get_current_active_account, scopes=["treasurer"])],
+)
+async def read_last_treasury(db=Depends(get_db)):
+    """
+    Returns the last treasury.
+
+    Requires a user with the 'treasurer' scope to be authenticated.
+
+    Args:
+        db: The database session dependency.
+
+    Returns:
+        The last treasury.
+    """
+    return await treasuries.get_last_treasury(db)
+
+
 @router.put(
     "/{treasury_id}",
     response_model=treasury_schema.Treasury,

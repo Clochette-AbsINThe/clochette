@@ -129,3 +129,16 @@ class TestCRUDTreasury(BaseTest):
         # Assert
         assert modified_treasury.cash_amount == 5
         assert modified_treasury.total_amount == 15
+
+    async def test_revert_transaction_sale_negative_cash(self):
+        # Arrange
+        self.treasury_in_db.cash_amount = 0
+        self.treasury_in_db.total_amount = 20
+        # Act
+        with self.assertRaises(HTTPException):
+            await crud_treasury.revert_transaction(
+                treasury=self.treasury_in_db,
+                amount=5,
+                sale=True,
+                payment_method=PaymentMethod.CASH,
+            )
