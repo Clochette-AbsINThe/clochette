@@ -148,6 +148,12 @@ class CRUDTreasury(
             # Cents are two decimals max
             treasury_created.cash_amount = round(treasury_created.cash_amount, 2)
 
+            if treasury_created.cash_amount < 0:
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=translator.NEGATIVE_CASH_AMOUNT,
+                )
+
         return treasury_created
 
     async def get_last_treasury(self, db: AsyncSession) -> Treasury:
