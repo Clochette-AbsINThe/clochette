@@ -28,13 +28,9 @@ async def read_non_inventoried_items(
     """
     Retrieve a list of non inventoried items.
 
-    Args:
-        - trade: The trade type.
-        - name: The non inventoried item name.
-        - db: The database session dependency.
-
-    Returns:
-        list[non_inventoried_item_schema.NonInventoriedItem]: A list of non inventoried items.
+    Query parameters:
+        - `trade`: The trade type.
+        - `name`: The non inventoried item name.
     """
     logger.debug(f"Trade: {trade}, name: {name}")
     return (
@@ -52,13 +48,6 @@ async def read_non_inventoried_items(
 async def read_non_inventoried_item(non_inventoried_item_id: int, db=Depends(get_db)):
     """
     Retrieve a non inventoried item.
-
-    Args:
-        - non_inventoried_item_id (int): Non inventoried item id.
-        - db: The database session dependency.
-
-    Returns:
-        non_inventoried_item_schema.NonInventoriedItem: A non inventoried item.
     """
     non_inventoried_item = await non_inventoried_items.read(
         db, id=non_inventoried_item_id
@@ -83,13 +72,6 @@ async def create_non_inventoried_item(
 ):
     """
     Create a non inventoried item.
-
-    Args:
-        - non_inventoried_item (non_inventoried_item_schema.NonInventoriedItemCreate): Non inventoried item to create.
-        - db: The database session dependency.
-
-    Returns:
-        non_inventoried_item_schema.NonInventoriedItem: The created non inventoried item.
     """
     if await non_inventoried_items.query(
         db, limit=1, name=non_inventoried_item.name, trade=non_inventoried_item.trade
@@ -114,14 +96,6 @@ async def update_non_inventoried_item(
 ):
     """
     Update a non inventoried item.
-
-    Args:
-        - non_inventoried_item_id (int): Non inventoried item id.
-        - non_inventoried_item (non_inventoried_item_schema.NonInventoriedItemUpdate): Non inventoried item to update.
-        - db: The database session dependency.
-
-    Returns:
-        non_inventoried_item_schema.NonInventoriedItem: The updated non inventoried item.
     """
     old_non_inventoried_item = await non_inventoried_items.read(
         db, id=non_inventoried_item_id
@@ -160,13 +134,6 @@ async def delete_non_inventoried_item(
 ):
     """
     Delete a non inventoried item.
-
-    Args:
-        - non_inventoried_item_id (int): Non inventoried item id.
-        - db: The database session dependency.
-
-    Returns:
-        non_inventoried_item_schema.NonInventoriedItem: The deleted non inventoried item.
     """
     if not await non_inventoried_items.read(db, id=non_inventoried_item_id):
         logger.debug(f"NonInventoriedItem {non_inventoried_item_id} not found")

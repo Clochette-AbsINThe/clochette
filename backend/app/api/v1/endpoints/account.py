@@ -27,13 +27,6 @@ async def read_accounts(
     Retrieve a list of accounts.
 
     This endpoint requires authentication with the "president" scope.
-
-    Args:
-        db: The database session dependency.
-        query: The query parameters for filtering, sorting, and pagination.
-
-    Returns:
-        A list of accounts matching the query parameters.
     """
     query_parameters = process_query_parameters(query)
     logger.debug(f"Query parameters: {query_parameters}")
@@ -48,13 +41,6 @@ async def read_accounts(
 async def create_account(account: account_schema.AccountCreate, db=Depends(get_db)):
     """
     Create a new account.
-
-    Args:
-        account: The account data to create.
-        db: The database session dependency.
-
-    Returns:
-        The created account.
     """
     if await accounts.query(db, username=account.username, limit=1):
         logger.debug(f"Username {account.username} already exists")
@@ -75,16 +61,6 @@ async def read_account(account_id: int, db=Depends(get_db)):
     Retrieve an account by ID.
 
     This endpoint requires authentication with the "president" scope.
-
-    Args:
-        account_id: The ID of the account to retrieve.
-        db: The database session dependency.
-
-    Returns:
-        The account with the specified ID.
-
-    Raises:
-        HTTPException: If the account with the specified ID is not found.
     """
     account = await accounts.read(db, account_id)
     if account is None:
@@ -107,18 +83,6 @@ async def update_account(
     Update an account by ID.
 
     This endpoint requires authentication with the "president" scope.
-
-    Args:
-        - account_id: The ID of the account to update.
-        - account: The updated account data.
-        - db: The database session dependency.
-
-    Returns:
-        The updated account.
-
-    Raises:
-        HTTPException: If the account with the specified ID is not found,
-        or if an account with the same username already exists.
     """
     old_account = await accounts.read(db, account_id)
     if old_account is None:
@@ -146,16 +110,6 @@ async def delete_account(account_id: int, db=Depends(get_db)):
     Delete an account by ID.
 
     This endpoint requires authentication with the "president" scope.
-
-    Args:
-        account_id: The ID of the account to delete.
-        db: The database session dependency.
-
-    Returns:
-        The deleted account.
-
-    Raises:
-        HTTPException: If the account with the specified ID is not found.
     """
     account = await accounts.read(db, account_id)
     if account is None:

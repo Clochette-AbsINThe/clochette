@@ -22,13 +22,6 @@ async def read_glasses(
 ):
     """
     Retrieve a list of glasses that match the given query parameters.
-
-    Args:
-        - db: The database session dependency.
-        - query: The query parameters to filter the glasses.
-
-    Returns:
-        - A list of glasses that match the given query parameters.
     """
     query_parameters = process_query_parameters(query)
     logger.debug(f"Query parameters: {query_parameters}")

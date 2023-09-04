@@ -23,14 +23,10 @@ async def read_barrels(db=Depends(get_db), all: bool = False, mounted: bool = Fa
     """
     Read barrels from the database.
 
-    Args:
-        - db: Database session dependency.
-        - all: If True, return all barrels. If False, return only mounted or unmounted barrels
+    Query parameters:
+        - `all`: If True, return all barrels. If False, return only mounted or unmounted barrels
             depending on the `mounted` argument.
-        - mounted: If True, return only mounted barrels. If False, return only unmounted barrels.
-
-    Returns:
-        A list of barrels.
+        - `mounted`: If True, return only mounted barrels. If False, return only unmounted barrels.
     """
     logger.debug(f"all: {all}, mounted: {mounted}")
     return (
@@ -50,12 +46,6 @@ async def read_barrels(db=Depends(get_db), all: bool = False, mounted: bool = Fa
 async def read_distinct_barrels(db=Depends(get_db)):
     """
     Read distinct barrels from the database.
-
-    Args:
-        - db: Database session dependency.
-
-    Returns:
-        A list of distinct barrels.
     """
     drink_id = barrel_model.Barrel.drink_item_id
     return await barrels.query(db, distinct=drink_id, empty_or_solded=False, limit=None)
@@ -69,13 +59,6 @@ async def read_distinct_barrels(db=Depends(get_db)):
 async def create_barrel(barrel: barrel_schema.BarrelCreate, db=Depends(get_db)):
     """
     Create a barrel in the database.
-
-    Args:
-        - barrel: The barrel data.
-        - db: Database session dependency.
-
-    Returns:
-        The created barrel.
     """
     return await barrels.create_v2(db, obj_in=barrel)
 
@@ -90,14 +73,6 @@ async def update_barrel(
 ):
     """
     Update a barrel in the database.
-
-    Args:
-        - barrel_id: The ID of the barrel to update.
-        - barrel: The updated barrel data.
-        - db: Database session dependency.
-
-    Returns:
-        The updated barrel.
     """
     db_barrel = await barrels.read(db, barrel_id)
     if db_barrel is None:
@@ -125,14 +100,6 @@ async def sale_barrel(
 ):
     """
     Update a barrel in the database.
-
-    Args:
-        - barrel_id: The ID of the barrel to update.
-        - barrel: The updated barrel data.
-        - db: Database session dependency.
-
-    Returns:
-        The updated barrel.
     """
     db_barrel = await barrels.read(db, barrel_id)
     if db_barrel is None:

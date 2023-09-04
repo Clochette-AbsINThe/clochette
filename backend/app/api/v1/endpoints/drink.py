@@ -22,16 +22,6 @@ logger = logging.getLogger("app.api.v1.drink")
 async def read_drink(drink_id: int, db=Depends(get_db)):
     """
     Retrieve a drink by ID.
-
-    Args:
-        drink_id (int): ID of the drink to retrieve.
-        db: Database connection dependency.
-
-    Returns:
-        drink_schema.Drink: The retrieved drink.
-
-    Raises:
-        HTTPException: If the drink is not found.
     """
     drink = await drinks.read(db, drink_id)
     if drink is None:
@@ -50,12 +40,6 @@ async def read_drink(drink_id: int, db=Depends(get_db)):
 async def read_drinks(db=Depends(get_db)):
     """
     Retrieve all drinks.
-
-    Args:
-        db: Database connection dependency.
-
-    Returns:
-        list[drink_schema.Drink]: The retrieved drinks.
     """
     return await drinks.query(db, limit=None)
 
@@ -68,16 +52,6 @@ async def read_drinks(db=Depends(get_db)):
 async def create_drink(drink: drink_schema.DrinkItemCreate, db=Depends(get_db)):
     """
     Create a new drink.
-
-    Args:
-        drink (drink_schema.DrinkCreate): The drink to create.
-        db: Database connection dependency.
-
-    Returns:
-        drink_schema.Drink: The created drink.
-
-    Raises:
-        HTTPException: If the drink already exists.
     """
     # Check if drink already exists
     if await drinks.query(db, name=drink.name, limit=1):
@@ -99,17 +73,6 @@ async def update_drink(
 ):
     """
     Update a drink by ID.
-
-    Args:
-        drink_id (int): ID of the drink to update.
-        drink (drink_schema.DrinkUpdate): The updated drink.
-        db: Database connection dependency.
-
-    Returns:
-        drink_schema.Drink: The updated drink.
-
-    Raises:
-        HTTPException: If the drink is not found or if the updated name already exists.
     """
     old_drink = await drinks.read(db, drink_id)
     if old_drink is None:
@@ -135,16 +98,6 @@ async def update_drink(
 async def delete_drink(drink_id: int, db=Depends(get_db)):
     """
     Delete a drink by ID.
-
-    Args:
-        drink_id (int): ID of the drink to delete.
-        db: Database connection dependency.
-
-    Returns:
-        drink_schema.Drink: The deleted drink.
-
-    Raises:
-        HTTPException: If the drink is not found or if it is used by a barrel.
     """
     if await drinks.read(db, drink_id) is None:
         logger.debug(f"Drink {drink_id} not found")

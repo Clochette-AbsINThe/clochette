@@ -24,13 +24,6 @@ async def read_glasses(
 ):
     """
     Retrieve a list of glasses that match the given query parameters.
-
-    Args:
-        - db: The database session dependency.
-        - query: The query parameters to filter the glasses.
-
-    Returns:
-        - A list of glasses that match the given query parameters.
     """
     query_parameters = process_query_parameters(query)
     logger.debug(f"Query parameters: {query_parameters}")
@@ -45,13 +38,6 @@ async def read_glasses(
 async def read_glass(glass_id: int, db=Depends(get_db)):
     """
     Retrieve a glass.
-
-    Args:
-        - glass_id: The glass id.
-        - db: The database session dependency.
-
-    Returns:
-        - The glass.
     """
     glass = await glasses.read(db, id=glass_id)
     if not glass:
@@ -71,12 +57,5 @@ async def read_glass(glass_id: int, db=Depends(get_db)):
 async def create_glass(glass: glass_schema.GlassCreate, db=Depends(get_db)):
     """
     Create a new glass in the database.
-
-    Args:
-        - glass: The glass to create.
-        - db: The database session dependency.
-
-    Returns:
-        - The created glass.
     """
     return await glasses.create_v2(db, obj_in=glass)

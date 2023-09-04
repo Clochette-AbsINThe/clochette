@@ -22,6 +22,9 @@ logger = logging.getLogger("app.api.v2.transaction")
 async def create_transaction(
     transaction: transaction_schema.TransactionCommerceCreate, db=Depends(get_db)
 ):
+    """
+    Create a new transaction in the database.
+    """
     pending_transaction = await transactions.query(
         db, status=transaction_schema.Status.PENDING
     )
@@ -41,6 +44,11 @@ async def create_transaction(
 async def create_treasury_transaction(
     transaction: transaction_schema.TransactionTreasuryCreate, db=Depends(get_db)
 ):
+    """
+    Create a new transaction in the database.
+
+    This endpoint requires authentication with the "treasury" scope.
+    """
     return await transactions.create_v2(db, obj_in=transaction)
 
 
@@ -53,6 +61,9 @@ async def validate_transaction(
     transaction_id: int,
     db=Depends(get_db),
 ):
+    """
+    Validate a transaction.
+    """
     old_transaction = await transactions.read(db, id=transaction_id)
     if not old_transaction:
         raise HTTPException(
@@ -80,6 +91,11 @@ async def delete_transaction(
     transaction_id: int,
     db=Depends(get_db),
 ):
+    """
+    Delete a transaction.
+
+    This endpoint requires authentication with the "treasury" scope.
+    """
     transaction = await transactions.read(db, id=transaction_id)
     if not transaction:
         raise HTTPException(
@@ -104,6 +120,9 @@ async def read_transactions(
         )
     ),
 ):
+    """
+    Retrieve transactions.
+    """
     query_parameters = process_query_parameters(query)
     logger.debug(f"Query parameters: {query_parameters}")
     return await transactions.query(db, limit=None, **query_parameters)
@@ -118,6 +137,9 @@ async def read_transaction(
     transaction_id: int,
     db=Depends(get_db),
 ):
+    """
+    Retrieve a transaction.
+    """
     transaction = await transactions.read(db, id=transaction_id)
     if not transaction:
         raise HTTPException(

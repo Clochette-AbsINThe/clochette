@@ -20,10 +20,7 @@ logger = logging.getLogger("app.api.v2.endpoints.non_inventoried")
 )
 async def read_non_inventorieds(db=Depends(get_db)):
     """
-    Retrieve a list of non inventoried items.
-
-    Returns:
-        list[non_inventoried_schema.NonInventoried]: A list of non inventoried items.
+    Retrieve a list of non inventorieds.
     """
     return await non_inventorieds.query(db, limit=None)
 
@@ -35,16 +32,7 @@ async def read_non_inventorieds(db=Depends(get_db)):
 )
 async def read_non_inventoried(non_inventoried_id: int, db=Depends(get_db)):
     """
-    Retrieve a non inventoried item.
-
-    Args:
-        non_inventoried_id (int): Non inventoried item id.
-
-    Returns:
-        non_inventoried_schema.NonInventoried: A non inventoried item.
-
-    Raises:
-        HTTPException: If the non inventoried item is not found.
+    Retrieve a non inventoried.
     """
     non_inventoried = await non_inventorieds.read(db, id=non_inventoried_id)
     if not non_inventoried:
@@ -65,12 +53,6 @@ async def create_non_inventoried(
     non_inventoried: non_inventoried_schema.NonInventoriedCreate, db=Depends(get_db)
 ):
     """
-    Create a new non inventoried item.
-
-    Args:
-        non_inventoried (non_inventoried_schema.NonInventoriedCreate): Non inventoried item to create.
-
-    Returns:
-        non_inventoried_schema.NonInventoried: The created non inventoried item.
+    Create a new non inventoried.
     """
     return await non_inventorieds.create_v2(db, obj_in=non_inventoried)
