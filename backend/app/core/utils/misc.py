@@ -41,7 +41,9 @@ def to_query_parameters(
         type[BaseModel]: The new Pydantic model.
     """
     if exclude is None:
-        exclude = ["id", "password"]
+        exclude = []
+
+    exclude.extend(["id", "password"])
 
     # Create a dictionary of fields with their type and metadata
     fields: dict[str, Tuple[type[Any] | None, FieldInfo]] = {}
@@ -51,6 +53,9 @@ def to_query_parameters(
     # Iterate over the fields of the model and add them to the fields dictionary
     for key, value in model.model_fields.items():
         if key in exclude:
+            continue
+
+        if value.exclude:
             continue
 
         _type = value.annotation
@@ -103,8 +108,8 @@ def to_query_parameters(
         new_model.__pydantic_decorators__.field_validators[validator_name] = validator
 
     # We copy the metadata, annotations and parent namespace of the original model to the new model
-    new_model.__pydantic_generic_metadata__ = model.__pydantic_generic_metadata__
-    new_model.__annotations__ = model.__annotations__
+    # new_model.__pydantic_generic_metadata__ = model.__pydantic_generic_metadata__
+    # new_model.__annotations__ = model.__annotations__
     new_model.__pydantic_parent_namespace__ = model.__pydantic_parent_namespace__
 
     # We rebuild the model to add the new fields
