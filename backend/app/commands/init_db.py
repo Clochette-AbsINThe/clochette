@@ -3,6 +3,9 @@ import logging
 from app.core.config import settings
 from app.core.types import IconName, SecurityScopes
 from app.crud.crud_account import account as accounts
+from app.crud.crud_non_inventoried_item import (
+    non_inventoried_item as non_inventoried_items,
+)
 from app.crud.crud_out_of_stock_item import out_of_stock_item as out_of_stock_items
 from app.crud.crud_treasury import treasury as treasuries
 from app.dependencies import get_db
@@ -10,6 +13,7 @@ from app.models.account import Account
 from app.schemas import account as account_schema
 from app.schemas import out_of_stock_item as out_of_stock_item_schema
 from app.schemas import treasury as treasury_schema
+from app.schemas.v2 import non_inventoried_item as non_inventoried_item_schema
 
 logger = logging.getLogger("app.command")
 
@@ -44,8 +48,7 @@ async def init_db() -> None:
         db_obj: Account | None = await accounts.read(
             db=session, id=1
         )  # First account to be created
-        if not db_obj:
-            raise Exception("Base account not found")
+        assert db_obj is not None
 
         updated_account = account_schema.AccountUpdate(
             **account_schema.Account.model_validate(db_obj).model_dump()
@@ -66,10 +69,25 @@ async def init_db() -> None:
                 icon=IconName.GLASS,
             ),
         )
+        await non_inventoried_items.create(
+            db=session,
+            obj_in=non_inventoried_item_schema.NonInventoriedItemCreate(
+                name="EcoCup",
+                icon=IconName.GLASS,
+            ),
+        )
         logger.info("EcoCup for buy created")
         await out_of_stock_items.create(
             db=session,
             obj_in=out_of_stock_item_schema.OutOfStockItemCreate(
+                name="EcoCup",
+                icon=IconName.GLASS,
+                sell_price=1,
+            ),
+        )
+        await non_inventoried_items.create(
+            db=session,
+            obj_in=non_inventoried_item_schema.NonInventoriedItemCreate(
                 name="EcoCup",
                 icon=IconName.GLASS,
                 sell_price=1,
