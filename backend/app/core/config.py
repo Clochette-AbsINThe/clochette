@@ -70,6 +70,7 @@ class Settings(BaseSettings):
 
     ALERT_BACKEND: str
     API_V1_PREFIX: str = "/api/v1"
+    API_V2_PREFIX: str = "/api/v2"
     LOCALE: SupportedLocales
 
     ALLOWED_HOSTS: list[str]
