@@ -8,7 +8,7 @@ from app.dependencies import get_current_active_account, get_db
 from app.models import barrel as barrel_model
 from app.schemas import barrel as barrel_schema
 
-router = APIRouter(tags=["barrel"], prefix="/barrel")
+router = APIRouter(tags=["barrel"], prefix="/barrel", deprecated=True)
 translator = Translator(element="barrel")
 
 logger = logging.getLogger("app.api.v1.barrel")
@@ -35,7 +35,9 @@ async def read_barrels(db=Depends(get_db), all: bool = False, mounted: bool = Fa
     return (
         await barrels.query(db, limit=None)
         if all
-        else await barrels.query(db, is_mounted=mounted, empty=False, limit=None)
+        else await barrels.query(
+            db, is_mounted=mounted, empty_or_solded=False, limit=None
+        )
     )
 
 
@@ -54,8 +56,8 @@ async def read_distinct_barrels(db=Depends(get_db)):
     Returns:
         A list of distinct barrels.
     """
-    drink_id = barrel_model.Barrel.drink_id
-    return await barrels.query(db, distinct=drink_id, empty=False, limit=None)
+    drink_id = barrel_model.Barrel.drink_item_id
+    return await barrels.query(db, distinct=drink_id, empty_or_solded=False, limit=None)
 
 
 @router.put(

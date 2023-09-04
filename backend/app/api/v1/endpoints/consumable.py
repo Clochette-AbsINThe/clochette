@@ -8,7 +8,7 @@ from app.dependencies import get_current_active_account, get_db
 from app.models import consumable as consumable_model
 from app.schemas import consumable as consumable_schema
 
-router = APIRouter(tags=["consumable"], prefix="/consumable")
+router = APIRouter(tags=["consumable"], prefix="/consumable", deprecated=True)
 translator = Translator(element="consumable")
 
 logger = logging.getLogger("app.api.v1.consumable")
@@ -34,7 +34,7 @@ async def read_consumables(db=Depends(get_db), all: bool = False):
     if all:
         return await consumables.query(db, limit=None)
 
-    return await consumables.query(db, empty=False, limit=None)
+    return await consumables.query(db, solded=False, limit=None)
 
 
 @router.get(
@@ -55,7 +55,7 @@ async def read_consumables_distincts(db=Depends(get_db)):
     return await consumables.query(
         db,
         distinct=consumable_model.Consumable.consumable_item_id,
-        empty=False,
+        solded=False,
         limit=None,
     )
 

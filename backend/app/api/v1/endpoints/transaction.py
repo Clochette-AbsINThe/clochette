@@ -4,11 +4,11 @@ from fastapi import APIRouter, Depends, HTTPException, Security, status
 
 from app.core.translation import Translator
 from app.core.utils.misc import process_query_parameters, to_query_parameters
-from app.crud.crud_transaction import transaction as transactions
+from app.crud.crud_transaction_v1 import transaction as transactions
 from app.dependencies import get_current_active_account, get_db
 from app.schemas import transaction as transaction_schema
 
-router = APIRouter(tags=["transaction"], prefix="/transaction")
+router = APIRouter(tags=["transaction"], prefix="/transaction", deprecated=True)
 translator = Translator(element="transaction")
 
 logger = logging.getLogger("app.api.v1.transaction")

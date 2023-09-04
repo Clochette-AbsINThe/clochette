@@ -7,7 +7,7 @@ from app.crud.crud_glass import glass as glasses
 from app.dependencies import get_current_active_account, get_db
 from app.schemas import glass as glass_schema
 
-router = APIRouter(tags=["glass"], prefix="/glass")
+router = APIRouter(tags=["glass"], prefix="/glass", deprecated=True)
 
 logger = logging.getLogger("app.api.v1.glass")
 
