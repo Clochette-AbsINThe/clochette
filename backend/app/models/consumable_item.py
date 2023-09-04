@@ -10,6 +10,13 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 class ConsumableItem(Base):
+    """This model represents a consumable item in the database.
+
+    Attributes:
+        - `name`: The name of the consumable item.
+        - `icon`: The icon of the consumable item.
+    """
+
     name: Mapped[Str256]
     icon: Mapped[IconName]
 

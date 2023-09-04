@@ -6,10 +6,10 @@ from app.db.base_class import Base, build_fk_annotation
 
 if TYPE_CHECKING:  # pragma: no cover
     from .out_of_stock_item import OutOfStockItem
-    from .transaction import Transaction
+    from .transaction_v1 import TransactionV1
 
 outofstockitem_fk = build_fk_annotation("outofstockitem")
-transaction_fk = build_fk_annotation("transaction")
+transaction_v1_fk = build_fk_annotation("transactionv1")
 
 
 class OutOfStock(Base):
@@ -28,7 +28,7 @@ class OutOfStock(Base):
         back_populates="outofstocks", lazy="selectin"
     )
 
-    transaction_id: Mapped[transaction_fk]
-    transaction: Mapped["Transaction"] = relationship(
+    transaction_v1_id: Mapped[transaction_v1_fk]
+    transaction_v1: Mapped["TransactionV1"] = relationship(
         back_populates="out_of_stocks", lazy="selectin"
     )
