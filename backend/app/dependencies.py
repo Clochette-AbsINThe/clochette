@@ -63,7 +63,7 @@ async def get_current_account(
 
     except JWTError as e:
         # Raise an exception if the token cannot be decoded
-        logger.debug("Token could not be parsed", e)
+        logger.debug(f"Token could not be parsed, {e}")
         raise credentials_exception
 
     # Get the account associated with the username
