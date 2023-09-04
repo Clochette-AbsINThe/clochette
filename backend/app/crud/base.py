@@ -120,7 +120,7 @@ class CRUDBase(
         # limit parameters. Finally, the query.all method is used to execute the query and
         # return the results as a list of records.
 
-        query: Select = select(self.model)
+        query = select(self.model)
 
         for column, value in filters.items():
             if isinstance(
@@ -212,6 +212,7 @@ class CRUDBase(
         await db.refresh(db_obj)
         return patch_timezone_sqlite(db_obj)
 
+    @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
     async def delete(self, db: AsyncSession, *, id: int) -> ModelT | None:
         """
         Delete a record.
