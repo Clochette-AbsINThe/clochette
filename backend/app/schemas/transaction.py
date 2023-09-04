@@ -2,7 +2,7 @@ from datetime import datetime as _datetime
 
 from pydantic import ConfigDict, FieldValidationInfo, computed_field, field_validator
 
-from app.core.types import PaymentMethod, TransactionType
+from app.core.types import PaymentMethod, TransactionTypeV1
 from app.schemas.barrel import Barrel
 from app.schemas.base import DefaultModel
 from app.schemas.consumable import Consumable
@@ -16,7 +16,7 @@ class TransactionBase(DefaultModel):
     payment_method: PaymentMethod
     sale: bool
     amount: float
-    type: TransactionType = TransactionType.TRANSACTION
+    type: TransactionTypeV1 = TransactionTypeV1.TRANSACTION
     description: str | None = None
 
     @field_validator("amount")
@@ -42,7 +42,7 @@ class TransactionFrontCreate(TransactionBase):
     @classmethod
     def empty_only_if_tresorery_type(cls, v, info: FieldValidationInfo):
         values = info.data
-        if v == [] and values["type"] != TransactionType.TRESORERY:
+        if v == [] and values["type"] != TransactionTypeV1.TRESORERY:
             raise ValueError('items must be provided if type is not "tresorery"')
         return v
 
@@ -64,5 +64,3 @@ class TransactionSingle(Transaction):
     out_of_stocks: list[OutOfStock] | None
     consumables_purchase: list[Consumable] | None
     consumables_sale: list[Consumable] | None
-
-    model_config = ConfigDict(from_attributes=True)
