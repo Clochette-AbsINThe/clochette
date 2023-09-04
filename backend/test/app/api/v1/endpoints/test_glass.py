@@ -1,11 +1,11 @@
 from test.base_test import BaseTest
 
 from app.crud.crud_barrel import barrel as crud_barrel
-from app.crud.crud_drink import drink as crud_drink
+from app.crud.crud_drink_item import drink_item as crud_drink
 from app.crud.crud_glass import glass as crud_glass
 from app.dependencies import get_db
 from app.schemas.barrel import Barrel, BarrelCreate
-from app.schemas.drink import Drink, DrinkCreate
+from app.schemas.drink_item import DrinkItem, DrinkItemCreate
 from app.schemas.glass import Glass, GlassCreate
 
 
@@ -13,15 +13,15 @@ class TestGlass(BaseTest):
     async def asyncSetUp(self) -> None:
         await super().asyncSetUp()
 
-        self.drink_create = DrinkCreate(name="test_name")
+        self.drink_create = DrinkItemCreate(name="test_name")
 
         async with get_db.get_session() as session:
-            self.drink_db = Drink.model_validate(
+            self.drink_db = DrinkItem.model_validate(
                 await crud_drink.create(session, obj_in=self.drink_create)
             )
             self.barrel_create = BarrelCreate(
                 fkId=self.drink_db.id,
-                unit_price=10,
+                unitPrice=10,
                 sell_price=2,
             )
             self.barrel_db = Barrel.model_validate(

@@ -33,7 +33,7 @@ class TestEachItem:
             item={"id": 1, "fkId": 1, "unitPrice": 1.0, "sellPrice": 1.0},
         )
         assert isinstance(item.computed_item, ConsumableCreate)
-        assert item.computed_item.unit_price == 1.0
+        assert item.computed_item.buy_price == 1.0
 
     def test_out_of_stock(self):
         item = Item(
@@ -49,7 +49,7 @@ class TestEachItem:
             item={"fkId": 1, "unitPrice": 1.0, "sellPrice": 1.0},
         )
         assert isinstance(item.computed_item, BarrelCreate)
-        assert item.computed_item.unit_price == 1.0
+        assert item.computed_item.buy_price == 1.0
 
     def test_glass(self):
         item = Item(table="glass", quantity=1, item={"fkId": 1})

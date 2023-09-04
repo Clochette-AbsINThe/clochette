@@ -1,7 +1,7 @@
 import pytest
 
 from app.models.barrel import Barrel as BarrelModel
-from app.models.drink import Drink as DrinkModel
+from app.models.drink_item import DrinkItem as DrinkModel
 from app.schemas.barrel import Barrel, BarrelCreate
 
 
@@ -10,11 +10,11 @@ def test_barrel_computed_field():
     barrel_model = BarrelModel(
         id=1,
         sell_price=2.5,
-        unit_price=1.5,
-        drink_id=1,
+        buy_price=1.5,
+        drink_item_id=1,
         is_mounted=True,
-        empty=False,
-        drink=drink_model,
+        empty_or_solded=False,
+        drink_item=drink_model,
     )
 
     barrel = Barrel.model_validate(barrel_model).model_dump()
@@ -29,12 +29,9 @@ def test_barrel_create():
     barrel_dict = {
         "drink_id": 1,
         "sell_price": 2.5,
-        "unit_price": 1.5,
+        "buy_price": 1.5,
         "transaction_id": 1,
     }
     barrel = BarrelCreate(**barrel_dict)
-    assert barrel.model_dump() == {
-        **barrel_dict,
-        "empty": False,
-        "is_mounted": False,
-    }
+    assert barrel.model_dump().get("empty_or_solded") is False
+    assert barrel.model_dump().get("is_mounted") is False

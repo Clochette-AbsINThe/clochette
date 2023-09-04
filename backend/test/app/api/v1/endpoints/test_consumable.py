@@ -24,7 +24,7 @@ class TestConsumable(BaseTest):
             )
             self.consumable_create = ConsumableCreate(
                 fkId=self.consumable_item_db.id,
-                unit_price=10,
+                unitPrice=10,
                 sell_price=2,
             )
             self.consumable_db = Consumable.model_validate(

@@ -3,7 +3,7 @@ import datetime
 import pytest
 from pydantic import ValidationError
 
-from app.core.types import PaymentMethod, TransactionType
+from app.core.types import PaymentMethod, TransactionTypeV1
 from app.schemas.item import Item
 from app.schemas.transaction import TransactionCreate, TransactionFrontCreate
 
@@ -15,7 +15,7 @@ def test_transaction_create_model():
         "payment_method": PaymentMethod.CASH,
         "sale": True,
         "amount": 10.012,
-        "type": TransactionType.TRANSACTION,
+        "type": TransactionTypeV1.TRANSACTION,
         "description": "Test transaction",
     }
     transaction_create = TransactionCreate(**transaction_create_dict)
@@ -45,7 +45,7 @@ def test_transaction_front_create_model():
         "payment_method": PaymentMethod.CASH,
         "sale": True,
         "amount": 10.0,
-        "type": TransactionType.TRANSACTION,
+        "type": TransactionTypeV1.TRANSACTION,
         "description": "Test transaction",
         "items": [item_dict],
     }
@@ -74,7 +74,7 @@ def test_transaction_front_create_model_empty_items():
         "payment_method": PaymentMethod.CASH,
         "sale": True,
         "amount": 10.0,
-        "type": TransactionType.TRESORERY,
+        "type": TransactionTypeV1.TRESORERY,
         "description": "Test transaction",
         "items": [],
     }
@@ -103,7 +103,7 @@ def test_transaction_front_create_model_empty_items_error():
         "payment_method": PaymentMethod.CASH,
         "sale": True,
         "amount": 10.0,
-        "type": TransactionType.TRANSACTION,
+        "type": TransactionTypeV1.TRANSACTION,
         "description": "Test transaction",
         "items": [],
     }

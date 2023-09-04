@@ -11,10 +11,10 @@ def test_consumable_computed_field():
     consumable_model = ConsumableModel(
         id=1,
         sell_price=2.5,
-        unit_price=1.5,
+        buy_price=1.5,
         consumable_item_id=1,
         consumable_item=consumable_item_model,
-        empty=False,
+        solded=False,
     )
 
     consumable = Consumable.model_validate(consumable_model).model_dump()
@@ -28,8 +28,8 @@ def test_consumable_computed_field():
 
 def test_consumbale_create():
     consumable = ConsumableCreate(
-        unit_price=1.5,
+        unitPrice=1.5,
         sell_price=2.5,
         fkId=1,
     )
-    assert consumable.empty is False
+    assert consumable.solded is False

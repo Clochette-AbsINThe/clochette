@@ -188,7 +188,7 @@ class TestConsumableItem(BaseTest):
                 obj_in=ConsumableCreate(
                     fkId=self.consumable_item_db.id,
                     sell_price=1,
-                    unit_price=1,
+                    unitPrice=1,
                 ),
             )
 

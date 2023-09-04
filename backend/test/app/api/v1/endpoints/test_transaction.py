@@ -1,11 +1,11 @@
 import datetime
 from test.base_test import BaseTest
 
-from app.core.types import IconName, PaymentMethod, TransactionType
+from app.core.types import IconName, PaymentMethod, TransactionTypeV1
 from app.crud.crud_consumable_item import consumable_item as crud_consumable_item
 from app.crud.crud_out_of_stock import out_of_stock as crud_out_of_stock
 from app.crud.crud_out_of_stock_item import out_of_stock_item as crud_out_of_stock_item
-from app.crud.crud_transaction import transaction as crud_transaction
+from app.crud.crud_transaction_v1 import transaction as crud_transaction_v1
 from app.crud.crud_treasury import treasury as crud_treasury
 from app.dependencies import get_db
 from app.schemas.consumable import ConsumableCreate
@@ -37,7 +37,7 @@ class TestTransaction(BaseTest):
             )
             consumable = ConsumableCreate(
                 fkId=consumable_item_in_db.id,
-                unit_price=1,
+                unitPrice=1,
                 sell_price=1,
             )
             out_of_stock_item = OutOfStockItemCreate(
@@ -64,7 +64,7 @@ class TestTransaction(BaseTest):
 
             transaction_create = TransactionFrontCreate(
                 amount=10,
-                type=TransactionType.TRANSACTION,
+                type=TransactionTypeV1.TRANSACTION,
                 datetime=datetime.datetime.now(),
                 payment_method=PaymentMethod.CARD,
                 sale=False,
@@ -74,7 +74,7 @@ class TestTransaction(BaseTest):
                 ],
             )
 
-            self.transaction_in_db = await crud_transaction.create(
+            self.transaction_in_db = await crud_transaction_v1.create(
                 session, obj_in=transaction_create
             )
 
@@ -97,7 +97,7 @@ class TestTransaction(BaseTest):
         # Arrange
         transaction_create = TransactionFrontCreate(
             amount=10,
-            type=TransactionType.TRANSACTION,
+            type=TransactionTypeV1.TRANSACTION,
             datetime=datetime.datetime.now(),
             payment_method=PaymentMethod.CARD,
             sale=False,
@@ -112,7 +112,7 @@ class TestTransaction(BaseTest):
             json=transaction_create.model_dump(by_alias=True, mode="json"),
         )
         async with get_db.get_session() as session:
-            transaction_in_db = await crud_transaction.read(
+            transaction_in_db = await crud_transaction_v1.read(
                 session, id=response.json()["id"]
             )
             nb_out_of_stock_in_db = await crud_out_of_stock.query(session)
@@ -131,7 +131,7 @@ class TestTransaction(BaseTest):
         response = self._client.get(f"/api/v1/transaction/{self.transaction.id}")
 
         async with get_db.get_session() as session:
-            transaction_in_db = await crud_transaction.read(
+            transaction_in_db = await crud_transaction_v1.read(
                 session, id=self.transaction.id
             )
 

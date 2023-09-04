@@ -1,29 +1,29 @@
 from test.base_test import BaseTest
 
 from app.crud.crud_barrel import barrel as crud_barrel
-from app.crud.crud_drink import drink as crud_drink
+from app.crud.crud_drink_item import drink_item as crud_drink
 from app.dependencies import get_db
 from app.schemas.barrel import BarrelCreate
-from app.schemas.drink import Drink, DrinkCreate, DrinkUpdate
+from app.schemas.drink_item import DrinkItem, DrinkItemCreate, DrinkItemUpdate
 
 
 class TestDrink(BaseTest):
     async def asyncSetUp(self) -> None:
         await super().asyncSetUp()
 
-        self.drink_create = DrinkCreate(name="test_name")
+        self.drink_create = DrinkItemCreate(name="test_name")
 
         async with get_db.get_session() as session:
-            self.drink_db = Drink.model_validate(
+            self.drink_db = DrinkItem.model_validate(
                 await crud_drink.create(session, obj_in=self.drink_create)
             )
 
-    async def read_drink_from_db(self, id: int) -> Drink | None:
+    async def read_drink_from_db(self, id: int) -> DrinkItem | None:
         async with get_db.get_session() as session:
             drink_in_db = await crud_drink.read(session, id)
             if drink_in_db is None:
                 return None
-            return Drink.model_validate(drink_in_db)
+            return DrinkItem.model_validate(drink_in_db)
 
     def test_read_drinks(self):
         # Arrange
@@ -54,7 +54,7 @@ class TestDrink(BaseTest):
 
     async def test_create_drink(self):
         # Arrange
-        drink_create = DrinkCreate(name="test_name2")
+        drink_create = DrinkItemCreate(name="test_name2")
 
         # Act
         response = self._client.post(
@@ -84,7 +84,7 @@ class TestDrink(BaseTest):
 
     async def test_update_drink(self):
         # Arrange
-        drink_update = DrinkUpdate(name="test_name2")
+        drink_update = DrinkItemUpdate(name="test_name2")
 
         # Act
         response = self._client.put(
@@ -102,7 +102,7 @@ class TestDrink(BaseTest):
 
     def test_update_drink_not_found(self):
         # Arrange
-        drink_update = DrinkUpdate(name="test_name2")
+        drink_update = DrinkItemUpdate(name="test_name2")
 
         # Act
         response = self._client.put(
@@ -116,13 +116,13 @@ class TestDrink(BaseTest):
 
     async def test_update_drink_duplicate(self):
         # Arrange
-        new_drink_create = DrinkCreate(name="test_name2")
+        new_drink_create = DrinkItemCreate(name="test_name2")
 
         async with get_db.get_session() as session:
-            new_drink_db = Drink.model_validate(
+            new_drink_db = DrinkItem.model_validate(
                 await crud_drink.create(session, obj_in=new_drink_create)
             )
-        drink_update = DrinkUpdate(name=new_drink_db.name)
+        drink_update = DrinkItemUpdate(name=new_drink_db.name)
 
         # Act
         response = self._client.put(
@@ -163,7 +163,7 @@ class TestDrink(BaseTest):
                 obj_in=BarrelCreate(
                     fkId=self.drink_db.id,
                     sell_price=1,
-                    unit_price=1,
+                    unitPrice=1,
                 ),
             )
 
