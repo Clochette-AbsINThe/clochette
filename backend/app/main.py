@@ -2,6 +2,7 @@
 
 import logging
 from contextlib import asynccontextmanager
+from typing import Any, Dict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -10,12 +11,14 @@ from fastapi.routing import APIRoute
 
 from app.api.utils.endpoints import base_router
 from app.api.v1.api import api_v1_router
+from app.api.v2.api import api_v2_router
 from app.core.config import settings
 from app.core.middleware import ExceptionMonitorMiddleware
 from app.core.utils.backend.alert_backend import alert_backend
 from app.db.pre_start import pre_start
-from app.dependencies import get_db
+from app.dependencies import get_current_active_account, get_db
 from app.schemas.base import HTTPError
+from app.utils.custom_openapi import generate_custom_openapi
 from app.utils.get_version import get_version
 from app.utils.logger import setup_logs
 
@@ -29,13 +32,18 @@ logger = logging.getLogger("app.main")
 
 def custom_generate_unique_id(route: APIRoute) -> str:
     """
-    Generate a unique id for each request.
+    Generate a unique id for each request, using the route name.
+    Prefix with the version of the API if the route is deprecated.
     """
-    return f"{route.name}"
+    route_name = route.name
+    if route.deprecated:
+        route_version = route.path.split("/")[2]
+        route_name = f"{route_version}_{route_name}"
+    return route_name
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):  # pragma: no cover
+async def lifespan(_app: FastAPI):  # pragma: no cover
     """
     Context manager to run startup and shutdown events.
     """
@@ -49,12 +57,10 @@ async def lifespan(app: FastAPI):  # pragma: no cover
     logger.info("Database connection closed.")
 
 
-app = FastAPI(
-    title="Clochette API",
-    openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
-    version=get_version(),
-    lifespan=lifespan,
-    responses={
+responses: Dict[int | str, Dict[str, Any]] | None = None
+
+if settings.ENVIRONMENT == "production":  # pragma: no cover
+    responses = {
         400: {"description": "Bad request", "model": HTTPError},
         401: {"description": "Unauthorized", "model": HTTPError},
         404: {"description": "Not found", "model": HTTPError},
@@ -62,7 +68,15 @@ app = FastAPI(
             "description": "Internal server error",
             "content": {"text/plain": {"example": "Internal server error"}},
         },
-    },
+    }
+
+
+app = FastAPI(
+    title="Clochette API",
+    openapi_url=f"{settings.API_V1_PREFIX}/openapi.json",
+    version=get_version(),
+    lifespan=lifespan,
+    responses=responses,
     generate_unique_id_function=custom_generate_unique_id,
 )
 
@@ -79,3 +93,10 @@ app.add_middleware(
 
 app.include_router(base_router, prefix=settings.API_V1_PREFIX)
 app.include_router(api_v1_router, prefix=settings.API_V1_PREFIX)
+app.include_router(api_v2_router, prefix=settings.API_V2_PREFIX)
+
+app.openapi = generate_custom_openapi(app)
+
+# Dependency overrides for testing purposes
+if settings.ENVIRONMENT != "production":  # pragma: no cover
+    app.dependency_overrides[get_current_active_account] = lambda: None
