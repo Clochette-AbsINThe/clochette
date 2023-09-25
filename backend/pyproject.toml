@@ -12,7 +12,7 @@ packages = [{ include = "app" }]
 
 [tool.poetry.dependencies]
 python = "^3.11"
-fastapi = { extras = ["all"], version = "^0.101.0" }
+fastapi = { extras = ["all"], version = "^0.103.1" }
 pydantic-settings = "^2.0.2"
 zxcvbn = "^4.4.28"
 sqlalchemy = "^2.0.21"
