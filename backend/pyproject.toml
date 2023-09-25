@@ -18,7 +18,7 @@ zxcvbn = "^4.4.28"
 sqlalchemy = "^2.0.21"
 pyhumps = "^3.8.0"
 python-jose = "^3.3.0"
-alembic = "^1.11.1"
+alembic = "^1.12.0"
 passlib = { extras = ["bcrypt"], version = "^1.7.4" }
 requests = "^2.31.0"
 types-requests = "^2.31.0.2"
