@@ -1,170 +1,131 @@
 @tailwind base;
-/* Fierfox */
-* {
-    scrollbar-width: thin;
-    scrollbar-color: #99999999 #222222bb;
-}
-
-/* Chrome, Edge, and Safari */
-*::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-*::-webkit-scrollbar-track {
-    background: #99999999;
-    border-radius: 14px;
-}
-
-*::-webkit-scrollbar-thumb {
-    background-color: #222222bb;
-    border-radius: 14px;
-    border: 1px solid #99999999;
-}
 @tailwind components;
 @tailwind utilities;
 
-.color-green {
-    color: green;
+.remove-arrows::-webkit-inner-spin-button,
+.remove-arrows::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
-.color-gray {
-    color: gray;
-}
-
-.color-black {
-    color: black;
-}
-
-.color-white {
-    color: white;
-}
-
-@layer components {
-    .btn-primary {
-        @apply text-white rounded-lg py-2 px-4 text-center bg-green-700 hover:bg-green-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-green-800 shadow-md;
-    }
-
-    .btn-danger {
-        @apply text-white rounded-lg py-2 px-4 text-center bg-red-700 hover:bg-red-800 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-red-800 shadow-md;
-    }
-
-    .input {
-        @apply block p-2 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-500 dark:bg-gray-600 dark:placeholder-gray-400 dark:text-white dark:disabled:bg-gray-800 dark:disabled:border-gray-700 dark:disabled:text-gray-500 focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 disabled:bg-slate-50 disabled:text-slate-500 disabled:border-slate-200 disabled:shadow-none;
-    }
-
-    .checkbox {
-        @apply appearance-none w-4 h-4 rounded border text-green-500 bg-gray-300 border-gray-500 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600 checked:bg-green-700 checked:border-transparent focus:outline-none dark:checked:bg-green-500;
-    }
-
-    .input-error {
-        @apply invalid:border-red-500 focus:invalid:border-red-500 focus:invalid:ring-red-500;
-    }
-}
-
-.checkbox:checked {
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 16 16' fill='%23fff' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 0 1 0 1.414l-5 5a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L6.5 9.086l4.293-4.293a1 1 0 0 1 1.414 0z'/%3E%3C/svg%3E");
+.remove-arrows {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 #hamburger-menu {
-    margin: 0 10px;
-    width: max-content;
-    height: max-content;
-    cursor: pointer;
+  margin: 0 10px;
+  width: max-content;
+  height: max-content;
+  cursor: pointer;
 
-    padding: 4px;
+  padding: 4px;
 
-    & > span {
-        display: block;
-        width: 28px;
-        height: 2px;
-        border-radius: 9999px;
+  & > span {
+    display: block;
+    width: 28px;
+    height: 2px;
+    border-radius: 9999px;
 
-        &:not(:last-child) {
-            margin-bottom: 7px;
-        }
-
-        &:last-child {
-            padding: 1px 0;
-        }
+    &:not(:last-child) {
+      margin-bottom: 7px;
     }
 
-    &,
-    & > span {
-        transition: all 0.3s ease-in-out;
+    &:last-child {
+      padding: 1px 0;
     }
+  }
 
-    &.active {
-        transition-delay: 0.7s;
-        transform: rotate(45deg);
-        border: 0px;
-
-        & > span {
-            &:nth-child(1) {
-                transform: translateY(9px);
-                transition-delay: 0.4s;
-            }
-
-            &:nth-child(2) {
-                width: 0;
-            }
-
-            &:nth-child(3) {
-                transform: translateY(-9px) rotate(90deg);
-                transition-delay: 0.4s;
-            }
-        }
-    }
-}
-
-body > * {
+  &,
+  & > span {
     transition: all 0.3s ease-in-out;
-}
+  }
 
-body > div {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
+  &.active {
+    transition-delay: 0.7s;
+    transform: rotate(45deg);
+    border: 0px;
 
-.hide-scroll-bar {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
+    & > span {
+      &:nth-child(1) {
+        transform: translateY(9px);
+        transition-delay: 0.4s;
+      }
 
-    &::-webkit-scrollbar {
-        display: none;
+      &:nth-child(2) {
+        width: 0;
+      }
+
+      &:nth-child(3) {
+        transform: translateY(-9px) rotate(90deg);
+        transition-delay: 0.4s;
+      }
     }
+  }
 }
 
-table {
-    text-indent: 0;
-    border-color: inherit;
-    border-collapse: separate;
-    border-spacing: 0;
-}
-
-/* top-left border-radius */
-table tr:first-child th:first-child {
-    border-top-left-radius: 1rem;
-}
-
-/* top-right border-radius */
-table tr:first-child th:last-child {
-    border-top-right-radius: 1rem;
-}
-
-/* bottom-left border-radius */
-table tr:last-child td:first-child {
-    border-bottom-left-radius: 1rem;
-}
-
-/* bottom-right border-radius */
-table tr:last-child td:last-child {
-    border-bottom-right-radius: 1rem;
+body > div#__next {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 html.dark {
-    canvas {
-        filter: invert(1) hue-rotate(180deg);
-    }
+  canvas {
+    filter: invert(1) hue-rotate(180deg);
+  }
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    --primary: 142.1 76.2% 30.3%;
+    --primary-foreground: 355.7 100% 97.3%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4.8% 95.9%;
+    --muted-foreground: 240 3.8% 46.1%;
+    --accent: 240 4.8% 95.9%;
+    --accent-foreground: 240 5.9% 10%;
+    --destructive: 0 80.2% 55.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 142.1 76.2% 36.3%;
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222 47% 11%;
+    --foreground: 0 0% 95%;
+    --card: 227 11.8% 10%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 9%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 142.1 70.6% 45.3%;
+    --primary-foreground: 144.9 80.4% 10%;
+    --secondary: 227 19% 24%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 12 6.5% 15.1%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 40.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --border: 227 19% 29%;
+    --input: 227 19% 29%;
+    --ring: 142.4 71.8% 29.2%;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
