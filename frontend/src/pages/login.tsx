@@ -1,15 +1,17 @@
-import Login from '@components/Admin/Login';
-import Base from '@layouts/base';
 import type { NextPage } from 'next';
 
+import Login from '@/components/login';
+import Base from '@/layouts/base';
+
 const LoginPage: NextPage = () => {
-    return (
-        <Base
-            title='Login'
-            description='Page de connection'>
-            <Login />
-        </Base>
-    );
+  return (
+    <Base
+      title='Se connecter'
+      description='Page de connexion'
+    >
+      <Login />
+    </Base>
+  );
 };
 
 export default LoginPage;

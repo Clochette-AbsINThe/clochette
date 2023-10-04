@@ -2,77 +2,26 @@ import { useState } from 'react';
 
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next';
 import Link from 'next/link';
-import { getServerSession } from 'next-auth';
 
-import { ReadDrinksResponse, useReadDrinks } from '@/openapi-codegen/clochetteComponents';
-import { options } from '@/pages/api/auth/[...nextauth]';
-import { Button } from '@components/Button';
-import Loader from '@components/Loader';
-import SearchBar from '@components/SearchBar';
-import Base from '@layouts/base';
-import { getIcon } from '@styles/utils';
-import { pages } from '@utils/pages';
+import { Button } from '@/components/button';
+import { DrinkItemHomeGrid } from '@/components/configuration-drink/drink-item-home-grid';
+import SearchBar from '@/components/search-bar';
+import Base from '@/layouts/base';
+import { pages } from '@/utils/pages';
+import { verifySession } from '@/utils/verify-session';
 
 export const getServerSideProps: GetServerSideProps<{}> = async (context) => {
-  const session = await getServerSession(context.req, context.res, options);
+  const result = await verifySession(context, pages.configuration.boissons.index);
 
-  if (!session)
-    return {
-      redirect: {
-        destination: pages.signin,
-        permanent: false
-      }
-    };
+  if (result.status === 'unauthenticated') {
+    return result.redirection;
+  }
 
   return { props: {} };
 };
 
-export function filterDrinks(drinks: ReadDrinksResponse, query: string) {
-  return drinks.filter((drink) => drink.name.toLowerCase().includes(query.toLowerCase())).sort((a, b) => a.name.localeCompare(b.name));
-}
-
 const ConfigurationBoissonPage: NextPage = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { isLoading, isError, data } = useReadDrinks({});
   const [query, setQuery] = useState('');
-
-  const content = () => {
-    if (isLoading) {
-      return <Loader />;
-    }
-
-    if (isError) {
-      return <p>Erreur lors du chargement des boissons</p>;
-    }
-
-    if (data.length === 0) {
-      return <p>Aucune boisson</p>;
-    }
-
-    return (
-      <div className='grid gap-4 grid-cols-[repeat(auto-fill,_minmax(250px,1fr))]'>
-        {filterDrinks(data, query).map((drink) => (
-          <div
-            key={drink.id}
-            className='flex flex-col space-y-5 p-4 bg-gray-50 rounded-lg shadow-md dark:bg-gray-700'>
-            <div className='flex justify-start items-center'>
-              <div>{getIcon('Beer', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
-              <div>{getIcon('Barrel', 'w-8 h-8 dark:text-white ml-2 text-black')}</div>
-              <span className='text-center text-xl ml-4'>{drink.name}</span>
-            </div>
-            <div className='flex grow justify-end space-x-5'>
-              <Link href={pages.configuration.boissons.id(drink.id)}>
-                <Button
-                  confirm
-                  aria-label='edit'>
-                  Editer
-                </Button>
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
 
   return (
     <Base title='Configuration des boissons'>
@@ -95,7 +44,7 @@ const ConfigurationBoissonPage: NextPage = (props: InferGetServerSidePropsType<t
             </Button>
           </Link>
         </div>
-        {content()}
+        <DrinkItemHomeGrid query={query} />
       </div>
     </Base>
   );
