@@ -1,4 +1,4 @@
-import { pages } from "@/utils/pages";
+import { pages } from '@/utils/pages';
 
 describe('pages', () => {
   it('should have the correct routes', () => {

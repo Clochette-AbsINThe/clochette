@@ -69,14 +69,7 @@ export function useCreatePurchaseTransaction() {
   });
   const { transactionFlow, isLoading } = useCreateTransactionFlow();
 
-  const loading =
-    createDrink.isLoading ||
-    createConsumableItem.isLoading ||
-    createNonInventoriedItem.isLoading ||
-    createNonInventoried.isLoading ||
-    createConsumable.isLoading ||
-    createBarrel.isLoading ||
-    isLoading;
+  const loading = createDrink.isLoading || createConsumableItem.isLoading || createNonInventoriedItem.isLoading || createNonInventoried.isLoading || createConsumable.isLoading || createBarrel.isLoading || isLoading;
 
   const items = useTransactionPurchaseStore.use.items();
 
@@ -132,7 +125,6 @@ export function useCreatePurchaseTransaction() {
       });
     }
   };
-
 
   /**
    * Pre-processes the items array by checking if each item has an 'id' property. If it does, it returns the item as is.

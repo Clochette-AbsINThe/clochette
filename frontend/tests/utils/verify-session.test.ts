@@ -7,29 +7,26 @@ import { verifySession, verifyScopes } from '@/utils/verify-session';
 vi.mock('next-auth');
 
 describe('verifySession', () => {
-
   it('should return unauthenticated status if session is not found', async () => {
     (getServerSession as Mock).mockReturnValueOnce(Promise.resolve(null));
 
     const result = await verifySession({} as any);
     expect(result.status).toBe('unauthenticated');
-    expect(
-      result.status === 'unauthenticated' &&
-      result.redirection.redirect.destination).toBe(pages.signin + '?callbackUrl=' + pages.index);
+    expect(result.status === 'unauthenticated' && result.redirection.redirect.destination).toBe(pages.signin + '?callbackUrl=' + pages.index);
   });
 
   it('should return authenticated status if session is found', async () => {
-    (getServerSession as Mock).mockReturnValueOnce(Promise.resolve({
-      user: {
-        name: 'John Doe'
-      }
-    }));
+    (getServerSession as Mock).mockReturnValueOnce(
+      Promise.resolve({
+        user: {
+          name: 'John Doe'
+        }
+      })
+    );
 
     const result = await verifySession({} as any);
     expect(result.status).toBe('authenticated');
-    expect(
-      result.status === 'authenticated' &&
-      result.session.user?.name).toBe('John Doe');
+    expect(result.status === 'authenticated' && result.session.user?.name).toBe('John Doe');
   });
 });
 
@@ -50,8 +47,6 @@ describe('verifyScopes', () => {
     };
     const result = verifyScopes(currentUrl, session as any);
     expect(result.status).toBe('unauthorized');
-    expect(
-      result.status === 'unauthorized' &&
-      result.redirection.redirect.destination).toBe(pages.account.index);
+    expect(result.status === 'unauthorized' && result.redirection.redirect.destination).toBe(pages.account.index);
   });
 });

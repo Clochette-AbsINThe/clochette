@@ -7,15 +7,15 @@ import { pages } from '@/utils/pages';
 
 type VerifySessionReturn =
   | {
-    status: 'authenticated';
-    session: Session;
-  }
+      status: 'authenticated';
+      session: Session;
+    }
   | {
-    status: 'unauthenticated';
-    redirection: {
-      redirect: Redirect;
+      status: 'unauthenticated';
+      redirection: {
+        redirect: Redirect;
+      };
     };
-  };
 
 /**
  * Verifies the user session on the server side.
@@ -45,14 +45,14 @@ export async function verifySession(context: GetServerSidePropsContext, callback
 
 type VerifyScopesReturn =
   | {
-    status: 'authorized';
-  }
+      status: 'authorized';
+    }
   | {
-    status: 'unauthorized';
-    redirection: {
-      redirect: Redirect;
+      status: 'unauthorized';
+      redirection: {
+        redirect: Redirect;
+      };
     };
-  };
 
 /**
  * Verifies if the current session has the required scopes to access the current URL.

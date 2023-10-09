@@ -18,13 +18,11 @@ describe('useCreateTransactionFlow', () => {
     const mutateAsyncUseValidateTransactionMock = vi.fn().mockResolvedValue({});
     const mutateAsyncUseDeleteTransactionMock = vi.fn().mockResolvedValue({});
 
-    vi.spyOn(componentModule, 'useCreateTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseCreateTransactionMock, isLoading } as any));
-    vi.spyOn(componentModule, 'useValidateTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseValidateTransactionMock, isLoading } as any));
-    vi.spyOn(componentModule, 'useDeleteTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseDeleteTransactionMock, isLoading } as any));
+    vi.spyOn(componentModule, 'useCreateTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseCreateTransactionMock, isLoading }) as any);
+    vi.spyOn(componentModule, 'useValidateTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseValidateTransactionMock, isLoading }) as any);
+    vi.spyOn(componentModule, 'useDeleteTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseDeleteTransactionMock, isLoading }) as any);
 
-    const { result } = renderHook(() =>
-      useCreateTransactionFlow()
-    );
+    const { result } = renderHook(() => useCreateTransactionFlow());
 
     act(() => {
       result.current.transactionFlow(transaction, itemsCallback);
@@ -41,13 +39,11 @@ describe('useCreateTransactionFlow', () => {
     const mutateAsyncUseValidateTransactionMock = vi.fn().mockRejectedValue({});
     const mutateAsyncUseDeleteTransactionMock = vi.fn().mockResolvedValue({});
 
-    vi.spyOn(componentModule, 'useCreateTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseCreateTransactionMock, isLoading } as any));
-    vi.spyOn(componentModule, 'useValidateTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseValidateTransactionMock, isLoading } as any));
-    vi.spyOn(componentModule, 'useDeleteTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseDeleteTransactionMock, isLoading } as any));
+    vi.spyOn(componentModule, 'useCreateTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseCreateTransactionMock, isLoading }) as any);
+    vi.spyOn(componentModule, 'useValidateTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseValidateTransactionMock, isLoading }) as any);
+    vi.spyOn(componentModule, 'useDeleteTransaction').mockImplementation(() => ({ mutateAsync: mutateAsyncUseDeleteTransactionMock, isLoading }) as any);
 
-    const { result } = renderHook(() =>
-      useCreateTransactionFlow()
-    );
+    const { result } = renderHook(() => useCreateTransactionFlow());
 
     await act(async () => {
       try {

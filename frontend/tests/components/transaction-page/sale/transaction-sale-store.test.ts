@@ -5,22 +5,21 @@ import { ECOCUP_NAME } from '@/utils/constant';
 
 const ecocup: SaleItemNonInventoried = {
   type: 'non-inventoried',
-  item: { name: ECOCUP_NAME, id: 2 } as any,
+  item: { name: ECOCUP_NAME, id: 2 } as any
 };
 const glass: SaleItemGlass = {
   type: 'glass',
-  item: { name: 'Test Glass', id: 1 } as any,
+  item: { name: 'Test Glass', id: 1 } as any
 };
 const nonInventoried: SaleItemNonInventoried = {
   type: 'non-inventoried',
-  item: { name: 'Test Non Inventoried', id: 1 } as any,
+  item: { name: 'Test Non Inventoried', id: 1 } as any
 };
 const consumable: SaleItemConsumable = {
   type: 'consumable',
   item: { name: 'Test Consumable', id: 1 } as any,
-  maxQuantity: 1,
+  maxQuantity: 1
 };
-
 
 describe('useTransactionSaleStore', () => {
   beforeEach(() => {
@@ -69,7 +68,6 @@ describe('useTransactionSaleStore', () => {
     });
   });
 
-
   it('should increment and decrement sale items', () => {
     const { result } = renderHook(() => useTransactionSaleStore());
 
@@ -108,7 +106,6 @@ describe('useTransactionSaleStore', () => {
     expect(result.current.items).toEqual([{ ...consumable, quantity: 0 }]);
   });
 
-
   it('should increment and decrement eco cup accordingly to glass item', () => {
     const { result } = renderHook(() => useTransactionSaleStore());
 
@@ -122,7 +119,7 @@ describe('useTransactionSaleStore', () => {
 
     expect(result.current.items).toEqual([
       { ...ecocup, quantity: 1 },
-      { ...glass, quantity: 1 },
+      { ...glass, quantity: 1 }
     ]);
 
     act(() => {
@@ -131,7 +128,7 @@ describe('useTransactionSaleStore', () => {
 
     expect(result.current.items).toEqual([
       { ...ecocup, quantity: 2 },
-      { ...glass, quantity: 2 },
+      { ...glass, quantity: 2 }
     ]);
 
     act(() => {
@@ -140,7 +137,7 @@ describe('useTransactionSaleStore', () => {
 
     expect(result.current.items).toEqual([
       { ...ecocup, quantity: 1 },
-      { ...glass, quantity: 1 },
+      { ...glass, quantity: 1 }
     ]);
 
     act(() => {
@@ -149,7 +146,7 @@ describe('useTransactionSaleStore', () => {
 
     expect(result.current.items).toEqual([
       { ...ecocup, quantity: 0 },
-      { ...glass, quantity: 0 },
+      { ...glass, quantity: 0 }
     ]);
   });
 
@@ -194,7 +191,7 @@ describe('useTransactionSaleStore', () => {
 
     expect(result.current.items).toEqual([
       { ...ecocup, quantity: 1 },
-      { ...glass, quantity: 1 },
+      { ...glass, quantity: 1 }
     ]);
 
     act(() => {
@@ -203,7 +200,7 @@ describe('useTransactionSaleStore', () => {
 
     expect(result.current.items).toEqual([
       { ...ecocup, quantity: 0 },
-      { ...glass, quantity: 0 },
+      { ...glass, quantity: 0 }
     ]);
   });
 });

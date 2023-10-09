@@ -44,11 +44,21 @@ describe('groupBy', () => {
       { name: 'Bob', age: 30 },
       { name: 'Charlie', age: 25 }
     ];
-    const expected = new Map<number, { name: string, age: number }[]>([
-      [25, [{ name: 'Alice', age: 25 }, { name: 'Charlie', age: 25 }]],
+    const expected = new Map<number, { name: string; age: number }[]>([
+      [
+        25,
+        [
+          { name: 'Alice', age: 25 },
+          { name: 'Charlie', age: 25 }
+        ]
+      ],
       [30, [{ name: 'Bob', age: 30 }]]
     ]);
-    const result = groupBy(arr, (item) => item.age, (a, b) => a - b);
+    const result = groupBy(
+      arr,
+      (item) => item.age,
+      (a, b) => a - b
+    );
     expect(result).toEqual(expected);
   });
 });

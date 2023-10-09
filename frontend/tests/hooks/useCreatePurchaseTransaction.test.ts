@@ -6,7 +6,7 @@ import { createWrapper } from 'tests/utils';
 describe('useCreatePurchaseTransaction', () => {
   it('should return the correct loading state', () => {
     const { result } = renderHook(() => useCreatePurchaseTransaction(), {
-      wrapper: createWrapper(),
+      wrapper: createWrapper()
     });
 
     expect(result.current.loading).toBe(false);
@@ -31,9 +31,9 @@ describe('expandItems', () => {
           name: 'Test Item',
           quantity: 3,
           buyPrice: 1.99,
-          sellPrice: 2.99,
-        },
-      },
+          sellPrice: 2.99
+        }
+      }
     ];
 
     const result = expandItems(items);
@@ -50,8 +50,8 @@ describe('expandItems', () => {
           name: 'Test Item 1',
           quantity: 2,
           buyPrice: 1.99,
-          sellPrice: 2.99,
-        },
+          sellPrice: 2.99
+        }
       },
       {
         type: 'barrel',
@@ -60,8 +60,8 @@ describe('expandItems', () => {
           name: 'Test Item 2',
           quantity: 1,
           buyPrice: 4.99,
-          sellPrice: 5.99,
-        },
+          sellPrice: 5.99
+        }
       },
       {
         type: 'non-inventoried',
@@ -70,9 +70,9 @@ describe('expandItems', () => {
           name: 'Test Item 3',
           quantity: 4,
           buyPrice: 9.99,
-          sellPrice: 10.99,
-        },
-      },
+          sellPrice: 10.99
+        }
+      }
     ];
 
     const result = expandItems(items);

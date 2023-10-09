@@ -1,28 +1,28 @@
-import { mockPush } from "./utils";
+import { mockPush } from './utils';
 
 vi.mock('next-auth/react', () => ({
   useSession: vi.fn().mockReturnValue({
     data: {
       id: 1,
       token: 'fake-token',
-      scopes: ['president'],
+      scopes: ['president']
     },
-    status: 'authenticated',
+    status: 'authenticated'
   }),
-  getSession: vi.fn(),
+  getSession: vi.fn()
 }));
 
 vi.mock('next/router', () => ({
   useRouter: vi.fn().mockReturnValue({
     push: mockPush,
-    pathname: '',
-  }),
+    pathname: ''
+  })
 }));
 
 global.ResizeObserver = vi.fn().mockImplementation(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
-  disconnect: vi.fn(),
+  disconnect: vi.fn()
 }));
 
 class MockPointerEvent extends Event {
@@ -44,7 +44,7 @@ window.HTMLElement.prototype.hasPointerCapture = vi.fn();
 
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: vi.fn().mockImplementation(query => ({
+  value: vi.fn().mockImplementation((query) => ({
     matches: false,
     media: query,
     onchange: null,
@@ -52,6 +52,6 @@ Object.defineProperty(window, 'matchMedia', {
     removeListener: vi.fn(), // Deprecated
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-  })),
+    dispatchEvent: vi.fn()
+  }))
 });

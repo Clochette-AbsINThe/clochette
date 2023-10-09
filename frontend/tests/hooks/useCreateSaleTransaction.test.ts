@@ -8,7 +8,7 @@ import { createWrapper } from 'tests/utils';
 describe('useCreateSaleTransaction', () => {
   it('should return the correct loading state', () => {
     const { result } = renderHook(() => useCreateSaleTransaction(), {
-      wrapper: createWrapper(),
+      wrapper: createWrapper()
     });
 
     expect(result.current.loading).toBe(false);
@@ -23,7 +23,7 @@ describe('expandItems', () => {
     icon: 'Misc',
     name: 'Test Item',
     buyPrice: 1.99,
-    sellPrice: 2.99,
+    sellPrice: 2.99
   };
 
   it('should return an empty array when given an empty array', () => {
@@ -40,13 +40,13 @@ describe('expandItems', () => {
         type: 'consumable',
         item: consumable,
         maxQuantity: 3,
-        quantity: 3,
-      },
+        quantity: 3
+      }
     ];
 
     const consumables: Consumable[] = [1, 2, 3].map((id) => ({
       ...consumable,
-      id,
+      id
     }));
 
     const result = expandItems(items, consumables);
@@ -64,7 +64,7 @@ describe('expandItems', () => {
         type: 'consumable',
         item: consumable,
         maxQuantity: 2,
-        quantity: 1,
+        quantity: 1
       },
       {
         type: 'glass',
@@ -76,9 +76,9 @@ describe('expandItems', () => {
           barrelSellPrice: null,
           drinkItemId: 2,
           emptyOrSolded: false,
-          isMounted: true,
+          isMounted: true
         },
-        quantity: 1,
+        quantity: 1
       },
       {
         type: 'non-inventoried',
@@ -87,10 +87,10 @@ describe('expandItems', () => {
           name: 'Test Item 3',
           sellPrice: 10.99,
           icon: 'Misc',
-          trade: 'purchase',
+          trade: 'purchase'
         },
-        quantity: 4,
-      },
+        quantity: 4
+      }
     ];
 
     const result = expandItems(items, [consumable]);
