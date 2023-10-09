@@ -36,7 +36,7 @@ class BarrelUpdateModify(BarrelUpdate):
 
 
 class BarrelUpdateSale(BarrelUpdate):
-    barrel_sell_price: float | None = Field(default=None, gt=0)
+    barrel_sell_price: float = Field(..., gt=0)
     transaction_id_sale: int = Field(..., alias="transactionId")
 
     @computed_field  # type: ignore[misc]
@@ -59,6 +59,7 @@ class Barrel(BarrelBase):
 
     buy_price: float
     sell_price: float
+    barrel_sell_price: float | None
     empty_or_solded: bool
     is_mounted: bool
 
@@ -68,3 +69,7 @@ class Barrel(BarrelBase):
         return self.drink_item.name if self.drink_item else "N/A"
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class BarrelDistinct(Barrel):
+    quantity: int = 1

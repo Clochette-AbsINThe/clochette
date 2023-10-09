@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Security, status
 
@@ -19,36 +20,73 @@ logger = logging.getLogger("app.api.v2.barrel")
     response_model=list[barrel_schema.Barrel],
     dependencies=[Security(get_current_active_account)],
 )
-async def read_barrels(db=Depends(get_db), all: bool = False, mounted: bool = False):
+async def read_barrels(
+    db=Depends(get_db),
+    all: bool = False,
+    is_mounted: bool | None = None,
+    drink_item_id: int | None = None,
+):
     """
     Read barrels from the database.
 
     Query parameters:
-        - `all`: If True, return all barrels. If False, return only mounted or unmounted barrels
-            depending on the `mounted` argument.
-        - `mounted`: If True, return only mounted barrels. If False, return only unmounted barrels.
+        - `all`: A boolean indicating whether to return all consumables or only non-empty ones.
+        - `is_mounted`: If specified, if True, return only mounted barrels, else if False,
+                return only unmounted barrels.
+        - `drink_item_id`: If specified, return only barrels containing the specified drink item.
     """
-    logger.debug(f"all: {all}, mounted: {mounted}")
-    return (
-        await barrels.query(db, limit=None)
-        if all
-        else await barrels.query(
-            db, is_mounted=mounted, empty_or_solded=False, limit=None
-        )
-    )
+    query_parameters: dict[str, Any] = {}
+    if not all:
+        query_parameters["empty_or_solded"] = False
+    if is_mounted is not None:
+        query_parameters["is_mounted"] = is_mounted
+    if drink_item_id is not None:
+        query_parameters["drink_item_id"] = drink_item_id
+
+    logger.debug(f"Query parameters: {query_parameters}")
+    return await barrels.query(db, limit=None, **query_parameters)
 
 
 @router.get(
     "/distincts/",
-    response_model=list[barrel_schema.Barrel],
+    response_model=list[barrel_schema.BarrelDistinct],
     dependencies=[Security(get_current_active_account)],
 )
-async def read_distinct_barrels(db=Depends(get_db)):
+async def read_distinct_barrels(db=Depends(get_db), is_mounted: bool | None = None):
     """
     Read distinct barrels from the database.
+
+    Query parameters:
+        - `is_mounted`: If specified, if True, return only mounted barrels, else if False,
+                return only unmounted barrels.
     """
-    drink_id = barrel_model.Barrel.drink_item_id
-    return await barrels.query(db, distinct=drink_id, empty_or_solded=False, limit=None)
+    query_parameters = {}
+    if is_mounted is not None:
+        query_parameters["is_mounted"] = is_mounted
+
+    distinct_barrels = await barrels.query(
+        db,
+        distinct=barrel_model.Barrel.drink_item_id,
+        empty_or_solded=False,
+        limit=None,
+        **query_parameters,
+    )
+
+    result = []
+    for distinct_barrel in distinct_barrels:
+        quantity = len(
+            await barrels.query(
+                db,
+                drink_item_id=distinct_barrel.drink_item_id,
+                empty_or_solded=False,
+                **query_parameters,
+            )
+        )
+        object = barrel_schema.BarrelDistinct.model_validate(distinct_barrel)
+        object.quantity = quantity
+        result.append(object)
+
+    return result
 
 
 @router.post(

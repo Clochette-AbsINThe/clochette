@@ -19,35 +19,75 @@ logger = logging.getLogger("app.api.v2.consumable")
     response_model=list[consumable_schema.Consumable],
     dependencies=[Security(get_current_active_account)],
 )
-async def read_consumables(db=Depends(get_db), all: bool = False):
+async def read_consumables(
+    db=Depends(get_db), all: bool = False, consumable_item_id: int | None = None
+):
     """
     Retrieve a list of consumables.
 
     Query parameters:
         - `all`: A boolean indicating whether to return all consumables or only non-empty ones.
     """
-    logger.debug(f"all: {all}")
-    if all:
-        return await consumables.query(db, limit=None)
+    query_parameters = {}
+    if consumable_item_id:
+        query_parameters["consumable_item_id"] = consumable_item_id
+    if not all:
+        query_parameters["solded"] = False
+    logger.debug(f"Query parameters: {query_parameters}")
 
-    return await consumables.query(db, solded=False, limit=None)
+    return await consumables.query(db, limit=None, **query_parameters)
+
+
+@router.get(
+    "/{consumable_id}",
+    response_model=consumable_schema.Consumable,
+    dependencies=[Security(get_current_active_account)],
+)
+async def read_consumable(consumable_id: int, db=Depends(get_db)):
+    """
+    Retrieve a consumable.
+    """
+    db_consumable = await consumables.read(db, consumable_id)
+    if db_consumable is None:
+        logger.debug(f"Consumable {consumable_id} not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail=translator.ELEMENT_NOT_FOUND
+        )
+    return db_consumable
 
 
 @router.get(
     "/distincts/",
-    response_model=list[consumable_schema.Consumable],
+    response_model=list[consumable_schema.ConsumableDistinct],
     dependencies=[Security(get_current_active_account)],
 )
 async def read_distinct_consumables(db=Depends(get_db)):
     """
     Retrieve a list of distinct consumables.
     """
-    return await consumables.query(
+    distinct_consumables = await consumables.query(
         db,
         distinct=consumable_model.Consumable.consumable_item_id,
         solded=False,
         limit=None,
     )
+
+    result = []
+    for distinct_consumable in distinct_consumables:
+        quantity = len(
+            await consumables.query(
+                db,
+                consumable_item_id=distinct_consumable.consumable_item_id,
+                solded=False,
+            )
+        )
+        object = consumable_schema.ConsumableDistinct.model_validate(
+            distinct_consumable
+        )
+        object.quantity = quantity
+        result.append(object)
+
+    return result
 
 
 @router.post(

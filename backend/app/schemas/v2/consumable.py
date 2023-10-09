@@ -60,3 +60,7 @@ class Consumable(ConsumableBase):
         return self.consumable_item.icon if self.consumable_item else IconName.MISC
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class ConsumableDistinct(Consumable):
+    quantity: int = 1

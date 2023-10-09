@@ -1,4 +1,5 @@
 import logging
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Security, status
 
@@ -23,7 +24,7 @@ logger = logging.getLogger("app.api.v2.endpoints.non_inventoried_item")
     dependencies=[Security(get_current_active_account)],
 )
 async def read_non_inventoried_items(
-    trade: TradeType, name: str | None = None, db=Depends(get_db)
+    trade: TradeType | None = None, name: str | None = None, db=Depends(get_db)
 ):
     """
     Retrieve a list of non inventoried items.
@@ -33,11 +34,12 @@ async def read_non_inventoried_items(
         - `name`: The non inventoried item name.
     """
     logger.debug(f"Trade: {trade}, name: {name}")
-    return (
-        await non_inventoried_items.query(db, limit=None, trade=trade)
-        if name is None
-        else await non_inventoried_items.query(db, limit=None, name=name, trade=trade)
-    )
+    query_parameters: dict[str, Any] = {}
+    if trade:
+        query_parameters["trade"] = trade.value
+    if name:
+        query_parameters["name"] = name
+    return await non_inventoried_items.query(db, limit=None, **query_parameters)
 
 
 @router.get(
