@@ -68,6 +68,13 @@ class Translator:
         }
     )
 
+    ELEMENT_NO_LONGER_IN_STOCK: TranslatedString = TranslatedString(
+        {
+            "en": "{element} is no longer in stock",
+            "fr": "{element} n'est plus en stock",
+        }
+    )
+
     NEGATIVE_CASH_AMOUNT: TranslatedString = TranslatedString(
         {
             "en": "Cash amount cannot be negative",
@@ -93,6 +100,41 @@ class Translator:
 
     USERNAME_UNAVAILABLE: TranslatedString = TranslatedString(
         {"en": "Username is unavailable", "fr": "Le nom d'utilisateur est indisponible"}
+    )
+
+    ALREADY_PENDING_TRANSACTION: TranslatedString = TranslatedString(
+        {
+            "en": "There is already a pending transaction",
+            "fr": "Il y a déjà une transaction en attente",
+        }
+    )
+
+    TRANSACTION_NOT_PENDING: TranslatedString = TranslatedString(
+        {
+            "en": "The transaction is not pending",
+            "fr": "La transaction n'est pas en attente",
+        }
+    )
+
+    TRANSACTION_NOT_PURCHASE: TranslatedString = TranslatedString(
+        {
+            "en": "The transaction is not a purchase",
+            "fr": "La transaction n'est pas un achat",
+        }
+    )
+
+    TRANSACTION_NOT_SALE: TranslatedString = TranslatedString(
+        {
+            "en": "The transaction is not a sale",
+            "fr": "La transaction n'est pas une vente",
+        }
+    )
+
+    TRANSACTION_NOT_COMMERCE: TranslatedString = TranslatedString(
+        {
+            "en": "The transaction is not a commerce",
+            "fr": "La transaction n'est pas un commerce",
+        }
     )
 
     def __getattribute__(self, __name: str) -> str:

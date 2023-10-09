@@ -18,6 +18,10 @@
         {
             "name": "unittest",
             "depth": 2
+        },
+        {
+            "name": "sqlalchemy",
+            "depth": 2
         }
     ],
     "python.analysis.typeCheckingMode": "basic",
@@ -36,18 +40,18 @@
     ],
     "python.testing.pytestEnabled": true,
     "python.testing.pytestArgs": [
-        "tests",
-        "-vv",
+        "test",
         "--cov=app",
         "--cov-report=term-missing",
         "--cov-report=html"
     ],
     "[python]": {
         "editor.codeActionsOnSave": {
-            "source.organizeImports": true
+            "source.organizeImports": true,
+            "source.fixAll": true
         },
         "editor.defaultFormatter": "ms-python.black-formatter",
-        "editor.codeLens": true
+        "editor.codeLens": true,
     },
     "search.exclude": {
         "**/dist": true,

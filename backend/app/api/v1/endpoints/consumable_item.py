@@ -22,12 +22,6 @@ logger = logging.getLogger("app.api.v1.consumable_item")
 async def read_consumable_items(db=Depends(get_db)):
     """
     Retrieve a list of all consumable items.
-
-    Args:
-        db: the database connection dependency.
-
-    Returns:
-        A list of all consumable items.
     """
     return await consumable_items.query(db, limit=None)
 
@@ -42,13 +36,6 @@ async def create_consumable_item(
 ):
     """
     Create a new consumable item.
-
-    Args:
-        consumable_item: the consumable item to create.
-        db: the database connection dependency.
-
-    Returns:
-        The newly created consumable item.
     """
     if await consumable_items.query(db, name=consumable_item.name, limit=1):
         logger.debug(f"Consumable item {consumable_item.name} already exists")
@@ -67,16 +54,6 @@ async def create_consumable_item(
 async def read_consumable_item(consumable_item_id: int, db=Depends(get_db)):
     """
     Retrieve a specific consumable item by ID.
-
-    Args:
-        consumable_item_id: the ID of the consumable item to retrieve.
-        db: the database connection dependency.
-
-    Returns:
-        The consumable item with the specified ID.
-
-    Raises:
-        HTTPException: if the consumable item with the specified ID is not found.
     """
     consumable_item = await consumable_items.read(db, consumable_item_id)
     if consumable_item is None:
@@ -99,18 +76,6 @@ async def update_consumable_item(
 ):
     """
     Update a specific consumable item by ID.
-
-    Args:
-        consumable_item_id: the ID of the consumable item to update.
-        consumable_item: the updated consumable item data.
-        db: the database connection dependency.
-
-    Returns:
-        The updated consumable item.
-
-    Raises:
-        HTTPException: if the consumable item with the specified ID is not found, or if an
-        attempt is made to update the consumable item with a name that already exists.
     """
     old_consumable_item = await consumable_items.read(db, consumable_item_id)
     if old_consumable_item is None:
@@ -138,17 +103,6 @@ async def update_consumable_item(
 async def delete_consumable_item(consumable_item_id: int, db=Depends(get_db)):
     """
     Delete a specific consumable item by ID.
-
-    Args:
-        consumable_item_id: the ID of the consumable item to delete.
-        db: the database connection dependency.
-
-    Returns:
-        The deleted consumable item.
-
-    Raises:
-        HTTPException: if the consumable item with the specified ID is not found, or if the
-        consumable item is currently being used by a consumable.
     """
     if await consumable_items.read(db, consumable_item_id) is None:
         logger.debug(f"Consumable item {consumable_item_id} not found")

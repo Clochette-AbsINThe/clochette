@@ -1,25 +1,25 @@
 from test.base_test import BaseTest
 
 from app.crud.crud_barrel import barrel as crud_barrel
-from app.crud.crud_drink import drink as crud_drink
+from app.crud.crud_drink_item import drink_item as crud_drink
 from app.dependencies import get_db
 from app.schemas.barrel import Barrel, BarrelCreate, BarrelUpdate
-from app.schemas.drink import Drink, DrinkCreate
+from app.schemas.drink_item import DrinkItem, DrinkItemCreate
 
 
 class TestBarrel(BaseTest):
     async def asyncSetUp(self) -> None:
         await super().asyncSetUp()
 
-        self.drink_create = DrinkCreate(name="test_name")
+        self.drink_create = DrinkItemCreate(name="test_name")
 
         async with get_db.get_session() as session:
-            self.drink_db = Drink.model_validate(
+            self.drink_db = DrinkItem.model_validate(
                 await crud_drink.create(session, obj_in=self.drink_create)
             )
             self.barrel_create = BarrelCreate(
                 fkId=self.drink_db.id,
-                unit_price=10,
+                unitPrice=10,
                 sell_price=2,
             )
             self.barrel_db = Barrel.model_validate(
@@ -86,7 +86,7 @@ class TestBarrel(BaseTest):
 
         # Assert
         assert response.status_code == 200
-        assert barrel_in_db.empty == barrel_update.empty
+        assert barrel_in_db.empty_or_solded == barrel_update.empty_or_solded
         assert response.json() == barrel_in_db.model_dump(by_alias=True)
 
     def test_update_barrel_not_found(self):

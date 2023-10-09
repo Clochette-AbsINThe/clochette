@@ -18,7 +18,6 @@ logger = logging.getLogger("app.api.v1.out_of_stock_item")
 @router.get(
     "/buy/",
     response_model=list[out_of_stock_item_schema.OutOfStockItem],
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def read_out_of_stock_items_buy(
@@ -27,13 +26,6 @@ async def read_out_of_stock_items_buy(
 ):
     """
     Retrieve a list of out of stock items for buying.
-
-    Args:
-        db: the database connection dependency.
-        query: the query parameters to filter the results.
-
-    Returns:
-        A list of out of stock items for buying.
     """
     query_parameters = process_query_parameters(query)
     logger.debug(f"Query parameters: {query_parameters}")
@@ -45,7 +37,6 @@ async def read_out_of_stock_items_buy(
 @router.get(
     "/sell/",
     response_model=list[out_of_stock_item_schema.OutOfStockItem],
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def read_out_of_stock_items_sell(
@@ -54,13 +45,6 @@ async def read_out_of_stock_items_sell(
 ):
     """
     Retrieve a list of out of stock items for selling.
-
-    Args:
-        db: the database connection dependency.
-        query: the query parameters to filter the results.
-
-    Returns:
-        A list of out of stock items for selling.
     """
     query_parameters = process_query_parameters(query)
     logger.debug(f"Query parameters: {query_parameters}")
@@ -72,22 +56,11 @@ async def read_out_of_stock_items_sell(
 @router.get(
     "/{out_of_stock_item_id}",
     response_model=out_of_stock_item_schema.OutOfStockItem,
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def read_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)):
     """
     Retrieve an out of stock item by ID.
-
-    Args:
-        out_of_stock_item_id: the ID of the out of stock item to retrieve.
-        db: the database connection dependency.
-
-    Returns:
-        The out of stock item with the specified ID.
-
-    Raises:
-        HTTPException: if the out of stock item is not found.
     """
     out_of_stock_item = await out_of_stock_items.read(db, out_of_stock_item_id)
     if out_of_stock_item is None:
@@ -101,7 +74,6 @@ async def read_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)):
 @router.post(
     "/",
     response_model=out_of_stock_item_schema.OutOfStockItem,
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def create_out_of_stock_item(
@@ -110,16 +82,6 @@ async def create_out_of_stock_item(
 ):
     """
     Create a new out of stock item.
-
-    Args:
-        out_of_stock_item: the data for the new out of stock item.
-        db: the database connection dependency.
-
-    Returns:
-        The newly created out of stock item.
-
-    Raises:
-        HTTPException: if an out of stock item with the same name already exists.
     """
     if await out_of_stock_items.query(
         db,
@@ -138,7 +100,6 @@ async def create_out_of_stock_item(
 @router.put(
     "/{out_of_stock_item_id}",
     response_model=out_of_stock_item_schema.OutOfStockItem,
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def update_out_of_stock_item(
@@ -148,17 +109,6 @@ async def update_out_of_stock_item(
 ):
     """
     Update an existing out of stock item.
-
-    Args:
-        out_of_stock_item_id: the ID of the out of stock item to update.
-        out_of_stock_item: the updated data for the out of stock item.
-        db: the database connection dependency.
-
-    Returns:
-        The updated out of stock item.
-
-    Raises:
-        HTTPException: if the out of stock item is not found or an out of stock item with the same name already exists.
     """
     old_out_of_stock_item = await out_of_stock_items.read(db, out_of_stock_item_id)
     if old_out_of_stock_item is None:
@@ -186,22 +136,11 @@ async def update_out_of_stock_item(
 @router.delete(
     "/{out_of_stock_item_id}",
     response_model=out_of_stock_item_schema.OutOfStockItem,
-    response_model_exclude_none=True,
     dependencies=[Security(get_current_active_account)],
 )
 async def delete_out_of_stock_item(out_of_stock_item_id: int, db=Depends(get_db)):
     """
     Delete an existing out of stock item.
-
-    Args:
-        out_of_stock_item_id: the ID of the out of stock item to delete.
-        db: the database connection dependency.
-
-    Returns:
-        The deleted out of stock item.
-
-    Raises:
-        HTTPException: if the out of stock item is not found or is used in an out of stock.
     """
     if await out_of_stock_items.read(db, out_of_stock_item_id) is None:
         logger.debug(f"Out of stock item {out_of_stock_item_id} not found")

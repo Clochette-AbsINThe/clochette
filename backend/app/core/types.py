@@ -29,6 +29,21 @@ class SecurityScopes(str, Enum):
     PRESIDENT = "president"
 
 
-class TransactionType(str, Enum):
+class TransactionTypeV1(str, Enum):
     TRANSACTION = "transaction"
     TRESORERY = "tresorery"
+
+
+class TradeType(str, Enum):
+    PURCHASE = "purchase"
+    SALE = "sale"
+
+
+class TransactionType(str, Enum):
+    COMMERCE = "commerce"
+    TRESORERY = "tresorery"
+
+
+class Status(str, Enum):
+    PENDING = "pending"
+    VALIDATED = "validated"

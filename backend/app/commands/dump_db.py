@@ -1,5 +1,6 @@
 import json
 import logging
+from typing import Any
 
 from sqlalchemy import inspect
 
@@ -15,7 +16,7 @@ async def dump_db(output_file: str) -> None:
     metadata = Base.metadata
     tables = metadata.sorted_tables
 
-    data = {}
+    data: dict[str, dict[str, Any]] = {}
     async with get_db.get_session() as session:
         for table in tables:
             data[table.name] = {}

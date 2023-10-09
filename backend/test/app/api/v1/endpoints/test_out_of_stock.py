@@ -39,6 +39,4 @@ class TestOutOfStock(BaseTest):
 
         # Assert
         assert response.status_code == 200
-        assert response.json() == [
-            self.out_of_stock_db.model_dump(by_alias=True, exclude_none=True)
-        ]
+        assert response.json() == [self.out_of_stock_db.model_dump(by_alias=True)]

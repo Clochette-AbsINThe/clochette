@@ -23,13 +23,6 @@ async def login(
 ) -> Any:
     """
     Logs in a user and returns an access token.
-
-    Args:
-        form_data (OAuth2PasswordRequestForm): The user's login credentials.
-        db (Database): The database session.
-
-    Returns:
-        dict: A dictionary containing the access token.
     """
     account = (
         (await accounts.query(db, username=form_data.username, limit=1))[0:1] or [None]
@@ -53,7 +46,7 @@ async def login(
         )
     return {
         "access_token": create_access_token(
-            subject=account.username, scopes=[account.scope.value]
+            subject=account.id, scopes=[account.scope.value]
         )
     }
 
@@ -64,12 +57,6 @@ async def read_account_me(
 ) -> Any:
     """
     Returns the current user's account information.
-
-    Args:
-        current_account (Account): The current user's account.
-
-    Returns:
-        dict: A dictionary containing the user's account information.
     """
     return current_account
 
@@ -82,14 +69,6 @@ async def update_account_me(
 ) -> Any:
     """
     Updates the current user's account information.
-
-    Args:
-        account_in (OwnAccountUpdate): The updated account information.
-        current_account (Account): The current user's account.
-        db (Database): The database session.
-
-    Returns:
-        dict: A dictionary containing the updated account information.
     """
     # Check if username is already taken
     if account_in.username and account_in.username != current_account.username:

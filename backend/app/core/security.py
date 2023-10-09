@@ -49,7 +49,7 @@ def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
 
 
-def create_access_token(*, subject: str, scopes: list[str]) -> str:
+def create_access_token(*, subject: int, scopes: list[str]) -> str:
     """
     Create an access token for the given subject (user ID).
 
@@ -65,7 +65,7 @@ def create_access_token(*, subject: str, scopes: list[str]) -> str:
 
 
 def _create_token(
-    subject: str, scopes: list[str], expires_delta: timedelta, token_type: str
+    subject: int, scopes: list[str], expires_delta: timedelta, token_type: str
 ) -> str:
     """
     Create a JWT token with the given subject, expiration delta, and token type.
@@ -76,7 +76,7 @@ def _create_token(
     :return: The created JWT token.
     """
     to_encode: JWTPayloadMapping = {  # Following RFC 7519 for registered claims names
-        "sub": subject,
+        "sub": str(subject),
         "scopes": scopes,
         "iat": datetime.utcnow(),
         "exp": datetime.utcnow() + expires_delta,

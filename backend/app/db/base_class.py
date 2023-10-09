@@ -21,13 +21,6 @@ class Base(DeclarativeBase):
     def __tablename__(self) -> str:
         return self.__name__.lower()
 
-    def __str__(self) -> str:
-        atrs = ", ".join(f"{k}={v}" for k, v in self.attributes)
-        return f"<{self.__class__.__name__} - {atrs}>"
-
-    def __repr__(self) -> str:
-        return str(self)
-
     @property
     def attributes(self):
         """Iterate over the attributes of the model.
@@ -37,6 +30,32 @@ class Base(DeclarativeBase):
         """
         for key, value in inspect(self).attrs.items():
             yield key, value.value
+
+    @classmethod
+    def is_optional(cls, attr: str) -> bool:
+        """Check if an attribute is optional.
+
+        Args:
+            attr (str): The name of the attribute.
+
+        Returns:
+            bool: True if the attribute is optional, False otherwise.
+        """
+        return inspect(cls).attrs[attr].columns[0].nullable
+
+    def __eq__(self, __value: object) -> bool:
+        if not isinstance(__value, self.__class__):
+            return False
+        return self.id == __value.id
+
+    def __ne__(self, __value: object) -> bool:
+        return not self.__eq__(__value)
+
+    def __str__(self) -> str:
+        return f"<{self.__class__.__name__} - id={self.id}>"
+
+    def __repr__(self) -> str:
+        return str(self)
 
 
 def build_fk_annotation(class_name: str):

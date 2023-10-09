@@ -41,9 +41,7 @@ class TestOutOfStockItem(BaseTest):
 
         # Assert
         assert response.status_code == 200
-        assert response.json() == [
-            self.out_of_stock_item_db.model_dump(by_alias=True, exclude_none=True)
-        ]
+        assert response.json() == [self.out_of_stock_item_db.model_dump(by_alias=True)]
 
     async def test_read_out_of_stock_items_sell(self):
         # Arrange
@@ -70,9 +68,7 @@ class TestOutOfStockItem(BaseTest):
 
         # Assert
         assert response.status_code == 200
-        assert response.json() == self.out_of_stock_item_db.model_dump(
-            by_alias=True, exclude_none=True
-        )
+        assert response.json() == self.out_of_stock_item_db.model_dump(by_alias=True)
 
     def test_read_out_of_stock_item_not_found(self):
         # Arrange
@@ -190,9 +186,7 @@ class TestOutOfStockItem(BaseTest):
 
         # Assert
         assert response.status_code == 200
-        assert response.json() == self.out_of_stock_item_db.model_dump(
-            by_alias=True, exclude_none=True
-        )
+        assert response.json() == self.out_of_stock_item_db.model_dump(by_alias=True)
         assert out_of_stock_item_in_db is None
 
     def test_delete_out_of_stock_item_not_found(self):

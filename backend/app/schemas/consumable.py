@@ -1,5 +1,6 @@
 from pydantic import ConfigDict, Field, computed_field
 
+from app.core.types import IconName
 from app.schemas.base import DefaultModel, ExcludedField
 from app.schemas.consumable_item import ConsumableItem
 
@@ -10,23 +11,23 @@ class ConsumableBase(DefaultModel):
 
     Attributes:
     -----------
-    unit_price : float
-        The unit price of the consumable item, meaning the price of buy.
+    buy_price : float
+        The buy price of the consumable item, meaning the price of buy.
     sell_price : float
         The sell price of the consumable item, meaning the price of sell.
     """
 
-    consumable_item_id: int = Field(..., alias="fkId")
-    unit_price: float = Field(..., gt=0)
+    buy_price: float = Field(..., gt=0, alias="unitPrice")
     sell_price: float = Field(..., gt=0)
 
 
 class ConsumableCreate(ConsumableBase):
+    consumable_item_id: int = Field(..., alias="fkId")
     id: int | None = None
 
     @computed_field  # type: ignore[misc]
     @property
-    def empty(self) -> bool:
+    def solded(self) -> bool:
         return False
 
 
@@ -35,32 +36,33 @@ class TransactionCreate(ConsumableCreate):
 
 
 class ConsumableUpdate(ConsumableBase):
-    unit_price: float | None = Field(default=None, gt=0)
+    buy_price: float | None = Field(default=None, gt=0, alias="unitPrice")
     sell_price: float | None = Field(default=None, gt=0)
 
 
 class ConsumableCreatePurchase(ConsumableCreate):
-    transaction_id_purchase: int = Field(0, alias="transaction_id")
+    transaction_v1_id_purchase: int = Field(0, alias="transaction_id")
 
     @computed_field  # type: ignore[misc]
     @property
-    def empty(self) -> bool:
+    def solded(self) -> bool:
         return False
 
 
 class ConsumableCreateSale(ConsumableCreate):
-    transaction_id_sale: int = Field(0, alias="transaction_id")
+    transaction_v1_id_sale: int = Field(0, alias="transaction_id")
 
     @computed_field  # type: ignore[misc]
     @property
-    def empty(self) -> bool:
+    def solded(self) -> bool:
         return True
 
 
 class Consumable(ConsumableBase):
     id: int
+    consumable_item_id: int = Field(..., alias="fkId")
     consumable_item: ConsumableItem | None = ExcludedField
-    empty: bool
+    solded: bool = Field(..., alias="empty")
 
     @computed_field  # type: ignore[misc]
     @property
@@ -69,7 +71,7 @@ class Consumable(ConsumableBase):
 
     @computed_field  # type: ignore[misc]
     @property
-    def icon(self) -> str:
-        return self.consumable_item.icon if self.consumable_item else "N/A"
+    def icon(self) -> IconName:
+        return self.consumable_item.icon if self.consumable_item else IconName.MISC
 
     model_config = ConfigDict(from_attributes=True)

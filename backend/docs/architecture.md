@@ -12,7 +12,7 @@ This documentation provides an overview of the architecture of the application. 
 
 ### 1. `api` Package
 
-The `api` package contains the API-related functionality of the application. It is divided into two sub-packages: `utils` and `v1`.
+The `api` package contains the API-related functionality of the application. It is divided into three sub-packages: `utils`, `v1` and `v2`.
 
 #### `utils` Sub-package
 
@@ -26,6 +26,10 @@ The endpoints are as follows:
 #### `v1` Sub-package
 
 The `v1` sub-package represents the version 1 of the API. It contains API route handlers for various resources like accounts, barrels, consumables, drinks, glasses, out-of-stock items, transactions, and treasuries. Each resource has its own module containing API route handlers.
+
+#### `v2` Sub-package
+
+The `v2` sub-package represents the version 2 of the API. It contains API route handlers for various resources like barrels, consumables, glasses, non inventoried items, transactions. Each resource has its own module containing API route handlers.
 
 ### 2. `commands` Package
 

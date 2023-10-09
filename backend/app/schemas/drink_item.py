@@ -3,19 +3,19 @@ from pydantic import ConfigDict
 from app.schemas.base import DefaultModel
 
 
-class DrinkBase(DefaultModel):
+class DrinkItemBase(DefaultModel):
     name: str
 
 
-class DrinkCreate(DrinkBase):
+class DrinkItemCreate(DrinkItemBase):
     pass
 
 
-class DrinkUpdate(DrinkBase):
+class DrinkItemUpdate(DrinkItemBase):
     name: str | None = None
 
 
-class Drink(DrinkBase):
+class DrinkItem(DrinkItemBase):
     id: int
 
     model_config = ConfigDict(from_attributes=True)

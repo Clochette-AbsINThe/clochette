@@ -30,7 +30,7 @@ class TestGetCurrentAccount(BaseTest):
 
         self.security_scopes = SecurityScopes(["staff"])
         self.token = create_access_token(
-            subject=self.account_create.username,
+            subject=self.account_db.id,
             scopes=["staff"],
         )
 
@@ -65,7 +65,7 @@ class TestGetCurrentAccount(BaseTest):
             )
 
         assert error.exception.status_code == status.HTTP_401_UNAUTHORIZED
-        assert "Username not in payload" in self._caplog.text
+        assert "Id not in payload" in self._caplog.text
 
     async def test_get_current_account_acount_not_found(self):
         # Arrange
@@ -84,9 +84,7 @@ class TestGetCurrentAccount(BaseTest):
 
     async def test_get_current_account_no_token_scope(self):
         # Arrange
-        modified_token = create_access_token(
-            subject=self.account_create.username, scopes=[]
-        )
+        modified_token = create_access_token(subject=self.account_db.id, scopes=[])
 
         with self.assertRaises(HTTPException) as error:
             await get_current_account(

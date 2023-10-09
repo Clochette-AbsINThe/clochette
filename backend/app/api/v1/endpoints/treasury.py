@@ -23,14 +23,22 @@ async def read_treasuries(db=Depends(get_db)):
     Returns a list of all treasuries.
 
     Requires a user with the 'treasurer' scope to be authenticated.
-
-    Args:
-        db: The database session dependency.
-
-    Returns:
-        A list of all treasuries.
     """
     return await treasuries.query(db, limit=None)
+
+
+@router.get(
+    "/last",
+    response_model=treasury_schema.Treasury,
+    dependencies=[Security(get_current_active_account, scopes=["treasurer"])],
+)
+async def read_last_treasury(db=Depends(get_db)):
+    """
+    Returns the last treasury.
+
+    Requires a user with the 'treasurer' scope to be authenticated.
+    """
+    return await treasuries.get_last_treasury(db)
 
 
 @router.put(
@@ -45,14 +53,6 @@ async def update_treasury(
     Updates a treasury with the given ID.
 
     Requires a user with the 'treasurer' scope to be authenticated.
-
-    Args:
-        treasury_id: The ID of the treasury to update.
-        treasury: The updated treasury data.
-        db: The database session dependency.
-
-    Returns:
-        The updated treasury.
     """
     old_treasury = await treasuries.read(db, treasury_id)
     if old_treasury is None:

@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 03f129368c87
+Revision ID: 4f4b5e91840c
 Revises: 
-Create Date: 2023-08-07 09:03:59.457485
+Create Date: 2023-10-03 21:08:47.029455
 
 """
 import sqlalchemy as sa
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "03f129368c87"
+revision = "4f4b5e91840c"
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -46,8 +46,23 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
-        "drink",
+        "drinkitem",
         sa.Column("name", sa.String(length=256), nullable=False),
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_table(
+        "noninventorieditem",
+        sa.Column("name", sa.String(length=256), nullable=False),
+        sa.Column(
+            "trade", sa.Enum("PURCHASE", "SALE", name="tradetype"), nullable=False
+        ),
+        sa.Column(
+            "icon",
+            sa.Enum("GLASS", "BEER", "FOOD", "SOFT", "BARREL", "MISC", name="iconname"),
+            nullable=False,
+        ),
+        sa.Column("sell_price", sa.Float(), nullable=True),
         sa.Column("id", sa.Integer(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -80,11 +95,40 @@ def upgrade() -> None:
             sa.Enum("CARD", "CASH", "LYDIA", "TRANSFER", name="paymentmethod"),
             nullable=False,
         ),
+        sa.Column(
+            "trade", sa.Enum("PURCHASE", "SALE", name="tradetype"), nullable=False
+        ),
+        sa.Column(
+            "type",
+            sa.Enum("COMMERCE", "TRESORERY", name="transactiontype"),
+            nullable=False,
+        ),
+        sa.Column(
+            "status", sa.Enum("PENDING", "VALIDATED", name="status"), nullable=False
+        ),
+        sa.Column("amount", sa.Float(), nullable=False),
+        sa.Column("description", sa.UnicodeText(), nullable=True),
+        sa.Column("treasury_id", sa.Integer(), nullable=False),
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["treasury_id"],
+            ["treasury.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_table(
+        "transactionv1",
+        sa.Column("datetime", sa.DateTime(timezone=True), nullable=False),
+        sa.Column(
+            "payment_method",
+            sa.Enum("CARD", "CASH", "LYDIA", "TRANSFER", name="paymentmethod"),
+            nullable=False,
+        ),
         sa.Column("amount", sa.Float(), nullable=False),
         sa.Column("sale", sa.Boolean(), nullable=False),
         sa.Column(
             "type",
-            sa.Enum("TRANSACTION", "TRESORERY", name="transactiontype"),
+            sa.Enum("TRANSACTION", "TRESORERY", name="transactiontypev1"),
             nullable=False,
         ),
         sa.Column("description", sa.UnicodeText(), nullable=True),
@@ -98,31 +142,44 @@ def upgrade() -> None:
     )
     op.create_table(
         "barrel",
-        sa.Column("unit_price", sa.Float(), nullable=False),
+        sa.Column("buy_price", sa.Float(), nullable=False),
         sa.Column("sell_price", sa.Float(), nullable=False),
+        sa.Column("barrel_sell_price", sa.Float(), nullable=True),
         sa.Column("is_mounted", sa.Boolean(), nullable=False),
-        sa.Column("empty", sa.Boolean(), nullable=False),
-        sa.Column("drink_id", sa.Integer(), nullable=False),
-        sa.Column("transaction_id", sa.Integer(), nullable=False),
+        sa.Column("empty_or_solded", sa.Boolean(), nullable=False),
+        sa.Column("drink_item_id", sa.Integer(), nullable=False),
+        sa.Column("transaction_v1_id", sa.Integer(), nullable=True),
+        sa.Column("transaction_id_purchase", sa.Integer(), nullable=True),
+        sa.Column("transaction_id_sale", sa.Integer(), nullable=True),
         sa.Column("id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
-            ["drink_id"],
-            ["drink.id"],
+            ["drink_item_id"],
+            ["drinkitem.id"],
         ),
         sa.ForeignKeyConstraint(
-            ["transaction_id"],
+            ["transaction_id_purchase"],
             ["transaction.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["transaction_id_sale"],
+            ["transaction.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["transaction_v1_id"],
+            ["transactionv1.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
         "consumable",
         sa.Column("sell_price", sa.Float(), nullable=False),
-        sa.Column("unit_price", sa.Float(), nullable=False),
-        sa.Column("empty", sa.Boolean(), nullable=False),
+        sa.Column("buy_price", sa.Float(), nullable=False),
+        sa.Column("solded", sa.Boolean(), nullable=False),
         sa.Column("consumable_item_id", sa.Integer(), nullable=False),
         sa.Column("transaction_id_purchase", sa.Integer(), nullable=True),
         sa.Column("transaction_id_sale", sa.Integer(), nullable=True),
+        sa.Column("transaction_v1_id_purchase", sa.Integer(), nullable=True),
+        sa.Column("transaction_v1_id_sale", sa.Integer(), nullable=True),
         sa.Column("id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
             ["consumable_item_id"],
@@ -136,17 +193,26 @@ def upgrade() -> None:
             ["transaction_id_sale"],
             ["transaction.id"],
         ),
+        sa.ForeignKeyConstraint(
+            ["transaction_v1_id_purchase"],
+            ["transactionv1.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["transaction_v1_id_sale"],
+            ["transactionv1.id"],
+        ),
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
-        "outofstock",
-        sa.Column("unit_price", sa.Float(), nullable=True),
-        sa.Column("item_id", sa.Integer(), nullable=False),
+        "noninventoried",
+        sa.Column("buy_price", sa.Float(), nullable=True),
+        sa.Column("sell_price", sa.Float(), nullable=True),
+        sa.Column("non_inventoried_item_id", sa.Integer(), nullable=False),
         sa.Column("transaction_id", sa.Integer(), nullable=False),
         sa.Column("id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
-            ["item_id"],
-            ["outofstockitem.id"],
+            ["non_inventoried_item_id"],
+            ["noninventorieditem.id"],
         ),
         sa.ForeignKeyConstraint(
             ["transaction_id"],
@@ -155,9 +221,27 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("id"),
     )
     op.create_table(
+        "outofstock",
+        sa.Column("unit_price", sa.Float(), nullable=True),
+        sa.Column("item_id", sa.Integer(), nullable=False),
+        sa.Column("transaction_v1_id", sa.Integer(), nullable=False),
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["item_id"],
+            ["outofstockitem.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["transaction_v1_id"],
+            ["transactionv1.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_table(
         "glass",
+        sa.Column("transaction_sell_price", sa.Float(), nullable=True),
         sa.Column("barrel_id", sa.Integer(), nullable=False),
-        sa.Column("transaction_id", sa.Integer(), nullable=False),
+        sa.Column("transaction_id", sa.Integer(), nullable=True),
+        sa.Column("transaction_v1_id", sa.Integer(), nullable=True),
         sa.Column("id", sa.Integer(), nullable=False),
         sa.ForeignKeyConstraint(
             ["barrel_id"],
@@ -166,6 +250,10 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(
             ["transaction_id"],
             ["transaction.id"],
+        ),
+        sa.ForeignKeyConstraint(
+            ["transaction_v1_id"],
+            ["transactionv1.id"],
         ),
         sa.PrimaryKeyConstraint("id"),
     )
@@ -176,12 +264,15 @@ def downgrade() -> None:
     # ### commands auto generated by Alembic - please adjust! ###
     op.drop_table("glass")
     op.drop_table("outofstock")
+    op.drop_table("noninventoried")
     op.drop_table("consumable")
     op.drop_table("barrel")
+    op.drop_table("transactionv1")
     op.drop_table("transaction")
     op.drop_table("treasury")
     op.drop_table("outofstockitem")
-    op.drop_table("drink")
+    op.drop_table("noninventorieditem")
+    op.drop_table("drinkitem")
     op.drop_table("consumableitem")
     op.drop_table("account")
     # ### end Alembic commands ###

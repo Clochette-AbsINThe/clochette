@@ -120,7 +120,7 @@ class CRUDBase(
         # limit parameters. Finally, the query.all method is used to execute the query and
         # return the results as a list of records.
 
-        query: Select = select(self.model)
+        query = select(self.model)
 
         for column, value in filters.items():
             if isinstance(
@@ -192,8 +192,12 @@ class CRUDBase(
         if isinstance(obj_in, dict):
             update_data = obj_in
         else:
-            # exclude_unset=True means that only the fields that are explicitly set in the input data will be updated
-            update_data = obj_in.model_dump(exclude_unset=True, exclude_none=True)
+            # We only want to update the fields that were actually passed in the request.
+            update_data = obj_in.model_dump(exclude_unset=True)
+            # At this point we have a dict with some None value for non-optional fields, we need to clear them
+            for field, value in list(update_data.items()):
+                if value is None and not self.model.is_optional(field):
+                    del update_data[field]
 
         # Update the fields of the database object with the corresponding
         # values from the update data
@@ -208,6 +212,7 @@ class CRUDBase(
         await db.refresh(db_obj)
         return patch_timezone_sqlite(db_obj)
 
+    @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
     async def delete(self, db: AsyncSession, *, id: int) -> ModelT | None:
         """
         Delete a record.
