@@ -42,9 +42,7 @@ export function IconForm<TFieldValues extends FieldValues>({ field, exclude, dir
               className='flex items-center gap-x-2 space-y-0'
               key={icon}
             >
-              <FormControl>
-                <RadioGroupItem value={icon} />
-              </FormControl>
+              <RadioGroupItem value={icon} />
               <FormLabel className='font-normal'>{getIcon(icon, 'w-8 h-8')}</FormLabel>
             </FormItem>
           ))}

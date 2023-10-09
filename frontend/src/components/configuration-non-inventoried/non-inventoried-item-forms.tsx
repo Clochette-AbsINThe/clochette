@@ -196,7 +196,7 @@ export function NonInventoriedItemCreateForm() {
         loading={createNonInventoriedItem.isLoading}
         type='submit'
       >
-        Créer le produit hors inventaire
+        Ajouter le nouveau produit hors inventaire
       </Button>
     </NonInventoriedItemForm>
   );

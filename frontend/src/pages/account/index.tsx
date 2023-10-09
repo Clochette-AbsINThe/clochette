@@ -1,6 +1,6 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next';
 
-import Tabs from '@/components/account-page/account-page-tabs';
+import { Tabs } from '@/components/account-page/account-page-tabs';
 import { UserForm } from '@/components/account-page/account-page-user-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Base from '@/layouts/base';

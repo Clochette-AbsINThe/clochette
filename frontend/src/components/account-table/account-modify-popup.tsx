@@ -3,8 +3,6 @@ import { toast } from 'react-hot-toast';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { DataTableRowActionsProps } from './account-table-row-actions';
-
 import { Button } from '@/components/button';
 import { DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -12,14 +10,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Switch } from '@/components/ui/switch';
 import { useReadAccount, useUpdateAccount } from '@/openapi-codegen/clochetteComponents';
 import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
-import { AccountUpdate } from '@/openapi-codegen/clochetteSchemas';
+import { Account, AccountUpdate } from '@/openapi-codegen/clochetteSchemas';
 
-interface AccountModifyPopupProps extends DataTableRowActionsProps {
+interface AccountModifyPopupProps {
+  rowAccount: Account;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-export function AccountModifyPopup({ row, isOpen, setIsOpen }: AccountModifyPopupProps) {
+export function AccountModifyPopup({ rowAccount, isOpen, setIsOpen }: AccountModifyPopupProps) {
   const queryClient = useQueryClient();
 
   const updateAccount = useUpdateAccount({
@@ -34,26 +33,22 @@ export function AccountModifyPopup({ row, isOpen, setIsOpen }: AccountModifyPopu
     }
   });
 
-  const {
-    data: account,
-    isLoading,
-    isError
-  } = useReadAccount(
+  const { data: account } = useReadAccount(
     {
       pathParams: {
-        accountId: row.original.id
+        accountId: rowAccount.id
       }
     },
     {
-      initialData: row.original,
+      initialData: rowAccount,
       enabled: isOpen
     }
   );
 
   const form = useForm<AccountUpdate>({
     defaultValues: {
-      scope: account?.scope ?? row.original.scope,
-      isActive: account?.isActive ?? row.original.isActive
+      scope: account?.scope ?? rowAccount.scope,
+      isActive: account?.isActive ?? rowAccount.isActive
     }
   });
 
@@ -61,7 +56,7 @@ export function AccountModifyPopup({ row, isOpen, setIsOpen }: AccountModifyPopu
     updateAccount.mutate({
       body: data,
       pathParams: {
-        accountId: row.original.id
+        accountId: rowAccount.id
       }
     });
   };
@@ -72,8 +67,6 @@ export function AccountModifyPopup({ row, isOpen, setIsOpen }: AccountModifyPopu
         <DialogTitle>Modifier le compte :</DialogTitle>
       </DialogHeader>
       <div className='flex flex-col gap-4 min-h-[50vh] min-w-[50vw]'>
-        {isLoading && <p className='text-md text-muted-foreground'>Chargement...</p>}
-        {isError && <p className='text-md text-muted-foreground'>Erreur lors du chargement du compte.</p>}
         {account && (
           <Form {...form}>
             <form
@@ -86,23 +79,21 @@ export function AccountModifyPopup({ row, isOpen, setIsOpen }: AccountModifyPopu
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Scope</FormLabel>
-                    <FormControl>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value ?? row.original.scope}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder='Séléctionner un rôle' />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value={'staff'}>Membre</SelectItem>
-                          <SelectItem value={'treasurer'}>Trésorier</SelectItem>
-                          <SelectItem value={'president'}>Président</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value ?? rowAccount.scope}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder='Sélectionner un rôle' />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value={'staff'}>Membre</SelectItem>
+                        <SelectItem value={'treasurer'}>Trésorier</SelectItem>
+                        <SelectItem value={'president'}>Président</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormDescription>Modification du rôle</FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -119,7 +110,7 @@ export function AccountModifyPopup({ row, isOpen, setIsOpen }: AccountModifyPopu
                     </div>
                     <FormControl>
                       <Switch
-                        checked={field.value ?? row.original.isActive}
+                        checked={field.value ?? rowAccount.isActive}
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>

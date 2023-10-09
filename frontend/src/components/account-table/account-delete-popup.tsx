@@ -2,19 +2,19 @@ import { toast } from 'react-hot-toast';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { DataTableRowActionsProps } from './account-table-row-actions';
-
 import { Button } from '@/components/button';
 import { DialogDescription, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { useDeleteAccount } from '@/openapi-codegen/clochetteComponents';
 import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
+import { Account } from '@/openapi-codegen/clochetteSchemas';
 
-interface AccountDeletePopupProps extends DataTableRowActionsProps {
+interface AccountDeletePopupProps {
+  rowAccount: Account;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-export function AccountDeletePopup({ row, isOpen, setIsOpen }: AccountDeletePopupProps) {
+export function AccountDeletePopup({ rowAccount, setIsOpen }: AccountDeletePopupProps) {
   const queryClient = useQueryClient();
 
   const deleteAccount = useDeleteAccount({
@@ -32,7 +32,7 @@ export function AccountDeletePopup({ row, isOpen, setIsOpen }: AccountDeletePopu
   const onClickDelete = () => {
     deleteAccount.mutate({
       pathParams: {
-        accountId: row.original.id
+        accountId: rowAccount.id
       }
     });
   };

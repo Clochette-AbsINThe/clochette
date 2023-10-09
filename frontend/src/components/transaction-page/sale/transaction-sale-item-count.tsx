@@ -12,10 +12,7 @@ import { formatPrice } from '@/utils/utils';
 
 export function ItemCount(props: SaleItem): JSX.Element {
   const [quantity, setQuantity] = useState<number>(0);
-  const increment = useTransactionSaleStore.use.increment();
-  const decrement = useTransactionSaleStore.use.decrement();
-  const reset = useTransactionSaleStore.use.reset();
-  const items = useTransactionSaleStore.use.items();
+  const { increment, decrement, reset, items } = useTransactionSaleStore();
 
   useEffect(() => {
     const item = items.find((item) => item.item.name === props.item.name && item.type === props.type);
@@ -69,6 +66,7 @@ export function ItemCount(props: SaleItem): JSX.Element {
           variant={'ghost'}
           size={'icon'}
           className='ml-3'
+          disabled={quantity <= 0}
           onClick={resetHandler}
         >
           <Cross2Icon className='w-12 h-12' />

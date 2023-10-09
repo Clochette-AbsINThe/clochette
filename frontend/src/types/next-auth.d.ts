@@ -2,7 +2,7 @@ import NextAuth, { DefaultSession, DefaultUser } from 'next-auth';
 
 declare module 'next-auth' {
   interface Session extends DefaultSession {
-    scopes?: string[];
+    scopes: string[];
     id: string;
     token: string;
   }
@@ -23,7 +23,7 @@ declare module 'next-auth/jwt' {
     iat: number;
     exp: number;
     token_type: string;
-    scopes?: string[];
+    scopes: string[];
     token: string;
   }
 }

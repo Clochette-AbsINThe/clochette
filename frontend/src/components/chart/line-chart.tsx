@@ -53,7 +53,7 @@ interface LineChartProps {
   type: 'cash' | 'account';
 }
 
-export default function LineChart({ type }: LineChartProps) {
+export function LineChart({ type }: LineChartProps) {
   const filterMethod = (transacion: Transaction) => {
     if (type === 'cash') {
       return transacion.paymentMethod === 'Espèces';

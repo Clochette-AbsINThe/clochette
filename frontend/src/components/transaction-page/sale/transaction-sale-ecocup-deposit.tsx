@@ -28,6 +28,7 @@ export function EcoCupDepositPopup({ ecoCup }: EcoCupDepositPopupProps): JSX.Ele
       toast.error(`Erreur lors de la création du produit hors inventaire. ${detail}`);
     }
   });
+
   const { transactionFlow, isLoading } = useCreateTransactionFlow();
   const loading = createNonInventoried.isLoading || isLoading;
   const form = useForm<TransactionCommerceCreate>({

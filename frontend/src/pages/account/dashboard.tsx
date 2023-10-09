@@ -1,6 +1,6 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next';
 
-import Tabs from '@/components/account-page/account-page-tabs';
+import { Tabs } from '@/components/account-page/account-page-tabs';
 import { barrelColumns } from '@/components/barrel-table/barrel-admin-columns';
 import { DateSaleChart } from '@/components/chart/date-sale-chart';
 import { HourSaleChart } from '@/components/chart/hour-sale-chart';

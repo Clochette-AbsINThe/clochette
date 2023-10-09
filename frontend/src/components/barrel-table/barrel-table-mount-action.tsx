@@ -9,10 +9,10 @@ import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
 import { BarrelDistinct } from '@/openapi-codegen/clochetteSchemas';
 
 interface BarrelsTableMountActionProps {
-  row: Row<BarrelDistinct>;
+  barrel: BarrelDistinct;
 }
 
-export default function BarrelsTableMountAction({ row }: BarrelsTableMountActionProps) {
+export function BarrelsTableMountAction({ barrel }: BarrelsTableMountActionProps) {
   const queryClient = useQueryClient();
 
   const modifyBarrel = useUpdateBarrel({
@@ -29,14 +29,14 @@ export default function BarrelsTableMountAction({ row }: BarrelsTableMountAction
   const { data } = useReadBarrels({
     queryParams: {
       is_mounted: true,
-      drink_item_id: row.original.drinkItemId
+      drink_item_id: barrel.drinkItemId
     }
   });
 
   const onClick = () => {
     modifyBarrel.mutate({
       pathParams: {
-        barrelId: row.original.id
+        barrelId: barrel.id
       },
       body: {
         isMounted: true

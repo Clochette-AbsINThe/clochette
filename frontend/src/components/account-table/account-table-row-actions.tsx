@@ -62,14 +62,14 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
       <DialogContent>
         {type === 'modify' && (
           <AccountModifyPopup
-            row={row}
+            rowAccount={row.original}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
           />
         )}
         {type === 'delete' && (
           <AccountDeletePopup
-            row={row}
+            rowAccount={row.original}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
           />

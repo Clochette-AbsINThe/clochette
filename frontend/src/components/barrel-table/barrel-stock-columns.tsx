@@ -1,7 +1,6 @@
 import { ColumnDef } from '@tanstack/react-table';
 
-import BarrelsTableMountAction from './barrel-table-mount-action';
-
+import { BarrelsTableMountAction } from '@/components/barrel-table/barrel-table-mount-action';
 import { DataTableRowActions } from '@/components/barrel-table/barrel-table-row-actions';
 import { DataTableColumnHeader } from '@/components/table/data-table-column-header';
 import { BarrelDistinct } from '@/openapi-codegen/clochetteSchemas';
@@ -80,7 +79,7 @@ export const barrelColumns: ColumnDef<BarrelDistinct>[] = [
       />
     ),
     cell: ({ row }) => {
-      return <BarrelsTableMountAction row={row} />;
+      return <BarrelsTableMountAction barrel={row.original} />;
     },
     enableSorting: false
   },

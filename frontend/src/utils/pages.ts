@@ -1,3 +1,6 @@
+/**
+ * Object containing all the routes of the application.
+ */
 export const pages = {
   signin: '/login',
   signout: '/logout',

@@ -8,11 +8,17 @@ import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
 import { Consumable, TransactionCommerceCreate } from '@/openapi-codegen/clochetteSchemas';
 
 type Item = SaleItem['item'];
-type ExpandedItem = {
+export type ExpandedItem = {
   type: SaleItem['type'];
   item: Item;
 };
 
+/**
+ * Expands the given sale items by duplicating consumable items based on their quantity.
+ * @param items - The sale items to expand.
+ * @param consumables - The list of consumable items to match with the sale items.
+ * @returns An array of expanded items.
+ */
 export function expandItems(items: SaleItems, consumables: Consumable[]) {
   const transformedItems: ExpandedItem[] = [];
 
@@ -54,7 +60,11 @@ export function useCreateSaleTransaction() {
 
   const { data: consumables } = useReadConsumables({});
 
-  const loading = createNonInventoried.isLoading || saleConsumable.isLoading || createGlass.isLoading || isLoading;
+  const loading =
+    createNonInventoried.isLoading ||
+    saleConsumable.isLoading ||
+    createGlass.isLoading ||
+    isLoading;
 
   const items = useTransactionSaleStore.use.items();
   const expandedItems = expandItems(items, consumables ?? []);

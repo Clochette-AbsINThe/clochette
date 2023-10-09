@@ -8,11 +8,16 @@ import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
 import { ConsumableItemCreate, DrinkItemCreate, NonInventoriedItemCreate, TransactionCommerceCreate } from '@/openapi-codegen/clochetteSchemas';
 
 type Item = PurchaseItem['item'];
-type ExpandedItem = {
+export type ExpandedItem = {
   type: PurchaseItem['type'];
   item: Item;
 };
 
+/**
+ * Expands an array of items by duplicating each item based on its quantity property.
+ * @param items - The array of items to be expanded.
+ * @returns An array of expanded items.
+ */
 export function expandItems(items: ExpandedItem[]) {
   const transformedItems: ExpandedItem[] = [];
   items.forEach((item) => {
@@ -64,7 +69,14 @@ export function useCreatePurchaseTransaction() {
   });
   const { transactionFlow, isLoading } = useCreateTransactionFlow();
 
-  const loading = createDrink.isLoading || createConsumableItem.isLoading || createNonInventoriedItem.isLoading || createNonInventoried.isLoading || createConsumable.isLoading || createBarrel.isLoading || isLoading;
+  const loading =
+    createDrink.isLoading ||
+    createConsumableItem.isLoading ||
+    createNonInventoriedItem.isLoading ||
+    createNonInventoried.isLoading ||
+    createConsumable.isLoading ||
+    createBarrel.isLoading ||
+    isLoading;
 
   const items = useTransactionPurchaseStore.use.items();
 
@@ -121,6 +133,12 @@ export function useCreatePurchaseTransaction() {
     }
   };
 
+
+  /**
+   * Pre-processes the items array by checking if each item has an 'id' property. If it does, it returns the item as is.
+   * If it doesn't, it calls the appropriate item handler function to create a new item and assigns the new item's id to the original item.
+   * @returns A Promise that resolves to an array of pre-processed items.
+   */
   const preProcessItems = async () => {
     const result = await Promise.all(
       items.map(async (item) => {

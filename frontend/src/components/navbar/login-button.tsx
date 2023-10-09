@@ -10,7 +10,7 @@ export default function LoginButton(): JSX.Element {
   const router = useRouter();
   const { status } = useSession();
 
-  const onClick = async () => {
+  const onClick = () => {
     signOut();
     router.push(pages.index);
   };

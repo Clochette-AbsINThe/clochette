@@ -1,7 +1,7 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next';
 
-import Tabs from '@/components/account-page/account-page-tabs';
-import LineChart from '@/components/chart/line-chart';
+import { Tabs } from '@/components/account-page/account-page-tabs';
+import { LineChart } from '@/components/chart/line-chart';
 import { DataTable } from '@/components/table/data-table';
 import { transactionColumns } from '@/components/transaction-table/transaction-columns';
 import { TresoryCardAccount } from '@/components/tresory-cards/tresory-card-account';

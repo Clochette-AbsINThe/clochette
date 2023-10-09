@@ -3,8 +3,6 @@ import { toast } from 'react-hot-toast';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { DataTableRowActionsProps } from './barrel-table-row-actions';
-
 import { Button } from '@/components/button';
 import { PaymentMethodForm, paymentMethodResolver } from '@/components/forms/payment-method-form';
 import { DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -13,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { useCreateTransactionFlow } from '@/hooks/useCreateTransactionFlow';
 import { useSaleBarrel } from '@/openapi-codegen/clochetteComponents';
 import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
-import { BarrelUpdateSale, TransactionCommerceCreate } from '@/openapi-codegen/clochetteSchemas';
+import { BarrelDistinct, BarrelUpdateSale, TransactionCommerceCreate } from '@/openapi-codegen/clochetteSchemas';
 import { formatPrice } from '@/utils/utils';
 
 export function barrelSaleResolver(data: BarrelUpdateSale & TransactionCommerceCreate): ResolverResult<BarrelUpdateSale & TransactionCommerceCreate> {
@@ -42,14 +40,14 @@ export function barrelSaleResolver(data: BarrelUpdateSale & TransactionCommerceC
     errors: errors
   };
 }
-interface BarrelSalePopupProps extends DataTableRowActionsProps {
+interface BarrelSalePopupProps {
+  rowBarrel: BarrelDistinct;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }
 
-export function BarrelSalePopup({ row, isOpen, setIsOpen }: BarrelSalePopupProps) {
+export function BarrelSalePopup({ rowBarrel, isOpen, setIsOpen }: BarrelSalePopupProps) {
   const queryClient = useQueryClient();
-  const barrel = row.original;
 
   const sellBarrel = useSaleBarrel({
     onError(error, variables, context) {
@@ -63,6 +61,7 @@ export function BarrelSalePopup({ row, isOpen, setIsOpen }: BarrelSalePopupProps
   const form = useForm<BarrelUpdateSale & TransactionCommerceCreate>({
     resolver: barrelSaleResolver,
     defaultValues: {
+      barrelSellPrice: 0,
       paymentMethod: 'CB'
     }
   });
@@ -75,7 +74,7 @@ export function BarrelSalePopup({ row, isOpen, setIsOpen }: BarrelSalePopupProps
           transactionId: transactionId
         },
         pathParams: {
-          barrelId: barrel.id
+          barrelId: rowBarrel.id
         }
       });
     };
@@ -89,7 +88,7 @@ export function BarrelSalePopup({ row, isOpen, setIsOpen }: BarrelSalePopupProps
     try {
       await transactionFlow(transaction, itemsCallback);
       setIsOpen(false);
-      toast.success(`Fût ${barrel.name} vendu avec succès !`);
+      toast.success(`Fût ${rowBarrel.name} vendu avec succès !`);
       queryClient.invalidateQueries({ stale: true });
     } catch {}
   };
@@ -104,10 +103,10 @@ export function BarrelSalePopup({ row, isOpen, setIsOpen }: BarrelSalePopupProps
       <div className='flex flex-col gap-4 min-h-[50vh] min-w-[50vw]'>
         <div className='flex flex-col mt-2 gap-y-2'>
           <div className='flex items-center gap-x-4'>
-            <h6 className='text-lg font-semi text-accent-foreground'>{barrel.name}</h6>
+            <h6 className='text-lg font-semi text-accent-foreground'>{rowBarrel.name}</h6>
           </div>
           <ul className='list-disc pl-6'>
-            <li className='text-md text-muted-foreground'>Prix d&apos;achat: {formatPrice(barrel.buyPrice)}</li>
+            <li className='text-md text-muted-foreground'>Prix d&apos;achat: {formatPrice(rowBarrel.buyPrice)}</li>
           </ul>
         </div>
         <div className='flex flex-col mt-2 gap-y-2'>

@@ -62,14 +62,14 @@ export function DataTableRowActions({ row }: DataTableRowActionsProps) {
       <DialogContent>
         {type === 'details' && (
           <BarrelModifyPopup
-            row={row}
+            rowBarrel={row.original}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
           />
         )}
         {type === 'sale' && (
           <BarrelSalePopup
-            row={row}
+            rowBarrel={row.original}
             isOpen={isOpen}
             setIsOpen={setIsOpen}
           />

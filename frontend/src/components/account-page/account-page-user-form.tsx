@@ -43,8 +43,8 @@ export function UserForm(props: UserFormProps): JSX.Element {
     }
   });
 
-  const onSubmit = async (data: OwnAccountUpdate) => {
-    await updateOwnAccount.mutateAsync({
+  const onSubmit = (data: OwnAccountUpdate) => {
+    updateOwnAccount.mutate({
       body: data
     });
   };

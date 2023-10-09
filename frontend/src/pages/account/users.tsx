@@ -1,7 +1,7 @@
 import { GetServerSideProps, InferGetServerSidePropsType, NextPage } from 'next';
 import Link from 'next/link';
 
-import Tabs from '@/components/account-page/account-page-tabs';
+import { Tabs } from '@/components/account-page/account-page-tabs';
 import { accountColumns } from '@/components/account-table/account-columns';
 import { DataTable } from '@/components/table/data-table';
 import { Button } from '@/components/ui/button';

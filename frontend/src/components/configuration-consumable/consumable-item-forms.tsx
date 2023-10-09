@@ -89,6 +89,10 @@ export function ConsumableItemForm(props: ConsumableItemFormProps) {
 export function ConsumableItemCreateForm() {
   const router = useRouter();
   const form = useForm<ConsumableItemCreate>({
+    defaultValues: {
+      icon: 'Misc',
+      name: ''
+    },
     resolver: consumableItemResolver
   });
 

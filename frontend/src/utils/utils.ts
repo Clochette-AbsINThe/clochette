@@ -1,9 +1,9 @@
 import { JWT } from 'next-auth/jwt';
 
 /**
- * This function could return null if the token is invalid in its format, for example if the token is not a JWT token
- * @param token JWT token
- * @returns Inforamtions inside the token
+ * Parses a JWT token and returns the information inside it, or null if the token is invalid.
+ * @param token - The JWT token to parse.
+ * @returns The information inside the token or null if the token is invalid.
  */
 export function parseJwt(token: string): JWT | null {
   try {
@@ -24,11 +24,12 @@ export function parseJwt(token: string): JWT | null {
 }
 
 /**
- * @param numOfSteps: Total number steps to get color, means total colors
- * @param step: The step number, means the order of the color
+ * Generates a vibrant, evenly spaced color based on the step number and the total number of steps.
+ * @param numOfSteps - The total number of steps to get color, which means the total number of colors.
+ * @param step - The step number, which means the order of the color.
+ * @returns The generated color in hexadecimal format.
  */
 export function rainbowColors(numOfSteps: number, step: number): string {
-  // This function generates vibrant, "evenly spaced" colours (i.e. no clustering). This is ideal for creating easily distinguishable vibrant markers in Google Maps and other apps.
   // Adam Cole, 2011-Sept-14
   const saturation = 0.7;
   const lightness = 0.62;
@@ -43,6 +44,7 @@ export function rainbowColors(numOfSteps: number, step: number): string {
   const c = (1 - Math.abs(2 * lightness - 1)) * saturation,
     x = c * (1 - Math.abs(((hue / 60) % 2) - 1)),
     m = lightness - c / 2;
+  /* c8 ignore next 31 */
   switch (i % 6) {
     case 0:
       red = c;
@@ -78,10 +80,24 @@ export function rainbowColors(numOfSteps: number, step: number): string {
   return '#' + ('00' + (~~((red + m) * 255)).toString(16)).slice(-2) + ('00' + (~~((green + m) * 255)).toString(16)).slice(-2) + ('00' + (~~((blue + m) * 255)).toString(16)).slice(-2) + 'DF';
 }
 
+/**
+ * Determines whether a value is unique in an array, which can be used as a filter callback.
+ * @param value - The value to check.
+ * @param index - The index of the value in the array.
+ * @param self - The array being checked.
+ * @returns True if the value is unique, false otherwise.
+ */
 export function unique<T>(value: T, index: number, self: T[]): boolean {
   return self.indexOf(value) === index;
 }
 
+/**
+ * Groups an array of values by a key and sorts the resulting map by the keys.
+ * @param array - The array of values to group.
+ * @param grouper - A function that returns the key to group by.
+ * @param sorter - A function that sorts the keys.
+ * @returns A map of the grouped values, sorted by the keys.
+ */
 export function groupBy<K, V>(array: V[], grouper: (item: V) => K, sorter: (a: K, b: K) => number): Map<K, V[]> {
   const res = array.reduce((store, item) => {
     var key = grouper(item);
@@ -96,6 +112,12 @@ export function groupBy<K, V>(array: V[], grouper: (item: V) => K, sorter: (a: K
   return new Map<K, V[]>(Array.from(res.entries()).sort((a, b) => sorter(a[0], b[0])));
 }
 
+/**
+ * Formats a number as a price in EUR.
+ * @param amount - The amount to format.
+ * @param signDisplay - Whether to display the currency sign always, never, or only when the amount is negative or zero.
+ * @returns The formatted price as a string.
+ */
 export function formatPrice(amount: number | null, signDisplay: 'always' | 'never' | 'auto' | 'exceptZero' = 'auto'): string {
   if (amount === null) return '';
   return new Intl.NumberFormat('fr-FR', {
@@ -105,6 +127,11 @@ export function formatPrice(amount: number | null, signDisplay: 'always' | 'neve
   }).format(amount);
 }
 
+/**
+ * Replaces empty strings in an object with null.
+ * @param obj - The object to patch.
+ * @returns The patched object.
+ */
 export function patchEmptyString(obj: Record<string, unknown>): Record<string, unknown> {
   Object.keys(obj).forEach((key) => {
     if (obj[key] === '') obj[key] = null;

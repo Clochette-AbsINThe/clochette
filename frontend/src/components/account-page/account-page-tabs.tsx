@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import type { Session } from 'next-auth';
 import { useSession } from 'next-auth/react';
 
 import { SecurityScopes } from '@/openapi-codegen/clochetteSchemas';
@@ -18,16 +19,25 @@ export const links: LinksType = [
   { label: 'Trésorie', href: pages.account.tresory, scopes: ['president', 'treasurer'] }
 ];
 
-export default function Tabs() {
-  const { pathname } = useRouter();
-  const activeLink = links.find((link) => link.href.search(pathname) !== -1);
-  let filteredLinks = [] as typeof links;
+export function findActiveLink(pathname: string) {
+  return links.find((link) => link.href.search(pathname) !== -1);
+}
 
-  const { data: session } = useSession();
+export function filterLinks(session: Session | null) {
   if (session) {
-    const userRoles = session.scopes ?? [];
-    filteredLinks = links.filter((link) => link.scopes.some((role) => userRoles.includes(role)));
+    const userRoles = session.scopes;
+    return links.filter((link) => link.scopes.some((role) => userRoles.includes(role)));
+  } else {
+    return [];
   }
+}
+
+export function Tabs() {
+  const { pathname } = useRouter();
+  const { data: session } = useSession();
+
+  const activeLink = findActiveLink(pathname);
+  const filteredLinks = filterLinks(session);
 
   return (
     <div className='flex justify-center pr-2 md:border-r md:border-b-0 border-b md:mr-4 mb-4 md:mb-0'>
