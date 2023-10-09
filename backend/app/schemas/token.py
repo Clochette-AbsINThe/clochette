@@ -9,5 +9,5 @@ class Token(BaseModel):
 
 
 class TokenData(DefaultModel):
-    username: str | None = None
+    id: int | None = None
     scopes: list[str] = []

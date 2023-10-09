@@ -46,7 +46,7 @@ async def login(
         )
     return {
         "access_token": create_access_token(
-            subject=account.username, scopes=[account.scope.value]
+            subject=account.id, scopes=[account.scope.value]
         )
     }
 

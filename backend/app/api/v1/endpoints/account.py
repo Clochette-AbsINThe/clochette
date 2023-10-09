@@ -3,6 +3,7 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException, Security, status
 
 from app.core.translation import Translator
+from app.core.types import SecurityScopes
 from app.core.utils.misc import process_query_parameters, to_query_parameters
 from app.crud.crud_account import account as accounts
 from app.dependencies import get_current_active_account, get_db
@@ -17,7 +18,9 @@ logger = logging.getLogger("app.api.v1.account")
 @router.get(
     "/",
     response_model=list[account_schema.Account],
-    dependencies=[Security(get_current_active_account, scopes=["president"])],
+    dependencies=[
+        Security(get_current_active_account, scopes=[SecurityScopes.PRESIDENT.value])
+    ],
 )
 async def read_accounts(
     db=Depends(get_db),
@@ -54,7 +57,9 @@ async def create_account(account: account_schema.AccountCreate, db=Depends(get_d
 @router.get(
     "/{account_id}",
     response_model=account_schema.Account,
-    dependencies=[Security(get_current_active_account, scopes=["president"])],
+    dependencies=[
+        Security(get_current_active_account, scopes=[SecurityScopes.PRESIDENT.value])
+    ],
 )
 async def read_account(account_id: int, db=Depends(get_db)):
     """
@@ -74,7 +79,9 @@ async def read_account(account_id: int, db=Depends(get_db)):
 @router.put(
     "/{account_id}",
     response_model=account_schema.Account,
-    dependencies=[Security(get_current_active_account, scopes=["president"])],
+    dependencies=[
+        Security(get_current_active_account, scopes=[SecurityScopes.PRESIDENT.value])
+    ],
 )
 async def update_account(
     account_id: int, account: account_schema.AccountUpdate, db=Depends(get_db)
@@ -103,7 +110,9 @@ async def update_account(
 @router.delete(
     "/{account_id}",
     response_model=account_schema.Account,
-    dependencies=[Security(get_current_active_account, scopes=["president"])],
+    dependencies=[
+        Security(get_current_active_account, scopes=[SecurityScopes.PRESIDENT.value])
+    ],
 )
 async def delete_account(account_id: int, db=Depends(get_db)):
     """

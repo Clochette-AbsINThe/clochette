@@ -49,17 +49,17 @@ async def get_current_account(
         payload = jwt.decode(
             token, settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
-        # Get the username from the payload
-        username: str | None = payload.get("sub")
-        if username is None:
-            # Raise an exception if the username is not in the payload
-            logger.debug("Username not in payload")
+        # Get the id from the payload
+        id: str | None = payload.get("sub")
+        if id is None:
+            # Raise an exception if the id is not in the payload
+            logger.debug("Id not in payload")
             raise credentials_exception
 
         # Get the scopes from the payload
         token_scopes = payload.get("scopes", [])
-        # Create a `TokenData`` object from the username
-        token_data = token_schema.TokenData(scopes=token_scopes, username=username)
+        # Create a `TokenData`` object from the id
+        token_data = token_schema.TokenData(scopes=token_scopes, id=int(id))
 
     except JWTError as e:
         # Raise an exception if the token cannot be decoded
@@ -69,10 +69,7 @@ async def get_current_account(
     # Get the account associated with the username
     async with db as session:
         async with session.begin():
-            account = (
-                (await accounts.query(session, limit=1, username=token_data.username))
-                or [None]
-            )[0]
+            account = await accounts.read(session, id=token_data.id)
 
     if account is None:
         # Raise an exception if the account does not exist
