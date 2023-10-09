@@ -48,6 +48,23 @@ class TestConsumable(BaseTest):
 
         assert self.consumable_db.name == self.consumable_item_create.name
 
+    def test_read_consumable(self):
+        # Arrange
+        # Act
+        response = self._client.get(f"/api/v2/consumable/{self.consumable_db.id}")
+
+        # Assert
+        assert response.status_code == 200
+        assert response.json() == self.consumable_db.model_dump(by_alias=True)
+
+    def test_read_consumable_not_found(self):
+        # Arrange
+        # Act
+        response = self._client.get(f"/api/v2/consumable/{self.consumable_db.id + 1}")
+
+        # Assert
+        assert response.status_code == 404
+
     def test_read_consumables(self):
         # Arrange
         # Act
@@ -66,6 +83,17 @@ class TestConsumable(BaseTest):
         assert response.status_code == 200
         assert response.json() == [self.consumable_db.model_dump(by_alias=True)]
 
+    def test_read_consumables_consumable_item_id(self):
+        # Arrange
+        # Act
+        response = self._client.get(
+            f"/api/v2/consumable/?consumable_item_id={self.consumable_item_db.id}"
+        )
+
+        # Assert
+        assert response.status_code == 200
+        assert response.json() == [self.consumable_db.model_dump(by_alias=True)]
+
     async def test_read_distinct_consumables(self):
         # Arrange
         async with get_db.get_session() as session:
@@ -76,7 +104,12 @@ class TestConsumable(BaseTest):
 
         # Assert
         assert response.status_code == 200
-        assert response.json() == [self.consumable_db.model_dump(by_alias=True)]
+        assert response.json() == [
+            {
+                **self.consumable_db.model_dump(by_alias=True),
+                "quantity": 2,
+            }
+        ]
 
     async def test_update_consumable(self):
         # Arrange

@@ -22,6 +22,7 @@ from app.schemas.v2.glass import GlassCreate
 from app.schemas.v2.transaction import (
     TransactionCommerceCreate,
     TransactionCommerceUpdate,
+    TransactionTreasuryCreate,
 )
 
 
@@ -83,6 +84,8 @@ class TestCRUDTransaction(BaseTest):
             await session.refresh(transaction_purchase)
             assert transaction_purchase.consumables_purchase is not None
 
+            treasury = await crud_treasury.get_last_treasury(session)
+            self.assertEqual(treasury.total_amount, -1)
             self.assertEqual(len(transaction_purchase.consumables_purchase), 1)
             self.assertEqual(transaction_purchase.amount, -1)
 
@@ -114,6 +117,9 @@ class TestCRUDTransaction(BaseTest):
                 obj_in=TransactionCommerceUpdate(),
             )
             await session.refresh(transaction_sale)
+
+            treasury = await crud_treasury.get_last_treasury(session)
+            self.assertEqual(treasury.total_amount, 0)
 
             consumables = await crud_consumable.query(session)
 
@@ -337,3 +343,23 @@ class TestCRUDTransaction(BaseTest):
             assert transaction_purchase is not None
             self.assertEqual(len(transaction_purchase.barrels_purchase), 1)
             self.assertEqual(barrels[0].empty_or_solded, False)
+
+    async def test_create_treasury(self):
+        async with get_db.get_session() as session:
+            # Purchase transaction
+            transaction_treasury = await crud_transaction.create_treasury(
+                session,
+                obj_in=TransactionTreasuryCreate(
+                    datetime=datetime.datetime.now(),
+                    description="test",
+                    amount=10,
+                    trade=TradeType.SALE,
+                    payment_method=PaymentMethod.CARD,
+                ),
+            )
+
+            await session.refresh(transaction_treasury)
+            assert transaction_treasury.amount == 10
+
+            treasury = await crud_treasury.get_last_treasury(session)
+            assert treasury.total_amount == 10

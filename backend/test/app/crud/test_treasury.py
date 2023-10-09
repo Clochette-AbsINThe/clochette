@@ -107,8 +107,7 @@ class TestCRUDTreasury(BaseTest):
         # Act
         modified_treasury = await crud_treasury.revert_transaction(
             treasury=self.treasury_in_db,
-            amount=5,
-            sale=False,
+            amount=-5,
             payment_method=PaymentMethod.CASH,
         )
         # Assert
@@ -123,7 +122,6 @@ class TestCRUDTreasury(BaseTest):
         modified_treasury = await crud_treasury.revert_transaction(
             treasury=self.treasury_in_db,
             amount=5,
-            sale=True,
             payment_method=PaymentMethod.CASH,
         )
         # Assert
@@ -139,6 +137,5 @@ class TestCRUDTreasury(BaseTest):
             await crud_treasury.revert_transaction(
                 treasury=self.treasury_in_db,
                 amount=5,
-                sale=True,
                 payment_method=PaymentMethod.CASH,
             )

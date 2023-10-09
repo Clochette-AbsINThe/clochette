@@ -65,7 +65,16 @@ class TestBarrel(BaseTest):
     def test_read_barrels_mounted(self):
         # Arrange
         # Act
-        response = self._client.get("/api/v2/barrel/?mounted=True")
+        response = self._client.get("/api/v2/barrel/?is_mounted=True")
+
+        # Assert
+        assert response.status_code == 200
+        assert response.json() == []
+
+    def test_read_barrels_drink_item_id(self):
+        # Arrange
+        # Act
+        response = self._client.get("/api/v2/barrel/?drink_item_id=10")
 
         # Assert
         assert response.status_code == 200
@@ -81,7 +90,21 @@ class TestBarrel(BaseTest):
 
         # Assert
         assert response.status_code == 200
-        assert response.json() == [self.barrel_db.model_dump(by_alias=True)]
+        assert response.json() == [
+            {**self.barrel_db.model_dump(by_alias=True), "quantity": 2}
+        ]
+
+    async def test_read_distinct_barrels_mounted(self):
+        # Arrange
+        async with get_db.get_session() as session:
+            await crud_barrel.create(session, obj_in=self.barrel_create)
+
+        # Act
+        response = self._client.get("/api/v2/barrel/distincts/?is_mounted=True")
+
+        # Assert
+        assert response.status_code == 200
+        assert response.json() == []
 
     async def test_update_barrel(self):
         # Arrange
