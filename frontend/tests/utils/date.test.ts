@@ -16,14 +16,14 @@ describe('createDateFromString', () => {
 
 describe('createSliceOf30Minutes', () => {
   it('before HH:30', () => {
-    const transaction = { datetime: '2023-09-04T12:29:47.062000Z' };
-    const expectedString = '14:00 - 14:30';
+    const transaction = { datetime: '2023-09-04T12:29:47.062000' };
+    const expectedString = '12:00 - 12:30';
     expect(createSliceOf30Minutes(transaction)).toEqual(expectedString);
   });
 
   it('after HH:30', () => {
-    const transaction = { datetime: '2023-09-04T12:30:47.062000Z' };
-    const expectedString = '14:30 - 15:00';
+    const transaction = { datetime: '2023-09-04T12:30:47.062000' };
+    const expectedString = '12:30 - 13:00';
     expect(createSliceOf30Minutes(transaction)).toEqual(expectedString);
   });
 });
