@@ -34,50 +34,57 @@ type TransactionSaleStore = {
 };
 
 export function increment(items: SaleItems, item: SaleItem, amount: number = 1) {
+  const itemsCopy = [...items];
   const matchigItem = items.find((i) => i.type === item.type && i.item.name === item.item.name);
+
+  let maxQuantity = Infinity;
+  if (item.type === 'consumable') {
+    maxQuantity = (item as SaleItemConsumable).maxQuantity;
+  }
+
   if (matchigItem) {
-    let maxQuantity = Infinity;
-    if (matchigItem.type === 'consumable') {
-      maxQuantity = (item as SaleItemConsumable).maxQuantity;
-    }
     matchigItem.quantity = Math.min(matchigItem.quantity + amount, maxQuantity);
   } else {
     const newItem = { ...item, quantity: amount };
-    items.push(newItem);
+    itemsCopy.push(newItem);
   }
 
   return {
-    items: [...items]
+    items: [...itemsCopy]
   };
 }
 
 export function decrement(items: SaleItems, item: SaleItem, amount: number = 1) {
+  const itemsCopy = [...items];
   const matchigItem = items.find((i) => i.type === item.type && i.item.name === item.item.name);
+
   if (matchigItem) {
     matchigItem.quantity = Math.max(matchigItem.quantity - amount, 0);
   } else {
     const newItem = { ...item, quantity: 0 };
-    items.push(newItem);
+    itemsCopy.push(newItem);
   }
 
   return {
-    items: [...items]
+    items: [...itemsCopy]
   };
 }
 
 export function reset(items: SaleItems, item: SaleItem) {
+  const itemsCopy = [...items];
   const matchigItem = items.find((i) => i.type === item.type && i.item.name === item.item.name);
+
   let delta = 0;
   if (matchigItem) {
     delta = -matchigItem.quantity;
     matchigItem.quantity = 0;
   } else {
     const newItem = { ...item, quantity: 0 };
-    items.push(newItem);
+    itemsCopy.push(newItem);
   }
 
   return {
-    items: [...items],
+    items: [...itemsCopy],
     delta
   };
 }
@@ -92,7 +99,7 @@ const useTransactionSaleStoreBase = create<TransactionSaleStore>((set, get) => (
     set({ items: [...items] });
   },
   addEcoCup: (ecoCup) => set({ items: [...get().items, { type: 'non-inventoried', item: ecoCup, quantity: 0 }] }),
-  increment(saleItem) {
+  increment: (saleItem) => {
     switch (saleItem.type) {
       case 'glass':
         const items = get().items;

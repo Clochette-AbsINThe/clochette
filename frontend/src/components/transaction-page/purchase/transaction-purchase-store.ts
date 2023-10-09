@@ -6,17 +6,17 @@ import { NonInventoriedCreateForm } from './transaction-purchase-non-inventoried
 
 import { createSelectors } from '@/lib/zustand';
 
-type PurchaseItemBarrel = {
+export type PurchaseItemBarrel = {
   type: 'barrel';
   item: Partial<BarrelCreateForm>;
 };
 
-type PurchaseItemNonInventoried = {
+export type PurchaseItemNonInventoried = {
   type: 'non-inventoried';
   item: Partial<NonInventoriedCreateForm>;
 };
 
-type PurchaseItemConsumable = {
+export type PurchaseItemConsumable = {
   type: 'consumable';
   item: Partial<ConsumableCreateForm>;
 };
@@ -32,22 +32,23 @@ type TransactionPurchaseStore = {
 };
 
 export function addItem(items: PurchaseItem[], item: PurchaseItem) {
-  const matchigItem = items.findIndex((i) => i.type === item.type && i.item.name === item.item.name);
-  if (matchigItem !== -1) {
-    items[matchigItem] = item;
+  const itemsCopy = [...items];
+  const matchigItemIndex = items.findIndex((i) => i.type === item.type && i.item.name === item.item.name);
+  if (matchigItemIndex !== -1) {
+    itemsCopy[matchigItemIndex] = item;
   } else {
-    items.push(item);
+    itemsCopy.push(item);
   }
 
   return {
-    items: [...items]
+    items: [...itemsCopy]
   };
 }
 
 export function removeItem(items: PurchaseItem[], item: PurchaseItem) {
-  const matchigItem = items.findIndex((i) => i.type === item.type && i.item.name === item.item.name);
-  if (matchigItem !== -1) {
-    items.splice(matchigItem, 1);
+  const matchigItemIndex = items.findIndex((i) => i.type === item.type && i.item.name === item.item.name);
+  if (matchigItemIndex !== -1) {
+    items.splice(matchigItemIndex, 1);
   }
 
   return {
