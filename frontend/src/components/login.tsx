@@ -78,6 +78,8 @@ export default function Login() {
     }
   };
 
+  if (typeof window === 'undefined') return null;
+
   return (
     <Card className='flex flex-col space-y-3 place-self-center min-[450px]:w-[400px] w-full aspect-square mt-20'>
       <CardHeader className='pb-0'>
