@@ -68,7 +68,7 @@ async def load_db(input_file: str) -> None:
                 await session.execute(
                     text(
                         f"SELECT setval(pg_get_serial_sequence('{table.name}', '{pk_name}'), "
-                        f"coalesce(max({pk_name}), 0)) FROM {table.name}"
+                        f"coalesce(max({pk_name}), 1)) FROM {table.name}"
                     )
                 )
 
