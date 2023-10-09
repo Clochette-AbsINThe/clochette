@@ -11,7 +11,7 @@ declare module 'next-auth' {
     iat: number;
     exp: number;
     token_type: string;
-    scopes?: string[];
+    scopes: string[];
     id: string;
     token: string;
   }
