@@ -37,11 +37,9 @@ export function loginResolver(data: BodyLogin): ResolverResult<BodyLogin> {
 }
 
 export default function Login() {
-  const { push, query } = useRouter();
+  const { push } = useRouter();
   const [loading, setLoading] = useState(false);
   const errorRef = useRef<HTMLHeadingElement>(null);
-
-  const callbackUrl = (query?.callbackUrl as string) ?? '/';
 
   const form = useForm<BodyLogin>({
     defaultValues: {
@@ -67,6 +65,9 @@ export default function Login() {
       }
 
       if (res.ok) {
+        // Get the query params from the res.url
+        const query = Object.fromEntries(new URLSearchParams(res.url?.split('?')[1]));
+        const callbackUrl = (query?.callbackUrl as string) ?? '/';
         push(callbackUrl);
         return;
       }
