@@ -1,62 +1,39 @@
-import Footer from '@components/Layout/Footer';
-import Head from 'next/head';
-import Script from 'next/script';
 import { Toaster } from 'react-hot-toast';
-import Navbar from '@components/Layout/Navbar/Navbar';
+
+import Head from 'next/head';
+
+import Footer from '@/components/footer/footer';
+import Navbar from '@/components/navbar/navbar';
 
 export interface Props {
-    title: string;
-    description: string;
-    children: JSX.Element;
+  title: string;
+  description?: string;
+  children: JSX.Element;
 }
 
 export default function Base({ children, title, description }: React.PropsWithChildren<Props>): JSX.Element {
-    return (
-        <>
-            <Head>
-                <title>{title}</title>
-                <meta
-                    name='description'
-                    content={description}
-                />
-                <meta
-                    name='viewport'
-                    content='width=device-width, initial-scale=1.0'
-                />
-            </Head>
-            <Navbar />
-            <main className='flex-grow p-3 flex flex-col select-none'>
-                {children}
-                <Toaster
-                    position='bottom-left'
-                    toastOptions={{ style: { maxWidth: 500 } }}
-                />
-            </main>
-            <Footer />
-            <Script id='theme'>
-                {`
-                        const theme = (() => {
-                            if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-                                return localStorage.getItem('theme');
-                            }
-                            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                                return 'dark';
-                            }
-                            return 'light';
-                        })();
-                        
-                        if (theme === 'light') {
-                            document.documentElement.classList.remove('dark');
-                        } else {
-                            document.documentElement.classList.add('dark');
-                        }
-                        window.localStorage.setItem('theme', theme);
-                        
-                        window.onpopstate = function (event) {
-                            window.location.reload();
-                        };
-                        `}
-            </Script>
-        </>
-    );
+  return (
+    <>
+      <Head>
+        <title>{title}</title>
+        <meta
+          name='description'
+          content={description}
+        />
+        <meta
+          name='viewport'
+          content='width=device-width, initial-scale=1.0'
+        />
+      </Head>
+      <Navbar />
+      <main className='flex-grow p-3 flex flex-col select-none'>
+        {children}
+        <Toaster
+          position='bottom-left'
+          toastOptions={{ style: { maxWidth: 500 } }}
+        />
+      </main>
+      <Footer />
+    </>
+  );
 }

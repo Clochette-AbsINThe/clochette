@@ -14,16 +14,13 @@
   "rules": {
     "indent": [
       "error",
-      4,
+      2,
       {
         "SwitchCase": 1
       }
     ],
     "no-use-before-define": [
-      "error",
-      {
-        "functions": false
-      }
+      "off"
     ],
     "no-plusplus": [
       "error",
@@ -51,6 +48,33 @@
     "n/no-callback-literal": "off",
     "react/react-in-jsx-scope": "off",
     "react-hooks/rules-of-hooks": "off",
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    "react/prop-types": "off",
+    "@next/next/no-img-element": "off",
+    "import/order": [
+      "error",
+      {
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        },
+        "pathGroups": [
+          {
+            "pattern": "react*",
+            "group": "external",
+            "position": "before"
+          },
+          {
+            "pattern": "{.,..}/**/*.+(css|scss)", // eslint-plugin-import#1239
+            "group": "sibling",
+            "position": "after"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": [
+          "builtin"
+        ],
+        "newlines-between": "always"
+      }
+    ]
   }
 }
