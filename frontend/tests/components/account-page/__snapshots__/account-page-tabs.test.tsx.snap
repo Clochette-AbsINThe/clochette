@@ -1,0 +1,38 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Tabs > should render the tabs 1`] = `
+<div>
+  <div
+    class="flex justify-center pr-2 md:border-r md:border-b-0 border-b md:mr-4 mb-4 md:mb-0"
+  >
+    <div
+      class="w-full max-w-md md:w-max flex justify-start items-center md:items-start md:flex-col flex-row mb-2 md:mb-0"
+    >
+      <a
+        class="px-3 py-2 text-sm w-full font-medium bg-slate-400 dark:bg-gray-800"
+        href="/account"
+      >
+        Accueil
+      </a>
+      <a
+        class="px-3 py-2 text-sm w-full font-medium text-gray-900 hover:bg-slate-300 dark:text-gray-300 dark:hover:bg-gray-700"
+        href="/account/dashboard"
+      >
+        Tableau de bord
+      </a>
+      <a
+        class="px-3 py-2 text-sm w-full font-medium text-gray-900 hover:bg-slate-300 dark:text-gray-300 dark:hover:bg-gray-700"
+        href="/account/users"
+      >
+        Comptes utilisateurs
+      </a>
+      <a
+        class="px-3 py-2 text-sm w-full font-medium text-gray-900 hover:bg-slate-300 dark:text-gray-300 dark:hover:bg-gray-700"
+        href="/account/tresory"
+      >
+        Trésorie
+      </a>
+    </div>
+  </div>
+</div>
+`;
