@@ -12,8 +12,7 @@ export default defineConfig({
     coverage: {
       include: ['src/**/*.{ts,tsx}'],
       exclude: ['src/pages/**', 'src/openapi-codegen/**', 'src/types/**', 'src/components/ui/**'],
-      all: true,
-      reporter: ['lcov', 'text', 'html']
+      all: true
     },
     env: {
       NEXT_PUBLIC_BACKEND_API_URL: 'http://localhost:8000'
