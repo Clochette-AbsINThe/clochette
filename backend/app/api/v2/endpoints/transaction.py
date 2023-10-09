@@ -3,7 +3,8 @@ import logging
 from fastapi import APIRouter, Depends, HTTPException, Security, status
 
 from app.core.translation import Translator
-from app.core.utils.misc import process_query_parameters, to_query_parameters
+from app.core.types import SecurityScopes
+from app.core.utils.misc import process_query_parameters
 from app.crud.crud_transaction import transaction as transactions
 from app.dependencies import get_current_active_account, get_db
 from app.schemas.v2 import transaction as transaction_schema
@@ -39,7 +40,9 @@ async def create_transaction(
 @router.post(
     "/treasury/",
     response_model=transaction_schema.Transaction,
-    dependencies=[Security(get_current_active_account, scopes=["treasury"])],
+    dependencies=[
+        Security(get_current_active_account, scopes=[SecurityScopes.TREASURER.value])
+    ],
 )
 async def create_treasury_transaction(
     transaction: transaction_schema.TransactionTreasuryCreate, db=Depends(get_db)
@@ -49,7 +52,7 @@ async def create_treasury_transaction(
 
     This endpoint requires authentication with the "treasury" scope.
     """
-    return await transactions.create_v2(db, obj_in=transaction)
+    return await transactions.create_treasury(db, obj_in=transaction)
 
 
 @router.patch(
@@ -85,7 +88,9 @@ async def validate_transaction(
 @router.delete(
     "/{transaction_id}",
     response_model=transaction_schema.TransactionDetail,
-    dependencies=[Security(get_current_active_account, scopes=["treasury"])],
+    dependencies=[
+        Security(get_current_active_account, scopes=[SecurityScopes.TREASURER.value])
+    ],
 )
 async def delete_transaction(
     transaction_id: int,
@@ -112,13 +117,7 @@ async def delete_transaction(
 )
 async def read_transactions(
     db=Depends(get_db),
-    query=Depends(
-        to_query_parameters(
-            transaction_schema.Transaction,
-            comparaison=True,
-            exclude=["treasury_id", "description"],
-        )
-    ),
+    query=Depends(transaction_schema.TransactionQuery),
 ):
     """
     Retrieve transactions.

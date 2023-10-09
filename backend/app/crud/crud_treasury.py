@@ -113,7 +113,6 @@ class CRUDTreasury(
         *,
         treasury: Treasury,
         amount: float,
-        sale: bool,
         payment_method: PaymentMethod,
     ) -> InternalTreasuryUpdate:
         """
@@ -132,19 +131,13 @@ class CRUDTreasury(
         treasury_created = InternalTreasuryUpdate.model_validate(treasury)
 
         # Update the total amount of the treasury based on the transaction amount and whether it is a sale or a purchase
-        if sale:
-            treasury_created.total_amount -= amount
-        else:
-            treasury_created.total_amount += amount
+        treasury_created.total_amount -= amount
 
         # Cents are two decimals max
         treasury_created.total_amount = round(treasury_created.total_amount, 2)
 
         if payment_method == PaymentMethod.CASH:
-            if sale:
-                treasury_created.cash_amount -= amount
-            else:
-                treasury_created.cash_amount += amount
+            treasury_created.cash_amount -= amount
             # Cents are two decimals max
             treasury_created.cash_amount = round(treasury_created.cash_amount, 2)
 
@@ -164,9 +157,12 @@ class CRUDTreasury(
 
         :return: The last treasury.
         """
-        query = select(self.model)
-        query = query.order_by(self.model.id.desc())
-        query = query.limit(1)
+        query = (
+            select(self.model)
+            .with_for_update(read=True)
+            .order_by(self.model.id.desc())
+            .limit(1)
+        )
         result = await db.execute(query)
         treasuries = result.scalars().all()
         if not treasuries:

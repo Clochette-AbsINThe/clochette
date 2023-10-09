@@ -3,11 +3,16 @@ import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.translation import Translator
-from app.core.types import TradeType
+from app.core.types import PaymentMethod, TradeType
 from app.crud.base import CRUDBase
 from app.crud.crud_treasury import treasury as crud_treasury
 from app.models.transaction import Transaction
-from app.schemas.v2.transaction import TransactionCreate, TransactionUpdate
+from app.schemas.treasury import InternalTreasuryUpdate
+from app.schemas.v2.transaction import (
+    TransactionCreate,
+    TransactionTreasuryCreate,
+    TransactionUpdate,
+)
 
 logger = logging.getLogger("app.crud.transaction")
 
@@ -33,6 +38,44 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
         obj_in.treasury_id = treasury_id
         return await super().create(db, obj_in=obj_in)
 
+    async def create_treasury(
+        self, db: AsyncSession, *, obj_in: TransactionTreasuryCreate
+    ) -> Transaction:
+        await self.update_treasury(
+            db=db,
+            amount=abs(obj_in.amount),
+            payment_method=obj_in.payment_method,
+            sale=obj_in.trade == TradeType.SALE,
+        )
+        return await self.create_v2(db, obj_in=obj_in)
+
+    async def update_treasury(
+        self,
+        db: AsyncSession,
+        *,
+        amount: float,
+        sale: bool,
+        payment_method: PaymentMethod,
+    ) -> tuple[InternalTreasuryUpdate, float]:
+        """
+        Update the treasury when a transaction is validated.
+        """
+
+        treasury = await crud_treasury.get_last_treasury(db)
+        print(
+            f"Total amount {treasury.total_amount} - Cash amount {treasury.cash_amount}"
+        )
+        # Pre-authorize the transaction
+        tresury_update = await crud_treasury.pre_authorize_transaction(
+            treasury=treasury,
+            amount=amount,
+            sale=sale,
+            payment_method=payment_method,
+        )
+        # Update the treasury
+        await crud_treasury.update(db, db_obj=treasury, obj_in=tresury_update[0])
+        return tresury_update
+
     async def validate(
         self,
         db: AsyncSession,
@@ -49,19 +92,15 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
 
         :return: The validated transaction
         """
-        treasury_orm = await crud_treasury.get_last_treasury(db)
-        # Pre-authorize the transaction
-        tresury_update = await crud_treasury.pre_authorize_transaction(
-            treasury=treasury_orm,
+        treasury_update = await self.update_treasury(
+            db,
             amount=db_obj.price_sum,
             sale=db_obj.trade == TradeType.SALE,
             payment_method=db_obj.payment_method,
         )
-        # Update the treasury
-        await crud_treasury.update(db, db_obj=treasury_orm, obj_in=tresury_update[0])
 
         # Update the transaction
-        obj_in.amount = tresury_update[1]
+        obj_in.amount = treasury_update[1]
         logger.debug(f"Price sum: {obj_in.amount}")
         return await super().update(db, db_obj=db_obj, obj_in=obj_in)
 
@@ -72,10 +111,10 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
             treasury = await crud_treasury.get_last_treasury(db)
             tresury_update = await crud_treasury.revert_transaction(
                 treasury=treasury,
-                amount=transaction_db.price_sum,
-                sale=transaction_db.trade == TradeType.SALE,
+                amount=transaction_db.amount,
                 payment_method=transaction_db.payment_method,
             )
+            logger.debug(f"Treasury amount: {tresury_update.total_amount}")
             await crud_treasury.update(db, db_obj=treasury, obj_in=tresury_update)
 
         return transaction_db

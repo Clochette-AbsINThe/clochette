@@ -1,13 +1,19 @@
 from abc import ABC, abstractmethod
 from datetime import datetime as _datetime
 
-from pydantic import ConfigDict, PrivateAttr, computed_field, field_validator
+from pydantic import (
+    ConfigDict,
+    FieldValidationInfo,
+    PrivateAttr,
+    computed_field,
+    field_validator,
+)
 
 from app.core.types import PaymentMethod, Status, TradeType, TransactionType
 from app.schemas.base import DefaultModel
-from app.schemas.glass import Glass
 from app.schemas.v2.barrel import Barrel
 from app.schemas.v2.consumable import Consumable
+from app.schemas.v2.glass import Glass
 from app.schemas.v2.non_inventoried import NonInventoried
 
 
@@ -55,6 +61,13 @@ class TransactionTreasuryCreate(TransactionCreate):
     def status(self) -> Status:
         """In Treasury, the status is VALIDATED at first."""
         return Status.VALIDATED
+
+    @field_validator("amount", mode="before")
+    @classmethod
+    def amount_must_match_trade(cls, v, info: FieldValidationInfo):
+        if info.data["trade"] == TradeType.PURCHASE:
+            return -abs(v)
+        return abs(v)
 
     @field_validator("amount", mode="after")
     @classmethod
@@ -123,3 +136,16 @@ class TransactionDetail(Transaction):
     non_inventorieds: list[NonInventoried]
     consumables_purchase: list[Consumable]
     consumables_sale: list[Consumable]
+
+
+class TransactionQuery(DefaultModel):
+    datetime__gt: _datetime | None = None
+    datetime__lt: _datetime | None = None
+    amount__gt: float | None = None
+    amount__lt: float | None = None
+    payment_method: PaymentMethod | None = None
+    trade: TradeType | None = None
+    type: TransactionType | None = None
+    status: Status | None = None
+
+    model_config = ConfigDict(alias_generator=None)
