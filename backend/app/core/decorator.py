@@ -1,9 +1,12 @@
 import functools
+import logging
 from typing import Tuple, Type
 
 from fastapi import HTTPException, status
 
 from app.core.translation import Translator
+
+logger = logging.getLogger("app.core.decorator")
 
 
 def handle_exceptions(
@@ -30,6 +33,7 @@ def handle_exceptions(
                 try:
                     return func(*args, **kwargs)
                 except exceptions as e:
+                    logger.error(e)
                     raise HTTPException(
                         status_code=status.HTTP_400_BAD_REQUEST, detail=detail
                     ) from e
@@ -44,6 +48,7 @@ def handle_exceptions(
                 try:
                     return await func(*args, **kwargs)
                 except exceptions as e:
+                    logger.error(e)
                     raise HTTPException(
                         status_code=status.HTTP_400_BAD_REQUEST, detail=detail
                     ) from e

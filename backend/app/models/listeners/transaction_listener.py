@@ -13,13 +13,18 @@ from app.core.translation import Translator
 from app.models.transaction import Transaction
 
 logger = logging.getLogger("app.models.listeners.transaction_listener")
-translator = Translator()
+
+barrel_translator = Translator("barrel")
+consumable_translator = Translator("consumable")
 
 
 class InvalidTransaction(Exception):
     pass
 
 
+@handle_exceptions(
+    consumable_translator.DELETION_OF_USED_ELEMENT, InvalidTransaction, sync_func=True
+)
 def prevent_consumables_deletion(target: Transaction):
     """Check if any associated consumables are referenced in sale transactions."""
     if any(
@@ -31,6 +36,9 @@ def prevent_consumables_deletion(target: Transaction):
         )
 
 
+@handle_exceptions(
+    barrel_translator.DELETION_OF_USED_ELEMENT, InvalidTransaction, sync_func=True
+)
 def prevent_barrels_deletion(target: Transaction):
     """Check if any associated barrels are referenced in sale transactions."""
     if any(barrel.transaction_id_sale for barrel in target.barrels_purchase):
@@ -41,9 +49,6 @@ def prevent_barrels_deletion(target: Transaction):
 
 
 @event.listens_for(Transaction, "before_delete")
-@handle_exceptions(
-    translator.DELETION_OF_USED_ELEMENT, InvalidTransaction, sync_func=True
-)
 def prevent_transaction_deletion(
     _mapper: Mapper[Transaction], _connection: Connection, target: Transaction
 ):
