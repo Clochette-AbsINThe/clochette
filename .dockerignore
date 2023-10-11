@@ -2,3 +2,6 @@ frontend/node_modules
 frontend/.next
 frontend/coverage
 frontend/tests
+backend/.venv
+backend/.pytest_cache
+backend/test
