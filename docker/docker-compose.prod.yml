@@ -3,18 +3,32 @@ version: "3"
 # This is a docker-compose file for Clochette production environment, which will override the default docker-compose.yml file.
 name: clochette_production
 
+volumes:
+  certbot:
+
 services:
   reverse-proxy:
+    container_name: reverse-proxy
     build:
       args:
         - host_arg=clochette.h.minet.net
     image: ghcr.io/clochette-absinthe/reverse-proxy:${tag:-latest}
     volumes:
-      - ./ssl/clochette.h.minet.net.crt:/etc/nginx/ssl/clochette.h.minet.net.crt
-      - ./ssl/clochette.h.minet.net.key:/etc/nginx/ssl/clochette.h.minet.net.key
-      - /var/www/certbot:/var/www/certbot
+      - ./ssl/clochette.h.minet.net.crt:/etc/nginx/ssl/clochette.h.minet.net.crt:ro
+      - ./ssl/clochette.h.minet.net.key:/etc/nginx/ssl/clochette.h.minet.net.key:ro
+      - certbot:/var/www/certbot:ro
+    restart: always
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:latest
+    volumes:
+      - certbot:/var/www/certbot/:rw
+      - ./ssl/clochette.h.minet.net.crt:/etc/letsencrypt/live/clochette.h.minet.net/fullchain.pem:rw
+      - ./ssl/clochette.h.minet.net.key:/etc/letsencrypt/live/clochette.h.minet.net/privkey.pem:rw
 
   frontend:
+    container_name: frontend
     build:
       args:
         - next_public_backend_url=https://clochette.h.minet.net
@@ -23,10 +37,13 @@ services:
     image: ghcr.io/clochette-absinthe/frontend:${tag:-latest}
     expose:
       - 3000
+    restart: always
 
   backend:
+    container_name: backend
     image: ghcr.io/clochette-absinthe/backend:${tag:-latest}
     environment:
+      - POSTGRES_HOST=database
       - ALERT_BACKEND=github
       - ISSUE_LABELS=Backend,bug,bot
       - GITHUB_USER=${GITHUB_USER}
@@ -35,7 +52,10 @@ services:
       - REPOSITORY_OWNER=${REPOSITORY_OWNER}
     expose:
       - 8080
+    restart: always
 
   database:
+    container_name: database
     expose:
       - 5432
+    restart: always

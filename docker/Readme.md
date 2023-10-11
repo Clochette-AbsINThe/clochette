@@ -33,3 +33,17 @@ If you want to migrate the database, you can use the following command:
 ```bash
 docker exec -it clochette-backend poetry run python app/command.py migrate
 ```
+
+## Certbot
+
+To generate the certificate, you can use the following command:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm certbot certonly --webroot --webroot-path /var/www/certbot/ -d clochette.h.minet.net --dry-run
+```
+
+To renew the certificate, you can use the following command:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml run --rm certbot renew --dry-run
+```
