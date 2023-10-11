@@ -47,7 +47,7 @@ async def get_current_account(
     try:
         # Decode the JWT token to get the payload
         payload = jwt.decode(
-            token, settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM]
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         # Get the id from the payload
         id: str | None = payload.get("sub")

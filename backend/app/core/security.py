@@ -82,4 +82,4 @@ def _create_token(
         "exp": datetime.utcnow() + expires_delta,
         "token_type": token_type,
     }
-    return jwt.encode(to_encode, settings.JWT_SECRET_KEY, algorithm=settings.ALGORITHM)
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
