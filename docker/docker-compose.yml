@@ -21,7 +21,7 @@ services:
       dockerfile: ./docker/frontend/Dockerfile
     container_name: clochette-frontend
     environment:
-      - SECRET_KEY=${JWT_SECRET_KEY}
+      - NEXTAUTH_SECRET=${SECRET_KEY}
     command:
       [
         "pm2-runtime",
@@ -30,7 +30,7 @@ services:
         "--name",
         "clochette-frontend",
         "--",
-        "start"
+        "start",
       ]
 
   backend:
@@ -40,29 +40,15 @@ services:
       context: ..
       dockerfile: ./docker/backend/Dockerfile
     container_name: clochette-backend
-    command:
-      [
-        "uvicorn",
-        "app.main:app",
-        "--host",
-        "0.0.0.0",
-        "--port",
-        "80"
-      ]
+    volumes:
+      - ./db-shared-volume:/root/db-shared-volume
     environment:
       - POSTGRES_HOST=clochette-db
       - POSTGRES_PORT=5432
       - POSTGRES_DB=clochette
       - POSTGRES_USER=clochette
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
-      - MIGRATE=${MIGRATE}
-      - ALERT_BACKEND=github # Default is terminal if not set
-      - GITHUB_USER=${GITHUB_USER}
-      - GITHUB_TOKEN=${GITHUB_TOKEN}
-      - REPOSITORY_NAME=${REPOSITORY_NAME}
-      - REPOSITORY_OWNER=${REPOSITORY_OWNER}
-      - ISSUE_LABELS=Backend,bug,bot
-      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - SECRET_KEY=${SECRET_KEY}
       - BASE_ACCOUNT_USERNAME=${BASE_ACCOUNT_USERNAME} # Default is admin if not set
       - BASE_ACCOUNT_PASSWORD=${BASE_ACCOUNT_PASSWORD}
       - LOCALE=${LOCALE}

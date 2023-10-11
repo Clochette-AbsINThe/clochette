@@ -12,18 +12,27 @@ services:
     volumes:
       - ./ssl/clochette.h.minet.net.crt:/etc/nginx/ssl/clochette.h.minet.net.crt
       - ./ssl/clochette.h.minet.net.key:/etc/nginx/ssl/clochette.h.minet.net.key
+      - /var/www/certbot:/var/www/certbot
 
   frontend:
     build:
       args:
-        - next_public_base_url=https://clochette.h.minet.net
-        - next_public_backend_api_url=https://clochette.h.minet.net/api/v1
+        - next_public_backend_url=https://clochette.h.minet.net
+    environment:
+      - NEXTAUTH_URL=https://clochette.h.minet.net
     image: ghcr.io/clochette-absinthe/frontend:${tag:-latest}
     expose:
       - 3000
 
   backend:
     image: ghcr.io/clochette-absinthe/backend:${tag:-latest}
+    environment:
+      - ALERT_BACKEND=github
+      - ISSUE_LABELS=Backend,bug,bot
+      - GITHUB_USER=${GITHUB_USER}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - REPOSITORY_NAME=${REPOSITORY_NAME}
+      - REPOSITORY_OWNER=${REPOSITORY_OWNER}
     expose:
       - 8080
 
