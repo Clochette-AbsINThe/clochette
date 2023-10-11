@@ -7,8 +7,7 @@
 - REPOSITORY_NAME=\*\*\*
 - REPOSITORY_OWNER=\*\*\*
 - POSTGRES_PASSWORD=\*\*\*
-- MIGRATE=\*\*\*
-- JWT_SECRET_KEY=\*\*\*
+- SECRET_KEY=\*\*\*
 - BASE_ACCOUNT_USERNAME=\*\*\*
 - BASE_ACCOUNT_PASSWORD=\*\*\*
 - LOCALE=fr # Or en

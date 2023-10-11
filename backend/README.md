@@ -160,6 +160,6 @@ docker run --name clochette-postgres -e POSTGRES_USER=clochette -e POSTGRES_PASS
 - `DATABASE_URI`: `SQLITE_DATABASE_URI`
 - `SQLITE_DATABASE_URI`: `sqlite+aiosqlite:///./clochette.db`
 - `POSTGRES_DATABASE_URI`: `postgresql+asyncpg://clochette:clochette@localhost:5432/clochette`
-- `JWT_SECRET_KEY`: `6a50e3ddeef70fd46da504d8d0a226db7f0b44dcdeb65b97751cf2393b33693e` can be generated with `openssl rand -hex 32` and could be overriden by the `SECRET_KEY` environment variable
+- `SECRET_KEY`: `6a50e3ddeef70fd46da504d8d0a226db7f0b44dcdeb65b97751cf2393b33693e` can be generated with `openssl rand -hex 32` and could be overriden by the `SECRET_KEY` environment variable
 - `BASE_ACCOUNT_USERNAME`: `admin`
 - `BASE_ACCOUNT_PASSWORD`: `admin-password*45`
