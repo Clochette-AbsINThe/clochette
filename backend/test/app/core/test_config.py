@@ -47,13 +47,17 @@ def test_env_prod(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("REPOSITORY_OWNER", "FAKE_VALUE")
 
     assert isinstance(select_settings("production"), ConfigProduction)
+    assert (
+        select_settings("production").DATABASE_URI
+        == "postgresql+asyncpg://FAKE_VALUE:FAKE_VALUE@localhost:5432/FAKE_VALUE"
+    )
 
 
 def test_env_test():
     settings = select_settings("test")
     assert isinstance(settings, ConfigTest)
     assert (
-        settings.JWT_SECRET_KEY
+        settings.SECRET_KEY
         == "6a50e3ddeef70fd46da504d8d0a226db7f0b44dcdeb65b97751cf2393b33693e"
     )
 

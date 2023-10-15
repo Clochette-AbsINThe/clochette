@@ -16,7 +16,7 @@ jobs:
         id: release
         uses: rymndhng/release-on-push-action@master
         with:
-          bump_version_scheme: patch
+          bump_version_scheme: "norelease"
           tag_prefix: v
           release_name: <RELEASE_TAG>
           max_commits: 25
@@ -26,3 +26,16 @@ jobs:
     outputs:
       tag_name: ${{ steps.release.outputs.tag_name }}
       version: ${{ steps.release.outputs.version }}
+
+  store-version:
+    needs: release-on-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Save version
+        run: |
+          mkdir -p ./version
+          echo "${{ needs.release-on-push.outputs.version }}" > ./version/version_number
+      - uses: actions/upload-artifact@v3
+        with:
+          name: version_number
+          path: ./version

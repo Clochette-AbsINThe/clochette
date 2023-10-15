@@ -1,9 +1,10 @@
 import logging
 import os
+from abc import abstractmethod
 from functools import lru_cache
 from typing import ClassVar, Literal, Optional
 
-from pydantic import Field, field_validator
+from pydantic import Field
 from pydantic_settings import BaseSettings
 
 logger = logging.getLogger("app.core.config")
@@ -33,7 +34,7 @@ class Settings(BaseSettings):
 
     ACCESS_TOKEN_EXPIRE_MINUTES : int
         The expiration time for access tokens in minutes.
-    JWT_SECRET_KEY : str
+    SECRET_KEY : str
         The secret key for JWT authentication.
     ALGORITHM : str
         The algorithm to use for JWT authentication.
@@ -81,7 +82,7 @@ class Settings(BaseSettings):
     # Authentication config
 
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 1  # 1 day
-    JWT_SECRET_KEY: str
+    SECRET_KEY: str
     ALGORITHM: str = "HS256"  # TODO: Change to ES256 in the future
 
     # Base account config
@@ -97,7 +98,10 @@ class Settings(BaseSettings):
     POSTGRES_USER: str
     POSTGRES_PASSWORD: str
 
-    DATABASE_URI: str
+    @property
+    @abstractmethod
+    def DATABASE_URI(self) -> str:
+        """The URI for the database."""
 
     # Github config
 
@@ -120,9 +124,8 @@ class ConfigDevelopment(Settings):
 
     """ Authentication config"""
     # openssl rand -hex 32
-    JWT_SECRET_KEY: str = Field(
+    SECRET_KEY: str = Field(
         default="6a50e3ddeef70fd46da504d8d0a226db7f0b44dcdeb65b97751cf2393b33693e",
-        alias="SECRET_KEY",
     )
 
     """Base account config """
@@ -159,20 +162,13 @@ class ConfigDevelopment(Settings):
     SQLITE_DATABASE_URI: ClassVar[str] = "sqlite+aiosqlite:///./clochette.db"
 
     # you can change it to either SQLITE_DATABASE_URI or POSTGRES_DATABASE_URI
-    DATABASE_URI: str = SQLITE_DATABASE_URI
-
-    @field_validator("DATABASE_URI")
-    @classmethod
-    def validate_database_uri(cls, v, _) -> str:
-        """Use for overriding the DATABASE_URI value with the DB_TYPE environment variable"""
+    @property
+    def DATABASE_URI(self) -> str:
         value = os.environ.get("DB_TYPE")
-        if value is None:
-            return v
-
         if value == "POSTGRES":
-            return cls.POSTGRES_DATABASE_URI
+            return self.POSTGRES_DATABASE_URI
 
-        return cls.SQLITE_DATABASE_URI
+        return self.SQLITE_DATABASE_URI
 
 
 class ConfigProduction(Settings):
@@ -187,12 +183,12 @@ class ConfigProduction(Settings):
 
     """ Authentication config"""
     # openssl rand -hex 32
-    JWT_SECRET_KEY: str = Field(..., alias="SECRET_KEY")
+    SECRET_KEY: str = Field(...)
 
     """Base account config """
 
     BASE_ACCOUNT_USERNAME: str = "admin"
-    BASE_ACCOUNT_PASSWORD: str
+    BASE_ACCOUNT_PASSWORD: str = Field(...)
 
     """Database config"""
 
@@ -204,22 +200,22 @@ class ConfigProduction(Settings):
 
     """Github config"""
 
-    GITHUB_USER: str
-    GITHUB_TOKEN: str
+    GITHUB_USER: str = Field(...)
+    GITHUB_TOKEN: str = Field(...)
 
     ISSUE_LABELS: str = "Backend,bug,bot"
-    REPOSITORY_NAME: str
-    REPOSITORY_OWNER: str
+    REPOSITORY_NAME: str = Field(...)
+    REPOSITORY_OWNER: str = Field(...)
 
-    DATABASE_URI: str = (
-        "postgresql+asyncpg://{user}:{password}@{host}:{port}/{db}".format(
-            user=POSTGRES_USER,
-            password=POSTGRES_PASSWORD,
-            host=POSTGRES_HOST,
-            port=POSTGRES_PORT,
-            db=POSTGRES_DB,
+    @property
+    def DATABASE_URI(self) -> str:
+        return "postgresql+asyncpg://{user}:{password}@{host}:{port}/{db}".format(
+            user=self.POSTGRES_USER,
+            password=self.POSTGRES_PASSWORD,
+            host=self.POSTGRES_HOST,
+            port=self.POSTGRES_PORT,
+            db=self.POSTGRES_DB,
         )
-    )
 
 
 class ConfigTest(Settings):
@@ -231,9 +227,7 @@ class ConfigTest(Settings):
     ENVIRONMENT: SupportedEnvironments = "test"
 
     """ Authentication config"""
-    JWT_SECRET_KEY: str = (
-        "6a50e3ddeef70fd46da504d8d0a226db7f0b44dcdeb65b97751cf2393b33693e"
-    )
+    SECRET_KEY: str = "6a50e3ddeef70fd46da504d8d0a226db7f0b44dcdeb65b97751cf2393b33693e"
 
     """Base account config """
     BASE_ACCOUNT_USERNAME: str = "test"
@@ -256,7 +250,9 @@ class ConfigTest(Settings):
     REPOSITORY_NAME: str = "test_repository_name"
     REPOSITORY_OWNER: str = "test_repository_owner"
 
-    DATABASE_URI: str = "sqlite+aiosqlite:///./test_clochette.db"
+    @property
+    def DATABASE_URI(self) -> str:
+        return "sqlite+aiosqlite:///./test_clochette.db"
 
 
 env = os.getenv("ENVIRONMENT", "development")
@@ -281,7 +277,7 @@ def select_settings(_env: Optional[str] = env):
         return ConfigDevelopment()
 
     if _env == "production":
-        return ConfigProduction()
+        return ConfigProduction()  # type: ignore
 
     if _env == "test":
         return ConfigTest()

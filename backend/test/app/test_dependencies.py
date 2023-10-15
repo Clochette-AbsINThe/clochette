@@ -54,7 +54,7 @@ class TestGetCurrentAccount(BaseTest):
         # Arrange
         to_encode = {"scopes": self.security_scopes.scopes}
         modified_token = jwt.encode(
-            to_encode, settings.JWT_SECRET_KEY, algorithm=settings.ALGORITHM
+            to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
         )
 
         with self.assertRaises(HTTPException) as error:

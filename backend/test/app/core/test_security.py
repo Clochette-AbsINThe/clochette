@@ -39,7 +39,7 @@ def test_create_access_token():
     scopes = ["test_scope1", "test_scope2"]
     access_token = create_access_token(subject=subject, scopes=scopes)
     decoded_token = jwt.decode(
-        access_token, settings.JWT_SECRET_KEY, algorithms=[settings.ALGORITHM]
+        access_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
     )
     assert decoded_token["sub"] == subject
     assert decoded_token["scopes"] == scopes
