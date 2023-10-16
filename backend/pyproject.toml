@@ -21,7 +21,7 @@ python-jose = "^3.3.0"
 alembic = "^1.11.1"
 passlib = { extras = ["bcrypt"], version = "^1.7.4" }
 requests = "^2.31.0"
-types-requests = "^2.31.0.2"
+types-requests = "^2.31.0.9"
 asyncpg = "^0.28.0"
 alembic-autogenerate-enums = "^0.1.2"
 tenacity = "^8.2.2"
