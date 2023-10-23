@@ -27,7 +27,7 @@
     "@radix-ui/react-tooltip": "^1.0.6",
     "@tanstack/react-query": "^4.32.6",
     "@tanstack/react-query-devtools": "^4.32.6",
-    "@tanstack/react-table": "^8.9.3",
+    "@tanstack/react-table": "^8.10.7",
     "@zxcvbn-ts/core": "^3.0.3",
     "@zxcvbn-ts/language-common": "^3.0.3",
     "@zxcvbn-ts/language-fr": "^3.0.1",
