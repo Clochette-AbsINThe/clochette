@@ -39,7 +39,7 @@
     "jose": "^4.15.4",
     "loglevel": "^1.8.1",
     "loglevel-plugin-prefix": "^0.8.4",
-    "next": "^13.4.13",
+    "next": "^14.0.2",
     "next-auth": "^4.22.4",
     "next-themes": "^0.2.1",
     "react": "^18.2.0",
