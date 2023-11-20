@@ -112,7 +112,8 @@ export function groupBy<K, V>(array: V[], grouper: (item: V) => K, sorter: (a: K
  * @param signDisplay - Whether to display the currency sign always, never, or only when the amount is negative or zero.
  * @returns The formatted price as a string.
  */
-export function formatPrice(amount: number | null, signDisplay: 'always' | 'never' | 'auto' | 'exceptZero' = 'auto'): string {
+export function formatPrice(amount: number | null | undefined, signDisplay: 'always' | 'never' | 'auto' | 'exceptZero' = 'auto'): string {
+  if (amount === undefined) return '';
   if (amount === null) return '';
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',

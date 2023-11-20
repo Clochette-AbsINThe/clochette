@@ -167,7 +167,7 @@ export default function Register(): React.JSX.Element {
             <div className='grow'></div>
             <Button
               type='submit'
-              loading={createAccount.isLoading}
+              loading={createAccount.isPending}
             >
               Créer un compte
             </Button>

@@ -163,7 +163,7 @@ export function TresoryTransactionPopupContent(props: TresoryTransactionPopupCon
         <DialogFooter>
           <Button
             confirm
-            loading={createTreasuryTransaction.isLoading}
+            loading={createTreasuryTransaction.isPending}
             type='submit'
           >
             Confirmer

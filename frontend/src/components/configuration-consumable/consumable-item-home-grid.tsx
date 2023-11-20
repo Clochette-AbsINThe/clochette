@@ -18,7 +18,7 @@ export function ConsumableItemHomeGrid({ query }: { query: string }) {
     return <Loader />;
   }
 
-  if (isError) {
+  if (isError || !data) {
     return <p>Erreur lors du chargement des consommables</p>;
   }
 

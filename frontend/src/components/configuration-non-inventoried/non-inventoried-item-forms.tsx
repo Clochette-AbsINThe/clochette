@@ -151,7 +151,7 @@ export function NonInventoriedItemUpdateForm({ nonInventoriedItem }: { nonInvent
     >
       <Button
         confirm
-        loading={updateNonInventoriedItem.isLoading}
+        loading={updateNonInventoriedItem.isPending}
         type='submit'
       >
         Modifier le produit hors inventaire
@@ -193,7 +193,7 @@ export function NonInventoriedItemCreateForm() {
     >
       <Button
         confirm
-        loading={createNonInventoriedItem.isLoading}
+        loading={createNonInventoriedItem.isPending}
         type='submit'
       >
         Ajouter le nouveau produit hors inventaire

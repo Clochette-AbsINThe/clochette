@@ -122,7 +122,7 @@ export function ConsumableItemCreateForm() {
     >
       <Button
         confirm
-        loading={createConsumableItem.isLoading}
+        loading={createConsumableItem.isPending}
         type='submit'
       >
         Ajouter le nouveau consommable
@@ -168,7 +168,7 @@ export function ConsumableItemUpdateForm({ consumableItem }: { consumableItem: C
     >
       <Button
         confirm
-        loading={updateConsumableItem.isLoading}
+        loading={updateConsumableItem.isPending}
         type='submit'
       >
         Modifier le consommable

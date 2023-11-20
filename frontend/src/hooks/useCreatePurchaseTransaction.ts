@@ -69,7 +69,7 @@ export function useCreatePurchaseTransaction() {
   });
   const { transactionFlow, isLoading } = useCreateTransactionFlow();
 
-  const loading = createDrink.isLoading || createConsumableItem.isLoading || createNonInventoriedItem.isLoading || createNonInventoried.isLoading || createConsumable.isLoading || createBarrel.isLoading || isLoading;
+  const loading = createDrink.isPending || createConsumableItem.isPending || createNonInventoriedItem.isPending || createNonInventoried.isPending || createConsumable.isPending || createBarrel.isPending || isLoading;
 
   const items = useTransactionPurchaseStore.use.items();
 

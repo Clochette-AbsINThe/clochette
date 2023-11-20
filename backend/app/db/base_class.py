@@ -57,6 +57,9 @@ class Base(DeclarativeBase):
     def __repr__(self) -> str:
         return str(self)
 
+    def dict(self):
+        return {k: v for k, v in self.attributes}
+
 
 def build_fk_annotation(class_name: str):
     """

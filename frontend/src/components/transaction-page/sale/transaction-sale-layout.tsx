@@ -23,7 +23,7 @@ export function TransactionSaleLayout(props: { barrels: Barrel[]; nonInventoried
       }
     },
     {
-      initialData: props.barrels
+      placeholderData: props.barrels
     }
   );
 
@@ -34,14 +34,14 @@ export function TransactionSaleLayout(props: { barrels: Barrel[]; nonInventoried
       }
     },
     {
-      initialData: props.nonInventoriedItems
+      placeholderData: props.nonInventoriedItems
     }
   );
 
   const { data: consumables } = useReadDistinctConsumables(
     {},
     {
-      initialData: props.consumables
+      placeholderData: props.consumables
     }
   );
 

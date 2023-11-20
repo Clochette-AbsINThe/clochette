@@ -53,7 +53,7 @@ export function AccountDeletePopup({ rowAccount, setIsOpen }: AccountDeletePopup
           </Button>
           <Button
             danger
-            loading={deleteAccount.isLoading}
+            loading={deleteAccount.isPending}
             onClick={onClickDelete}
           >
             Supprimer

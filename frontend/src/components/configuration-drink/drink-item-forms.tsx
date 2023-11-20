@@ -100,7 +100,7 @@ export function DrinkItemCreateForm() {
     >
       <Button
         confirm
-        loading={createDrink.isLoading}
+        loading={createDrink.isPending}
         type='submit'
       >
         Ajouter la nouvelle boisson
@@ -146,7 +146,7 @@ export function DrinkItemUpdateForm(props: { drink: DrinkItem }) {
     >
       <Button
         confirm
-        loading={updateDrink.isLoading}
+        loading={updateDrink.isPending}
         type='submit'
       >
         Modifier la boisson

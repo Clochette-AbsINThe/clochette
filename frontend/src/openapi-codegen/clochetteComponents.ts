@@ -34,7 +34,7 @@ export const fetchRoot = (variables: RootVariables, signal?: AbortSignal) => clo
 /**
  * Root endpoint.
  */
-export const useRoot = <TData = Schemas.RootResponse>(variables: RootVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.RootResponse, RootError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useRoot = <TData = Schemas.RootResponse>(variables: RootVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.RootResponse, RootError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.RootResponse, RootError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/', operationId: 'root', variables }),
@@ -69,7 +69,7 @@ export const fetchHealth = (variables: HealthVariables, signal?: AbortSignal) =>
 /**
  * Health endpoint.
  */
-export const useHealth = <TData = Schemas.HealthResponse>(variables: HealthVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.HealthResponse, HealthError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useHealth = <TData = Schemas.HealthResponse>(variables: HealthVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.HealthResponse, HealthError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.HealthResponse, HealthError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/health', operationId: 'health', variables }),
@@ -108,7 +108,7 @@ export const fetchError = (variables: ErrorVariables, signal?: AbortSignal) => c
 /**
  * Error endpoint, which need to be used to test the exception monitor middleware.
  */
-export const useError = <TData = undefined>(variables: ErrorVariables, options?: Omit<reactQuery.UseQueryOptions<undefined, ErrorError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useError = <TData = undefined>(variables: ErrorVariables, options?: Omit<reactQuery.UseQueryOptions<undefined, ErrorError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<undefined, ErrorError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/error', operationId: 'error', variables }),
@@ -143,7 +143,7 @@ export const fetchVersion = (variables: VersionVariables, signal?: AbortSignal) 
 /**
  * Version endpoint.
  */
-export const useVersion = <TData = Schemas.VersionResponse>(variables: VersionVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.VersionResponse, VersionError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useVersion = <TData = Schemas.VersionResponse>(variables: VersionVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.VersionResponse, VersionError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.VersionResponse, VersionError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/version', operationId: 'version', variables }),
@@ -200,7 +200,7 @@ export const fetchReadAccounts = (variables: ReadAccountsVariables, signal?: Abo
  *
  * This endpoint requires authentication with the "president" scope.
  */
-export const useReadAccounts = <TData = ReadAccountsResponse>(variables: ReadAccountsVariables, options?: Omit<reactQuery.UseQueryOptions<ReadAccountsResponse, ReadAccountsError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadAccounts = <TData = ReadAccountsResponse>(variables: ReadAccountsVariables, options?: Omit<reactQuery.UseQueryOptions<ReadAccountsResponse, ReadAccountsError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadAccountsResponse, ReadAccountsError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/account/', operationId: 'readAccounts', variables }),
@@ -289,10 +289,10 @@ export const fetchReadAccount = (variables: ReadAccountVariables, signal?: Abort
  *
  * This endpoint requires authentication with the "president" scope.
  */
-export const useReadAccount = <TData = Schemas.Account>(variables: ReadAccountVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.Account, ReadAccountError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadAccount = <TData = Schemas.Account>(variables: ReadAccountVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.Account, ReadAccountError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.Account, ReadAccountError, TData>({
-    queryKey: queryKeyFn({ path: '/api/v1/account/{account_id}', operationId: 'readAccount', variables }),
+    queryKey: queryKeyFn({ path: '/api/v1/account/{accountId}', operationId: 'readAccount', variables }),
     queryFn: ({ signal }) => fetchReadAccount({ ...fetcherOptions, ...variables }, signal),
     ...options,
     ...queryOptions
@@ -460,7 +460,7 @@ export const fetchReadAccountMe = (variables: ReadAccountMeVariables, signal?: A
 /**
  * Returns the current user's account information.
  */
-export const useReadAccountMe = <TData = Schemas.Account>(variables: ReadAccountMeVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.Account, ReadAccountMeError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadAccountMe = <TData = Schemas.Account>(variables: ReadAccountMeVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.Account, ReadAccountMeError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.Account, ReadAccountMeError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/auth/me/', operationId: 'readAccountMe', variables }),
@@ -563,7 +563,7 @@ export const fetchV1ReadBarrels = (variables: V1ReadBarrelsVariables, signal?: A
  *     - `all`: If True, return all barrels. If False, return only mounted or unmounted barrels.
  *     - `mounted`: If True, return only mounted barrels. If False, return only unmounted barrels.
  */
-export const useV1ReadBarrels = <TData = V1ReadBarrelsResponse>(variables: V1ReadBarrelsVariables, options?: Omit<reactQuery.UseQueryOptions<V1ReadBarrelsResponse, V1ReadBarrelsError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useV1ReadBarrels = <TData = V1ReadBarrelsResponse>(variables: V1ReadBarrelsVariables, options?: Omit<reactQuery.UseQueryOptions<V1ReadBarrelsResponse, V1ReadBarrelsError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<V1ReadBarrelsResponse, V1ReadBarrelsError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/barrel/', operationId: 'v1ReadBarrels', variables }),
@@ -603,7 +603,7 @@ export const fetchV1ReadDistinctBarrels = (variables: V1ReadDistinctBarrelsVaria
  */
 export const useV1ReadDistinctBarrels = <TData = V1ReadDistinctBarrelsResponse>(
   variables: V1ReadDistinctBarrelsVariables,
-  options?: Omit<reactQuery.UseQueryOptions<V1ReadDistinctBarrelsResponse, V1ReadDistinctBarrelsError, TData>, 'queryKey' | 'queryFn'>
+  options?: Omit<reactQuery.UseQueryOptions<V1ReadDistinctBarrelsResponse, V1ReadDistinctBarrelsError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<V1ReadDistinctBarrelsResponse, V1ReadDistinctBarrelsError, TData>({
@@ -700,7 +700,10 @@ export const fetchV1ReadConsumables = (variables: V1ReadConsumablesVariables, si
 /**
  * Retrieve a list of consumables.
  */
-export const useV1ReadConsumables = <TData = V1ReadConsumablesResponse>(variables: V1ReadConsumablesVariables, options?: Omit<reactQuery.UseQueryOptions<V1ReadConsumablesResponse, V1ReadConsumablesError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useV1ReadConsumables = <TData = V1ReadConsumablesResponse>(
+  variables: V1ReadConsumablesVariables,
+  options?: Omit<reactQuery.UseQueryOptions<V1ReadConsumablesResponse, V1ReadConsumablesError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
+) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<V1ReadConsumablesResponse, V1ReadConsumablesError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/consumable/', operationId: 'v1ReadConsumables', variables }),
@@ -740,7 +743,7 @@ export const fetchV1ReadConsumablesDistincts = (variables: V1ReadConsumablesDist
  */
 export const useV1ReadConsumablesDistincts = <TData = V1ReadConsumablesDistinctsResponse>(
   variables: V1ReadConsumablesDistinctsVariables,
-  options?: Omit<reactQuery.UseQueryOptions<V1ReadConsumablesDistinctsResponse, V1ReadConsumablesDistinctsError, TData>, 'queryKey' | 'queryFn'>
+  options?: Omit<reactQuery.UseQueryOptions<V1ReadConsumablesDistinctsResponse, V1ReadConsumablesDistinctsError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<V1ReadConsumablesDistinctsResponse, V1ReadConsumablesDistinctsError, TData>({
@@ -824,7 +827,10 @@ export const fetchReadConsumableItems = (variables: ReadConsumableItemsVariables
 /**
  * Retrieve a list of all consumable items.
  */
-export const useReadConsumableItems = <TData = ReadConsumableItemsResponse>(variables: ReadConsumableItemsVariables, options?: Omit<reactQuery.UseQueryOptions<ReadConsumableItemsResponse, ReadConsumableItemsError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadConsumableItems = <TData = ReadConsumableItemsResponse>(
+  variables: ReadConsumableItemsVariables,
+  options?: Omit<reactQuery.UseQueryOptions<ReadConsumableItemsResponse, ReadConsumableItemsError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
+) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadConsumableItemsResponse, ReadConsumableItemsError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/consumable_item/', operationId: 'readConsumableItems', variables }),
@@ -910,10 +916,10 @@ export const fetchReadConsumableItem = (variables: ReadConsumableItemVariables, 
 /**
  * Retrieve a specific consumable item by ID.
  */
-export const useReadConsumableItem = <TData = Schemas.ConsumableItem>(variables: ReadConsumableItemVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.ConsumableItem, ReadConsumableItemError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadConsumableItem = <TData = Schemas.ConsumableItem>(variables: ReadConsumableItemVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.ConsumableItem, ReadConsumableItemError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.ConsumableItem, ReadConsumableItemError, TData>({
-    queryKey: queryKeyFn({ path: '/api/v1/consumable_item/{consumable_item_id}', operationId: 'readConsumableItem', variables }),
+    queryKey: queryKeyFn({ path: '/api/v1/consumable_item/{consumableItemId}', operationId: 'readConsumableItem', variables }),
     queryFn: ({ signal }) => fetchReadConsumableItem({ ...fetcherOptions, ...variables }, signal),
     ...options,
     ...queryOptions
@@ -1044,10 +1050,10 @@ export const fetchReadDrink = (variables: ReadDrinkVariables, signal?: AbortSign
 /**
  * Retrieve a drink by ID.
  */
-export const useReadDrink = <TData = Schemas.DrinkItem>(variables: ReadDrinkVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.DrinkItem, ReadDrinkError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadDrink = <TData = Schemas.DrinkItem>(variables: ReadDrinkVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.DrinkItem, ReadDrinkError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.DrinkItem, ReadDrinkError, TData>({
-    queryKey: queryKeyFn({ path: '/api/v1/drink/{drink_id}', operationId: 'readDrink', variables }),
+    queryKey: queryKeyFn({ path: '/api/v1/drink/{drinkId}', operationId: 'readDrink', variables }),
     queryFn: ({ signal }) => fetchReadDrink({ ...fetcherOptions, ...variables }, signal),
     ...options,
     ...queryOptions
@@ -1170,7 +1176,7 @@ export const fetchReadDrinks = (variables: ReadDrinksVariables, signal?: AbortSi
 /**
  * Retrieve all drinks.
  */
-export const useReadDrinks = <TData = ReadDrinksResponse>(variables: ReadDrinksVariables, options?: Omit<reactQuery.UseQueryOptions<ReadDrinksResponse, ReadDrinksError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadDrinks = <TData = ReadDrinksResponse>(variables: ReadDrinksVariables, options?: Omit<reactQuery.UseQueryOptions<ReadDrinksResponse, ReadDrinksError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadDrinksResponse, ReadDrinksError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/drink/', operationId: 'readDrinks', variables }),
@@ -1257,7 +1263,7 @@ export const fetchV1ReadGlasses = (variables: V1ReadGlassesVariables, signal?: A
 /**
  * Retrieve a list of glasses that match the given query parameters.
  */
-export const useV1ReadGlasses = <TData = V1ReadGlassesResponse>(variables: V1ReadGlassesVariables, options?: Omit<reactQuery.UseQueryOptions<V1ReadGlassesResponse, V1ReadGlassesError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useV1ReadGlasses = <TData = V1ReadGlassesResponse>(variables: V1ReadGlassesVariables, options?: Omit<reactQuery.UseQueryOptions<V1ReadGlassesResponse, V1ReadGlassesError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<V1ReadGlassesResponse, V1ReadGlassesError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/glass/', operationId: 'v1ReadGlasses', variables }),
@@ -1294,7 +1300,7 @@ export const fetchReadOutOfStocks = (variables: ReadOutOfStocksVariables, signal
 /**
  * Retrieve a list of out of stock items.
  */
-export const useReadOutOfStocks = <TData = ReadOutOfStocksResponse>(variables: ReadOutOfStocksVariables, options?: Omit<reactQuery.UseQueryOptions<ReadOutOfStocksResponse, ReadOutOfStocksError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadOutOfStocks = <TData = ReadOutOfStocksResponse>(variables: ReadOutOfStocksVariables, options?: Omit<reactQuery.UseQueryOptions<ReadOutOfStocksResponse, ReadOutOfStocksError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadOutOfStocksResponse, ReadOutOfStocksError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/out_of_stock/', operationId: 'readOutOfStocks', variables }),
@@ -1346,7 +1352,7 @@ export const fetchReadOutOfStockItemsBuy = (variables: ReadOutOfStockItemsBuyVar
  */
 export const useReadOutOfStockItemsBuy = <TData = ReadOutOfStockItemsBuyResponse>(
   variables: ReadOutOfStockItemsBuyVariables,
-  options?: Omit<reactQuery.UseQueryOptions<ReadOutOfStockItemsBuyResponse, ReadOutOfStockItemsBuyError, TData>, 'queryKey' | 'queryFn'>
+  options?: Omit<reactQuery.UseQueryOptions<ReadOutOfStockItemsBuyResponse, ReadOutOfStockItemsBuyError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadOutOfStockItemsBuyResponse, ReadOutOfStockItemsBuyError, TData>({
@@ -1399,7 +1405,7 @@ export const fetchReadOutOfStockItemsSell = (variables: ReadOutOfStockItemsSellV
  */
 export const useReadOutOfStockItemsSell = <TData = ReadOutOfStockItemsSellResponse>(
   variables: ReadOutOfStockItemsSellVariables,
-  options?: Omit<reactQuery.UseQueryOptions<ReadOutOfStockItemsSellResponse, ReadOutOfStockItemsSellError, TData>, 'queryKey' | 'queryFn'>
+  options?: Omit<reactQuery.UseQueryOptions<ReadOutOfStockItemsSellResponse, ReadOutOfStockItemsSellError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadOutOfStockItemsSellResponse, ReadOutOfStockItemsSellError, TData>({
@@ -1446,10 +1452,10 @@ export const fetchReadOutOfStockItem = (variables: ReadOutOfStockItemVariables, 
 /**
  * Retrieve an out of stock item by ID.
  */
-export const useReadOutOfStockItem = <TData = Schemas.OutOfStockItem>(variables: ReadOutOfStockItemVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.OutOfStockItem, ReadOutOfStockItemError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadOutOfStockItem = <TData = Schemas.OutOfStockItem>(variables: ReadOutOfStockItemVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.OutOfStockItem, ReadOutOfStockItemError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.OutOfStockItem, ReadOutOfStockItemError, TData>({
-    queryKey: queryKeyFn({ path: '/api/v1/out_of_stock_item/{out_of_stock_item_id}', operationId: 'readOutOfStockItem', variables }),
+    queryKey: queryKeyFn({ path: '/api/v1/out_of_stock_item/{outOfStockItemId}', operationId: 'readOutOfStockItem', variables }),
     queryFn: ({ signal }) => fetchReadOutOfStockItem({ ...fetcherOptions, ...variables }, signal),
     ...options,
     ...queryOptions
@@ -1626,7 +1632,10 @@ export type V1ReadTransactionsVariables = {
 export const fetchV1ReadTransactions = (variables: V1ReadTransactionsVariables, signal?: AbortSignal) =>
   clochetteFetch<V1ReadTransactionsResponse, V1ReadTransactionsError, undefined, {}, V1ReadTransactionsQueryParams, {}>({ url: '/api/v1/transaction/', method: 'get', ...variables, signal });
 
-export const useV1ReadTransactions = <TData = V1ReadTransactionsResponse>(variables: V1ReadTransactionsVariables, options?: Omit<reactQuery.UseQueryOptions<V1ReadTransactionsResponse, V1ReadTransactionsError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useV1ReadTransactions = <TData = V1ReadTransactionsResponse>(
+  variables: V1ReadTransactionsVariables,
+  options?: Omit<reactQuery.UseQueryOptions<V1ReadTransactionsResponse, V1ReadTransactionsError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
+) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<V1ReadTransactionsResponse, V1ReadTransactionsError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/transaction/', operationId: 'v1ReadTransactions', variables }),
@@ -1700,10 +1709,13 @@ export type V1ReadTransactionVariables = {
 export const fetchV1ReadTransaction = (variables: V1ReadTransactionVariables, signal?: AbortSignal) =>
   clochetteFetch<Schemas.TransactionSingle, V1ReadTransactionError, undefined, {}, {}, V1ReadTransactionPathParams>({ url: '/api/v1/transaction/{transactionId}', method: 'get', ...variables, signal });
 
-export const useV1ReadTransaction = <TData = Schemas.TransactionSingle>(variables: V1ReadTransactionVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.TransactionSingle, V1ReadTransactionError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useV1ReadTransaction = <TData = Schemas.TransactionSingle>(
+  variables: V1ReadTransactionVariables,
+  options?: Omit<reactQuery.UseQueryOptions<Schemas.TransactionSingle, V1ReadTransactionError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
+) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.TransactionSingle, V1ReadTransactionError, TData>({
-    queryKey: queryKeyFn({ path: '/api/v1/transaction/{transaction_id}', operationId: 'v1ReadTransaction', variables }),
+    queryKey: queryKeyFn({ path: '/api/v1/transaction/{transactionId}', operationId: 'v1ReadTransaction', variables }),
     queryFn: ({ signal }) => fetchV1ReadTransaction({ ...fetcherOptions, ...variables }, signal),
     ...options,
     ...queryOptions
@@ -1741,7 +1753,7 @@ export const fetchReadTreasuries = (variables: ReadTreasuriesVariables, signal?:
  *
  * Requires a user with the 'treasurer' scope to be authenticated.
  */
-export const useReadTreasuries = <TData = ReadTreasuriesResponse>(variables: ReadTreasuriesVariables, options?: Omit<reactQuery.UseQueryOptions<ReadTreasuriesResponse, ReadTreasuriesError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadTreasuries = <TData = ReadTreasuriesResponse>(variables: ReadTreasuriesVariables, options?: Omit<reactQuery.UseQueryOptions<ReadTreasuriesResponse, ReadTreasuriesError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadTreasuriesResponse, ReadTreasuriesError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/treasury/', operationId: 'readTreasuries', variables }),
@@ -1780,7 +1792,7 @@ export const fetchReadLastTreasury = (variables: ReadLastTreasuryVariables, sign
  *
  * Requires a user with the 'treasurer' scope to be authenticated.
  */
-export const useReadLastTreasury = <TData = Schemas.Treasury>(variables: ReadLastTreasuryVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.Treasury, ReadLastTreasuryError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadLastTreasury = <TData = Schemas.Treasury>(variables: ReadLastTreasuryVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.Treasury, ReadLastTreasuryError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.Treasury, ReadLastTreasuryError, TData>({
     queryKey: queryKeyFn({ path: '/api/v1/treasury/last', operationId: 'readLastTreasury', variables }),
@@ -1893,7 +1905,7 @@ export const fetchReadBarrels = (variables: ReadBarrelsVariables, signal?: Abort
  *             return only unmounted barrels.
  *     - `drink_item_id`: If specified, return only barrels containing the specified drink item.
  */
-export const useReadBarrels = <TData = ReadBarrelsResponse>(variables: ReadBarrelsVariables, options?: Omit<reactQuery.UseQueryOptions<ReadBarrelsResponse, ReadBarrelsError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadBarrels = <TData = ReadBarrelsResponse>(variables: ReadBarrelsVariables, options?: Omit<reactQuery.UseQueryOptions<ReadBarrelsResponse, ReadBarrelsError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadBarrelsResponse, ReadBarrelsError, TData>({
     queryKey: queryKeyFn({ path: '/api/v2/barrel/', operationId: 'readBarrels', variables }),
@@ -1988,7 +2000,10 @@ export const fetchReadDistinctBarrels = (variables: ReadDistinctBarrelsVariables
  *     - `is_mounted`: If specified, if True, return only mounted barrels, else if False,
  *             return only unmounted barrels.
  */
-export const useReadDistinctBarrels = <TData = ReadDistinctBarrelsResponse>(variables: ReadDistinctBarrelsVariables, options?: Omit<reactQuery.UseQueryOptions<ReadDistinctBarrelsResponse, ReadDistinctBarrelsError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadDistinctBarrels = <TData = ReadDistinctBarrelsResponse>(
+  variables: ReadDistinctBarrelsVariables,
+  options?: Omit<reactQuery.UseQueryOptions<ReadDistinctBarrelsResponse, ReadDistinctBarrelsError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
+) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadDistinctBarrelsResponse, ReadDistinctBarrelsError, TData>({
     queryKey: queryKeyFn({ path: '/api/v2/barrel/distincts/', operationId: 'readDistinctBarrels', variables }),
@@ -2136,7 +2151,7 @@ export const fetchReadConsumables = (variables: ReadConsumablesVariables, signal
  * Query parameters:
  *     - `all`: A boolean indicating whether to return all consumables or only non-empty ones.
  */
-export const useReadConsumables = <TData = ReadConsumablesResponse>(variables: ReadConsumablesVariables, options?: Omit<reactQuery.UseQueryOptions<ReadConsumablesResponse, ReadConsumablesError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadConsumables = <TData = ReadConsumablesResponse>(variables: ReadConsumablesVariables, options?: Omit<reactQuery.UseQueryOptions<ReadConsumablesResponse, ReadConsumablesError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadConsumablesResponse, ReadConsumablesError, TData>({
     queryKey: queryKeyFn({ path: '/api/v2/consumable/', operationId: 'readConsumables', variables }),
@@ -2222,10 +2237,10 @@ export const fetchReadConsumable = (variables: ReadConsumableVariables, signal?:
 /**
  * Retrieve a consumable.
  */
-export const useReadConsumable = <TData = Schemas.Consumable>(variables: ReadConsumableVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.Consumable, ReadConsumableError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadConsumable = <TData = Schemas.Consumable>(variables: ReadConsumableVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.Consumable, ReadConsumableError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.Consumable, ReadConsumableError, TData>({
-    queryKey: queryKeyFn({ path: '/api/v2/consumable/{consumable_id}', operationId: 'readConsumable', variables }),
+    queryKey: queryKeyFn({ path: '/api/v2/consumable/{consumableId}', operationId: 'readConsumable', variables }),
     queryFn: ({ signal }) => fetchReadConsumable({ ...fetcherOptions, ...variables }, signal),
     ...options,
     ...queryOptions
@@ -2307,7 +2322,7 @@ export const fetchReadDistinctConsumables = (variables: ReadDistinctConsumablesV
  */
 export const useReadDistinctConsumables = <TData = ReadDistinctConsumablesResponse>(
   variables: ReadDistinctConsumablesVariables,
-  options?: Omit<reactQuery.UseQueryOptions<ReadDistinctConsumablesResponse, ReadDistinctConsumablesError, TData>, 'queryKey' | 'queryFn'>
+  options?: Omit<reactQuery.UseQueryOptions<ReadDistinctConsumablesResponse, ReadDistinctConsumablesError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadDistinctConsumablesResponse, ReadDistinctConsumablesError, TData>({
@@ -2401,7 +2416,7 @@ export const fetchReadGlasses = (variables: ReadGlassesVariables, signal?: Abort
 /**
  * Retrieve a list of glasses that match the given query parameters.
  */
-export const useReadGlasses = <TData = ReadGlassesResponse>(variables: ReadGlassesVariables, options?: Omit<reactQuery.UseQueryOptions<ReadGlassesResponse, ReadGlassesError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadGlasses = <TData = ReadGlassesResponse>(variables: ReadGlassesVariables, options?: Omit<reactQuery.UseQueryOptions<ReadGlassesResponse, ReadGlassesError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadGlassesResponse, ReadGlassesError, TData>({
     queryKey: queryKeyFn({ path: '/api/v2/glass/', operationId: 'readGlasses', variables }),
@@ -2485,10 +2500,10 @@ export const fetchReadGlass = (variables: ReadGlassVariables, signal?: AbortSign
 /**
  * Retrieve a glass.
  */
-export const useReadGlass = <TData = Schemas.Glass>(variables: ReadGlassVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.Glass, ReadGlassError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadGlass = <TData = Schemas.Glass>(variables: ReadGlassVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.Glass, ReadGlassError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.Glass, ReadGlassError, TData>({
-    queryKey: queryKeyFn({ path: '/api/v2/glass/{glass_id}', operationId: 'readGlass', variables }),
+    queryKey: queryKeyFn({ path: '/api/v2/glass/{glassId}', operationId: 'readGlass', variables }),
     queryFn: ({ signal }) => fetchReadGlass({ ...fetcherOptions, ...variables }, signal),
     ...options,
     ...queryOptions
@@ -2523,7 +2538,10 @@ export const fetchReadNonInventorieds = (variables: ReadNonInventoriedsVariables
 /**
  * Retrieve a list of non inventorieds.
  */
-export const useReadNonInventorieds = <TData = ReadNonInventoriedsResponse>(variables: ReadNonInventoriedsVariables, options?: Omit<reactQuery.UseQueryOptions<ReadNonInventoriedsResponse, ReadNonInventoriedsError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadNonInventorieds = <TData = ReadNonInventoriedsResponse>(
+  variables: ReadNonInventoriedsVariables,
+  options?: Omit<reactQuery.UseQueryOptions<ReadNonInventoriedsResponse, ReadNonInventoriedsError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
+) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadNonInventoriedsResponse, ReadNonInventoriedsError, TData>({
     queryKey: queryKeyFn({ path: '/api/v2/non_inventoried/', operationId: 'readNonInventorieds', variables }),
@@ -2609,10 +2627,10 @@ export const fetchReadNonInventoried = (variables: ReadNonInventoriedVariables, 
 /**
  * Retrieve a non inventoried.
  */
-export const useReadNonInventoried = <TData = Schemas.NonInventoried>(variables: ReadNonInventoriedVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.NonInventoried, ReadNonInventoriedError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadNonInventoried = <TData = Schemas.NonInventoried>(variables: ReadNonInventoriedVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.NonInventoried, ReadNonInventoriedError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.NonInventoried, ReadNonInventoriedError, TData>({
-    queryKey: queryKeyFn({ path: '/api/v2/non_inventoried/{non_inventoried_id}', operationId: 'readNonInventoried', variables }),
+    queryKey: queryKeyFn({ path: '/api/v2/non_inventoried/{nonInventoriedId}', operationId: 'readNonInventoried', variables }),
     queryFn: ({ signal }) => fetchReadNonInventoried({ ...fetcherOptions, ...variables }, signal),
     ...options,
     ...queryOptions
@@ -2668,7 +2686,7 @@ export const fetchReadNonInventoriedItems = (variables: ReadNonInventoriedItemsV
  */
 export const useReadNonInventoriedItems = <TData = ReadNonInventoriedItemsResponse>(
   variables: ReadNonInventoriedItemsVariables,
-  options?: Omit<reactQuery.UseQueryOptions<ReadNonInventoriedItemsResponse, ReadNonInventoriedItemsError, TData>, 'queryKey' | 'queryFn'>
+  options?: Omit<reactQuery.UseQueryOptions<ReadNonInventoriedItemsResponse, ReadNonInventoriedItemsError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadNonInventoriedItemsResponse, ReadNonInventoriedItemsError, TData>({
@@ -2757,11 +2775,11 @@ export const fetchReadNonInventoriedItem = (variables: ReadNonInventoriedItemVar
  */
 export const useReadNonInventoriedItem = <TData = Schemas.NonInventoriedItem>(
   variables: ReadNonInventoriedItemVariables,
-  options?: Omit<reactQuery.UseQueryOptions<Schemas.NonInventoriedItem, ReadNonInventoriedItemError, TData>, 'queryKey' | 'queryFn'>
+  options?: Omit<reactQuery.UseQueryOptions<Schemas.NonInventoriedItem, ReadNonInventoriedItemError, TData>, 'queryKey' | 'queryFn' | 'initialData'>
 ) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.NonInventoriedItem, ReadNonInventoriedItemError, TData>({
-    queryKey: queryKeyFn({ path: '/api/v2/non_inventoried_item/{non_inventoried_item_id}', operationId: 'readNonInventoriedItem', variables }),
+    queryKey: queryKeyFn({ path: '/api/v2/non_inventoried_item/{nonInventoriedItemId}', operationId: 'readNonInventoriedItem', variables }),
     queryFn: ({ signal }) => fetchReadNonInventoriedItem({ ...fetcherOptions, ...variables }, signal),
     ...options,
     ...queryOptions
@@ -2947,7 +2965,7 @@ export const fetchReadTransactions = (variables: ReadTransactionsVariables, sign
 /**
  * Retrieve transactions.
  */
-export const useReadTransactions = <TData = ReadTransactionsResponse>(variables: ReadTransactionsVariables, options?: Omit<reactQuery.UseQueryOptions<ReadTransactionsResponse, ReadTransactionsError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadTransactions = <TData = ReadTransactionsResponse>(variables: ReadTransactionsVariables, options?: Omit<reactQuery.UseQueryOptions<ReadTransactionsResponse, ReadTransactionsError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<ReadTransactionsResponse, ReadTransactionsError, TData>({
     queryKey: queryKeyFn({ path: '/api/v2/transaction/', operationId: 'readTransactions', variables }),
@@ -3129,10 +3147,10 @@ export const fetchReadTransaction = (variables: ReadTransactionVariables, signal
 /**
  * Retrieve a transaction.
  */
-export const useReadTransaction = <TData = Schemas.TransactionDetail>(variables: ReadTransactionVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.TransactionDetail, ReadTransactionError, TData>, 'queryKey' | 'queryFn'>) => {
+export const useReadTransaction = <TData = Schemas.TransactionDetail>(variables: ReadTransactionVariables, options?: Omit<reactQuery.UseQueryOptions<Schemas.TransactionDetail, ReadTransactionError, TData>, 'queryKey' | 'queryFn' | 'initialData'>) => {
   const { fetcherOptions, queryOptions, queryKeyFn } = useClochetteContext(options);
   return reactQuery.useQuery<Schemas.TransactionDetail, ReadTransactionError, TData>({
-    queryKey: queryKeyFn({ path: '/api/v2/transaction/{transaction_id}', operationId: 'readTransaction', variables }),
+    queryKey: queryKeyFn({ path: '/api/v2/transaction/{transactionId}', operationId: 'readTransaction', variables }),
     queryFn: ({ signal }) => fetchReadTransaction({ ...fetcherOptions, ...variables }, signal),
     ...options,
     ...queryOptions
@@ -3166,7 +3184,7 @@ export type QueryOperation =
       variables: ReadAccountsVariables;
     }
   | {
-      path: '/api/v1/account/{account_id}';
+      path: '/api/v1/account/{accountId}';
       operationId: 'readAccount';
       variables: ReadAccountVariables;
     }
@@ -3201,12 +3219,12 @@ export type QueryOperation =
       variables: ReadConsumableItemsVariables;
     }
   | {
-      path: '/api/v1/consumable_item/{consumable_item_id}';
+      path: '/api/v1/consumable_item/{consumableItemId}';
       operationId: 'readConsumableItem';
       variables: ReadConsumableItemVariables;
     }
   | {
-      path: '/api/v1/drink/{drink_id}';
+      path: '/api/v1/drink/{drinkId}';
       operationId: 'readDrink';
       variables: ReadDrinkVariables;
     }
@@ -3236,7 +3254,7 @@ export type QueryOperation =
       variables: ReadOutOfStockItemsSellVariables;
     }
   | {
-      path: '/api/v1/out_of_stock_item/{out_of_stock_item_id}';
+      path: '/api/v1/out_of_stock_item/{outOfStockItemId}';
       operationId: 'readOutOfStockItem';
       variables: ReadOutOfStockItemVariables;
     }
@@ -3246,7 +3264,7 @@ export type QueryOperation =
       variables: V1ReadTransactionsVariables;
     }
   | {
-      path: '/api/v1/transaction/{transaction_id}';
+      path: '/api/v1/transaction/{transactionId}';
       operationId: 'v1ReadTransaction';
       variables: V1ReadTransactionVariables;
     }
@@ -3276,7 +3294,7 @@ export type QueryOperation =
       variables: ReadConsumablesVariables;
     }
   | {
-      path: '/api/v2/consumable/{consumable_id}';
+      path: '/api/v2/consumable/{consumableId}';
       operationId: 'readConsumable';
       variables: ReadConsumableVariables;
     }
@@ -3291,7 +3309,7 @@ export type QueryOperation =
       variables: ReadGlassesVariables;
     }
   | {
-      path: '/api/v2/glass/{glass_id}';
+      path: '/api/v2/glass/{glassId}';
       operationId: 'readGlass';
       variables: ReadGlassVariables;
     }
@@ -3301,7 +3319,7 @@ export type QueryOperation =
       variables: ReadNonInventoriedsVariables;
     }
   | {
-      path: '/api/v2/non_inventoried/{non_inventoried_id}';
+      path: '/api/v2/non_inventoried/{nonInventoriedId}';
       operationId: 'readNonInventoried';
       variables: ReadNonInventoriedVariables;
     }
@@ -3311,7 +3329,7 @@ export type QueryOperation =
       variables: ReadNonInventoriedItemsVariables;
     }
   | {
-      path: '/api/v2/non_inventoried_item/{non_inventoried_item_id}';
+      path: '/api/v2/non_inventoried_item/{nonInventoriedItemId}';
       operationId: 'readNonInventoriedItem';
       variables: ReadNonInventoriedItemVariables;
     }
@@ -3321,7 +3339,7 @@ export type QueryOperation =
       variables: ReadTransactionsVariables;
     }
   | {
-      path: '/api/v2/transaction/{transaction_id}';
+      path: '/api/v2/transaction/{transactionId}';
       operationId: 'readTransaction';
       variables: ReadTransactionVariables;
     };

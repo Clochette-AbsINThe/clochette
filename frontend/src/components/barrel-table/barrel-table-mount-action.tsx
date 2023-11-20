@@ -49,7 +49,7 @@ export function BarrelsTableMountAction({ barrel }: BarrelsTableMountActionProps
       confirm
       disabled={data === undefined || data.length > 0}
       onClick={onClick}
-      loading={modifyBarrel.isLoading}
+      loading={modifyBarrel.isPending}
     >
       Monter
     </Button>

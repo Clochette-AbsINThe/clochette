@@ -40,7 +40,7 @@ export function AccountModifyPopup({ rowAccount, isOpen, setIsOpen }: AccountMod
       }
     },
     {
-      initialData: rowAccount,
+      placeholderData: rowAccount,
       enabled: isOpen
     }
   );
@@ -123,7 +123,7 @@ export function AccountModifyPopup({ rowAccount, isOpen, setIsOpen }: AccountMod
                 <Button
                   confirm
                   type='submit'
-                  loading={updateAccount.isLoading}
+                  loading={updateAccount.isPending}
                 >
                   Modifier le compte
                 </Button>

@@ -63,9 +63,9 @@ export const getServerSideProps: GetServerSideProps<{
 };
 
 const TransactionVentePage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { data: drinkItems } = useReadDrinks({}, { initialData: props.drinkItems });
-  const { data: consumableItems } = useReadConsumableItems({}, { initialData: props.consumableItems });
-  const { data: nonInventoriedItems } = useReadNonInventoriedItems({ queryParams: { trade: 'purchase' } }, { initialData: props.nonInventoriedItems });
+  const { data: drinkItems } = useReadDrinks({}, { placeholderData: props.drinkItems });
+  const { data: consumableItems } = useReadConsumableItems({}, { placeholderData: props.consumableItems });
+  const { data: nonInventoriedItems } = useReadNonInventoriedItems({ queryParams: { trade: 'purchase' } }, { placeholderData: props.nonInventoriedItems });
 
   return (
     <Base

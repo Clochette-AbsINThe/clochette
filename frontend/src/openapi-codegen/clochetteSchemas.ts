@@ -61,9 +61,6 @@ export type BarrelDistinct = {
   barrelSellPrice: number | null;
   emptyOrSolded: boolean;
   isMounted: boolean;
-  /**
-   * @default 1
-   */
   quantity: number;
   name: string;
 };
@@ -114,9 +111,6 @@ export type ConsumableDistinct = {
   solded: boolean;
   sellPrice: number;
   buyPrice: number;
-  /**
-   * @default 1
-   */
   quantity: number;
   name: string;
   icon: IconName;
@@ -198,7 +192,7 @@ export type Item = {
 
 export type NonInventoried = {
   nonInventoriedItemId: number;
-  buyPrice: number | null;
+  buyPrice?: number | null;
   id: number;
   sellPrice: number | null;
   name: string;
@@ -218,7 +212,7 @@ export type NonInventoriedItem = {
    */
   name: string;
   icon: IconName;
-  sellPrice: number | null;
+  sellPrice?: number | null;
   id: number;
   trade: TradeType;
 };
@@ -240,7 +234,7 @@ export type NonInventoriedItemUpdate = {
 
 export type OutOfStock = {
   fkId: number;
-  unitPrice: number | null;
+  unitPrice?: number | null;
   id: number;
   name: string;
   icon: IconName;
@@ -262,7 +256,7 @@ export type OutOfStockItem = {
    */
   name: string;
   icon: IconName;
-  sellPrice: number | null;
+  sellPrice?: number | null;
   id: number;
   /**
    * buy_or_sell is True if the item does not have a sell price.
@@ -311,7 +305,7 @@ export type Token = {
   /**
    * @default bearer
    */
-  token_type: string;
+  token_type?: string;
 };
 
 export type TradeType = 'purchase' | 'sale';
@@ -373,8 +367,8 @@ export type TransactionSingle = {
   /**
    * @default transaction
    */
-  type: TransactionTypeV1;
-  description: string | null;
+  type?: TransactionTypeV1;
+  description?: string | null;
   id: number;
   treasuryId: number;
   barrels: BarrelV1[] | null;
@@ -431,7 +425,7 @@ export type VersionResponse = {
 };
 
 export type BarrelV1 = {
-  fkId: number | null;
+  fkId?: number | null;
   /**
    * @exclusiveMinimum 0
    */
@@ -517,8 +511,8 @@ export type TransactionV1 = {
   /**
    * @default transaction
    */
-  type: TransactionTypeV1;
-  description: string | null;
+  type?: TransactionTypeV1;
+  description?: string | null;
   id: number;
   treasuryId: number;
 };

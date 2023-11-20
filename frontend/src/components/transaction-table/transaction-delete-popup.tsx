@@ -53,7 +53,7 @@ export function TransactionDeletePopup({ row, isOpen, setIsOpen }: TransactionDe
           </Button>
           <Button
             danger
-            loading={deleteTransaction.isLoading}
+            loading={deleteTransaction.isPending}
             onClick={onClickDelete}
           >
             Supprimer

@@ -35,7 +35,7 @@ export function DrinkItemDeleteButton({ drink }: { drink: DrinkItem }) {
     <Button
       danger
       onClick={onDelete}
-      loading={deleteDrink.isLoading}
+      loading={deleteDrink.isPending}
     >
       <span>Supprimer</span>
     </Button>

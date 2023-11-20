@@ -93,7 +93,7 @@ export function BarrelSalePopup({ rowBarrel, isOpen, setIsOpen }: BarrelSalePopu
     } catch {}
   };
 
-  const loading = sellBarrel.isLoading || isLoading;
+  const loading = sellBarrel.isPending || isLoading;
 
   return (
     <>
