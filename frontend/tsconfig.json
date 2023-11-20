@@ -32,6 +32,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
+    "next.config.cjs",
   ],
   "exclude": [
     "node_modules"
