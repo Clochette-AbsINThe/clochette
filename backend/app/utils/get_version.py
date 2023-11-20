@@ -1,4 +1,9 @@
-import tomllib
+import sys
+
+if sys.version_info < (3, 11):
+    from pip._vendor import tomli as tomllib  # pragma: no cover
+else:
+    import tomllib  # pragma: no cover
 
 
 def get_version():
