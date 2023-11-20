@@ -11,6 +11,10 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: ⬆
+    groups:
+      github-actions:
+        patterns:
+          - "*"
 
   - package-ecosystem: "npm"
     directory: "/frontend"
@@ -18,6 +22,11 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: ⬆
+    groups:
+      production-dependencies:
+        dependency-type: production
+      development-dependencies:
+        dependency-type: development
 
   - package-ecosystem: "pip"
     directory: "/backend"
@@ -25,3 +34,8 @@ updates:
       interval: "weekly"
     commit-message:
       prefix: ⬆
+    groups:
+      production-dependencies:
+        dependency-type: production
+      development-dependencies:
+        dependency-type: development
