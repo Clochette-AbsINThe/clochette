@@ -4,16 +4,18 @@ This is the backend for the clochette website. It is based on FastAPI and uses a
 
 You can find more information about the architecture in the [architecture.md](./docs/architecture.md) file.
 
+Read the markdowns in the [docs](./docs) folder to learn more about the project.
+
 ## Requirements
 
-- Python 3.11
+- Python >=3.10
 - Poetry
 
 ## Installation
 
 ### Install dependencies
 
-Poetry will take all the information on the `pyproject.toml` file and will install all its dependencoies.
+Poetry will take all the information on the `pyproject.toml` file and will install all its dependencies.
 
 You can install Poetry using the following command:
 
@@ -33,7 +35,7 @@ Source: https://python-poetry.org/docs/#installing-with-the-official-installer
 
 Then, you can install the dependencies.
 
-#### Virtual env if you use Conda
+#### Virtual env if you use Conda (Optional)
 
 Start the conda env:
 
@@ -63,6 +65,15 @@ Activate the virtual env:
 
 ```bash
 $ source .venv/bin/activate
+```
+
+#### Run with different python version
+
+You can try to run the application with a different python version using the following command:
+
+```bash
+$ poetry install
+$ poetry update
 ```
 
 #### Install the pre-commit Git hook
@@ -129,6 +140,8 @@ Then, you can run the app with the following command from the root folder:
 $ uvicorn app.main:app --reload
 ```
 
+To be able to view the Swagger UI, you need to go to the following URL: localhost:8000/docs
+
 ### Availabe configuration
 
 You can configure the app using the [config.py](./app/core/config.py) file.
@@ -139,8 +152,8 @@ There is 3 different configuration:
 - `TestingConfig`: Used for testing
 - `ProductionConfig`: Used for production
 
-You can change the configuration by changing the `ENVIRONMENT` variable to be either `development`, `test` or `production`.
-By default the `ENVIRONMENT` variable is set to `development`.
+You can change the configuration by changing the `ENVIRONMENT` environment variable to be either `development`, `test` or `production`.
+By default the `ENVIRONMENT` environment variable is set to `development`.
 
 You can choose to run on PostgreSQL by setting the `DB_TYPE` environment variable to `POSTGRES`.
 By default the `DB_TYPE` variable is set to `SQLITE`.

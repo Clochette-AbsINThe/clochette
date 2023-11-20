@@ -1,5 +1,7 @@
 # Details about the v2
 
+This file contains details about the v2 of the API.
+
 ## Transactions
 
 In v2, transactions are now split into two status, `pending` and `validated`. This is to allow the user to create a transaction and validate it at a later time.

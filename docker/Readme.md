@@ -1,5 +1,7 @@
 # When the app is set to the deployment you should add 1 important env files
 
+Go check this [documentation](./reverse-proxy/ssl/README.md) to be able to set up https using docker in development.
+
 ## `.env` in the docker/ folder
 
 - GITHUB_USER=\*\*\*
@@ -11,6 +13,8 @@
 - BASE_ACCOUNT_USERNAME=\*\*\*
 - BASE_ACCOUNT_PASSWORD=\*\*\*
 - LOCALE=fr # Or en
+
+You can have a look to the .env.sample file which should be working for development.
 
 ## The `db-shared-volume` folder
 

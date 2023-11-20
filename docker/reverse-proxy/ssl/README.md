@@ -35,6 +35,7 @@ NGINX is configured to use https. To do this, you need to :
 ## Generate a new certificate
 
 To generate a new certificate, you need to have `openssl` installed.
+You need to generate a new certificate if you want to change the domain name or if the certificate is expired.
 
 1.  Generate a csr:
 
