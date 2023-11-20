@@ -14,7 +14,7 @@ import { useCreateSaleTransaction } from '@/hooks/useCreateSaleTransaction';
 import { TransactionCommerceCreate } from '@/openapi-codegen/clochetteSchemas';
 import { formatPrice } from '@/utils/utils';
 
-export function TransactionSaleValidate(): JSX.Element {
+export function TransactionSaleValidate(): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
   const queryClient = useQueryClient();
   const items = useTransactionSaleStore.use.items();

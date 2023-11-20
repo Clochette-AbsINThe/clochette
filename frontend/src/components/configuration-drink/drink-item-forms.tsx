@@ -4,7 +4,6 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/router';
 
 import { Button } from '@/components/button';
-import { IconForm } from '@/components/forms/icon-form';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useCreateDrink, useUpdateDrink } from '@/openapi-codegen/clochetteComponents';

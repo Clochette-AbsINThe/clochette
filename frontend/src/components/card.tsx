@@ -9,7 +9,7 @@ interface CardProps {
   icon: Icons[];
 }
 
-export default function Card({ title, description, link, icon }: CardProps): JSX.Element {
+export default function Card({ title, description, link, icon }: CardProps): React.JSX.Element {
   return (
     <div className='w-full p-2 flex-grow'>
       <Link href={link}>

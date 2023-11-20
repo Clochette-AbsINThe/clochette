@@ -1,4 +1,4 @@
-export default function Loader(): JSX.Element {
+export default function Loader(): React.JSX.Element {
   return (
     <div className='flex justify-center items-center h-full'>
       <div

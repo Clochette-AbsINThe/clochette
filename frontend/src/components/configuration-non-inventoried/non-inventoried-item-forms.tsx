@@ -9,7 +9,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { useCreateNonInventoriedItem, useUpdateNonInventoriedItem } from '@/openapi-codegen/clochetteComponents';
 import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
-import { NonInventoriedItem, NonInventoriedItemCreate, NonInventoriedItemUpdate, TransactionCommerceCreate } from '@/openapi-codegen/clochetteSchemas';
+import { NonInventoriedItem, NonInventoriedItemCreate, NonInventoriedItemUpdate } from '@/openapi-codegen/clochetteSchemas';
 import { pages } from '@/utils/pages';
 import { patchEmptyString } from '@/utils/utils';
 

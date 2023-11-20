@@ -9,7 +9,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 
 const queryClient = new QueryClient();
 
-export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
+export default function MyApp({ Component, pageProps }: AppProps): React.JSX.Element {
   return (
     <SessionProvider session={pageProps.session}>
       <QueryClientProvider client={queryClient}>

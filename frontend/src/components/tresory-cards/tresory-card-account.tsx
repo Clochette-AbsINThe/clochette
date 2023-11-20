@@ -5,7 +5,6 @@ import { TresoryTransactionPopupContent } from './tresory-transaction-popup-cont
 import { Button as UIButton } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { useReadLastTreasury } from '@/openapi-codegen/clochetteComponents';
 import { Treasury } from '@/openapi-codegen/clochetteSchemas';
 import { getIcon } from '@/styles/utils';
 import { formatPrice } from '@/utils/utils';

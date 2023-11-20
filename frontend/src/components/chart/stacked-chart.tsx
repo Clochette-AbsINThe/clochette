@@ -87,19 +87,21 @@ export function StackedChart<K>({ groupByCallback, sortCallback }: StackedChartP
 
   const chartData: ChartData<'bar'> = {
     labels: Array.from(dataset.keys()),
-    datasets: names.sort().map((name, index) => {
-      return {
-        label: name,
-        data: Array.from(dataset.values()).map((itemsForAKey) => itemsForAKey.filter((item) => item.name === name).length),
-        backgroundColor: rainbowColors(names.length + 2, index),
-        borderRadius: 10,
-        animation: {
-          duration: 500,
-          easing: 'easeOutQuart'
-        },
-        maxBarThickness: 15
-      };
-    })
+    datasets: names
+      .sort((a, b) => a.localeCompare(b))
+      .map((name, index) => {
+        return {
+          label: name,
+          data: Array.from(dataset.values()).map((itemsForAKey) => itemsForAKey.filter((item) => item.name === name).length),
+          backgroundColor: rainbowColors(names.length + 2, index),
+          borderRadius: 10,
+          animation: {
+            duration: 500,
+            easing: 'easeOutQuart'
+          },
+          maxBarThickness: 15
+        };
+      })
   };
 
   return (

@@ -14,7 +14,7 @@ interface UserFormProps {
   user: Account;
 }
 
-export function UserForm(props: UserFormProps): JSX.Element {
+export function UserForm(props: UserFormProps): React.JSX.Element {
   const query = useQueryClient();
 
   const { data: user } = useReadAccountMe(

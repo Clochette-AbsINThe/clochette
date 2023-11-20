@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Button } from '@/components/button';
 import { pages } from '@/utils/pages';
 
-export default function Page404(): JSX.Element {
+export default function Page404(): React.JSX.Element {
   return (
     <div className='flex flex-col w-full h-full justify-around items-center grow'>
       <div className='flex items-center my-4 text-[11.5rem]'>

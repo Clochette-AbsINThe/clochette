@@ -16,7 +16,7 @@ const navitems = {
 // Import Dark mode dynamically to avoid SSR issues
 const DarkMode = dynamic(() => import('@/components/navbar/dark-mode-switch').then((mod) => mod.DarkMode), { ssr: false });
 
-export default function Navbar(): JSX.Element {
+export default function Navbar(): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

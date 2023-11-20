@@ -53,7 +53,7 @@ export function registerResolver(data: RegisterBody): ResolverResult<RegisterBod
   };
 }
 
-export default function Register(): JSX.Element {
+export default function Register(): React.JSX.Element {
   const { push } = useRouter();
 
   const form = useForm<RegisterBody>({

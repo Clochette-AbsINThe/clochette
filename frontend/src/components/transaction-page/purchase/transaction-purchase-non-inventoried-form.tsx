@@ -80,7 +80,7 @@ export function NonInventoriedDropdownPopupContent({ nonInventoriedCreate }: { n
   const disableItem = !!nonInventoriedCreate && 'id' in nonInventoriedCreate;
 
   const { name, quantity, buyPrice } = form.watch();
-  const totalPrice = buyPrice! * quantity ?? 0;
+  const totalPrice = buyPrice! * (quantity ?? 0);
 
   return (
     <>

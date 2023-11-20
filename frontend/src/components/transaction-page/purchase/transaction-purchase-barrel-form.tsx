@@ -79,7 +79,7 @@ export function BarrelDropdownPopupContent({ barrelCreate }: { barrelCreate?: Pa
   const disableItem = !!barrelCreate && 'id' in barrelCreate;
 
   const { name, quantity, sellPrice, buyPrice } = form.watch();
-  const totalPrice = buyPrice * quantity ?? 0;
+  const totalPrice = buyPrice * (quantity ?? 0);
 
   return (
     <>

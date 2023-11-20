@@ -1,5 +1,6 @@
-import type { QueryKey, QueryOptions, UseQueryOptions } from '@tanstack/react-query';
+import type { QueryKey, UseQueryOptions } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
+
 import { QueryOperation } from '../openapi-codegen/clochetteComponents';
 
 export type ClochetteContext<

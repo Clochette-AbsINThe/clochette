@@ -8,10 +8,10 @@ import Navbar from '@/components/navbar/navbar';
 export interface Props {
   title: string;
   description?: string;
-  children: JSX.Element;
+  children: React.JSX.Element;
 }
 
-export default function Base({ children, title, description }: React.PropsWithChildren<Props>): JSX.Element {
+export default function Base({ children, title, description }: React.PropsWithChildren<Props>): React.JSX.Element {
   return (
     <>
       <Head>

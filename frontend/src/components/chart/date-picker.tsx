@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
 import { CalendarIcon } from '@radix-ui/react-icons';
-import { addDays, format, subMonths } from 'date-fns';
+import { format } from 'date-fns';
 
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';

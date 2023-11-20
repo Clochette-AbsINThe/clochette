@@ -3,8 +3,6 @@ import { toast } from 'react-hot-toast';
 
 import { useQueryClient } from '@tanstack/react-query';
 
-import { DataTableRowActionsProps } from './barrel-table-row-actions';
-
 import { Button } from '@/components/button';
 import { DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';

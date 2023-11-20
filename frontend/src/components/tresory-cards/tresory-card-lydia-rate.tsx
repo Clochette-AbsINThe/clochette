@@ -10,7 +10,7 @@ import { Card } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import useOnEchap from '@/hooks/useOnEchap';
-import { useReadLastTreasury, useUpdateTreasury } from '@/openapi-codegen/clochetteComponents';
+import { useUpdateTreasury } from '@/openapi-codegen/clochetteComponents';
 import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
 import { Treasury, TreasuryUpdate } from '@/openapi-codegen/clochetteSchemas';
 import { getIcon } from '@/styles/utils';

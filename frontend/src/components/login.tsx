@@ -67,7 +67,7 @@ export default function Login() {
       if (res.ok) {
         // Get the query params from the res.url
         const query = Object.fromEntries(new URLSearchParams(res.url?.split('?')[1]));
-        const callbackUrl = (query?.callbackUrl as string) ?? '/';
+        const callbackUrl = (query.callbackUrl as string) ?? '/';
         push(callbackUrl);
         return;
       }

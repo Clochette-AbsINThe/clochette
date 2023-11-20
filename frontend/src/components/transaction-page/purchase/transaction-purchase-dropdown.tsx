@@ -27,7 +27,7 @@ type DropdownItemProps =
       type: 'non-inventoried';
     };
 
-export function DropdownItem(props: DropdownItemProps): JSX.Element {
+export function DropdownItem(props: DropdownItemProps): React.JSX.Element {
   const icon: IconName = 'icon' in props.item ? props.item.icon : 'Barrel';
 
   return (
@@ -53,7 +53,7 @@ export function DropdownItem(props: DropdownItemProps): JSX.Element {
   );
 }
 
-export function MissingDropdownItem({ type }: { type: DropdownItemProps['type'] }): JSX.Element {
+export function MissingDropdownItem({ type }: { type: DropdownItemProps['type'] }): React.JSX.Element {
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -108,7 +108,7 @@ export function filterItems(items: DropdownProps['items'], query: string): Dropd
   return items.filter((item) => item.name.toLowerCase().includes(query.toLowerCase()));
 }
 
-export function Dropdown(props: DropdownProps): JSX.Element {
+export function Dropdown(props: DropdownProps): React.JSX.Element {
   const [query, setQuery] = useState('');
 
   const filteredItems = filterItems(props.items, query);

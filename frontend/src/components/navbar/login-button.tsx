@@ -6,7 +6,7 @@ import { signOut, useSession } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { pages } from '@/utils/pages';
 
-export default function LoginButton(): JSX.Element {
+export default function LoginButton(): React.JSX.Element {
   const router = useRouter();
   const { status } = useSession();
 

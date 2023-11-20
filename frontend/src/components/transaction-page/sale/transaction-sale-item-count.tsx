@@ -6,11 +6,10 @@ import { SaleItem, useTransactionSaleStore } from './transaction-sale-store';
 
 import { Button } from '@/components/ui/button';
 import { IconName } from '@/openapi-codegen/clochetteSchemas';
-import { getIcon } from '@/styles/utils';
-import { PlusCircledIcon, MinusCircledIcon } from '@/styles/utils';
+import { getIcon, PlusCircledIcon, MinusCircledIcon } from '@/styles/utils';
 import { formatPrice } from '@/utils/utils';
 
-export function ItemCount(props: SaleItem): JSX.Element {
+export function ItemCount(props: SaleItem): React.JSX.Element {
   const [quantity, setQuantity] = useState<number>(0);
   const { increment, decrement, reset, items } = useTransactionSaleStore();
 

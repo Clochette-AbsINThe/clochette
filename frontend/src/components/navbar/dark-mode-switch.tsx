@@ -14,7 +14,7 @@ const icons = [
   />
 ];
 
-export function DarkMode(): JSX.Element {
+export function DarkMode(): React.JSX.Element {
   const { setTheme, theme } = useTheme();
 
   return (

@@ -1,5 +1,4 @@
 import { Card } from '@/components/ui/card';
-import { useReadLastTreasury } from '@/openapi-codegen/clochetteComponents';
 import { Treasury } from '@/openapi-codegen/clochetteSchemas';
 import { getIcon } from '@/styles/utils';
 import { formatPrice } from '@/utils/utils';

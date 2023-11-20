@@ -19,7 +19,7 @@ interface EcoCupDepositPopupProps {
   ecoCup: NonInventoriedItem;
 }
 
-export function EcoCupDepositPopup({ ecoCup }: EcoCupDepositPopupProps): JSX.Element {
+export function EcoCupDepositPopup({ ecoCup }: EcoCupDepositPopupProps): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
 
   const createNonInventoried = useCreateNonInventoried({
@@ -107,7 +107,7 @@ export function EcoCupDepositPopup({ ecoCup }: EcoCupDepositPopupProps): JSX.Ele
   );
 }
 
-export function EcoCupDeposit({ ecoCupDeposit }: { ecoCupDeposit: NonInventoriedItem | null }): JSX.Element {
+export function EcoCupDeposit({ ecoCupDeposit }: { ecoCupDeposit: NonInventoriedItem | null }): React.JSX.Element {
   const { data: ecoCupDepositArray } = useReadNonInventoriedItems(
     {
       queryParams: {

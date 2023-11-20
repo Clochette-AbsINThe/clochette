@@ -9,7 +9,7 @@ export function parseJwt(token: string): JWT | null {
   try {
     const base64Url = token.split('.')[1];
     const base64 = base64Url?.replace(/-/g, '+').replace(/_/g, '/');
-    const buffer = Buffer.from(base64 as string, 'base64');
+    const buffer = Buffer.from(base64, 'base64');
     const jsonPayload = decodeURIComponent(
       buffer
         .toString('utf-8')
@@ -49,31 +49,25 @@ export function rainbowColors(numOfSteps: number, step: number): string {
     case 0:
       red = c;
       green = x;
-      blue = 0;
       break;
     case 1:
       red = x;
       green = x;
-      blue = 0;
       break;
     case 2:
-      red = 0;
       green = c;
       blue = x;
       break;
     case 3:
-      red = 0;
       green = x;
       blue = c;
       break;
     case 4:
       red = x;
-      green = 0;
       blue = c;
       break;
     case 5:
       red = c;
-      green = 0;
       blue = x;
       break;
   }
@@ -100,7 +94,7 @@ export function unique<T>(value: T, index: number, self: T[]): boolean {
  */
 export function groupBy<K, V>(array: V[], grouper: (item: V) => K, sorter: (a: K, b: K) => number): Map<K, V[]> {
   const res = array.reduce((store, item) => {
-    var key = grouper(item);
+    const key = grouper(item);
     if (store.has(key)) {
       store.get(key)!.push(item);
     } else {

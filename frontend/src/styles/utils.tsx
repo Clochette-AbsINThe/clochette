@@ -5,7 +5,7 @@ interface IconProps {
   className: string;
 }
 
-const BeerIcon = (props: IconProps): JSX.Element => {
+const BeerIcon = (props: IconProps): React.JSX.Element => {
   return (
     <svg
       className={props.className}
@@ -49,7 +49,7 @@ const BeerIcon = (props: IconProps): JSX.Element => {
   );
 };
 
-const GlassIcon = (props: IconProps): JSX.Element => {
+const GlassIcon = (props: IconProps): React.JSX.Element => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -66,7 +66,7 @@ const GlassIcon = (props: IconProps): JSX.Element => {
   );
 };
 
-const FoodIcon = (props: IconProps): JSX.Element => {
+const FoodIcon = (props: IconProps): React.JSX.Element => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -83,7 +83,7 @@ const FoodIcon = (props: IconProps): JSX.Element => {
   );
 };
 
-const SoftIcon = (props: IconProps): JSX.Element => {
+const SoftIcon = (props: IconProps): React.JSX.Element => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -116,7 +116,7 @@ const SoftIcon = (props: IconProps): JSX.Element => {
   );
 };
 
-const BarrelIcon = (props: IconProps): JSX.Element => {
+const BarrelIcon = (props: IconProps): React.JSX.Element => {
   return (
     <svg
       className={props.className}
@@ -138,7 +138,7 @@ const BarrelIcon = (props: IconProps): JSX.Element => {
   );
 };
 
-const MiscIcon = (props: IconProps): JSX.Element => {
+const MiscIcon = (props: IconProps): React.JSX.Element => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -158,7 +158,7 @@ const MiscIcon = (props: IconProps): JSX.Element => {
   );
 };
 
-const LydiaIcon = (props: IconProps): JSX.Element => {
+const LydiaIcon = (props: IconProps): React.JSX.Element => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -176,7 +176,7 @@ const LydiaIcon = (props: IconProps): JSX.Element => {
   );
 };
 
-const CashIcon = (props: IconProps): JSX.Element => {
+const CashIcon = (props: IconProps): React.JSX.Element => {
   return (
     <svg
       className={props.className}
@@ -196,7 +196,7 @@ const CashIcon = (props: IconProps): JSX.Element => {
   );
 };
 
-const CBIcon = (props: IconProps): JSX.Element => {
+const CBIcon = (props: IconProps): React.JSX.Element => {
   return (
     <svg
       className={props.className}
@@ -216,7 +216,7 @@ const CBIcon = (props: IconProps): JSX.Element => {
   );
 };
 
-const VirementIcon = (props: IconProps): JSX.Element => {
+const VirementIcon = (props: IconProps): React.JSX.Element => {
   return (
     <svg
       className={props.className}
@@ -230,7 +230,7 @@ const VirementIcon = (props: IconProps): JSX.Element => {
   );
 };
 
-const SettingsIcon = (props: IconProps): JSX.Element => {
+const SettingsIcon = (props: IconProps): React.JSX.Element => {
   return (
     <svg
       className={props.className}
@@ -245,7 +245,7 @@ const SettingsIcon = (props: IconProps): JSX.Element => {
   );
 };
 
-export const IncreaseArrowIcon = (): JSX.Element => {
+export const IncreaseArrowIcon = (): React.JSX.Element => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -263,7 +263,7 @@ export const IncreaseArrowIcon = (): JSX.Element => {
   );
 };
 
-export const DecreasingArrowIcon = (): JSX.Element => {
+export const DecreasingArrowIcon = (): React.JSX.Element => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -281,7 +281,7 @@ export const DecreasingArrowIcon = (): JSX.Element => {
   );
 };
 
-export const PlusCircledIcon = ({ className }: { className?: string }): JSX.Element => {
+export const PlusCircledIcon = ({ className }: { className?: string }): React.JSX.Element => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -300,7 +300,7 @@ export const PlusCircledIcon = ({ className }: { className?: string }): JSX.Elem
   );
 };
 
-export const MinusCircledIcon = ({ className }: { className?: string }): JSX.Element => {
+export const MinusCircledIcon = ({ className }: { className?: string }): React.JSX.Element => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -325,7 +325,7 @@ type AdditionalIcons = 'Setting' | 'Cash';
 
 export type Icons = IconName | PaymentMethod | AdditionalIcons;
 
-export function getIcon(name: IconName | PaymentMethod | AdditionalIcons, className: string = 'w-10 h-10 ml-2'): JSX.Element {
+export function getIcon(name: IconName | PaymentMethod | AdditionalIcons, className: string = 'w-10 h-10 ml-2'): React.JSX.Element {
   switch (name) {
     case 'Glass':
       return (
