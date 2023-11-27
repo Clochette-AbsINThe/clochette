@@ -72,7 +72,7 @@
     "eslint-plugin-n": "^16.0.1",
     "eslint-plugin-promise": "^6.1.1",
     "eslint-plugin-react": "^7.33.1",
-    "jsdom": "^22.1.0",
+    "jsdom": "^23.0.0",
     "postcss": "^8.4.27",
     "prettier": "^3.0.1",
     "sass": "^1.69.3",
