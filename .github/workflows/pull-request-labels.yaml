@@ -27,7 +27,7 @@ jobs:
           path: frontend
 
       - name: Raise an error if the versions are not the same
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         id: check_versions
         with:
           script: |
@@ -44,7 +44,7 @@ jobs:
 
       - name: Get the label to add
         id: get_label
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
