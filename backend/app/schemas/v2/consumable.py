@@ -63,4 +63,4 @@ class Consumable(ConsumableBase):
 
 
 class ConsumableDistinct(Consumable):
-    quantity: int = 1
+    quantity: int

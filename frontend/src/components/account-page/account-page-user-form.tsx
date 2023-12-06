@@ -20,7 +20,7 @@ export function UserForm(props: UserFormProps): React.JSX.Element {
   const { data: user } = useReadAccountMe(
     {},
     {
-      initialData: props.user
+      placeholderData: props.user
     }
   );
 
@@ -112,7 +112,7 @@ export function UserForm(props: UserFormProps): React.JSX.Element {
         <div className='grow'></div>
         <Button
           type='submit'
-          loading={updateOwnAccount.isLoading}
+          loading={updateOwnAccount.isPending}
         >
           Modifier mon compte
         </Button>

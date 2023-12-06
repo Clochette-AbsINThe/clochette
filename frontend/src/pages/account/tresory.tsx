@@ -58,8 +58,8 @@ export const getServerSideProps: GetServerSideProps<{
 };
 
 const TresoryPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { data: transactions } = useReadTransactions({}, { initialData: props.transactions });
-  const { data: treasury } = useReadLastTreasury({}, { initialData: props.treasury ?? undefined });
+  const { data: transactions } = useReadTransactions({}, { placeholderData: props.transactions });
+  const { data: treasury } = useReadLastTreasury({}, { placeholderData: props.treasury ?? undefined });
 
   return (
     <Base title='Gestions de la trésorerie'>

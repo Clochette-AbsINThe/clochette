@@ -144,7 +144,7 @@ export function BarrelModifyPopup({ rowBarrel, isOpen, setIsOpen }: BarrelModify
                   <DialogFooter>
                     <Button
                       confirm
-                      loading={modifyBarrel.isLoading}
+                      loading={modifyBarrel.isPending}
                       type='submit'
                     >
                       Modifier le fût

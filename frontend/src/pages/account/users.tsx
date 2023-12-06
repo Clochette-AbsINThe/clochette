@@ -45,7 +45,7 @@ export const getServerSideProps: GetServerSideProps<{
 };
 
 const UsersPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>> = (props: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { data: accounts } = useReadAccounts({}, { initialData: props.accounts });
+  const { data: accounts } = useReadAccounts({}, { placeholderData: props.accounts });
 
   return (
     <Base title='Gestions des utilisateurs'>

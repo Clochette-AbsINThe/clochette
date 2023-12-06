@@ -82,9 +82,13 @@ async def read_distinct_barrels(db=Depends(get_db), is_mounted: bool | None = No
                 **query_parameters,
             )
         )
-        object = barrel_schema.BarrelDistinct.model_validate(distinct_barrel)
-        object.quantity = quantity
-        result.append(object)
+        distinct_object = barrel_schema.BarrelDistinct.model_validate(
+            {
+                **distinct_barrel.dict(),
+                "quantity": quantity,
+            }
+        )
+        result.append(distinct_object)
 
     return result
 

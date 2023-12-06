@@ -147,7 +147,7 @@ export function ConsumableModifyPopup({ row, isOpen, setIsOpen }: ConsumableUpda
                   <DialogFooter>
                     <Button
                       confirm
-                      loading={modifyConsumbale.isLoading}
+                      loading={modifyConsumbale.isPending}
                       type='submit'
                     >
                       Modifier le consommable

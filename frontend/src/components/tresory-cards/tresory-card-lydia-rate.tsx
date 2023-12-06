@@ -131,7 +131,7 @@ export function TresoryCardLydiaRate(props: TreasuryCardLydiaRateProps) {
               Modifier le taux
             </UIButton>
             <Button
-              loading={updateTreasury.isLoading}
+              loading={updateTreasury.isPending}
               type='submit'
               hidden={!isEditingTreasuryRate}
             >

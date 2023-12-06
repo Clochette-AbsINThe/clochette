@@ -74,7 +74,7 @@ const StockPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>
   const { data: consumables } = useReadDistinctConsumables(
     {},
     {
-      initialData: props.consumables
+      placeholderData: props.consumables
     }
   );
 
@@ -85,7 +85,7 @@ const StockPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>
       }
     },
     {
-      initialData: props.barrels
+      placeholderData: props.barrels
     }
   );
 
@@ -96,7 +96,7 @@ const StockPage: NextPage<InferGetServerSidePropsType<typeof getServerSideProps>
       }
     },
     {
-      initialData: props.mountedBarrels
+      placeholderData: props.mountedBarrels
     }
   );
 

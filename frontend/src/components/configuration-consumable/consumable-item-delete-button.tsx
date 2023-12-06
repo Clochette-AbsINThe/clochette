@@ -35,7 +35,7 @@ export function ConsumableItemDeleteButton({ consumableItem }: { consumableItem:
     <Button
       danger
       onClick={onDelete}
-      loading={deleteConsumableItem.isLoading}
+      loading={deleteConsumableItem.isPending}
     >
       <span>Supprimer</span>
     </Button>

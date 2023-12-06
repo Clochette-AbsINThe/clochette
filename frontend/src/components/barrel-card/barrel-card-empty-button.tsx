@@ -64,7 +64,7 @@ export function EmptyBarrelButton({ barrel }: { barrel: Barrel }) {
             </DialogClose>
             <QueryButton
               danger
-              loading={modifyBarrel.isLoading}
+              loading={modifyBarrel.isPending}
               onClick={onClick}
             >
               Vider

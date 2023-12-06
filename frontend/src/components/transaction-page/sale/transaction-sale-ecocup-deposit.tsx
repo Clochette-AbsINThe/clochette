@@ -30,7 +30,7 @@ export function EcoCupDepositPopup({ ecoCup }: EcoCupDepositPopupProps): React.J
   });
 
   const { transactionFlow, isLoading } = useCreateTransactionFlow();
-  const loading = createNonInventoried.isLoading || isLoading;
+  const loading = createNonInventoried.isPending || isLoading;
   const form = useForm<TransactionCommerceCreate>({
     resolver: paymentMethodResolver,
     defaultValues: {
@@ -116,7 +116,7 @@ export function EcoCupDeposit({ ecoCupDeposit }: { ecoCupDeposit: NonInventoried
       }
     },
     {
-      initialData: ecoCupDeposit ? [ecoCupDeposit] : []
+      placeholderData: ecoCupDeposit ? [ecoCupDeposit] : []
     }
   );
   const ecoCup = ecoCupDepositArray?.[0];

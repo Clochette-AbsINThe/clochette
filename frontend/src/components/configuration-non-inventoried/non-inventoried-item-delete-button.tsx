@@ -35,7 +35,7 @@ export function NonInventoriedItemDeleteButton({ nonInventoriedItem }: { nonInve
     <Button
       danger
       onClick={onDelete}
-      loading={deleteNonInventoriedItem.isLoading}
+      loading={deleteNonInventoriedItem.isPending}
     >
       <span>Supprimer</span>
     </Button>

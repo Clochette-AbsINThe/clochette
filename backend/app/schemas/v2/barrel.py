@@ -72,4 +72,4 @@ class Barrel(BarrelBase):
 
 
 class BarrelDistinct(Barrel):
-    quantity: int = 1
+    quantity: int

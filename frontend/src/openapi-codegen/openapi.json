@@ -6756,8 +6756,7 @@
           },
           "quantity": {
             "type": "integer",
-            "title": "Quantity",
-            "default": 1
+            "title": "Quantity"
           },
           "name": {
             "type": "string",
@@ -6984,8 +6983,7 @@
           },
           "quantity": {
             "type": "integer",
-            "title": "Quantity",
-            "default": 1
+            "title": "Quantity"
           },
           "name": {
             "type": "string",
@@ -7338,7 +7336,6 @@
         "type": "object",
         "required": [
           "nonInventoriedItemId",
-          "buyPrice",
           "id",
           "sellPrice",
           "name",
@@ -7411,7 +7408,6 @@
         "required": [
           "name",
           "icon",
-          "sellPrice",
           "id",
           "trade"
         ],
@@ -7538,7 +7534,6 @@
         "type": "object",
         "required": [
           "fkId",
-          "unitPrice",
           "id",
           "name",
           "icon",
@@ -7613,7 +7608,6 @@
         "required": [
           "name",
           "icon",
-          "sellPrice",
           "id",
           "buyOrSell"
         ],
@@ -7810,8 +7804,7 @@
         },
         "type": "object",
         "required": [
-          "access_token",
-          "token_type"
+          "access_token"
         ],
         "title": "Token"
       },
@@ -8134,8 +8127,6 @@
           "paymentMethod",
           "sale",
           "amount",
-          "type",
-          "description",
           "id",
           "treasuryId",
           "barrels",
@@ -8334,7 +8325,6 @@
         },
         "type": "object",
         "required": [
-          "fkId",
           "sellPrice",
           "unitPrice",
           "id",
@@ -8566,8 +8556,6 @@
           "paymentMethod",
           "sale",
           "amount",
-          "type",
-          "description",
           "id",
           "treasuryId"
         ],

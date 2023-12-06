@@ -52,6 +52,6 @@ export function useCreateTransactionFlow() {
 
   return {
     transactionFlow,
-    isLoading: createTransaction.isLoading || validateTransaction.isLoading
+    isLoading: createTransaction.isPending || validateTransaction.isPending
   };
 }

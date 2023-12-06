@@ -81,11 +81,13 @@ async def read_distinct_consumables(db=Depends(get_db)):
                 solded=False,
             )
         )
-        object = consumable_schema.ConsumableDistinct.model_validate(
-            distinct_consumable
+        distinct_object = consumable_schema.ConsumableDistinct.model_validate(
+            {
+                **distinct_consumable.dict(),
+                "quantity": quantity,
+            }
         )
-        object.quantity = quantity
-        result.append(object)
+        result.append(distinct_object)
 
     return result
 

@@ -60,7 +60,7 @@ export function useCreateSaleTransaction() {
 
   const { data: consumables } = useReadConsumables({});
 
-  const loading = createNonInventoried.isLoading || saleConsumable.isLoading || createGlass.isLoading || isLoading;
+  const loading = createNonInventoried.isPending || saleConsumable.isPending || createGlass.isPending || isLoading;
 
   const items = useTransactionSaleStore.use.items();
   const expandedItems = expandItems(items, consumables ?? []);

@@ -48,7 +48,7 @@ const TransactionHistoryPage: NextPage<InferGetServerSidePropsType<typeof getSer
       }
     },
     {
-      initialData: props.transactions
+      placeholderData: props.transactions
     }
   );
 
