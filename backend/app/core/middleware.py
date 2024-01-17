@@ -37,16 +37,6 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
         super().__init__(app)
         self.alert_backend = alert_backend
 
-    # TODO: Remove this when starlette 0.28.0 is released
-    async def set_body(self, request: Request):
-        """Pre-consume the request body to avoid issues with the body being consumed multiple times."""
-        receive_ = await request.receive()
-
-        async def receive():
-            return receive_
-
-        request._receive = receive  # type: ignore
-
     async def dispatch(self, request: Request, call_next):
         """
         Dispatch the given request through the middleware chain.
@@ -57,8 +47,6 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
         or a default error response if an exception is raised.
         """
         try:
-            # TODO: Remove this when starlette 0.28.0 is released
-            await self.set_body(request)
             return await call_next(request)
         # An unhanded exception was raised during the processing of the request
         except Exception as e:
