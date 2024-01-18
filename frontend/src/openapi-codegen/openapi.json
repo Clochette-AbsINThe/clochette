@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "Clochette API",
-    "version": "2.1.1"
+    "version": "3.0.0"
   },
   "paths": {
     "/api/v1/": {
@@ -262,7 +262,9 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 32
                 },
                 {
                   "type": "null"
@@ -310,7 +312,9 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "integer"
+                  "type": "integer",
+                  "maximum": 2027,
+                  "minimum": 2000
                 },
                 {
                   "type": "null"
@@ -2587,7 +2591,8 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 {
                   "type": "null"
@@ -2619,7 +2624,8 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "number"
+                  "type": "number",
+                  "exclusiveMinimum": 0.0
                 },
                 {
                   "type": "null"
@@ -2718,7 +2724,8 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "string"
+                  "type": "string",
+                  "minLength": 1
                 },
                 {
                   "type": "null"
@@ -2750,7 +2757,8 @@
             "schema": {
               "anyOf": [
                 {
-                  "type": "number"
+                  "type": "number",
+                  "exclusiveMinimum": 0.0
                 },
                 {
                   "type": "null"
@@ -6565,7 +6573,7 @@
           },
           "promotionYear": {
             "type": "integer",
-            "maximum": 2026.0,
+            "maximum": 2027.0,
             "minimum": 2000.0,
             "title": "Promotionyear"
           },
@@ -6616,7 +6624,7 @@
           },
           "promotionYear": {
             "type": "integer",
-            "maximum": 2026.0,
+            "maximum": 2027.0,
             "minimum": 2000.0,
             "title": "Promotionyear"
           }
@@ -6683,7 +6691,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 2026.0,
+                "maximum": 2027.0,
                 "minimum": 2000.0
               },
               {
@@ -7735,7 +7743,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "maximum": 2026.0,
+                "maximum": 2027.0,
                 "minimum": 2000.0
               },
               {
