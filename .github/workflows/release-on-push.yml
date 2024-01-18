@@ -35,7 +35,7 @@ jobs:
         run: |
           mkdir -p ./version
           echo "${{ needs.release-on-push.outputs.version }}" > ./version/version_number
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: version_number
           path: ./version
