@@ -42,7 +42,7 @@ interface ConsumableItemFormProps {
   children: React.ReactNode;
 }
 
-export function ConsumableItemForm(props: ConsumableItemFormProps) {
+export function ConsumableItemForm(props: Readonly<ConsumableItemFormProps>) {
   const form = props.form as UseFormReturn<ConsumableItemCreate | ConsumableItemUpdate>;
   const onSubmit = props.onSubmit as (data: ConsumableItemCreate | ConsumableItemUpdate) => void;
 
@@ -131,7 +131,7 @@ export function ConsumableItemCreateForm() {
   );
 }
 
-export function ConsumableItemUpdateForm({ consumableItem }: { consumableItem: ConsumableItem }) {
+export function ConsumableItemUpdateForm({ consumableItem }: Readonly<{ consumableItem: ConsumableItem }>) {
   const router = useRouter();
 
   const form = useForm<ConsumableItemUpdate>({

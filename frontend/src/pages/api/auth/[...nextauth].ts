@@ -71,7 +71,7 @@ export const options: NextAuthOptions = {
   callbacks: {
     // Getting the JWT token from API response
     jwt: async ({ token, user, account }) => {
-      const isSigningIn = user ? true : false;
+      const isSigningIn = !!user;
       if (isSigningIn) {
         token = {
           ...user
@@ -88,7 +88,7 @@ export const options: NextAuthOptions = {
         throw new Error('TokenExpiredError');
       }
 
-      const isSigningIn = token ? true : false;
+      const isSigningIn = !!token;
       if (isSigningIn) {
         session = {
           id: token.sub,

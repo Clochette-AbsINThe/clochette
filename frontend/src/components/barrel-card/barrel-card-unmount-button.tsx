@@ -8,7 +8,7 @@ import { useUpdateBarrel } from '@/openapi-codegen/clochetteComponents';
 import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
 import { Barrel } from '@/openapi-codegen/clochetteSchemas';
 
-export function UnmountBarrelButton({ barrel }: { barrel: Barrel }) {
+export function UnmountBarrelButton({ barrel }: Readonly<{ barrel: Barrel }>) {
   const queryClient = useQueryClient();
 
   const modifyBarrel = useUpdateBarrel({

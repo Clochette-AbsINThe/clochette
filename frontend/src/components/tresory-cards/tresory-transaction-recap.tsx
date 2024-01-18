@@ -9,7 +9,7 @@ interface TresoryTransactionRecapProps {
   cashAmountDiff: number;
 }
 
-export function TresoryTransactionRecap(props: TresoryTransactionRecapProps) {
+export function TresoryTransactionRecap(props: Readonly<TresoryTransactionRecapProps>) {
   const { treasury, accountAmountDiff, cashAmountDiff } = props;
 
   return (

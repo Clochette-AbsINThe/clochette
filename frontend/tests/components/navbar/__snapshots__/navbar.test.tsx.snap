@@ -14,7 +14,7 @@ exports[`Navbar > should match snapshot 1`] = `
       >
         Clochette
       </a>
-      <div
+      <button
         aria-label="hamburger-menu"
         class="lg:hidden"
         id="hamburger-menu"
@@ -28,7 +28,7 @@ exports[`Navbar > should match snapshot 1`] = `
         <span
           class="bg-gray-600 dark:bg-gray-300"
         />
-      </div>
+      </button>
     </div>
     <div
       class="hidden lg:flex flex-col lg:flex-row items-center flex-grow"

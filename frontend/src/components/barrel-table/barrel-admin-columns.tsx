@@ -94,7 +94,7 @@ export const barrelColumns: ColumnDef<Barrel>[] = [
   }
 ];
 
-export function TotalGlassSoldCell({ row }: { row: Row<Barrel> }) {
+export function TotalGlassSoldCell({ row }: Readonly<{ row: Row<Barrel> }>) {
   const { data } = useReadGlasses({
     queryParams: {
       barrel_id: row.getValue<number>('id')
@@ -104,7 +104,7 @@ export function TotalGlassSoldCell({ row }: { row: Row<Barrel> }) {
   return <span>{data?.length ?? 0}</span>;
 }
 
-export function TotalSellPriceCell({ row }: { row: Row<Barrel> }) {
+export function TotalSellPriceCell({ row }: Readonly<{ row: Row<Barrel> }>) {
   const { data } = useReadGlasses({
     queryParams: {
       barrel_id: row.getValue<number>('id')
@@ -118,7 +118,7 @@ export function TotalSellPriceCell({ row }: { row: Row<Barrel> }) {
   return <span>{formatPrice(totalSellPrice ?? 0)}</span>;
 }
 
-export function ProfitCell({ row }: { row: Row<Barrel> }) {
+export function ProfitCell({ row }: Readonly<{ row: Row<Barrel> }>) {
   const { data } = useReadGlasses({
     queryParams: {
       barrel_id: row.getValue<number>('id')

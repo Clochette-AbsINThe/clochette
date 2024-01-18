@@ -18,7 +18,7 @@ interface AccountModifyPopupProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-export function AccountModifyPopup({ rowAccount, isOpen, setIsOpen }: AccountModifyPopupProps) {
+export function AccountModifyPopup({ rowAccount, isOpen, setIsOpen }: Readonly<AccountModifyPopupProps>) {
   const queryClient = useQueryClient();
 
   const updateAccount = useUpdateAccount({

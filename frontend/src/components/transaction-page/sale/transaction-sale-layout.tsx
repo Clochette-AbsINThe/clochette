@@ -12,7 +12,7 @@ import { Barrel, ConsumableDistinct, NonInventoriedItem } from '@/openapi-codege
 import { ECOCUP_NAME } from '@/utils/constant';
 import { pages } from '@/utils/pages';
 
-export function TransactionSaleLayout(props: { barrels: Barrel[]; nonInventoriedItems: NonInventoriedItem[]; consumables: ConsumableDistinct[]; ecoCupDeposit: NonInventoriedItem | null }) {
+export function TransactionSaleLayout(props: Readonly<{ barrels: Barrel[]; nonInventoriedItems: NonInventoriedItem[]; consumables: ConsumableDistinct[]; ecoCupDeposit: NonInventoriedItem | null }>) {
   const addEcoCup = useTransactionSaleStore.use.addEcoCup();
   const items = useTransactionSaleStore.use.items();
 

@@ -3,7 +3,7 @@ interface SearchBarProps {
   setQuery: (query: string) => void;
 }
 
-export default function SearchBar({ query, setQuery }: SearchBarProps): React.JSX.Element {
+export default function SearchBar({ query, setQuery }: Readonly<SearchBarProps>): React.JSX.Element {
   return (
     <div className='w-full max-w-xs md:max-w-3xl mr-4'>
       <label

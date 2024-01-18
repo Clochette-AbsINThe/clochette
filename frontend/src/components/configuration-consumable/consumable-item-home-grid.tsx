@@ -11,7 +11,7 @@ export function filterConsumableItem(consumableItems: ReadConsumableItemsRespons
   return consumableItems.filter((consumableItem) => consumableItem.name.toLowerCase().includes(query.toLowerCase())).sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export function ConsumableItemHomeGrid({ query }: { query: string }) {
+export function ConsumableItemHomeGrid({ query }: Readonly<{ query: string }>) {
   const { isLoading, isError, data } = useReadConsumableItems({});
 
   if (isLoading) {

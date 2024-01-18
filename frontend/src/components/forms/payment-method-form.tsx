@@ -26,7 +26,7 @@ export function paymentMethodResolver(data: TransactionCommerceCreate): Resolver
   };
 }
 
-export function PaymentMethodForm<TFieldValues extends FieldValues>({ field }: PaymentMethodFormProps<TFieldValues>) {
+export function PaymentMethodForm<TFieldValues extends FieldValues>({ field }: Readonly<PaymentMethodFormProps<TFieldValues>>) {
   const paymentOptions: PaymentMethod[] = ['CB', 'Espèces', 'Lydia', 'Virement'];
 
   return (

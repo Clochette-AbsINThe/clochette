@@ -39,7 +39,7 @@ export function increment(items: SaleItems, item: SaleItem, amount: number = 1) 
 
   let maxQuantity = Infinity;
   if (item.type === 'consumable') {
-    maxQuantity = (item as SaleItemConsumable).maxQuantity;
+    maxQuantity = item.maxQuantity;
   }
 
   if (matchigItem) {
@@ -100,58 +100,49 @@ const useTransactionSaleStoreBase = create<TransactionSaleStore>((set, get) => (
   },
   addEcoCup: (ecoCup) => set({ items: [...get().items, { type: 'non-inventoried', item: ecoCup, quantity: 0 }] }),
   increment: (saleItem) => {
-    switch (saleItem.type) {
-      case 'glass':
-        const items = get().items;
-        const step1 = increment(items, saleItem);
-        const ecoCup = step1.items.find((item) => item.item.name === ECOCUP_NAME);
-        if (!ecoCup) {
-          set(step1);
-          break;
-        }
-        const step2 = increment(step1.items, ecoCup);
-        set(step2);
-        break;
-      default:
-        set(increment(get().items, saleItem));
-        break;
+    if (saleItem.type === 'glass') {
+      const items = get().items;
+      const step1 = increment(items, saleItem);
+      const ecoCup = step1.items.find((item) => item.item.name === ECOCUP_NAME);
+      if (!ecoCup) {
+        set(step1);
+        return;
+      }
+      const step2 = increment(step1.items, ecoCup);
+      set(step2);
+      return;
     }
+    set(increment(get().items, saleItem));
   },
   decrement(saleItem) {
-    switch (saleItem.type) {
-      case 'glass':
-        const items = get().items;
-        const step1 = decrement(items, saleItem);
-        const ecoCup = step1.items.find((item) => item.item.name === ECOCUP_NAME);
-        if (!ecoCup) {
-          set(step1);
-          break;
-        }
-        const step2 = decrement(step1.items, ecoCup);
-        set(step2);
-        break;
-      default:
-        set(decrement(get().items, saleItem));
-        break;
+    if (saleItem.type === 'glass') {
+      const items = get().items;
+      const step1 = decrement(items, saleItem);
+      const ecoCup = step1.items.find((item) => item.item.name === ECOCUP_NAME);
+      if (!ecoCup) {
+        set(step1);
+        return;
+      }
+      const step2 = decrement(step1.items, ecoCup);
+      set(step2);
+      return;
     }
+    set(decrement(get().items, saleItem));
   },
   reset(saleItem) {
-    switch (saleItem.type) {
-      case 'glass':
-        const items = get().items;
-        const step1 = reset(items, saleItem);
-        const ecoCup = step1.items.find((item) => item.item.name === ECOCUP_NAME);
-        if (!ecoCup) {
-          set(step1);
-          break;
-        }
-        const step2 = decrement(step1.items, ecoCup, Math.abs(step1.delta));
-        set(step2);
-        break;
-      default:
-        set(reset(get().items, saleItem));
-        break;
+    if (saleItem.type === 'glass') {
+      const items = get().items;
+      const step1 = reset(items, saleItem);
+      const ecoCup = step1.items.find((item) => item.item.name === ECOCUP_NAME);
+      if (!ecoCup) {
+        set(step1);
+        return;
+      }
+      const step2 = decrement(step1.items, ecoCup, Math.abs(step1.delta));
+      set(step2);
+      return;
     }
+    set(reset(get().items, saleItem));
   }
 }));
 

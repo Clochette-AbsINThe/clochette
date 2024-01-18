@@ -8,7 +8,7 @@ interface DataTablePaginationProps<TData> {
   table: Table<TData>;
 }
 
-export function DataTablePagination<TData>({ table }: DataTablePaginationProps<TData>) {
+export function DataTablePagination<TData>({ table }: Readonly<DataTablePaginationProps<TData>>) {
   return (
     <div className='flex items-center justify-end px-2 flex-wrap gap-2'>
       <div className='flex items-center gap-x-6 lg:gap-x-8 flex-wrap'>

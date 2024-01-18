@@ -14,7 +14,7 @@ interface AccountDeletePopupProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-export function AccountDeletePopup({ rowAccount, setIsOpen }: AccountDeletePopupProps) {
+export function AccountDeletePopup({ rowAccount, setIsOpen }: Readonly<AccountDeletePopupProps>) {
   const queryClient = useQueryClient();
 
   const deleteAccount = useDeleteAccount({

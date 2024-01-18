@@ -8,7 +8,7 @@ import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
 import { DrinkItem } from '@/openapi-codegen/clochetteSchemas';
 import { pages } from '@/utils/pages';
 
-export function DrinkItemDeleteButton({ drink }: { drink: DrinkItem }) {
+export function DrinkItemDeleteButton({ drink }: Readonly<{ drink: DrinkItem }>) {
   const router = useRouter();
   const name = drink.name;
 

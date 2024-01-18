@@ -17,7 +17,10 @@ prefix.reg(log);
 prefix.apply(log, {
   format(level, name, timestamp) {
     const trace = generateTrace();
-    return `${chalk.gray(`[${timestamp}]`)} ${colors[level.toUpperCase()](level)} ${chalk.green(`${trace}:`)}`;
+    const coloredTimesatmp = chalk.gray(`[${timestamp}]`);
+    const coloredLevel = colors[level.toUpperCase()](level);
+    const coloredTrace = chalk.green(`${trace}:`);
+    return `${coloredTimesatmp} ${coloredLevel} ${coloredTrace}`;
   }
 });
 
@@ -46,7 +49,7 @@ function generateTrace() {
         }
       }
       const file = errorCopy[errorCopy.length - 1].split('./src').pop()?.split(':')[0];
-      return `${chalk.gray(`(${file}:${names.join('->')})`)}`;
+      return chalk.gray(`(${file}:${names.join('->')})`);
     }
   } catch (error) {
     return '';

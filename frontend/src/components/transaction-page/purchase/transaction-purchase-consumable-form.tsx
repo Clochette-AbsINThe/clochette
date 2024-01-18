@@ -57,7 +57,7 @@ export function consumableCreateResolver(data: ConsumableCreateForm): ResolverRe
   };
 }
 
-export function ConsumableDropdownPopupContent({ consumableCreate }: { consumableCreate?: Partial<ConsumableCreateForm> }) {
+export function ConsumableDropdownPopupContent({ consumableCreate }: Readonly<{ consumableCreate?: Partial<ConsumableCreateForm> }>) {
   const addItem = useTransactionPurchaseStore.use.addItem();
   const form = useForm<ConsumableCreateForm>({
     defaultValues: {

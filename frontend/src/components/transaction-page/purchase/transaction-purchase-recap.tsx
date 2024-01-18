@@ -16,10 +16,10 @@ export function TransactionPurchaseRecap() {
     <div className='flex flex-col mb-4'>
       <h1 className='text-2xl font-bold'>Récapitulatif :</h1>
       <div className='grid lg:grid-cols-3 md:grid-cols-2 gap-2'>
-        {items.map((item, index) => (
+        {items.map((item) => (
           <TransactionPurchaseRecapItem
             item={item}
-            key={index}
+            key={item.type + item.item.name}
           />
         ))}
       </div>
@@ -27,7 +27,7 @@ export function TransactionPurchaseRecap() {
   );
 }
 
-export function TransactionPurchaseRecapItem({ item }: { item: PurchaseItem }) {
+export function TransactionPurchaseRecapItem({ item }: Readonly<{ item: PurchaseItem }>) {
   const removeItem = useTransactionPurchaseStore.use.removeItem();
   const icon: IconName = 'icon' in item.item ? item.item.icon! : 'Barrel';
   const totalPrice = item.item.buyPrice! * item.item.quantity!;

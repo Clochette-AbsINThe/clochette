@@ -1,7 +1,6 @@
 import toast from 'react-hot-toast';
 
 import { useQueryClient } from '@tanstack/react-query';
-import { Row } from '@tanstack/react-table';
 
 import { Button } from '@/components/button';
 import { useReadBarrels, useUpdateBarrel } from '@/openapi-codegen/clochetteComponents';
@@ -12,7 +11,7 @@ interface BarrelsTableMountActionProps {
   barrel: BarrelDistinct;
 }
 
-export function BarrelsTableMountAction({ barrel }: BarrelsTableMountActionProps) {
+export function BarrelsTableMountAction({ barrel }: Readonly<BarrelsTableMountActionProps>) {
   const queryClient = useQueryClient();
 
   const modifyBarrel = useUpdateBarrel({

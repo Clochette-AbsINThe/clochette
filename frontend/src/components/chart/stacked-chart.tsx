@@ -56,7 +56,7 @@ interface StackedChartProps<K> {
   sortCallback: (a: K, b: K) => number;
 }
 
-export function StackedChart<K>({ groupByCallback, sortCallback }: StackedChartProps<K>) {
+export function StackedChart<K>({ groupByCallback, sortCallback }: Readonly<StackedChartProps<K>>) {
   const [date, setDate] = useState<DateRange | undefined>({
     from: subMonths(new Date(), 1),
     to: addDays(new Date(), 1)
@@ -88,7 +88,7 @@ export function StackedChart<K>({ groupByCallback, sortCallback }: StackedChartP
   const chartData: ChartData<'bar'> = {
     labels: Array.from(dataset.keys()),
     datasets: names
-      .sort((a, b) => a.localeCompare(b))
+      .toSorted((a, b) => a.localeCompare(b))
       .map((name, index) => {
         return {
           label: name,

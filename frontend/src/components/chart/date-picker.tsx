@@ -13,7 +13,7 @@ interface DatePickerProps extends React.HTMLAttributes<HTMLDivElement> {
   setDate: (date: DateRange | undefined) => void;
 }
 
-export function DatePickerWithRange({ className, date, setDate }: DatePickerProps) {
+export function DatePickerWithRange({ className, date, setDate }: Readonly<DatePickerProps>) {
   return (
     <div className={cn('grid gap-2', className)}>
       <Popover>

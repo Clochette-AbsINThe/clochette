@@ -67,10 +67,10 @@ export function TransactionPurchaseValidate(): React.JSX.Element {
           <DialogDescription>Montant total de {formatPrice(totalPrice)}</DialogDescription>
         </DialogHeader>
         <ul className='list-disc pl-2 md:pl-6'>
-          {items.map((item, index) => (
+          {items.map((item) => (
             <li
               className='text-md text-muted-foreground'
-              key={index}
+              key={item.type + item.item.name}
             >
               {item.item.quantity} {item.item.name} pour {formatPrice(item.item.buyPrice! * item.item.quantity!)}
             </li>

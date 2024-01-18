@@ -13,7 +13,7 @@ interface TreasuryCardAccountProps {
   treasury: Treasury;
 }
 
-export function TresoryCardAccount(props: TreasuryCardAccountProps) {
+export function TresoryCardAccount(props: Readonly<TreasuryCardAccountProps>) {
   const { treasury } = props;
   const [isOpen, setIsOpen] = useState(false);
 

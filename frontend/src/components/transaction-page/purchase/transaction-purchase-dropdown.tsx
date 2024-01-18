@@ -53,7 +53,7 @@ export function DropdownItem(props: DropdownItemProps): React.JSX.Element {
   );
 }
 
-export function MissingDropdownItem({ type }: { type: DropdownItemProps['type'] }): React.JSX.Element {
+export function MissingDropdownItem({ type }: Readonly<{ type: DropdownItemProps['type'] }>): React.JSX.Element {
   return (
     <Dialog>
       <DialogTrigger asChild>

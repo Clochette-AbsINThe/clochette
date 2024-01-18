@@ -57,7 +57,7 @@ export function nonInventoriedCreateResolver(data: NonInventoriedCreateForm): Re
   };
 }
 
-export function NonInventoriedDropdownPopupContent({ nonInventoriedCreate }: { nonInventoriedCreate?: Partial<NonInventoriedCreateForm> }) {
+export function NonInventoriedDropdownPopupContent({ nonInventoriedCreate }: Readonly<{ nonInventoriedCreate?: Partial<NonInventoriedCreateForm> }>) {
   const addItem = useTransactionPurchaseStore.use.addItem();
   const form = useForm<NonInventoriedCreateForm>({
     defaultValues: {
