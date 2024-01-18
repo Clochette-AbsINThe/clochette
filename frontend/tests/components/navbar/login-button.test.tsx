@@ -5,8 +5,6 @@ import { Mock } from 'vitest';
 import LoginButton from '@/components/navbar/login-button';
 import { mockPush } from 'tests/utils';
 
-vi.mock('next-auth/react');
-
 describe('LoginButton', () => {
   const mockSignOut = signOut as Mock;
   const mockUseSession = useSession as Mock;
