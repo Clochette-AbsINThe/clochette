@@ -138,3 +138,4 @@ omit = [
     "app/db/base_class.py",
     "app/db/base.py",
 ]
+concurrency = ["greenlet", "thread"]
