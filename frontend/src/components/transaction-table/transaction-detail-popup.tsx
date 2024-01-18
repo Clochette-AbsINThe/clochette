@@ -5,7 +5,7 @@ import { DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useReadTransaction } from '@/openapi-codegen/clochetteComponents';
 import { TransactionDetail } from '@/openapi-codegen/clochetteSchemas';
 
-export function TransactionDetails(transaction: TransactionDetail) {
+export function TransactionDetails(transaction: Readonly<TransactionDetail>) {
   if (transaction.trade === 'purchase') {
     return (
       <>
@@ -30,7 +30,7 @@ interface TransactionDetailPopupProps extends DataTableRowActionsProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-export function TransactionDetailPopup({ row, isOpen, setIsOpen }: TransactionDetailPopupProps) {
+export function TransactionDetailPopup({ row, isOpen }: Readonly<TransactionDetailPopupProps>) {
   const { data, isLoading, isError } = useReadTransaction(
     {
       pathParams: {

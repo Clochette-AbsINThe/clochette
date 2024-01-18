@@ -14,7 +14,7 @@ export interface DataTableRowActionsProps {
   row: Row<ConsumableDistinct>;
 }
 
-export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+export function DataTableRowActions({ row }: Readonly<DataTableRowActionsProps>) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

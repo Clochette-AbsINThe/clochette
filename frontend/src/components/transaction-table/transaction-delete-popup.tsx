@@ -14,7 +14,7 @@ interface TransactionDeletePopupProps extends DataTableRowActionsProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-export function TransactionDeletePopup({ row, isOpen, setIsOpen }: TransactionDeletePopupProps) {
+export function TransactionDeletePopup({ row, setIsOpen }: Readonly<TransactionDeletePopupProps>) {
   const queryClient = useQueryClient();
 
   const deleteTransaction = useDeleteTransaction({

@@ -34,7 +34,7 @@ interface DrinkItemFormProps {
   children: React.ReactNode;
 }
 
-export function DrinkItemForm(props: DrinkItemFormProps) {
+export function DrinkItemForm(props: Readonly<DrinkItemFormProps>) {
   const form = props.form as UseFormReturn<DrinkItemCreate | DrinkItemUpdate>;
   const onSubmit = props.onSubmit as (data: DrinkItemCreate | DrinkItemUpdate) => void;
 
@@ -109,7 +109,7 @@ export function DrinkItemCreateForm() {
   );
 }
 
-export function DrinkItemUpdateForm(props: { drink: DrinkItem }) {
+export function DrinkItemUpdateForm(props: Readonly<{ drink: DrinkItem }>) {
   const router = useRouter();
 
   const form = useForm<DrinkItemUpdate>({

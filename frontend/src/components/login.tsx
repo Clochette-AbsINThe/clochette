@@ -67,7 +67,7 @@ export default function Login() {
       if (res.ok) {
         // Get the query params from the res.url
         const query = Object.fromEntries(new URLSearchParams(res.url?.split('?')[1]));
-        const callbackUrl = (query.callbackUrl as string) ?? '/';
+        const callbackUrl = query.callbackUrl ?? '/';
         push(callbackUrl);
         return;
       }
@@ -99,10 +99,10 @@ export default function Login() {
         <CardTitle className='text-xl font-bold md:text-2xl'>Connectez-vous</CardTitle>
       </CardHeader>
       <CardContent className='pb-0'>
-        <h3
+        <p
           className='font-bold text-red-600'
           ref={errorRef}
-        ></h3>
+        ></p>
       </CardContent>
       <CardContent>
         <Form {...form}>

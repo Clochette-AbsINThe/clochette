@@ -11,15 +11,14 @@ import { useCreateTransactionFlow } from '@/hooks/useCreateTransactionFlow';
 import { useReadNonInventoriedItems, useCreateNonInventoried } from '@/openapi-codegen/clochetteComponents';
 import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
 import { NonInventoriedItem, TransactionCommerceCreate } from '@/openapi-codegen/clochetteSchemas';
-import { PlusCircledIcon } from '@/styles/utils';
-import { getIcon } from '@/styles/utils';
+import { PlusCircledIcon, getIcon } from '@/styles/utils';
 import { ECOCUP_NAME } from '@/utils/constant';
 
 interface EcoCupDepositPopupProps {
   ecoCup: NonInventoriedItem;
 }
 
-export function EcoCupDepositPopup({ ecoCup }: EcoCupDepositPopupProps): React.JSX.Element {
+export function EcoCupDepositPopup({ ecoCup }: Readonly<EcoCupDepositPopupProps>): React.JSX.Element {
   const [isOpen, setIsOpen] = useState(false);
 
   const createNonInventoried = useCreateNonInventoried({
@@ -107,7 +106,7 @@ export function EcoCupDepositPopup({ ecoCup }: EcoCupDepositPopupProps): React.J
   );
 }
 
-export function EcoCupDeposit({ ecoCupDeposit }: { ecoCupDeposit: NonInventoriedItem | null }): React.JSX.Element {
+export function EcoCupDeposit({ ecoCupDeposit }: Readonly<{ ecoCupDeposit: NonInventoriedItem | null }>): React.JSX.Element {
   const { data: ecoCupDepositArray } = useReadNonInventoriedItems(
     {
       queryParams: {

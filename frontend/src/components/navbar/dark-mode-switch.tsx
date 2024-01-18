@@ -29,7 +29,7 @@ export function DarkMode(): React.JSX.Element {
           <label
             title={t}
             className={(checked ? 'text-primary' : 'text-foreground') + ' py-1 px-3 opacity-50 cursor-pointer'}
-            key={i}
+            key={t}
           >
             {icon}
             <input

@@ -56,7 +56,7 @@ export function barrelCreateResolver(data: BarrelCreateForm): ResolverResult<Bar
   };
 }
 
-export function BarrelDropdownPopupContent({ barrelCreate }: { barrelCreate?: Partial<BarrelCreateForm> }) {
+export function BarrelDropdownPopupContent({ barrelCreate }: Readonly<{ barrelCreate?: Partial<BarrelCreateForm> }>) {
   const addItem = useTransactionPurchaseStore.use.addItem();
   const form = useForm<BarrelCreateForm>({
     defaultValues: {

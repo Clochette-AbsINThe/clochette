@@ -11,7 +11,7 @@ interface BuyPriceFormProps<TFieldValues extends FieldValues> {
   quantity: number;
 }
 
-export function BuyPriceForm<TFieldValues extends FieldValues>({ field, quantity }: BuyPriceFormProps<TFieldValues>) {
+export function BuyPriceForm<TFieldValues extends FieldValues>({ field, quantity }: Readonly<BuyPriceFormProps<TFieldValues>>) {
   const [type, setType] = useState<'unit' | 'total'>('unit');
   const inputRef = useRef<HTMLInputElement>(null);
 

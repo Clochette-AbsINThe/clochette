@@ -48,7 +48,7 @@ export function createTreasuryTransactionResolver(data: TransactionTreasuryCreat
   };
 }
 
-export function TresoryTransactionPopupContent(props: TresoryTransactionPopupContentProps) {
+export function TresoryTransactionPopupContent(props: Readonly<TresoryTransactionPopupContentProps>) {
   const { treasury } = props;
   const queryClient = useQueryClient();
 

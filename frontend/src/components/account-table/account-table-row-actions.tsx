@@ -15,7 +15,7 @@ export interface DataTableRowActionsProps {
   row: Row<Account>;
 }
 
-export function DataTableRowActions({ row }: DataTableRowActionsProps) {
+export function DataTableRowActions({ row }: Readonly<DataTableRowActionsProps>) {
   const [isOpen, setIsOpen] = useState(false);
   const [type, setType] = useState<'modify' | 'delete'>('delete');
 

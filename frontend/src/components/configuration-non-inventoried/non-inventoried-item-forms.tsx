@@ -49,7 +49,7 @@ interface NonInventoriedItemFormProps {
   children: React.ReactNode;
 }
 
-export function NonInventoriedItemForm(props: NonInventoriedItemFormProps) {
+export function NonInventoriedItemForm(props: Readonly<NonInventoriedItemFormProps>) {
   const form = props.form as UseFormReturn<NonInventoriedItemCreate | NonInventoriedItemUpdate>;
   const onSubmit = props.onSubmit as (data: NonInventoriedItemCreate | NonInventoriedItemUpdate) => void;
 
@@ -114,7 +114,7 @@ export function NonInventoriedItemForm(props: NonInventoriedItemFormProps) {
   );
 }
 
-export function NonInventoriedItemUpdateForm({ nonInventoriedItem }: { nonInventoriedItem: NonInventoriedItem }) {
+export function NonInventoriedItemUpdateForm({ nonInventoriedItem }: Readonly<{ nonInventoriedItem: NonInventoriedItem }>) {
   const router = useRouter();
 
   const form = useForm<NonInventoriedItemUpdate>({

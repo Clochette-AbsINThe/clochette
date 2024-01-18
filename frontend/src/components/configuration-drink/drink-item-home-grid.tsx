@@ -10,7 +10,7 @@ import { pages } from '@/utils/pages';
 export function filterDrinks(drinks: ReadDrinksResponse, query: string) {
   return drinks.filter((drink) => drink.name.toLowerCase().includes(query.toLowerCase())).sort((a, b) => a.name.localeCompare(b.name));
 }
-export function DrinkItemHomeGrid({ query }: { query: string }) {
+export function DrinkItemHomeGrid({ query }: Readonly<{ query: string }>) {
   const { isLoading, isError, data } = useReadDrinks({});
 
   if (isLoading) {

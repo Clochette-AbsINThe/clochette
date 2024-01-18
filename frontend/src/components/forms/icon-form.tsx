@@ -14,7 +14,7 @@ interface IconFormProps<TFieldValues extends FieldValues> {
   disabled?: boolean;
 }
 
-export function IconForm<TFieldValues extends FieldValues>({ field, exclude, direction = 'column', disabled = false }: IconFormProps<TFieldValues>) {
+export function IconForm<TFieldValues extends FieldValues>({ field, exclude, direction = 'column', disabled = false }: Readonly<IconFormProps<TFieldValues>>) {
   let iconOptions: IconName[] = ['Soft', 'Beer', 'Barrel', 'Food', 'Misc', 'Glass'];
 
   if (exclude) {

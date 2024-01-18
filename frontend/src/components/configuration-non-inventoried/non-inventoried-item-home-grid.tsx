@@ -11,7 +11,7 @@ export function filterNonInventoried(nonInventoriedItems: ReadNonInventoriedItem
   return nonInventoriedItems.filter((nonInventoriedItem) => nonInventoriedItem.name.toLowerCase().includes(query.toLowerCase())).sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export function NonInventoriedItemHomeGrid({ query }: { query: string }) {
+export function NonInventoriedItemHomeGrid({ query }: Readonly<{ query: string }>) {
   const { isLoading, isError, data } = useReadNonInventoriedItems({});
 
   if (isLoading) {

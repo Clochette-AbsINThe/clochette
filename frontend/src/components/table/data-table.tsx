@@ -11,9 +11,9 @@ interface DataTableProps<TData extends { id: number }, TValue> {
   pagination?: boolean;
 }
 
-export function DataTable<TData extends { id: number }, TValue>({ columns, data, pagination = true }: DataTableProps<TData, TValue>) {
+export function DataTable<TData extends { id: number }, TValue>({ columns, data, pagination = true }: Readonly<DataTableProps<TData, TValue>>) {
   const [rowSelection, setRowSelection] = useState({});
-  const [columnVisibility] = useState<VisibilityState>({ id: false });
+  const columnVisibility: VisibilityState = { id: false };
   const [sorting, setSorting] = useState<SortingState>([{ id: 'id', desc: true }]);
 
   const table = useReactTable({

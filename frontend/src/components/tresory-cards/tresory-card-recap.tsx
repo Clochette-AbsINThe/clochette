@@ -7,7 +7,7 @@ interface TreasuryCardRecapProps {
   treasury: Treasury;
 }
 
-export function TresoryCardRecap(props: TreasuryCardRecapProps) {
+export function TresoryCardRecap(props: Readonly<TreasuryCardRecapProps>) {
   const { treasury } = props;
   return (
     <Card className='p-6 flex flex-col grow sm:grow-0 gap-4'>

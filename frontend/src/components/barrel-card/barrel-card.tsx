@@ -5,7 +5,7 @@ import { useReadGlasses } from '@/openapi-codegen/clochetteComponents';
 import { Barrel } from '@/openapi-codegen/clochetteSchemas';
 import { getIcon } from '@/styles/utils';
 
-export function BarrelCard({ barrel }: { barrel: Barrel }) {
+export function BarrelCard({ barrel }: Readonly<{ barrel: Barrel }>) {
   const { data } = useReadGlasses({
     queryParams: {
       barrel_id: barrel.id

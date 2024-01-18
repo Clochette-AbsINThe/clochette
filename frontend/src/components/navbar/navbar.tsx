@@ -28,7 +28,7 @@ export default function Navbar(): React.JSX.Element {
         >
           Clochette
         </Link>
-        <div
+        <button
           id='hamburger-menu'
           aria-label='hamburger-menu'
           onClick={() => setIsOpen(!isOpen)}
@@ -37,7 +37,7 @@ export default function Navbar(): React.JSX.Element {
           <span className='bg-gray-600 dark:bg-gray-300'></span>
           <span className='bg-gray-600 dark:bg-gray-300'></span>
           <span className='bg-gray-600 dark:bg-gray-300'></span>
-        </div>
+        </button>
       </div>
       <div className={(!isOpen ? 'hidden ' : '') + 'lg:flex flex-col lg:flex-row items-center flex-grow'}>
         <div className={'flex p-2 justify-start flex-grow self-start lg:self-center h-full flex-col lg:flex-row pb-4 space-y-2 lg:space-y-0 lg:items-end lg:mb-2'}>

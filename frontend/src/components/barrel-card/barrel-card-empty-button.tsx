@@ -11,7 +11,7 @@ import { useUpdateBarrel } from '@/openapi-codegen/clochetteComponents';
 import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
 import { Barrel } from '@/openapi-codegen/clochetteSchemas';
 
-export function EmptyBarrelButton({ barrel }: { barrel: Barrel }) {
+export function EmptyBarrelButton({ barrel }: Readonly<{ barrel: Barrel }>) {
   const queryClient = useQueryClient();
   const [isOpen, setIsOpen] = useState(false);
 

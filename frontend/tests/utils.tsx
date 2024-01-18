@@ -3,7 +3,6 @@ import { fireEvent } from '@testing-library/react';
 import { Mock } from 'vitest';
 
 import { Dialog } from '@/components/ui/dialog';
-import { logger } from '@/lib/logger';
 import * as original from '@/openapi-codegen/clochetteComponents';
 
 export const mockPush = vi.fn();

@@ -74,7 +74,7 @@ export function passwordFormResolver(data: PasswordType): ResolverResult<Passwor
   };
 }
 
-export function PasswordForm<TFieldValues extends PasswordType>({ form: unsafeForm }: PasswordFormProps<TFieldValues>) {
+export function PasswordForm<TFieldValues extends PasswordType>({ form: unsafeForm }: Readonly<PasswordFormProps<TFieldValues>>) {
   // @ts-expect-error
   const form = unsafeForm as UseFormReturn<PasswordType>;
 
@@ -135,10 +135,10 @@ export function PasswordForm<TFieldValues extends PasswordType>({ form: unsafeFo
         )}
       />
       <div className='flex flex-row gap-2 mt-2'>
-        <div className={`w-full h-2 rounded-full ${zxcvbnResult.score > 0 ? `${colorForPasswordValidator(zxcvbnResult.score)}` : 'bg-gray-300'}`}></div>
-        <div className={`w-full h-2 rounded-full ${zxcvbnResult.score > 1 ? `${colorForPasswordValidator(zxcvbnResult.score)}` : 'bg-gray-300'}`}></div>
-        <div className={`w-full h-2 rounded-full ${zxcvbnResult.score > 2 ? `${colorForPasswordValidator(zxcvbnResult.score)}` : 'bg-gray-300'}`}></div>
-        <div className={`w-full h-2 rounded-full ${zxcvbnResult.score > 3 ? `${colorForPasswordValidator(zxcvbnResult.score)}` : 'bg-gray-300'}`}></div>
+        <div className={`w-full h-2 rounded-full ${zxcvbnResult.score > 0 ? colorForPasswordValidator(zxcvbnResult.score) : 'bg-gray-300'}`}></div>
+        <div className={`w-full h-2 rounded-full ${zxcvbnResult.score > 1 ? colorForPasswordValidator(zxcvbnResult.score) : 'bg-gray-300'}`}></div>
+        <div className={`w-full h-2 rounded-full ${zxcvbnResult.score > 2 ? colorForPasswordValidator(zxcvbnResult.score) : 'bg-gray-300'}`}></div>
+        <div className={`w-full h-2 rounded-full ${zxcvbnResult.score > 3 ? colorForPasswordValidator(zxcvbnResult.score) : 'bg-gray-300'}`}></div>
       </div>
     </>
   );

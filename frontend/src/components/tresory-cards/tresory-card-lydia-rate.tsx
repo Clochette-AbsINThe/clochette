@@ -46,7 +46,7 @@ interface TreasuryCardLydiaRateProps {
   treasury: Treasury;
 }
 
-export function TresoryCardLydiaRate(props: TreasuryCardLydiaRateProps) {
+export function TresoryCardLydiaRate(props: Readonly<TreasuryCardLydiaRateProps>) {
   const { treasury } = props;
   const queryClient = useQueryClient();
   const [isEditingTreasuryRate, setIsEditingTreasuryRate] = useState(false);

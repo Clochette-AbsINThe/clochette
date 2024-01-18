@@ -8,7 +8,7 @@ import { generateApiErrorMessage } from '@/openapi-codegen/clochetteFetcher';
 import { NonInventoriedItem } from '@/openapi-codegen/clochetteSchemas';
 import { pages } from '@/utils/pages';
 
-export function NonInventoriedItemDeleteButton({ nonInventoriedItem }: { nonInventoriedItem: NonInventoriedItem }) {
+export function NonInventoriedItemDeleteButton({ nonInventoriedItem }: Readonly<{ nonInventoriedItem: NonInventoriedItem }>) {
   const router = useRouter();
   const name = nonInventoriedItem.name;
 

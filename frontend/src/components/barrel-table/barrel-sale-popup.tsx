@@ -46,7 +46,7 @@ interface BarrelSalePopupProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-export function BarrelSalePopup({ rowBarrel, isOpen, setIsOpen }: BarrelSalePopupProps) {
+export function BarrelSalePopup({ rowBarrel, setIsOpen }: Readonly<BarrelSalePopupProps>) {
   const queryClient = useQueryClient();
 
   const sellBarrel = useSaleBarrel({

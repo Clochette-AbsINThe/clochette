@@ -47,7 +47,7 @@ interface ConsumableUpdateModifyFormProps extends DataTableRowActionsProps {
   setIsOpen: (isOpen: boolean) => void;
 }
 
-export function ConsumableModifyPopup({ row, isOpen, setIsOpen }: ConsumableUpdateModifyFormProps) {
+export function ConsumableModifyPopup({ row, isOpen, setIsOpen }: Readonly<ConsumableUpdateModifyFormProps>) {
   const queryClient = useQueryClient();
   const consumable = row.original;
 

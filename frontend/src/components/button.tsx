@@ -14,7 +14,7 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 export const Button = ({ children, onClick, danger, disabled, type, confirm, loading, retour, ...rest }: ButtonProps) => {
   const _danger = danger ?? false;
   const _confirm = confirm ?? false;
-  const _disabled = (disabled || loading) ?? false;
+  const _disabled = disabled ?? loading ?? false;
 
   const className =
     'text-sm font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 transition ease-in duration-200 rounded-md shadow-md transform enabled:hover:-translate-y-1 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-1';
@@ -45,7 +45,7 @@ export const Button = ({ children, onClick, danger, disabled, type, confirm, loa
   );
 };
 
-function Loading({ loading }: { loading?: boolean }) {
+function Loading({ loading }: Readonly<{ loading?: boolean }>) {
   if (loading === undefined || !loading) return <></>;
   return (
     <svg
@@ -71,7 +71,7 @@ function Loading({ loading }: { loading?: boolean }) {
   );
 }
 
-function Return({ retour }: { retour?: boolean }) {
+function Return({ retour }: Readonly<{ retour?: boolean }>) {
   if (retour === undefined || !retour) return <></>;
   return (
     <svg
