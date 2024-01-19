@@ -1,129 +1,129 @@
-from collections.abc import Callable
-from devtools import pprint
-from traceback import format_exception
+import json
+import logging
+from traceback import format_exception, print_exception
+from typing import Protocol
+
+import requests
+from fastapi.datastructures import URL, Headers
 
 from app.core.config import settings
 
+logger = logging.getLogger("app.core.utils.backend.alert_backend")
 
-def alert_backend() -> Callable[[Exception, dict], None]:
+
+class TestException(Exception):
+    pass
+
+
+class Alert(Protocol):  # pragma: no cover
+    def __call__(
+        self, exception: Exception, method: str, url: URL, headers: Headers, body: bytes
+    ) -> None:
+        ...
+
+
+def alert_backend() -> Alert:
     if settings.ALERT_BACKEND == "terminal":
         return alert_to_terminal
-    elif settings.ALERT_BACKEND == "github":
+
+    if settings.ALERT_BACKEND == "github":
         return alert_to_github_issues
-    else:
-        print("Invalid alert backend: {backend}".format(
-            backend=settings.ALERT_BACKEND
-        ))
-        print("Falling back to terminal alert")
-        return alert_to_terminal
+
+    logger.warning(f"Invalid alert backend: {settings.ALERT_BACKEND}")
+    logger.warning("Falling back to terminal alert")
+    return alert_to_terminal
 
 
-def alert_to_terminal(exception: Exception, **request: dict) -> None:
-    print("### An exception has been raised! ###")
-    print("############## Request ##############")
-    pprint(request)
-    print("############# Exception #############")
-    format_exception(type(exception), exception, exception.__traceback__)
-    pprint(exception)
+def alert_to_terminal(
+    exception: Exception, method: str, url: URL, headers: Headers, body: bytes
+) -> None:
+    if (
+        isinstance(exception, TestException) and settings.ENVIRONMENT == "production"
+    ):  # pragma: no cover
+        return None
+
+    logger.error("### An exception has been raised! ###")
+    logger.error("############## Request ##############")
+    logger.error(f"{method} {url}")
+    logger.error("########## Request headers ##########")
+    for key, value in headers.items():
+        logger.error(f"- **{key}**: {value}")
+    logger.error("########### Request body ############")
+    logger.error(body.decode())
+    logger.error("############# Exception #############")
+    logger.exception(exception, exc_info=False)
+    print_exception(type(exception), exception, exception.__traceback__, chain=False)
 
 
-def alert_to_github_issues(exception: Exception, **request: dict) -> None:
+def alert_to_github_issues(
+    exception: Exception, method: str, url: URL, headers: Headers, body: bytes
+) -> None:
+    if isinstance(exception, TestException):  # pragma: no cover
+        return None
+
+    issue_name = f"{exception.__class__.__name__}: {str(exception)}"
     # Format the exception and request to markdown
-    body = "# {type}: {msg}\n\n".format(
-        type=exception.__class__.__name__,
-        msg=str(exception)
+    markdown = f"# {issue_name}\n\n"
+    markdown += f"{method} {url}\n\n"
+    markdown += "## Request headers\n"
+    markdown += "\n".join(
+        f"- **{key}**: {value}"
+        for key, value in headers.items()
+        if key != "Authorization"
     )
-    body += "{method} {url}\n\n".format(
-        method=request["method"],
-        url=request["url"]
-    )
-    body += "## Request headers\n"
-    body += "\n".join(
-        "- **{key}**: {value}".format(
-            key=key,
-            value=value
+    markdown += "\n\n"
+    markdown += "## Request body\n"
+    markdown += "```\n"
+    markdown += body.decode()
+    markdown += "\n```\n\n"
+    markdown += "## Exception traceback\n"
+    markdown += "```\n"
+    markdown += "".join(
+        format_exception(
+            type(exception), exception, exception.__traceback__, chain=False
         )
-        for key, value in request["headers"].items()
     )
-    body += "\n\n"
-    body += "## Request body\n"
-    body += "```\n"
-    body += request["body"].decode()
-    body += "\n```\n\n"
-    body += "## Exception traceback\n"
-    body += "```\n"
-    body += "".join(format_exception(type(exception), exception, exception.__traceback__))
-    body += "\n```\n\n"
+    markdown += "\n```\n\n"
 
     # Create the issue on github
-    import requests
-    import json
 
     # Authenticate with github
     session = requests.Session()
     session.auth = (settings.GITHUB_USER, settings.GITHUB_TOKEN)
 
     # Before creating it, check if there is already an issue with the same title
-    url = "https://api.github.com/repos/{owner}/{repo}/issues".format(
-        owner=settings.REPOSITORY_OWNER,
-        repo=settings.REPOSITORY_NAME
-    )
+    github_url = f"https://api.github.com/repos/{settings.REPOSITORY_OWNER}/{settings.REPOSITORY_NAME}/issues"
 
-    response = session.get(url)
+    response = session.get(github_url)
 
     if response.status_code != 200:
-        print("Failed to get issues from github: {status_code}".format(
-            status_code=response.status_code
-        ))
-        print(response.content)
-        print("Falling back to terminal alert")
-        alert_to_terminal(exception, **request)
-        return
+        logger.error(f"Failed to get issues from github: {response.status_code}")
+        logger.error(response.content)
+        logger.warning("Falling back to terminal alert")
+        return alert_to_terminal(exception, method, url, headers, body)
 
     existing_issue = next(
-        (
-            issue
-            for issue in response.json()
-            if issue["title"] == "{type}: {msg}".format(
-                type=exception.__class__.__name__,
-                msg=str(exception)
-            )
-        ),
-        None
+        (issue for issue in response.json() if issue["title"] == issue_name),
+        None,
     )
 
     if existing_issue:
-        print("Issue already exists on github: {url}".format(
-            url=existing_issue["html_url"]
-        ))
-        return
-
-    # Create the issue
-
-    url = "https://api.github.com/repos/{owner}/{repo}/issues".format(
-        owner=settings.REPOSITORY_OWNER,
-        repo=settings.REPOSITORY_NAME
-    )
+        logger.warning(f"Issue already exists on github: {existing_issue['html_url']}")
+        return None
 
     payload = {
-        "title": "{type}: {msg}".format(
-            type=exception.__class__.__name__,
-            msg=str(exception)
-        ),
-        "body": body,
+        "title": issue_name,
+        "body": body.decode(),
         "labels": [label for label in settings.ISSUE_LABELS.split(",") if label],
     }
 
-    response = session.post(url, data=json.dumps(payload))
+    response = session.post(github_url, data=json.dumps(payload))
 
     if response.status_code != 201:
-        print("Failed to create issue on github: {status_code}".format(
-            status_code=response.status_code
-        ))
-        print(response.content)
-        print("Falling back to terminal alert")
-        alert_to_terminal(exception, **request)
-    else:
-        print("Issue created on github: {url}".format(
-            url=response.json()["html_url"]
-        ))
+        logger.error("Failed to create issue on github: {response.status_code}")
+        logger.error(response.content)
+        logger.warning("Falling back to terminal alert")
+        return alert_to_terminal(exception, method, url, headers, body)
+
+    logger.info(f"Issue created on github: {response.json()['html_url']}")
+    return None

@@ -1,15 +1,14 @@
-from sqlalchemy import Boolean, Column, Enum, Integer, String
+from sqlalchemy.orm import Mapped
 
 from app.core.types import SecurityScopes
-from app.db.base_class import Base
+from app.db.base_class import Base, Str256, Str512
 
 
 class Account(Base):
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String(256), nullable=False)
-    password = Column(String(512), nullable=False)
-    scope = Column(Enum(SecurityScopes), nullable=False)
-    is_active = Column(Boolean, nullable=False)
-    last_name = Column(String(256), nullable=False)
-    first_name = Column(String(256), nullable=False)
-    promotion_year = Column(Integer, nullable=False)
+    username: Mapped[Str256]
+    password: Mapped[Str512]
+    scope: Mapped[SecurityScopes]
+    is_active: Mapped[bool]
+    last_name: Mapped[Str256]
+    first_name: Mapped[Str256]
+    promotion_year: Mapped[int]

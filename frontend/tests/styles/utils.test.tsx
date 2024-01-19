@@ -1,62 +1,80 @@
-import { getIcon } from '@styles/utils';
-import { render, screen } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
-test('getIcon Glass', () => {
-    render(<div>{getIcon('Glass', '')}</div>);
-    const icon = screen.getByTestId('Glass');
-    expect(icon).toBeInTheDocument();
-});
+import { PlusCircledIcon, DecreasingArrowIcon, IncreaseArrowIcon, MinusCircledIcon, getIcon } from '@/styles/utils';
 
-test('getIcon Beer', () => {
-    render(<div>{getIcon('Beer', '')}</div>);
-    const icon = screen.getByTestId('Beer');
-    expect(icon).toBeInTheDocument();
-});
+describe('getIcon', () => {
+  it('should render the Glass icon', () => {
+    const { container } = render(getIcon('Glass'));
+    expect(container.firstChild).toMatchSnapshot();
+  });
 
-test('getIcon Food', () => {
-    render(<div>{getIcon('Food', '')}</div>);
-    const icon = screen.getByTestId('Food');
-    expect(icon).toBeInTheDocument();
-});
+  it('should render the Beer icon', () => {
+    const { container } = render(getIcon('Beer'));
+    expect(container.firstChild).toMatchSnapshot();
+  });
 
-test('getIcon Soft', () => {
-    render(<div>{getIcon('Soft', '')}</div>);
-    const icon = screen.getByTestId('Soft');
-    expect(icon).toBeInTheDocument();
-});
+  it('should render the Food icon', () => {
+    const { container } = render(getIcon('Food'));
+    expect(container.firstChild).toMatchSnapshot();
+  });
 
-test('getIcon Barrel', () => {
-    render(<div>{getIcon('Barrel', '')}</div>);
-    const icon = screen.getByTestId('Barrel');
-    expect(icon).toBeInTheDocument();
-});
+  it('should render the Soft icon', () => {
+    const { container } = render(getIcon('Soft'));
+    expect(container.firstChild).toMatchSnapshot();
+  });
 
-test('getIcon Misc', () => {
-    render(<div>{getIcon('Misc', '')}</div>);
-    const icon = screen.getByTestId('Misc');
-    expect(icon).toBeInTheDocument();
-});
+  it('should render the Barrel icon', () => {
+    const { container } = render(getIcon('Barrel'));
+    expect(container.firstChild).toMatchSnapshot();
+  });
 
-test('getIcon Cash', () => {
-    render(<div>{getIcon('Cash', '')}</div>);
-    const icon = screen.getByTestId('Cash');
-    expect(icon).toBeInTheDocument();
-});
+  it('should render the Misc icon', () => {
+    const { container } = render(getIcon('Misc'));
+    expect(container.firstChild).toMatchSnapshot();
+  });
 
-test('getIcon CB', () => {
-    render(<div>{getIcon('CB', '')}</div>);
-    const icon = screen.getByTestId('CB');
-    expect(icon).toBeInTheDocument();
-});
+  it('should render the Lydia icon', () => {
+    const { container } = render(getIcon('Lydia'));
+    expect(container.firstChild).toMatchSnapshot();
+  });
 
-test('getIcon Lydia', () => {
-    render(<div>{getIcon('Lydia', '')}</div>);
-    const icon = screen.getByTestId('Lydia');
-    expect(icon).toBeInTheDocument();
-});
+  it('should render the Cash icon', () => {
+    const { container } = render(getIcon('Cash'));
+    expect(container.firstChild).toMatchSnapshot();
+  });
 
-test('getIcon Setting', () => {
-    render(<div>{getIcon('Setting', '')}</div>);
-    const icon = screen.getByTestId('Setting');
-    expect(icon).toBeInTheDocument();
+  it('should render the CB icon', () => {
+    const { container } = render(getIcon('CB'));
+    expect(container.firstChild).toMatchSnapshot();
+  });
+
+  it('should render the Virement icon', () => {
+    const { container } = render(getIcon('Virement'));
+    expect(container.firstChild).toMatchSnapshot();
+  });
+
+  it('should render the Settings icon', () => {
+    const { container } = render(getIcon('Setting'));
+    expect(container.firstChild).toMatchSnapshot();
+  });
+
+  it('should render the Increase Arrow icon', () => {
+    const { container } = render(<IncreaseArrowIcon />);
+    expect(container.firstChild).toMatchSnapshot();
+  });
+
+  it('should render the Decrease Arrow icon', () => {
+    const { container } = render(<DecreasingArrowIcon />);
+    expect(container.firstChild).toMatchSnapshot();
+  });
+
+  it('should render the Plus Cicrled icon', () => {
+    const { container } = render(<PlusCircledIcon />);
+    expect(container.firstChild).toMatchSnapshot();
+  });
+
+  it('should render the Minus Cicrled icon', () => {
+    const { container } = render(<MinusCircledIcon />);
+    expect(container.firstChild).toMatchSnapshot();
+  });
 });

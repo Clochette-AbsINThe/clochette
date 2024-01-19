@@ -1,0 +1,6 @@
+root = true
+
+# Match all ts or tsx file except in node_modules
+[*.{ts,tsx,js,jsx,scss}]
+indent_style = space
+indent_size = 2

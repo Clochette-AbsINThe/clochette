@@ -1,7 +1,7 @@
-from pydantic import Field, validator
+from pydantic import ConfigDict, Field, computed_field
 
-from app.core.config import DefaultModel
 from app.core.types import IconName
+from app.schemas.base import DefaultModel
 
 
 class OutOfStockItemBase(DefaultModel):
@@ -9,38 +9,23 @@ class OutOfStockItemBase(DefaultModel):
     icon: IconName
     sell_price: float | None = Field(default=None, gt=0)
 
+    @computed_field  # type: ignore[misc]
+    @property
+    def buy_or_sell(self) -> bool:
+        """buy_or_sell is True if the item does not have a sell price."""
+        return self.sell_price is None
+
 
 class OutOfStockItemCreate(OutOfStockItemBase):
-    buy_or_sell: bool | None
-
-    @validator("buy_or_sell", always=True, pre=True)
-    def populate_buy_or_sell(cls, v, values):
-        return values["sell_price"] is None
-
-
-class OutOfStockItemCreateFront(OutOfStockItemBase):
     pass
 
 
 class OutOfStockItemUpdate(OutOfStockItemBase):
-    name: str | None = Field(min_length=1)
-    icon: IconName | None
-    buy_or_sell: bool | None
-
-    # Exclude_unset option removing dynamic default setted on a validator #1399,
-    # We had to fix the value of buy_or_sell in the endpoint for now.
-    @validator("buy_or_sell", always=True, pre=True)
-    def populate_buy_or_sell(cls, v, values):
-        return values["sell_price"] is None
-
-
-class OutOfStockItemUpdateFront(OutOfStockItemBase):
-    name: str | None = Field(min_length=1)
-    icon: IconName | None
+    name: str | None = Field(default=None, min_length=1)
+    icon: IconName | None = None
 
 
 class OutOfStockItem(OutOfStockItemBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

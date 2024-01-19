@@ -3,30 +3,62 @@ version: "3"
 # This is a docker-compose file for Clochette production environment, which will override the default docker-compose.yml file.
 name: clochette_production
 
+volumes:
+  certbot:
+
 services:
   reverse-proxy:
+    container_name: reverse-proxy
     build:
       args:
         - host_arg=clochette.h.minet.net
     image: ghcr.io/clochette-absinthe/reverse-proxy:${tag:-latest}
     volumes:
-      - ./ssl/clochette.h.minet.net.crt:/etc/nginx/ssl/clochette.h.minet.net.crt
-      - ./ssl/clochette.h.minet.net.key:/etc/nginx/ssl/clochette.h.minet.net.key
+      - ./ssl/clochette.h.minet.net.crt:/etc/nginx/ssl/clochette.h.minet.net.crt:ro
+      - ./ssl/clochette.h.minet.net.key:/etc/nginx/ssl/clochette.h.minet.net.key:ro
+      - certbot:/var/www/certbot:ro
+    restart: always
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot:latest
+    volumes:
+      - certbot:/var/www/certbot/:rw
+      - ./ssl/letsencrypt:/etc/letsencrypt:rw
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   frontend:
+    container_name: frontend
     build:
       args:
-        - next_public_base_url=https://clochette.h.minet.net
-        - next_public_backend_api_url=https://clochette.h.minet.net/api/v1
+        - next_public_backend_url=https://clochette.h.minet.net
+    environment:
+      - NEXTAUTH_URL=https://clochette.h.minet.net
     image: ghcr.io/clochette-absinthe/frontend:${tag:-latest}
     expose:
       - 3000
+    restart: always
 
   backend:
+    container_name: backend
     image: ghcr.io/clochette-absinthe/backend:${tag:-latest}
+    environment:
+      - POSTGRES_HOST=database
+      - ALERT_BACKEND=github
+      - ISSUE_LABELS=Backend,bug,bot
+      - GITHUB_USER=${GITHUB_USER}
+      - GITHUB_TOKEN=${GITHUB_TOKEN}
+      - REPOSITORY_NAME=${REPOSITORY_NAME}
+      - REPOSITORY_OWNER=${REPOSITORY_OWNER}
     expose:
       - 8080
+    restart: always
 
   database:
+    container_name: database
     expose:
       - 5432
+    restart: always
+    volumes:
+      - ./database:/var/lib/postgresql/data

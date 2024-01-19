@@ -1,15 +1,15 @@
-from pydantic import Field, validator
+from pydantic import ConfigDict, Field, computed_field
 
-from app.core.config import DefaultModel
 from app.schemas.barrel import Barrel
+from app.schemas.base import DefaultModel, ExcludedField
 
 
 class GlassBase(DefaultModel):
-    barrel_id: int = Field(..., alias='fkId')
+    barrel_id: int = Field(..., alias="fkId")
 
 
 class GlassCreate(GlassBase):
-    transaction_id: int = 0
+    transaction_v1_id: int = Field(default=0, alias="transaction_id")
 
 
 class TransactionCreate(GlassBase):
@@ -22,18 +22,16 @@ class GlassUpdate(GlassBase):
 
 class Glass(GlassBase):
     id: int
-    barrel: Barrel = Field(..., exclude=True)
-    name: str | None
+    barrel: Barrel | None = ExcludedField
 
-    @validator('name', always=True)
-    def populate_name(cls, v, values):
-        return values['barrel'].name
-    
-    sell_price: float | None
+    @computed_field  # type: ignore[misc]
+    @property
+    def name(self) -> str:
+        return self.barrel.name if self.barrel else "N/A"
 
-    @validator('sell_price', always=True)
-    def populate_sell_price(cls, v, values):
-        return values['barrel'].sell_price
+    @computed_field  # type: ignore[misc]
+    @property
+    def sell_price(self) -> float:
+        return self.barrel.sell_price if self.barrel else 0.0
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)

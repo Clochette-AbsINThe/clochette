@@ -9,19 +9,33 @@ services:
         - host_arg=clochette.dev
     volumes:
       - ./reverse-proxy/ssl:/etc/nginx/ssl
+    networks:
+      default:
+        aliases:
+          - clochette.dev
 
   frontend:
+    volumes:
+      - ./reverse-proxy/ssl/absinthe.ca.crt:/etc/ssl/certs/absinthe.ca.crt
     build:
       args:
-        - next_public_base_url=https://clochette.dev
-        - next_public_backend_api_url=https://clochette.dev/api/v1
+        - next_public_backend_url=https://clochette.dev
+    environment:
+      - NEXTAUTH_URL=https://clochette.dev
+      - NODE_EXTRA_CA_CERTS=/etc/ssl/certs/absinthe.ca.crt
     ports:
       - 8300:3000
 
   backend:
+    environment:
+      - ALERT_BACKEND=terminal
+      - GITHUB_USER=""
+      - GITHUB_TOKEN=""
+      - REPOSITORY_NAME=""
+      - REPOSITORY_OWNER=""
     ports:
-      - "8080:80"
+      - 8080:8080
 
   database:
     ports:
-      - "5432:5432"
+      - 5432:5432

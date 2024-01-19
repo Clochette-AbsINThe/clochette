@@ -3,3 +3,5 @@ README.md
 *.config.*
 .next/**
 **/coverage/**
+node_modules/
+src/openapi-codegen/**

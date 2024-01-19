@@ -1,65 +1,123 @@
-import importlib
+import logging
 
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.decorator import handle_exceptions
 from app.core.translation import Translator
+from app.core.types import PaymentMethod, TradeType
 from app.crud.base import CRUDBase
-from app.crud.crud_treasury import treasury as treasuries
+from app.crud.crud_treasury import treasury as crud_treasury
 from app.models.transaction import Transaction
-from app.schemas.consumable import ConsumableCreatePurchase, ConsumableCreateSale, ConsumableUpdate
-from app.schemas.transaction import TransactionCreate, TransactionFrontCreate, TransactionUpdate
+from app.schemas.treasury import InternalTreasuryUpdate
+from app.schemas.v2.transaction import (
+    TransactionCreate,
+    TransactionTreasuryCreate,
+    TransactionUpdate,
+)
 
+logger = logging.getLogger("app.crud.transaction")
 
 translator = Translator()
 
 
 class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate]):
-    @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
-    async def create(self, db: AsyncSession, *, obj_in: TransactionFrontCreate) -> Transaction:
+    async def create_v2(
+        self,
+        db: AsyncSession,
+        *,
+        obj_in: TransactionCreate,
+    ) -> Transaction:
         """
-        Create a new transaction in the database.
+        Create a transaction.
 
         :param db: The database session
-        :param obj_in: The data for the transaction to be created.
+        :param obj_in: The data for the transaction to be created
 
-        :return: The created transaction.
+        :return: The created transaction
         """
-        # Create a `TransactionCreate` object from the input data
-        transaction_create = TransactionCreate(**obj_in.dict())
-        # Update treasury
-        await treasuries.add_transaction(db, obj_in=transaction_create)
-        # Store transaction using the super method
-        transaction = await super().create(db, obj_in=transaction_create)
-        # Get the items from the input data
-        items = obj_in.items
-        # Iterate over the items
-        for i in range(len(items)):
-            # Get the CRUD utility corresponding to the item's table
-            crud_table: CRUDBase = getattr(importlib.import_module(f'app.crud.crud_{items[i].table}'), items[i].table)
-            # Iterate over the number of items
-            for _ in range(items[i].quantity):
-                # Get the item's data
-                obj_in = items[i].item
-                # If the item is a consumable item, create a `ConsumableCreatePurchase` or `ConsumableCreateSale` object
-                # from the item data depending on wheher the transaction is a sale or a purchase
-                if items[i].table == 'consumable':
-                    obj_in = ConsumableCreateSale(**obj_in.dict(), transaction_id=transaction.id) if transaction.sale else ConsumableCreatePurchase(**obj_in.dict(), transaction_id=transaction.id)
-                    # If the transaction is a sale, update the consumable item using the update method of the CRUD
-                    # utility, otherwise create a new consumable item using the create method of the CRUD utility
-                    if transaction.sale:
-                        await crud_table.update(db, db_obj=(await crud_table.read(db, id=obj_in.id)), obj_in=ConsumableUpdate(**obj_in.dict()))
-                    else:
-                        await crud_table.create(db, obj_in=obj_in)
-                else:
-                    # Set the transaction id of the item data to the transaction's id
-                    obj_in.transaction_id = transaction.id
-                    # Create a new item using the create method of the CRUD utility
-                    await crud_table.create(db, obj_in=obj_in)
-        
-        # Return the created transaction
-        return transaction
+        treasury_id = (await crud_treasury.get_last_treasury(db)).id
+        obj_in.treasury_id = treasury_id
+        return await super().create(db, obj_in=obj_in)
+
+    async def create_treasury(
+        self, db: AsyncSession, *, obj_in: TransactionTreasuryCreate
+    ) -> Transaction:
+        await self.update_treasury(
+            db=db,
+            amount=abs(obj_in.amount),
+            payment_method=obj_in.payment_method,
+            sale=obj_in.trade == TradeType.SALE,
+        )
+        return await self.create_v2(db, obj_in=obj_in)
+
+    async def update_treasury(
+        self,
+        db: AsyncSession,
+        *,
+        amount: float,
+        sale: bool,
+        payment_method: PaymentMethod,
+    ) -> tuple[InternalTreasuryUpdate, float]:
+        """
+        Update the treasury when a transaction is validated.
+        """
+
+        treasury = await crud_treasury.get_last_treasury(db)
+        print(
+            f"Total amount {treasury.total_amount} - Cash amount {treasury.cash_amount}"
+        )
+        # Pre-authorize the transaction
+        tresury_update = await crud_treasury.pre_authorize_transaction(
+            treasury=treasury,
+            amount=amount,
+            sale=sale,
+            payment_method=payment_method,
+        )
+        # Update the treasury
+        await crud_treasury.update(db, db_obj=treasury, obj_in=tresury_update[0])
+        return tresury_update
+
+    async def validate(
+        self,
+        db: AsyncSession,
+        *,
+        db_obj: Transaction,
+        obj_in: TransactionUpdate,
+    ) -> Transaction:
+        """
+        Validate a transaction.
+
+        :param db: The database session
+        :param id: The transaction id
+        :param obj_in: The data for the transaction to be validated
+
+        :return: The validated transaction
+        """
+        treasury_update = await self.update_treasury(
+            db,
+            amount=db_obj.price_sum,
+            sale=db_obj.trade == TradeType.SALE,
+            payment_method=db_obj.payment_method,
+        )
+
+        # Update the transaction
+        obj_in.amount = treasury_update[1]
+        logger.debug(f"Price sum: {obj_in.amount}")
+        return await super().update(db, db_obj=db_obj, obj_in=obj_in)
+
+    async def delete(self, db: AsyncSession, *, id: int) -> Transaction | None:
+        transaction_db = await super().delete(db, id=id)
+
+        if transaction_db is not None:
+            treasury = await crud_treasury.get_last_treasury(db)
+            tresury_update = await crud_treasury.revert_transaction(
+                treasury=treasury,
+                amount=transaction_db.amount,
+                payment_method=transaction_db.payment_method,
+            )
+            logger.debug(f"Treasury amount: {tresury_update.total_amount}")
+            await crud_treasury.update(db, db_obj=treasury, obj_in=tresury_update)
+
+        return transaction_db
 
 
 transaction = CRUDTransaction(Transaction)

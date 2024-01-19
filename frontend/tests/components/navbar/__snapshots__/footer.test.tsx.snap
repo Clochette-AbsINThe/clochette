@@ -1,0 +1,15 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Footer > should match snapshot 1`] = `
+<div>
+  <footer
+    class="flex justify-center"
+  >
+    <p
+      class="mb-3"
+    >
+      Guillemet Samuel - Marzelleau Benoit
+    </p>
+  </footer>
+</div>
+`;

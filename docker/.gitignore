@@ -1,5 +1,6 @@
 *.env
 *.sh
 *.csr
-*.ca.key
 /ssl/
+db-shared-volume/*
+!db-shared-volume/.gitkeep

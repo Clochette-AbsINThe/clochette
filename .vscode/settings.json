@@ -5,11 +5,15 @@
         "typescript", // Enable .ts
         "typescriptreact" // Enable .tsx
     ],
-    "astro.typescript.diagnostics.enabled": true,
     "files.exclude": {
         "**/.git": true,
-        "frontend/node_modules/": true,
+        "**/node_modules/": true,
+        "**/.next/": true,
+        "**/coverage/": true,
+        "**/.mypy_cache/": true,
+        "**/.pytest_cache/": true,
+        "**/.coverage/": true,
+        "**/.venv/": true,
+        "**/__pycache__/": true,
     },
-    "vitest.enable": true,
-    "vitest.commandLine": "./frontend/node_modules/.bin/vitest --config ./vitest.config.ts -r ./frontend/ --watch"
 }

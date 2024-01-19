@@ -1,0 +1,86 @@
+name: Labels pull request
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  add-labels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get the current version from pyproject.toml
+        id: get_current_version_from_pyproject
+        run: |
+          cd backend
+          echo "version=$(cat pyproject.toml | grep -m 1 version | cut -d' ' -f3 | sed 's/"//g')" >> $GITHUB_OUTPUT
+
+      - name: Get the current version from package.json
+        id: get_current_version_from_package
+        uses: martinbeentjes/npm-get-version-action@v1.3.1
+        with:
+          path: frontend
+
+      - name: Raise an error if the versions are not the same
+        uses: actions/github-script@v7
+        id: check_versions
+        with:
+          script: |
+            const pyproject_version = process.env.PYPROJECT_VERSION;
+            const package_version = process.env.PACKAGE_VERSION;
+            if (pyproject_version !== package_version) {
+                core.setFailed("The versions in pyproject.toml and package.json are not the same");
+            } else {
+                core.setOutput("version", pyproject_version);
+            }
+        env:
+          PYPROJECT_VERSION: ${{ steps.get_current_version_from_pyproject.outputs.version }}
+          PACKAGE_VERSION: ${{ steps.get_current_version_from_package.outputs.current-version }}
+
+      - name: Get the label to add
+        id: get_label
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const labels = ["release:patch", "release:minor", "release:major", "norelease"];
+            let last_release = {
+                data: {
+                    tag_name: "v0.0.0",
+                },
+            }
+            try {
+                last_release = await github.rest.repos.getLatestRelease({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                });
+            } catch (error) {
+                console.log("No release found");
+            }
+            const last_release_tag = last_release.data.tag_name;
+            const last_release_version = last_release_tag.replace("v", "");
+            if (last_release_version === process.env.VERSION) {
+                core.setOutput("label", labels[3]);
+            } else {
+                const last_release_version_split = last_release_version.split(".");
+                const current_version_split = process.env.VERSION.split(".");
+                if (last_release_version_split[0] !== current_version_split[0]) {
+                    core.setOutput("label", labels[2]);
+                } else if (last_release_version_split[1] !== current_version_split[1]) {
+                    core.setOutput("label", labels[1]);
+                } else {
+                    core.setOutput("label", labels[0]);
+                }
+            }
+        env:
+          VERSION: ${{ steps.check_versions.outputs.version }}
+
+      - name: Add labels
+        uses: actions-ecosystem/action-add-labels@v1
+        with:
+          labels: ${{ steps.get_label.outputs.label }}

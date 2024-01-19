@@ -6,13 +6,15 @@ Start by `npm install`
 
 Create a `.env.development` file where there is :
 
--   NEXT_PUBLIC_BASE_URL=http://localhost:3000
--   NEXT_PUBLIC_BACKEND_API_URL=https://clochette.dev/api/v1
--   SECRET_KEY=\*\*\*\*\*\* #Same as the one in the backend
+- NEXT_PUBLIC_BASE_URL=http://localhost:3000
+- NEXT_PUBLIC_BACKEND_API_URL=https://clochette.dev/api/v1
+- SECRET_KEY=\*\*\*\*\*\* #Same as the one in the backend
+
+Have a look to the .env.sample file which should be working for development.
 
 ## Running:
 
-You have to start the `DeployDocker.sh` script to make the backend accessible.
+You have to start the backend to be able to run the frontend in full mode.
 
 Start `npm run dev` to start the development server.
 

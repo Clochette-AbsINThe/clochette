@@ -18,45 +18,11 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "noUncheckedIndexedAccess": true,
     "baseUrl": ".",
     "paths": {
-      "@components/*": [
-        "src/components/*"
-      ],
-      "@layouts/*": [
-        "src/layouts/*"
-      ],
-      "@pages/*": [
-        "src/pages/*"
-      ],
-      "@assets/*": [
-        "src/assets/*"
-      ],
-      "@styles/*": [
-        "src/styles/*"
-      ],
-      "@include/*": [
-        "src/layouts/include/*"
-      ],
-      "@hooks/*": [
-        "src/hooks/*"
-      ],
-      "@proxies/*": [
-        "src/proxies/*"
-      ],
-      "@types": [
-        "src/types/types"
-      ],
-      "@proxiesTypes": [
-        "src/types/proxiesTypes.ts"
-      ],
-      "@endpoints": [
-        "src/utils/endpoints"
-      ],
-      "@utils/*": [
-        "src/utils/*"
-      ],
+      "@/*": [
+        "src/*"
+      ]
     },
     "types": [
       "vitest/globals"
@@ -65,7 +31,8 @@
   "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "next.config.cjs",
   ],
   "exclude": [
     "node_modules"

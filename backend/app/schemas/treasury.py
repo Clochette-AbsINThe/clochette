@@ -1,6 +1,7 @@
-from pydantic import Field
+from pydantic import ConfigDict, Field
 
-from app.core.config import DefaultModel
+from app.schemas.base import DefaultModel
+
 
 class TreasuryBase(DefaultModel):
     total_amount: float
@@ -12,16 +13,15 @@ class TreasuryCreate(TreasuryBase):
     pass
 
 
-class TreasuryUpdate(TreasuryBase):
-    total_amount: float | None = Field(exclude=True)
-    cash_amount: float | None = Field(exclude=True)
-    lydia_rate: float | None = Field(ge=0, le=1)
-    class Config:
-        orm_mode = True
+class InternalTreasuryUpdate(TreasuryBase):
+    model_config = ConfigDict(from_attributes=True)
+
+
+class TreasuryUpdate(DefaultModel):
+    lydia_rate: float | None = Field(default=None, ge=0, le=1)
 
 
 class Treasury(TreasuryBase):
     id: int
 
-    class Config:
-        orm_mode = True
+    model_config = ConfigDict(from_attributes=True)
