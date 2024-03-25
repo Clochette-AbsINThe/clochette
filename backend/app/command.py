@@ -114,15 +114,13 @@ execute_parser.add_argument(
     help="SQL command",
 )
 
-PROMPT_MESSAGE = (
-    "Are you sure you want to reset the database, this will delete all data? [y/N] "
-)
+PROMPT_MESSAGE = "Are you sure you want to reset the database, this will delete all data? [y/N] "
 
 
 async def main(command: str) -> None:
     args = parser.parse_args()
 
-    logger.info(f"Running command: {command}")
+    logger.info("Running command: %s", command)
 
     # OpenAPI schema generation is a special case
     # because it doesn't require a database connection

@@ -65,7 +65,10 @@ def create_access_token(*, subject: int, scopes: list[str]) -> str:
 
 
 def _create_token(
-    subject: int, scopes: list[str], expires_delta: timedelta, token_type: str
+    subject: int,
+    scopes: list[str],
+    expires_delta: timedelta,
+    token_type: str,
 ) -> str:
     """
     Create a JWT token with the given subject, expiration delta, and token type.

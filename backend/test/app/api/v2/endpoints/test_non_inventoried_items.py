@@ -18,24 +18,16 @@ class TestNonInventoriedItem(BaseTest):
     async def asyncSetUp(self) -> None:
         await super().asyncSetUp()
 
-        self.non_inventoried_item_create = NonInventoriedItemCreate(
-            name="test_name", icon=IconName.MISC
-        )
+        self.non_inventoried_item_create = NonInventoriedItemCreate(name="test_name", icon=IconName.MISC)
 
         async with get_db.get_session() as session:
             self.non_inventoried_item_db = NonInventoriedItem.model_validate(
-                await crud_non_inventoried_item.create(
-                    session, obj_in=self.non_inventoried_item_create
-                )
+                await crud_non_inventoried_item.create(session, obj_in=self.non_inventoried_item_create)
             )
 
-    async def read_non_inventoried_item_from_db(
-        self, id: int
-    ) -> NonInventoriedItem | None:
+    async def read_non_inventoried_item_from_db(self, id: int) -> NonInventoriedItem | None:
         async with get_db.get_session() as session:
-            non_inventoried_item_in_db = await crud_non_inventoried_item.read(
-                session, id
-            )
+            non_inventoried_item_in_db = await crud_non_inventoried_item.read(session, id)
             if non_inventoried_item_in_db is None:
                 return None
             return NonInventoriedItem.model_validate(non_inventoried_item_in_db)
@@ -47,15 +39,11 @@ class TestNonInventoriedItem(BaseTest):
 
         # Assert
         assert response.status_code == 200
-        assert response.json() == [
-            self.non_inventoried_item_db.model_dump(by_alias=True)
-        ]
+        assert response.json() == [self.non_inventoried_item_db.model_dump(by_alias=True)]
 
     async def test_read_non_inventoried_items_sale(self):
         # Arrange
-        create_sell_item = NonInventoriedItemCreate(
-            name="test_name_sell", icon=IconName.MISC, sell_price=1
-        )
+        create_sell_item = NonInventoriedItemCreate(name="test_name_sell", icon=IconName.MISC, sell_price=1)
         async with get_db.get_session() as session:
             non_inventoried_item_db = NonInventoriedItem.model_validate(
                 await crud_non_inventoried_item.create(session, obj_in=create_sell_item)
@@ -76,22 +64,16 @@ class TestNonInventoriedItem(BaseTest):
             )
 
         # Act
-        response = self._client.get(
-            "/api/v2/non_inventoried_item?trade=purchase&name=test_name"
-        )
+        response = self._client.get("/api/v2/non_inventoried_item?trade=purchase&name=test_name")
 
         # Assert
         assert response.status_code == 200
-        assert response.json() == [
-            self.non_inventoried_item_db.model_dump(by_alias=True)
-        ]
+        assert response.json() == [self.non_inventoried_item_db.model_dump(by_alias=True)]
 
     async def test_read_non_inventoried_item(self):
         # Arrange
         # Act
-        response = self._client.get(
-            f"/api/v2/non_inventoried_item/{self.non_inventoried_item_db.id}"
-        )
+        response = self._client.get(f"/api/v2/non_inventoried_item/{self.non_inventoried_item_db.id}")
 
         # Assert
         assert response.status_code == 200
@@ -100,9 +82,7 @@ class TestNonInventoriedItem(BaseTest):
     async def test_read_non_inventoried_item_not_found(self):
         # Arrange
         # Act
-        response = self._client.get(
-            f"/api/v2/non_inventoried_item/{self.non_inventoried_item_db.id + 1}"
-        )
+        response = self._client.get(f"/api/v2/non_inventoried_item/{self.non_inventoried_item_db.id + 1}")
 
         # Assert
         assert response.status_code == 404
@@ -110,9 +90,7 @@ class TestNonInventoriedItem(BaseTest):
 
     async def test_create_non_inventoried_item_buy(self):
         # Arrange
-        non_inventoried_item_create = NonInventoriedItemCreate(
-            name="test_name2", icon=IconName.MISC
-        )
+        non_inventoried_item_create = NonInventoriedItemCreate(name="test_name2", icon=IconName.MISC)
 
         # Act
         response = self._client.post(
@@ -120,9 +98,7 @@ class TestNonInventoriedItem(BaseTest):
             json=non_inventoried_item_create.model_dump(by_alias=True),
         )
 
-        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(
-            response.json()["id"]
-        )
+        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(response.json()["id"])
 
         # Assert
         assert response.status_code == 200
@@ -132,9 +108,7 @@ class TestNonInventoriedItem(BaseTest):
 
     async def test_create_non_inventoried_item_sell(self):
         # Arrange
-        non_inventoried_item_create = NonInventoriedItemCreate(
-            name="test_name2", icon=IconName.MISC, sell_price=1
-        )
+        non_inventoried_item_create = NonInventoriedItemCreate(name="test_name2", icon=IconName.MISC, sell_price=1)
 
         # Act
         response = self._client.post(
@@ -142,16 +116,12 @@ class TestNonInventoriedItem(BaseTest):
             json=non_inventoried_item_create.model_dump(by_alias=True),
         )
 
-        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(
-            response.json()["id"]
-        )
+        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(response.json()["id"])
 
         # Assert
         assert response.status_code == 200
         assert response.json().get("name") == non_inventoried_item_create.name
-        assert (
-            response.json().get("sellPrice") == non_inventoried_item_create.sell_price
-        )
+        assert response.json().get("sellPrice") == non_inventoried_item_create.sell_price
         assert non_inventoried_item_in_db is not None
         assert non_inventoried_item_in_db.name == non_inventoried_item_create.name
 
@@ -177,9 +147,7 @@ class TestNonInventoriedItem(BaseTest):
             json=non_inventoried_item_update.model_dump(by_alias=True),
         )
 
-        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(
-            self.non_inventoried_item_db.id
-        )
+        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(self.non_inventoried_item_db.id)
 
         # Assert
         assert response.status_code == 200
@@ -198,20 +166,13 @@ class TestNonInventoriedItem(BaseTest):
             json=non_inventoried_item_update.model_dump(by_alias=True),
         )
 
-        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(
-            self.non_inventoried_item_db.id
-        )
+        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(self.non_inventoried_item_db.id)
 
         # Assert
         assert response.status_code == 200
-        assert (
-            response.json().get("sellPrice") == non_inventoried_item_update.sell_price
-        )
+        assert response.json().get("sellPrice") == non_inventoried_item_update.sell_price
         assert non_inventoried_item_in_db is not None
-        assert (
-            non_inventoried_item_in_db.sell_price
-            == non_inventoried_item_update.sell_price
-        )
+        assert non_inventoried_item_in_db.sell_price == non_inventoried_item_update.sell_price
         assert non_inventoried_item_in_db.trade == TradeType.SALE
 
     async def test_update_non_inventoried_item_not_found(self):
@@ -250,13 +211,9 @@ class TestNonInventoriedItem(BaseTest):
     async def test_delete_non_inventoried_item(self):
         # Arrange
         # Act
-        response = self._client.delete(
-            f"/api/v2/non_inventoried_item/{self.non_inventoried_item_db.id}"
-        )
+        response = self._client.delete(f"/api/v2/non_inventoried_item/{self.non_inventoried_item_db.id}")
 
-        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(
-            self.non_inventoried_item_db.id
-        )
+        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(self.non_inventoried_item_db.id)
 
         # Assert
         assert response.status_code == 200
@@ -266,9 +223,7 @@ class TestNonInventoriedItem(BaseTest):
     async def test_delete_non_inventoried_item_not_found(self):
         # Arrange
         # Act
-        response = self._client.delete(
-            f"/api/v2/non_inventoried_item/{self.non_inventoried_item_db.id + 1}"
-        )
+        response = self._client.delete(f"/api/v2/non_inventoried_item/{self.non_inventoried_item_db.id + 1}")
 
         # Assert
         assert response.status_code == 404
@@ -287,17 +242,11 @@ class TestNonInventoriedItem(BaseTest):
             )
 
         # Act
-        response = self._client.delete(
-            f"/api/v2/non_inventoried_item/{self.non_inventoried_item_db.id}"
-        )
+        response = self._client.delete(f"/api/v2/non_inventoried_item/{self.non_inventoried_item_db.id}")
 
-        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(
-            self.non_inventoried_item_db.id
-        )
+        non_inventoried_item_in_db = await self.read_non_inventoried_item_from_db(self.non_inventoried_item_db.id)
 
         # Assert
         assert response.status_code == 400
-        assert response.json() == {
-            "detail": "Non inventoried item is in use and cannot be deleted"
-        }
+        assert response.json() == {"detail": "Non inventoried item is in use and cannot be deleted"}
         assert non_inventoried_item_in_db is not None

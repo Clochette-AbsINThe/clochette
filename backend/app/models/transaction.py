@@ -12,7 +12,7 @@ if TYPE_CHECKING:  # pragma: no cover
     from .non_inventoried import NonInventoried
 
 
-treasury_fk = build_fk_annotation("treasury")
+treasury_fk: type[int] = build_fk_annotation("treasury")
 
 
 class Transaction(Base):
@@ -97,16 +97,8 @@ class Transaction(Base):
             )
 
         return (
-            sum(
-                glass.transaction_sell_price
-                for glass in self.glasses
-                if glass.transaction_sell_price is not None
-            )
-            + sum(
-                barrel.barrel_sell_price
-                for barrel in self.barrels_sale
-                if barrel.barrel_sell_price is not None
-            )
+            sum(glass.transaction_sell_price for glass in self.glasses if glass.transaction_sell_price is not None)
+            + sum(barrel.barrel_sell_price for barrel in self.barrels_sale if barrel.barrel_sell_price is not None)
             + sum(consumable.sell_price for consumable in self.consumables_sale)
             + sum(
                 non_inventoried.sell_price

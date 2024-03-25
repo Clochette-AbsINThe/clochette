@@ -46,9 +46,7 @@ class TestCRUDTreasury(BaseTest):
         async with get_db.get_session() as session:
             await crud_treasury.add_transaction(session, obj_in=self.transaction)
 
-            treasury_in_db = Treasury.model_validate(
-                await crud_treasury.read(session, id=self.treasury_in_db.id)
-            )
+            treasury_in_db = Treasury.model_validate(await crud_treasury.read(session, id=self.treasury_in_db.id))
 
         # Assert
         assert treasury_in_db.cash_amount == 0
@@ -63,9 +61,7 @@ class TestCRUDTreasury(BaseTest):
         async with get_db.get_session() as session:
             await crud_treasury.add_transaction(session, obj_in=self.transaction)
 
-            treasury_in_db = Treasury.model_validate(
-                await crud_treasury.read(session, id=self.treasury_in_db.id)
-            )
+            treasury_in_db = Treasury.model_validate(await crud_treasury.read(session, id=self.treasury_in_db.id))
 
         # Assert
         assert treasury_in_db.cash_amount == 10

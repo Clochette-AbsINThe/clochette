@@ -22,25 +22,25 @@ class CRUDBarrel(CRUDBase[Barrel, BarrelCreate, BarrelUpdate]):
     async def create_v2(self, db, *, obj_in: barrel_schemas_v2.BarrelCreate) -> Barrel:
         transaction = await crud_transaction.read(db, id=obj_in.transaction_id_purchase)
         if not transaction:
-            logger.debug(f"Transaction {obj_in.transaction_id_purchase} not found")
+            logger.debug("Transaction %s not found", obj_in.transaction_id_purchase)
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=transaction_translator.ELEMENT_NOT_FOUND,
             )
         if transaction.status != Status.PENDING:
-            logger.debug(f"Transaction {obj_in.transaction_id_purchase} not pending")
+            logger.debug("Transaction %s not pending", obj_in.transaction_id_purchase)
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=transaction_translator.TRANSACTION_NOT_PENDING,
             )
         if transaction.trade != TradeType.PURCHASE:
-            logger.debug(f"Transaction {obj_in.transaction_id_purchase} not purchase")
+            logger.debug("Transaction %s not purchase", obj_in.transaction_id_purchase)
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=transaction_translator.TRANSACTION_NOT_PURCHASE,
             )
         if transaction.type != TransactionType.COMMERCE:
-            logger.debug(f"Transaction {obj_in.transaction_id_purchase} not commerce")
+            logger.debug("Transaction %s not commerce", obj_in.transaction_id_purchase)
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=transaction_translator.TRANSACTION_NOT_COMMERCE,
@@ -49,29 +49,33 @@ class CRUDBarrel(CRUDBase[Barrel, BarrelCreate, BarrelUpdate]):
         return await super().create(db, obj_in=obj_in)
 
     async def update_v2(
-        self, db, *, db_obj: Barrel, obj_in: barrel_schemas_v2.BarrelUpdateSale
+        self,
+        db,
+        *,
+        db_obj: Barrel,
+        obj_in: barrel_schemas_v2.BarrelUpdateSale,
     ) -> Barrel:
         transaction = await crud_transaction.read(db, id=obj_in.transaction_id_sale)
         if not transaction:
-            logger.debug(f"Transaction {obj_in.transaction_id_sale} not found")
+            logger.debug("Transaction %s not found", obj_in.transaction_id_sale)
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=transaction_translator.ELEMENT_NOT_FOUND,
             )
         if transaction.status != Status.PENDING:
-            logger.debug(f"Transaction {obj_in.transaction_id_sale} not pending")
+            logger.debug("Transaction %s not pending", obj_in.transaction_id_sale)
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=transaction_translator.TRANSACTION_NOT_PENDING,
             )
         if transaction.trade != TradeType.SALE:
-            logger.debug(f"Transaction {obj_in.transaction_id_sale} not sale")
+            logger.debug("Transaction %s not sale", obj_in.transaction_id_sale)
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=transaction_translator.TRANSACTION_NOT_SALE,
             )
         if transaction.type != TransactionType.COMMERCE:
-            logger.debug(f"Transaction {obj_in.transaction_id_sale} not commerce")
+            logger.debug("Transaction %s not commerce", obj_in.transaction_id_sale)
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=transaction_translator.TRANSACTION_NOT_COMMERCE,

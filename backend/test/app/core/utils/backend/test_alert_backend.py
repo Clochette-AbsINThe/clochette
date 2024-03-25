@@ -103,16 +103,12 @@ def test_alert_to_github_issues_new():
         mock_response.json.return_value = []
         mock_session.return_value.get.return_value = mock_response
         mock_session.return_value.post.return_value.status_code = 201
-        mock_session.return_value.post.return_value.json.return_value = {
-            "html_url": "https://example.com"
-        }
+        mock_session.return_value.post.return_value.json.return_value = {"html_url": "https://example.com"}
 
         alert(exception, method, url, headers, body)
 
         mock_session.assert_called_once_with()
-        assert mock_session.return_value.auth == (
-            (settings.GITHUB_USER, settings.GITHUB_TOKEN)
-        )
+        assert mock_session.return_value.auth == ((settings.GITHUB_USER, settings.GITHUB_TOKEN))
         mock_session.return_value.get.assert_called_once_with(
             f"https://api.github.com/repos/{settings.REPOSITORY_OWNER}/{settings.REPOSITORY_NAME}/issues"
         )
@@ -122,9 +118,7 @@ def test_alert_to_github_issues_new():
                 {
                     "title": f"{exception.__class__.__name__}: {str(exception)}",
                     "body": body.decode(),
-                    "labels": [
-                        label for label in settings.ISSUE_LABELS.split(",") if label
-                    ],
+                    "labels": [label for label in settings.ISSUE_LABELS.split(",") if label],
                 }
             ),
         )

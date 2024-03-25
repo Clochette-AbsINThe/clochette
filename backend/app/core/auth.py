@@ -30,7 +30,8 @@ def check_scopes(security_scopes: SecurityScopes, token_scopes: list[str]) -> bo
     required_scopes = security_scopes.scopes
     # Get the higher scope in `token_scopes`
     token_scope = sorted(
-        token_scopes, key=lambda scope: SecurityScopesHierarchy[scope].value
+        token_scopes,
+        key=lambda scope: SecurityScopesHierarchy[scope].value,
     )[-1]
     # Check if the token scopes are sufficient to access the endpoint
     return all(scope in scopes_hierarchy[token_scope] for scope in required_scopes)

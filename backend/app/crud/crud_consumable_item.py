@@ -4,9 +4,8 @@ from app.schemas.consumable_item import ConsumableItemCreate, ConsumableItemUpda
 
 
 class CRUDConsumableItem(
-    CRUDBase[ConsumableItem, ConsumableItemCreate, ConsumableItemUpdate]
-):
-    ...
+    CRUDBase[ConsumableItem, ConsumableItemCreate, ConsumableItemUpdate],
+): ...
 
 
 consumable_item = CRUDConsumableItem(ConsumableItem)

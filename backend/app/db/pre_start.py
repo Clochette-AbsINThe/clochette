@@ -19,7 +19,9 @@ logger = logging.getLogger("app.db.pre_start")
 def handle_sigint(signum, frame):
     if RAISED_EXCEPTION:  # pragma: no cover
         traceback.print_exception(
-            type(RAISED_EXCEPTION), RAISED_EXCEPTION, RAISED_EXCEPTION.__traceback__
+            type(RAISED_EXCEPTION),
+            RAISED_EXCEPTION,
+            RAISED_EXCEPTION.__traceback__,
         )
     sys.exit(0)
 
@@ -31,7 +33,7 @@ RAISED_EXCEPTION = None
     stop=stop_after_attempt(MAX_TRIES),
     wait=wait_fixed(WAIT_SECONDS),
     before=before_log(logger, logging.INFO),
-    after=after_log(logger, logging.WARN),
+    after=after_log(logger, logging.WARNING),
 )
 async def pre_start() -> None:
     """
@@ -47,5 +49,5 @@ async def pre_start() -> None:
     except Exception as e:
         global RAISED_EXCEPTION
         RAISED_EXCEPTION = e
-        logger.error(e)
-        raise e
+        logger.exception(e)
+        raise

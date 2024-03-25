@@ -28,7 +28,8 @@ class Consumable(Base):
 
     consumable_item_id: Mapped[consumableitem_fk]
     consumable_item: Mapped["ConsumableItem"] = relationship(
-        back_populates="consumables", lazy="selectin"
+        back_populates="consumables",
+        lazy="selectin",
     )
 
     transaction_id_purchase: Mapped[transaction_fk | None]

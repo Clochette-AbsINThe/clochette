@@ -1,4 +1,4 @@
-""" Main module of the API."""
+"""Main module of the API."""
 
 import logging
 from contextlib import asynccontextmanager

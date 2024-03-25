@@ -1,10 +1,10 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, Security, status
+from fastapi import APIRouter, HTTPException, Security, status
 
 from app.core.translation import Translator
 from app.crud.crud_non_inventoried import non_inventoried as non_inventorieds
-from app.dependencies import get_current_active_account, get_db
+from app.dependencies import DBDependency, get_current_active_account
 from app.schemas.v2 import non_inventoried as non_inventoried_schema
 
 router = APIRouter(tags=["non_inventoried"], prefix="/non_inventoried")
@@ -18,7 +18,7 @@ logger = logging.getLogger("app.api.v2.endpoints.non_inventoried")
     response_model=list[non_inventoried_schema.NonInventoried],
     dependencies=[Security(get_current_active_account)],
 )
-async def read_non_inventorieds(db=Depends(get_db)):
+async def read_non_inventorieds(db: DBDependency):
     """
     Retrieve a list of non inventorieds.
     """
@@ -30,13 +30,13 @@ async def read_non_inventorieds(db=Depends(get_db)):
     response_model=non_inventoried_schema.NonInventoried,
     dependencies=[Security(get_current_active_account)],
 )
-async def read_non_inventoried(non_inventoried_id: int, db=Depends(get_db)):
+async def read_non_inventoried(non_inventoried_id: int, db: DBDependency):
     """
     Retrieve a non inventoried.
     """
     non_inventoried = await non_inventorieds.read(db, id=non_inventoried_id)
     if not non_inventoried:
-        logger.debug(f"NonInventoried {non_inventoried_id} not found")
+        logger.debug("NonInventoried %s not found", non_inventoried_id)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=translator.ELEMENT_NOT_FOUND,
@@ -50,7 +50,8 @@ async def read_non_inventoried(non_inventoried_id: int, db=Depends(get_db)):
     dependencies=[Security(get_current_active_account)],
 )
 async def create_non_inventoried(
-    non_inventoried: non_inventoried_schema.NonInventoriedCreate, db=Depends(get_db)
+    non_inventoried: non_inventoried_schema.NonInventoriedCreate,
+    db: DBDependency,
 ):
     """
     Create a new non inventoried.

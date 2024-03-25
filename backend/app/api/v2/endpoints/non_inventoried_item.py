@@ -1,7 +1,7 @@
 import logging
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Security, status
+from fastapi import APIRouter, HTTPException, Security, status
 
 from app.core.translation import Translator
 from app.core.types import TradeType
@@ -9,7 +9,7 @@ from app.crud.crud_non_inventoried import non_inventoried as non_inventorieds
 from app.crud.crud_non_inventoried_item import (
     non_inventoried_item as non_inventoried_items,
 )
-from app.dependencies import get_current_active_account, get_db
+from app.dependencies import DBDependency, get_current_active_account
 from app.schemas.v2 import non_inventoried_item as non_inventoried_item_schema
 
 router = APIRouter(tags=["non_inventoried_item"], prefix="/non_inventoried_item")
@@ -24,7 +24,9 @@ logger = logging.getLogger("app.api.v2.endpoints.non_inventoried_item")
     dependencies=[Security(get_current_active_account)],
 )
 async def read_non_inventoried_items(
-    trade: TradeType | None = None, name: str | None = None, db=Depends(get_db)
+    db: DBDependency,
+    trade: TradeType | None = None,
+    name: str | None = None,
 ):
     """
     Retrieve a list of non inventoried items.
@@ -33,7 +35,7 @@ async def read_non_inventoried_items(
         - `trade`: The trade type.
         - `name`: The non inventoried item name.
     """
-    logger.debug(f"Trade: {trade}, name: {name}")
+    logger.debug("Trade: %s, name: %s", trade, name)
     query_parameters: dict[str, Any] = {}
     if trade:
         query_parameters["trade"] = trade.value
@@ -47,15 +49,16 @@ async def read_non_inventoried_items(
     response_model=non_inventoried_item_schema.NonInventoriedItem,
     dependencies=[Security(get_current_active_account)],
 )
-async def read_non_inventoried_item(non_inventoried_item_id: int, db=Depends(get_db)):
+async def read_non_inventoried_item(non_inventoried_item_id: int, db: DBDependency):
     """
     Retrieve a non inventoried item.
     """
     non_inventoried_item = await non_inventoried_items.read(
-        db, id=non_inventoried_item_id
+        db,
+        id=non_inventoried_item_id,
     )
     if not non_inventoried_item:
-        logger.debug(f"NonInventoriedItem {non_inventoried_item_id} not found")
+        logger.debug("NonInventoriedItem %s not found", non_inventoried_item_id)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=translator.ELEMENT_NOT_FOUND,
@@ -70,15 +73,18 @@ async def read_non_inventoried_item(non_inventoried_item_id: int, db=Depends(get
 )
 async def create_non_inventoried_item(
     non_inventoried_item: non_inventoried_item_schema.NonInventoriedItemCreate,
-    db=Depends(get_db),
+    db: DBDependency,
 ):
     """
     Create a non inventoried item.
     """
     if await non_inventoried_items.query(
-        db, limit=1, name=non_inventoried_item.name, trade=non_inventoried_item.trade
+        db,
+        limit=1,
+        name=non_inventoried_item.name,
+        trade=non_inventoried_item.trade,
     ):
-        logger.debug(f"NonInventoriedItem {non_inventoried_item.name} already exists")
+        logger.debug("NonInventoriedItem %s already exists", non_inventoried_item.name)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=translator.ELEMENT_ALREADY_EXISTS,
@@ -94,16 +100,17 @@ async def create_non_inventoried_item(
 async def update_non_inventoried_item(
     non_inventoried_item_id: int,
     non_inventoried_item: non_inventoried_item_schema.NonInventoriedItemUpdate,
-    db=Depends(get_db),
+    db: DBDependency,
 ):
     """
     Update a non inventoried item.
     """
     old_non_inventoried_item = await non_inventoried_items.read(
-        db, id=non_inventoried_item_id
+        db,
+        id=non_inventoried_item_id,
     )
     if not old_non_inventoried_item:
-        logger.debug(f"NonInventoriedItem {non_inventoried_item_id} not found")
+        logger.debug("NonInventoriedItem %s not found", non_inventoried_item_id)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=translator.ELEMENT_NOT_FOUND,
@@ -115,13 +122,15 @@ async def update_non_inventoried_item(
         trade=non_inventoried_item.trade,
     )
     if results and results[0].id != non_inventoried_item_id:
-        logger.debug(f"NonInventoriedItem {non_inventoried_item.name} already exists")
+        logger.debug("NonInventoriedItem %s already exists", non_inventoried_item.name)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=translator.ELEMENT_ALREADY_EXISTS,
         )
     return await non_inventoried_items.update(
-        db, db_obj=old_non_inventoried_item, obj_in=non_inventoried_item
+        db,
+        db_obj=old_non_inventoried_item,
+        obj_in=non_inventoried_item,
     )
 
 
@@ -132,22 +141,25 @@ async def update_non_inventoried_item(
 )
 async def delete_non_inventoried_item(
     non_inventoried_item_id: int,
-    db=Depends(get_db),
+    db: DBDependency,
 ):
     """
     Delete a non inventoried item.
     """
     if not await non_inventoried_items.read(db, id=non_inventoried_item_id):
-        logger.debug(f"NonInventoriedItem {non_inventoried_item_id} not found")
+        logger.debug("NonInventoriedItem %s not found", non_inventoried_item_id)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=translator.ELEMENT_NOT_FOUND,
         )
     if await non_inventorieds.query(
-        db, limit=1, non_inventoried_item_id=non_inventoried_item_id
+        db,
+        limit=1,
+        non_inventoried_item_id=non_inventoried_item_id,
     ):
         logger.debug(
-            f"NonInventoriedItem {non_inventoried_item_id} is used by a non inventoried"
+            "NonInventoriedItem %s is used by a non inventoried",
+            non_inventoried_item_id,
         )
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

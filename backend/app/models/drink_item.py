@@ -18,5 +18,6 @@ class DrinkItem(Base):
     name: Mapped[Str256]
 
     barrels: Mapped[List["Barrel"]] = relationship(
-        back_populates="drink_item", lazy="selectin"
+        back_populates="drink_item",
+        lazy="selectin",
     )

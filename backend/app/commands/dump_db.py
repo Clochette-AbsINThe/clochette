@@ -20,9 +20,7 @@ async def dump_db(output_file: str) -> None:
     async with get_db.get_session() as session:
         for table in tables:
             data[table.name] = {}
-            data[table.name]["columns"] = [
-                column.name for column in inspect(table).columns
-            ]
+            data[table.name]["columns"] = [column.name for column in inspect(table).columns]
             data[table.name]["data"] = []
             for row in await session.execute(table.select()):
                 data[table.name]["data"].append(row.tuple()._asdict())

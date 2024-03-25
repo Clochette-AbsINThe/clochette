@@ -1,10 +1,10 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, Security, status
+from fastapi import APIRouter, HTTPException, Security, status
 
 from app.core.translation import Translator
 from app.crud.crud_treasury import treasury as treasuries
-from app.dependencies import get_current_active_account, get_db
+from app.dependencies import DBDependency, get_current_active_account
 from app.schemas import treasury as treasury_schema
 
 router = APIRouter(tags=["treasury"], prefix="/treasury")
@@ -18,7 +18,7 @@ logger = logging.getLogger("app.api.v1.treasury")
     response_model=list[treasury_schema.Treasury],
     dependencies=[Security(get_current_active_account, scopes=["treasurer"])],
 )
-async def read_treasuries(db=Depends(get_db)):
+async def read_treasuries(db: DBDependency):
     """
     Returns a list of all treasuries.
 
@@ -32,7 +32,7 @@ async def read_treasuries(db=Depends(get_db)):
     response_model=treasury_schema.Treasury,
     dependencies=[Security(get_current_active_account, scopes=["treasurer"])],
 )
-async def read_last_treasury(db=Depends(get_db)):
+async def read_last_treasury(db: DBDependency):
     """
     Returns the last treasury.
 
@@ -47,7 +47,9 @@ async def read_last_treasury(db=Depends(get_db)):
     dependencies=[Security(get_current_active_account, scopes=["treasurer"])],
 )
 async def update_treasury(
-    treasury_id: int, treasury: treasury_schema.TreasuryUpdate, db=Depends(get_db)
+    treasury_id: int,
+    treasury: treasury_schema.TreasuryUpdate,
+    db: DBDependency,
 ):
     """
     Updates a treasury with the given ID.
@@ -56,8 +58,9 @@ async def update_treasury(
     """
     old_treasury = await treasuries.read(db, treasury_id)
     if old_treasury is None:
-        logger.debug(f"Treasury {treasury_id} not found")
+        logger.debug("Treasury %s not found", treasury_id)
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=translator.ELEMENT_NOT_FOUND
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=translator.ELEMENT_NOT_FOUND,
         )
     return await treasuries.update(db, db_obj=old_treasury, obj_in=treasury)

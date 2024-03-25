@@ -16,7 +16,7 @@ logger = logging.getLogger("app.command")
 async def load_db(input_file: str) -> None:
     logger.info("Loading dump data")
 
-    with open(input_file, "r", encoding="utf-8") as f:
+    with open(input_file, encoding="utf-8") as f:
         data = json.load(f)
 
     async with get_db.get_session() as session:
@@ -28,7 +28,7 @@ async def load_db(input_file: str) -> None:
         for table in reversed(tables):
             table_name = table.name
             if table_name not in data:
-                logger.error(f"Table {table_name} not in dump file")
+                logger.error("Table %s not in dump file", table_name)
                 continue
             table_data = data[table_name]
             columns = table_data["columns"]
@@ -37,7 +37,8 @@ async def load_db(input_file: str) -> None:
             # Verify that the columns in the dump file match the columns in the table
             if columns != [column.name for column in inspect(table).columns]:
                 logger.error(
-                    f"Columns in dump file do not match columns in table {table_name}"
+                    "Columns in dump file do not match columns in table %s",
+                    table_name,
                 )
                 continue
             tables_to_load.append((table, rows))
@@ -47,16 +48,13 @@ async def load_db(input_file: str) -> None:
             await session.execute(table.delete())
 
         for table, rows in reversed(tables_to_load):
-            logger.info(f"Loading data for table {table.name}")
+            logger.info("Loading data for table %s", table.name)
             for row in rows:
                 # Convert datetime strings to datetime objects
                 for column in table.columns:
-                    if (
-                        isinstance(row[column.name], str)
-                        and column.type.python_type == datetime.datetime
-                    ):
+                    if isinstance(row[column.name], str) and column.type.python_type == datetime.datetime:
                         row[column.name] = datetime.datetime.fromisoformat(
-                            row[column.name]
+                            row[column.name],
                         )
                 await session.execute(table.insert().values(**row))
 
@@ -68,8 +66,8 @@ async def load_db(input_file: str) -> None:
                 await session.execute(
                     text(
                         f"SELECT setval(pg_get_serial_sequence('{table.name}', '{pk_name}'), "
-                        f"coalesce(max({pk_name}), 1)) FROM {table.name}"
-                    )
+                        f"coalesce(max({pk_name}), 1)) FROM {table.name}",
+                    ),
                 )
 
         await session.commit()

@@ -14,17 +14,13 @@ class TestBarrel(BaseTest):
         self.drink_create = DrinkItemCreate(name="test_name")
 
         async with get_db.get_session() as session:
-            self.drink_db = DrinkItem.model_validate(
-                await crud_drink.create(session, obj_in=self.drink_create)
-            )
+            self.drink_db = DrinkItem.model_validate(await crud_drink.create(session, obj_in=self.drink_create))
             self.barrel_create = BarrelCreate(
                 fkId=self.drink_db.id,
                 unitPrice=10,
                 sell_price=2,
             )
-            self.barrel_db = Barrel.model_validate(
-                await crud_barrel.create(session, obj_in=self.barrel_create)
-            )
+            self.barrel_db = Barrel.model_validate(await crud_barrel.create(session, obj_in=self.barrel_create))
 
         assert self.barrel_db.name == self.drink_create.name
 
@@ -80,9 +76,7 @@ class TestBarrel(BaseTest):
         )
 
         async with get_db.get_session() as session:
-            barrel_in_db = Barrel.model_validate(
-                await crud_barrel.read(session, id=self.barrel_db.id)
-            )
+            barrel_in_db = Barrel.model_validate(await crud_barrel.read(session, id=self.barrel_db.id))
 
         # Assert
         assert response.status_code == 200

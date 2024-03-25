@@ -22,15 +22,11 @@ class TestConsumable(BaseTest):
     async def asyncSetUp(self) -> None:
         await super().asyncSetUp()
 
-        self.consumable_item_create = ConsumableItemCreate(
-            name="test_name", icon=IconName.BEER
-        )
+        self.consumable_item_create = ConsumableItemCreate(name="test_name", icon=IconName.BEER)
 
         async with get_db.get_session() as session:
             self.consumable_item_db = ConsumableItem.model_validate(
-                await crud_consumable_item.create(
-                    session, obj_in=self.consumable_item_create
-                )
+                await crud_consumable_item.create(session, obj_in=self.consumable_item_create)
             )
             self.consumable_create = ConsumableCreate(
                 consumable_item_id=self.consumable_item_db.id,
@@ -86,9 +82,7 @@ class TestConsumable(BaseTest):
     def test_read_consumables_consumable_item_id(self):
         # Arrange
         # Act
-        response = self._client.get(
-            f"/api/v2/consumable/?consumable_item_id={self.consumable_item_db.id}"
-        )
+        response = self._client.get(f"/api/v2/consumable/?consumable_item_id={self.consumable_item_db.id}")
 
         # Assert
         assert response.status_code == 200
@@ -124,9 +118,7 @@ class TestConsumable(BaseTest):
         )
 
         async with get_db.get_session() as session:
-            consumable_in_db = Consumable.model_validate(
-                await crud_consumable.read(session, id=self.consumable_db.id)
-            )
+            consumable_in_db = Consumable.model_validate(await crud_consumable.read(session, id=self.consumable_db.id))
 
         # Assert
         assert response.status_code == 200
@@ -156,14 +148,10 @@ class TestConsumable(BaseTest):
                 payment_method=PaymentMethod.CARD,
                 datetime=datetime.datetime.now(),
             )
-            transaction_db = await crud_transaction.create_v2(
-                session, obj_in=transaction
-            )
+            transaction_db = await crud_transaction.create_v2(session, obj_in=transaction)
         self._client.patch(
             f"/api/v2/consumable/{self.consumable_db.id}/sale",
-            json=ConsumableUpdateSale(transactionId=transaction_db.id).model_dump(
-                by_alias=True
-            ),
+            json=ConsumableUpdateSale(transactionId=transaction_db.id).model_dump(by_alias=True),
         )
         consumable_update = ConsumableUpdateModify(sell_price=True)
 
@@ -184,9 +172,7 @@ class TestConsumable(BaseTest):
                 payment_method=PaymentMethod.CARD,
                 datetime=datetime.datetime.now(),
             )
-            transaction_db = await crud_transaction.create_v2(
-                session, obj_in=transaction
-            )
+            transaction_db = await crud_transaction.create_v2(session, obj_in=transaction)
         consumable_update = ConsumableUpdateSale(
             transactionId=transaction_db.id,
         )
@@ -198,21 +184,14 @@ class TestConsumable(BaseTest):
         )
 
         async with get_db.get_session() as session:
-            consumable_in_db = await crud_consumable.read(
-                session, id=self.consumable_db.id
-            )
+            consumable_in_db = await crud_consumable.read(session, id=self.consumable_db.id)
 
         # Assert
         assert response.status_code == 200
         assert consumable_in_db is not None
         assert consumable_in_db.solded
-        assert (
-            consumable_in_db.transaction_id_sale
-            == consumable_update.transaction_id_sale
-        )
-        assert response.json() == Consumable.model_validate(
-            consumable_in_db
-        ).model_dump(by_alias=True)
+        assert consumable_in_db.transaction_id_sale == consumable_update.transaction_id_sale
+        assert response.json() == Consumable.model_validate(consumable_in_db).model_dump(by_alias=True)
 
     async def test_sale_consumable_already_solded(self):
         # Arrange
@@ -222,14 +201,10 @@ class TestConsumable(BaseTest):
                 payment_method=PaymentMethod.CARD,
                 datetime=datetime.datetime.now(),
             )
-            transaction_db = await crud_transaction.create_v2(
-                session, obj_in=transaction
-            )
+            transaction_db = await crud_transaction.create_v2(session, obj_in=transaction)
         self._client.patch(
             f"/api/v2/consumable/{self.consumable_db.id}/sale",
-            json=ConsumableUpdateSale(transactionId=transaction_db.id).model_dump(
-                by_alias=True
-            ),
+            json=ConsumableUpdateSale(transactionId=transaction_db.id).model_dump(by_alias=True),
         )
         consumable_update = ConsumableUpdateSale(
             transactionId=transaction_db.id,
@@ -267,9 +242,7 @@ class TestConsumable(BaseTest):
                 payment_method=PaymentMethod.CARD,
                 datetime=datetime.datetime.now(),
             )
-            transaction_db = await crud_transaction.create_v2(
-                session, obj_in=transaction
-            )
+            transaction_db = await crud_transaction.create_v2(session, obj_in=transaction)
 
         consumable_create = ConsumableCreate(
             consumable_item_id=self.consumable_item_db.id,
@@ -287,8 +260,6 @@ class TestConsumable(BaseTest):
         # Assert
         assert response.status_code == 200
         async with get_db.get_session() as session:
-            consumable_in_db = Consumable.model_validate(
-                await crud_consumable.read(session, id=response.json()["id"])
-            )
+            consumable_in_db = Consumable.model_validate(await crud_consumable.read(session, id=response.json()["id"]))
         assert consumable_in_db.name == self.consumable_item_create.name
         assert response.json() == consumable_in_db.model_dump(by_alias=True)

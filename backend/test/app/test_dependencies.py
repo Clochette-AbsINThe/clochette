@@ -24,9 +24,7 @@ class TestGetCurrentAccount(BaseTest):
         )
 
         async with get_db.get_session() as session:
-            self.account_db = await crud_account.create(
-                session, obj_in=self.account_create
-            )
+            self.account_db = await crud_account.create(session, obj_in=self.account_create)
 
         self.security_scopes = SecurityScopes(["staff"])
         self.token = create_access_token(
@@ -53,9 +51,7 @@ class TestGetCurrentAccount(BaseTest):
     async def test_get_current_account_no_sub(self):
         # Arrange
         to_encode = {"scopes": self.security_scopes.scopes}
-        modified_token = jwt.encode(
-            to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
-        )
+        modified_token = jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
         with self.assertRaises(HTTPException) as error:
             await get_current_account(
@@ -132,9 +128,7 @@ class TestGetCurrentAccount(BaseTest):
     async def test_get_current_active_account_inactive(self):
         # Arrange
         async with get_db.get_session() as session:
-            await crud_account.update(
-                session, db_obj=self.account_db, obj_in={"is_active": False}
-            )
+            await crud_account.update(session, db_obj=self.account_db, obj_in={"is_active": False})
 
         with self.assertRaises(HTTPException) as error:
             await get_current_active_account(
@@ -146,9 +140,7 @@ class TestGetCurrentAccount(BaseTest):
 
     async def test_get_current_active_account_success(self):
         async with get_db.get_session() as session:
-            await crud_account.update(
-                session, db_obj=self.account_db, obj_in={"is_active": True}
-            )
+            await crud_account.update(session, db_obj=self.account_db, obj_in={"is_active": True})
 
         # Arrange
         current_account = await get_current_active_account(

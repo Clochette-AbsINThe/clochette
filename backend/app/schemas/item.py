@@ -22,11 +22,14 @@ class Item(DefaultModel):
         """
         # Check if the table exists by trying to find its specification
         if find_spec(f"app.schemas.{v}") is None:
-            raise ValueError(f"No such table: {v}")
+            msg = f"No such table: {v}"
+            raise ValueError(msg)
         if not hasattr(
-            importlib.import_module(f"app.schemas.{v}"), "TransactionCreate"
+            importlib.import_module(f"app.schemas.{v}"),
+            "TransactionCreate",
         ):
-            raise ValueError(f"Table {v} does not have a transaction scheme")
+            msg = f"Table {v} does not have a transaction scheme"
+            raise ValueError(msg)
         return v
 
     quantity: int = Field(..., gt=0)
@@ -41,7 +44,7 @@ class Item(DefaultModel):
         # Check if the 'table' key exists in the values dictionary,
         # which means that the 'table' field has been validated
         values = info.data
-        if "table" not in values.keys():
+        if "table" not in values:
             return None
         # Get the transaction scheme for the given table
         transaction_scheme: DefaultModel = getattr(

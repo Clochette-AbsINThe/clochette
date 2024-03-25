@@ -40,9 +40,7 @@ class TestTransaction(BaseTest):
                 unitPrice=1,
                 sell_price=1,
             )
-            out_of_stock_item = OutOfStockItemCreate(
-                name="test_name", icon=IconName.MISC
-            )
+            out_of_stock_item = OutOfStockItemCreate(name="test_name", icon=IconName.MISC)
             out_of_stock_item_in_db = OutOfStockItem.model_validate(
                 await crud_out_of_stock_item.create(session, obj_in=out_of_stock_item)
             )
@@ -74,9 +72,7 @@ class TestTransaction(BaseTest):
                 ],
             )
 
-            self.transaction_in_db = await crud_transaction_v1.create(
-                session, obj_in=transaction_create
-            )
+            self.transaction_in_db = await crud_transaction_v1.create(session, obj_in=transaction_create)
 
             self.transaction = Transaction.model_validate(self.transaction_in_db)
 
@@ -112,17 +108,13 @@ class TestTransaction(BaseTest):
             json=transaction_create.model_dump(by_alias=True, mode="json"),
         )
         async with get_db.get_session() as session:
-            transaction_in_db = await crud_transaction_v1.read(
-                session, id=response.json()["id"]
-            )
+            transaction_in_db = await crud_transaction_v1.read(session, id=response.json()["id"])
             nb_out_of_stock_in_db = await crud_out_of_stock.query(session)
 
         # Assert
         assert response.status_code == 200
         assert transaction_in_db is not None
-        assert response.json() == Transaction.model_validate(
-            transaction_in_db
-        ).model_dump(by_alias=True, mode="json")
+        assert response.json() == Transaction.model_validate(transaction_in_db).model_dump(by_alias=True, mode="json")
         assert len(nb_out_of_stock_in_db) == 2
 
     async def test_read_transaction(self):
@@ -131,15 +123,13 @@ class TestTransaction(BaseTest):
         response = self._client.get(f"/api/v1/transaction/{self.transaction.id}")
 
         async with get_db.get_session() as session:
-            transaction_in_db = await crud_transaction_v1.read(
-                session, id=self.transaction.id
-            )
+            transaction_in_db = await crud_transaction_v1.read(session, id=self.transaction.id)
 
         # Assert
         assert response.status_code == 200
-        assert response.json() == TransactionSingle.model_validate(
-            transaction_in_db
-        ).model_dump(by_alias=True, mode="json")
+        assert response.json() == TransactionSingle.model_validate(transaction_in_db).model_dump(
+            by_alias=True, mode="json"
+        )
 
     async def test_read_transaction_not_found(self):
         # Arrange

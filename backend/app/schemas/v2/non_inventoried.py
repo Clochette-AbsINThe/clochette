@@ -42,19 +42,11 @@ class NonInventoried(NonInventoriedBase):
     @computed_field  # type: ignore[misc]
     @property
     def icon(self) -> IconName:
-        return (
-            self.non_inventoried_item.icon
-            if self.non_inventoried_item
-            else IconName.MISC
-        )
+        return self.non_inventoried_item.icon if self.non_inventoried_item else IconName.MISC
 
     @computed_field  # type: ignore[misc]
     @property
     def trade(self) -> TradeType:
-        return (
-            self.non_inventoried_item.trade
-            if self.non_inventoried_item
-            else TradeType.PURCHASE
-        )
+        return self.non_inventoried_item.trade if self.non_inventoried_item else TradeType.PURCHASE
 
     model_config = ConfigDict(from_attributes=True)

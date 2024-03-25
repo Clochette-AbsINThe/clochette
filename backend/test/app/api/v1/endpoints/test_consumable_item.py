@@ -16,15 +16,11 @@ class TestConsumableItem(BaseTest):
     async def asyncSetUp(self) -> None:
         await super().asyncSetUp()
 
-        self.consumable_item_create = ConsumableItemCreate(
-            name="test_name", icon=IconName.MISC
-        )
+        self.consumable_item_create = ConsumableItemCreate(name="test_name", icon=IconName.MISC)
 
         async with get_db.get_session() as session:
             self.consumable_item_db = ConsumableItem.model_validate(
-                await crud_consumable_item.create(
-                    session, obj_in=self.consumable_item_create
-                )
+                await crud_consumable_item.create(session, obj_in=self.consumable_item_create)
             )
 
     async def read_consumable_item_from_db(self, id: int) -> ConsumableItem | None:
@@ -46,9 +42,7 @@ class TestConsumableItem(BaseTest):
     def test_read_consumable_item(self):
         # Arrange
         # Act
-        response = self._client.get(
-            f"/api/v1/consumable_item/{self.consumable_item_db.id}"
-        )
+        response = self._client.get(f"/api/v1/consumable_item/{self.consumable_item_db.id}")
 
         # Assert
         assert response.status_code == 200
@@ -65,9 +59,7 @@ class TestConsumableItem(BaseTest):
 
     async def test_create_consumable_item(self):
         # Arrange
-        consumable_item_create = ConsumableItemCreate(
-            name="test_name2", icon=IconName.MISC
-        )
+        consumable_item_create = ConsumableItemCreate(name="test_name2", icon=IconName.MISC)
 
         # Act
         response = self._client.post(
@@ -75,9 +67,7 @@ class TestConsumableItem(BaseTest):
             json=consumable_item_create.model_dump(by_alias=True),
         )
 
-        consumable_item_in_db = await self.read_consumable_item_from_db(
-            response.json()["id"]
-        )
+        consumable_item_in_db = await self.read_consumable_item_from_db(response.json()["id"])
 
         # Assert
         assert response.status_code == 200
@@ -107,9 +97,7 @@ class TestConsumableItem(BaseTest):
             json=consumable_item_update.model_dump(by_alias=True),
         )
 
-        consumable_item_in_db = await self.read_consumable_item_from_db(
-            self.consumable_item_db.id
-        )
+        consumable_item_in_db = await self.read_consumable_item_from_db(self.consumable_item_db.id)
 
         # Assert
         assert response.status_code == 200
@@ -133,15 +121,11 @@ class TestConsumableItem(BaseTest):
 
     async def test_update_consumable_item_duplicate(self):
         # Arrange
-        new_consumable_item_create = ConsumableItemCreate(
-            name="test_name2", icon=IconName.MISC
-        )
+        new_consumable_item_create = ConsumableItemCreate(name="test_name2", icon=IconName.MISC)
 
         async with get_db.get_session() as session:
             new_consumable_item_db = ConsumableItem.model_validate(
-                await crud_consumable_item.create(
-                    session, obj_in=new_consumable_item_create
-                )
+                await crud_consumable_item.create(session, obj_in=new_consumable_item_create)
             )
         consumable_item_update = ConsumableItemUpdate(name=new_consumable_item_db.name)
 
@@ -158,13 +142,9 @@ class TestConsumableItem(BaseTest):
     async def test_delete_consumable_item(self):
         # Arrange
         # Act
-        response = self._client.delete(
-            f"/api/v1/consumable_item/{self.consumable_item_db.id}"
-        )
+        response = self._client.delete(f"/api/v1/consumable_item/{self.consumable_item_db.id}")
 
-        consumable_item_in_db = await self.read_consumable_item_from_db(
-            self.consumable_item_db.id
-        )
+        consumable_item_in_db = await self.read_consumable_item_from_db(self.consumable_item_db.id)
 
         # Assert
         assert response.status_code == 200
@@ -193,17 +173,11 @@ class TestConsumableItem(BaseTest):
             )
 
         # Act
-        response = self._client.delete(
-            f"/api/v1/consumable_item/{self.consumable_item_db.id}"
-        )
+        response = self._client.delete(f"/api/v1/consumable_item/{self.consumable_item_db.id}")
 
-        consumable_item_in_db = await self.read_consumable_item_from_db(
-            self.consumable_item_db.id
-        )
+        consumable_item_in_db = await self.read_consumable_item_from_db(self.consumable_item_db.id)
 
         # Assert
         assert response.status_code == 400
-        assert response.json() == {
-            "detail": "Consumable item is in use and cannot be deleted"
-        }
+        assert response.json() == {"detail": "Consumable item is in use and cannot be deleted"}
         assert consumable_item_in_db is not None

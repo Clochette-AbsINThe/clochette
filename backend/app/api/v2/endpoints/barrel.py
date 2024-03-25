@@ -1,11 +1,11 @@
 import logging
 from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Security, status
+from fastapi import APIRouter, HTTPException, Security, status
 
 from app.core.translation import Translator
 from app.crud.crud_barrel import barrel as barrels
-from app.dependencies import get_current_active_account, get_db
+from app.dependencies import DBDependency, get_current_active_account
 from app.models import barrel as barrel_model
 from app.schemas.v2 import barrel as barrel_schema
 
@@ -21,7 +21,7 @@ logger = logging.getLogger("app.api.v2.barrel")
     dependencies=[Security(get_current_active_account)],
 )
 async def read_barrels(
-    db=Depends(get_db),
+    db: DBDependency,
     all: bool = False,
     is_mounted: bool | None = None,
     drink_item_id: int | None = None,
@@ -43,7 +43,7 @@ async def read_barrels(
     if drink_item_id is not None:
         query_parameters["drink_item_id"] = drink_item_id
 
-    logger.debug(f"Query parameters: {query_parameters}")
+    logger.debug("Query parameters: %s", query_parameters)
     return await barrels.query(db, limit=None, **query_parameters)
 
 
@@ -52,7 +52,7 @@ async def read_barrels(
     response_model=list[barrel_schema.BarrelDistinct],
     dependencies=[Security(get_current_active_account)],
 )
-async def read_distinct_barrels(db=Depends(get_db), is_mounted: bool | None = None):
+async def read_distinct_barrels(db: DBDependency, is_mounted: bool | None = None):
     """
     Read distinct barrels from the database.
 
@@ -80,13 +80,13 @@ async def read_distinct_barrels(db=Depends(get_db), is_mounted: bool | None = No
                 drink_item_id=distinct_barrel.drink_item_id,
                 empty_or_solded=False,
                 **query_parameters,
-            )
+            ),
         )
         distinct_object = barrel_schema.BarrelDistinct.model_validate(
             {
                 **distinct_barrel.dict(),
                 "quantity": quantity,
-            }
+            },
         )
         result.append(distinct_object)
 
@@ -98,7 +98,7 @@ async def read_distinct_barrels(db=Depends(get_db), is_mounted: bool | None = No
     response_model=barrel_schema.Barrel,
     dependencies=[Security(get_current_active_account)],
 )
-async def create_barrel(barrel: barrel_schema.BarrelCreate, db=Depends(get_db)):
+async def create_barrel(barrel: barrel_schema.BarrelCreate, db: DBDependency):
     """
     Create a barrel in the database.
     """
@@ -111,19 +111,22 @@ async def create_barrel(barrel: barrel_schema.BarrelCreate, db=Depends(get_db)):
     dependencies=[Security(get_current_active_account)],
 )
 async def update_barrel(
-    barrel_id: int, barrel: barrel_schema.BarrelUpdateModify, db=Depends(get_db)
+    barrel_id: int,
+    barrel: barrel_schema.BarrelUpdateModify,
+    db: DBDependency,
 ):
     """
     Update a barrel in the database.
     """
     db_barrel = await barrels.read(db, barrel_id)
     if db_barrel is None:
-        logger.debug(f"Barrel {barrel_id} not found")
+        logger.debug("Barrel %s not found", barrel_id)
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=translator.ELEMENT_NOT_FOUND
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=translator.ELEMENT_NOT_FOUND,
         )
     if db_barrel.empty_or_solded:
-        logger.debug(f"Barrel {barrel_id} is empty or solded")
+        logger.debug("Barrel %s is empty or solded", barrel_id)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=translator.ELEMENT_NO_LONGER_IN_STOCK,
@@ -138,19 +141,22 @@ async def update_barrel(
     dependencies=[Security(get_current_active_account)],
 )
 async def sale_barrel(
-    barrel_id: int, barrel: barrel_schema.BarrelUpdateSale, db=Depends(get_db)
+    barrel_id: int,
+    barrel: barrel_schema.BarrelUpdateSale,
+    db: DBDependency,
 ):
     """
     Update a barrel in the database.
     """
     db_barrel = await barrels.read(db, barrel_id)
     if db_barrel is None:
-        logger.debug(f"Barrel {barrel_id} not found")
+        logger.debug("Barrel %s not found", barrel_id)
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=translator.ELEMENT_NOT_FOUND
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=translator.ELEMENT_NOT_FOUND,
         )
     if db_barrel.empty_or_solded:
-        logger.debug(f"Barrel {barrel_id} is empty or solded")
+        logger.debug("Barrel %s is empty or solded", barrel_id)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=translator.ELEMENT_NO_LONGER_IN_STOCK,

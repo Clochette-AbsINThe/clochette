@@ -60,10 +60,7 @@ def get_defined_enums(conn, schema):
             AND n.nspname = :schema
     """
     return DeclaredEnumValues(
-        {
-            r[0]: frozenset(r[1])
-            for r in conn.execute(sqlalchemy.text(sql), dict(schema=schema))
-        }
+        {r[0]: frozenset(r[1]) for r in conn.execute(sqlalchemy.text(sql), {"schema": schema})},
     )
 
 
@@ -100,12 +97,10 @@ def get_declared_enums(metadata, schema, default):
 
     for table in metadata.tables.values():
         for column in table.columns:
-            if is_enum_column_type(column.type) and schema == (
-                column.type.schema or default
-            ):
+            if is_enum_column_type(column.type) and schema == (column.type.schema or default):
                 types.add(column.type)
                 table_definitions.append(
-                    EnumToTable(table.name, column.name, column.type.name)
+                    EnumToTable(table.name, column.name, column.type.name),
                 )
 
     return DeclaredEnumValues(
@@ -164,9 +159,7 @@ class SyncEnumValuesOp(alembic.operations.ops.MigrateOperation):
         name,
         old_values: List[str],
         new_values: List[str],
-        affected_columns: Optional[
-            List[Tuple[str, str]]
-        ] = None,  # (table_name, column_name) tuples
+        affected_columns: Optional[List[Tuple[str, str]]] = None,  # (table_name, column_name) tuples
     ):
         """
         Define every enum value from `new_values` that is not present in
@@ -187,36 +180,30 @@ class SyncEnumValuesOp(alembic.operations.ops.MigrateOperation):
         if affected_columns is not None:
             with get_connection(operations) as conn:
                 all_values = ", ".join(
-                    [f"'{value}'" for value in sorted(set(new_values))]
+                    [f"'{value}'" for value in sorted(set(new_values))],
                 )
 
                 conn.execute(
-                    sqlalchemy.text(f"ALTER TYPE {schema}.{name} RENAME TO {name}_old")
+                    sqlalchemy.text(f"ALTER TYPE {schema}.{name} RENAME TO {name}_old"),
                 )
                 conn.execute(
                     sqlalchemy.text(
-                        f"CREATE TYPE {schema}.{name} AS ENUM({all_values})"
-                    )
+                        f"CREATE TYPE {schema}.{name} AS ENUM({all_values})",
+                    ),
                 )
                 for table_name, column_name in affected_columns:
                     conn.execute(
                         sqlalchemy.text(
                             f"ALTER TABLE {table_name} ALTER COLUMN {column_name} TYPE {schema}.{name} USING "
-                            f"{column_name}::text::{schema}.{name}"
-                        )
+                            f"{column_name}::text::{schema}.{name}",
+                        ),
                     )
                 conn.execute(sqlalchemy.text(f"DROP TYPE {schema}.{name}_old"))
 
 
 @alembic.autogenerate.render.renderers.dispatch_for(SyncEnumValuesOp)
 def render_sync_enum_value_op(autogen_context, op: SyncEnumValuesOp):
-    return "op.sync_enum_values(%r, %r, %r, %r, %r)" % (
-        op.schema,
-        op.name,
-        sorted(op.old_values),
-        sorted(op.new_values),
-        op.affected_columns,
-    )
+    return f"op.sync_enum_values({op.schema!r}, {op.name!r}, {sorted(op.old_values)!r}, {sorted(op.new_values)!r}, {op.affected_columns!r})"
 
 
 @alembic.autogenerate.comparators.dispatch_for("schema")  # type: ignore
@@ -251,6 +238,10 @@ def compare_enums(autogen_context, upgrade_ops, schema_names):
 
     for schema, name, old_values, new_values, affected_columns in sorted(to_add):
         op = SyncEnumValuesOp(
-            schema, name, list(old_values), list(new_values), list(affected_columns)
+            schema,
+            name,
+            list(old_values),
+            list(new_values),
+            list(affected_columns),
         )
         upgrade_ops.ops.append(op)

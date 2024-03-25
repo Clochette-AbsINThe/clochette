@@ -16,23 +16,17 @@ class TestGlass(BaseTest):
         self.drink_create = DrinkItemCreate(name="test_name")
 
         async with get_db.get_session() as session:
-            self.drink_db = DrinkItem.model_validate(
-                await crud_drink.create(session, obj_in=self.drink_create)
-            )
+            self.drink_db = DrinkItem.model_validate(await crud_drink.create(session, obj_in=self.drink_create))
             self.barrel_create = BarrelCreate(
                 fkId=self.drink_db.id,
                 unitPrice=10,
                 sell_price=2,
             )
-            self.barrel_db = Barrel.model_validate(
-                await crud_barrel.create(session, obj_in=self.barrel_create)
-            )
+            self.barrel_db = Barrel.model_validate(await crud_barrel.create(session, obj_in=self.barrel_create))
             self.glass_create = GlassCreate(
                 fkId=self.barrel_db.id,
             )
-            self.glass_db = Glass.model_validate(
-                await crud_glass.create(session, obj_in=self.glass_create)
-            )
+            self.glass_db = Glass.model_validate(await crud_glass.create(session, obj_in=self.glass_create))
 
         assert self.glass_db.name == self.drink_create.name
 
@@ -48,9 +42,7 @@ class TestGlass(BaseTest):
     def test_read_glasses_query_barrel_id(self):
         # Arrange
         # Act
-        response = self._client.get(
-            f"/api/v1/glass/?barrel_id={self.glass_db.barrel_id}"
-        )
+        response = self._client.get(f"/api/v1/glass/?barrel_id={self.glass_db.barrel_id}")
 
         # Assert
         assert response.status_code == 200

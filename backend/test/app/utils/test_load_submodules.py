@@ -22,9 +22,7 @@ def test_load_submodules():
     mock_import_module.side_effect = [mock_submodule1, mock_submodule2]
 
     with patch("app.utils.load_submodules.pkgutil.iter_modules", mock_iter_modules):
-        with patch(
-            "app.utils.load_submodules.importlib.import_module", mock_import_module
-        ):
+        with patch("app.utils.load_submodules.importlib.import_module", mock_import_module):
             submodules = load_submodules(parent_module)
 
     assert submodules == [mock_submodule1, mock_submodule2]

@@ -17,10 +17,13 @@ logger = logging.getLogger("app.crud.crud_treasury")
 
 
 class CRUDTreasury(
-    CRUDBase[Treasury, TreasuryCreate, TreasuryUpdate | InternalTreasuryUpdate]
+    CRUDBase[Treasury, TreasuryCreate, TreasuryUpdate | InternalTreasuryUpdate],
 ):
     async def add_transaction(
-        self, db: AsyncSession, *, obj_in: TransactionCreate
+        self,
+        db: AsyncSession,
+        *,
+        obj_in: TransactionCreate,
     ) -> Treasury:
         """
         Add a transaction to a treasury.
@@ -32,11 +35,13 @@ class CRUDTreasury(
         """
         # Get the treasury with the given id
         treasury_orm: Treasury | None = await self.read(
-            db, obj_in.treasury_id, for_update=True
+            db,
+            obj_in.treasury_id,
+            for_update=True,
         )
         # If the treasury does not exist, raise a 404 error
         if treasury_orm is None:
-            logger.error(f"Treasury {obj_in.treasury_id} not found")
+            logger.error("Treasury %s not found", obj_in.treasury_id)
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=translator.ELEMENT_NOT_FOUND,
@@ -157,12 +162,7 @@ class CRUDTreasury(
 
         :return: The last treasury.
         """
-        query = (
-            select(self.model)
-            .with_for_update(read=True)
-            .order_by(self.model.id.desc())
-            .limit(1)
-        )
+        query = select(self.model).with_for_update(read=True).order_by(self.model.id.desc()).limit(1)
         result = await db.execute(query)
         treasuries = result.scalars().all()
         if not treasuries:

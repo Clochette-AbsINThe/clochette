@@ -45,6 +45,7 @@ class DatabaseInterface(ABC):
         You need to close the session after using it.
         """
         if not self.async_sessionmaker:
-            raise RuntimeError("Database not initialized")
+            msg = "Database not initialized"
+            raise RuntimeError(msg)
 
         return self.async_sessionmaker()

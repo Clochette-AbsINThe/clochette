@@ -9,7 +9,6 @@ from app.crud.crud_non_inventoried_item import (
 from app.crud.crud_out_of_stock_item import out_of_stock_item as out_of_stock_items
 from app.crud.crud_treasury import treasury as treasuries
 from app.dependencies import get_db
-from app.models.account import Account
 from app.schemas import account as account_schema
 from app.schemas import out_of_stock_item as out_of_stock_item_schema
 from app.schemas import treasury as treasury_schema
@@ -33,7 +32,7 @@ async def init_db() -> None:
         )
         logger.info("Treasury created")
         # Create account
-        await accounts.create(
+        created_account = await accounts.create(
             db=session,
             obj_in=account_schema.AccountCreate(
                 username=settings.BASE_ACCOUNT_USERNAME,
@@ -44,20 +43,14 @@ async def init_db() -> None:
             ),
         )
         logger.info("Base account created")
-        # Activate account
-        db_obj: Account | None = await accounts.read(
-            db=session, id=1
-        )  # First account to be created
-        assert db_obj is not None
-
         updated_account = account_schema.AccountUpdate(
-            **account_schema.Account.model_validate(db_obj).model_dump()
+            **account_schema.Account.model_validate(created_account).model_dump(),
         )
         updated_account.is_active = True
         updated_account.scope = SecurityScopes.PRESIDENT
         await accounts.update(
             db=session,
-            db_obj=db_obj,
+            db_obj=created_account,
             obj_in=updated_account,
         )
         logger.info("Base account activated")

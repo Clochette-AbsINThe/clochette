@@ -14,9 +14,7 @@ async def override_get_current_active_account():
 
 class BaseTest(unittest.IsolatedAsyncioTestCase):
     @pytest.fixture(autouse=True)
-    def inject_fixtures(
-        self, client: TestClient, caplog: pytest.LogCaptureFixture, tmp_path
-    ):
+    def inject_fixtures(self, client: TestClient, caplog: pytest.LogCaptureFixture, tmp_path):
         self._caplog = caplog
         self._client = client
         self._tmp_path = tmp_path
@@ -26,9 +24,7 @@ class BaseTest(unittest.IsolatedAsyncioTestCase):
 
     async def asyncSetUp(self) -> None:
         sqlite_path = "sqlite+aiosqlite:///" + str(self._tmp_path / "test.db")
-        self._client.app.dependency_overrides[  # type: ignore
-            get_current_active_account
-        ] = override_get_current_active_account
+        self._client.app.dependency_overrides[get_current_active_account] = override_get_current_active_account  # type: ignore
 
         cast(SqliteDatabase, get_db).setup(sqlite_path)
         await cast(SqliteDatabase, get_db).create_all(no_drop=True)

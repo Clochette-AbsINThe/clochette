@@ -12,15 +12,11 @@ class TestConsumable(BaseTest):
     async def asyncSetUp(self) -> None:
         await super().asyncSetUp()
 
-        self.consumable_item_create = ConsumableItemCreate(
-            name="test_name", icon=IconName.BEER
-        )
+        self.consumable_item_create = ConsumableItemCreate(name="test_name", icon=IconName.BEER)
 
         async with get_db.get_session() as session:
             self.consumable_item_db = ConsumableItem.model_validate(
-                await crud_consumable_item.create(
-                    session, obj_in=self.consumable_item_create
-                )
+                await crud_consumable_item.create(session, obj_in=self.consumable_item_create)
             )
             self.consumable_create = ConsumableCreate(
                 fkId=self.consumable_item_db.id,
@@ -77,9 +73,7 @@ class TestConsumable(BaseTest):
         )
 
         async with get_db.get_session() as session:
-            consumable_in_db = Consumable.model_validate(
-                await crud_consumable.read(session, id=self.consumable_db.id)
-            )
+            consumable_in_db = Consumable.model_validate(await crud_consumable.read(session, id=self.consumable_db.id))
 
         # Assert
         assert response.status_code == 200
