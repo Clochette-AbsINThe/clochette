@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clochette"
-version = "3.0.0"
+version = "3.0.1"
 description = "Fast API app for clochette backend"
 authors = [
     "Samuel Guillemet <samuel.guillemet@telecom-sudparis.eu>",
