@@ -28,7 +28,8 @@ async def error():
     """
     Error endpoint, which need to be used to test the exception monitor middleware.
     """
-    raise TestException("Test exception")
+    msg = "Test exception"
+    raise TestException(msg)
 
 
 @base_router.get("/version", status_code=200, response_model=VersionResponse)

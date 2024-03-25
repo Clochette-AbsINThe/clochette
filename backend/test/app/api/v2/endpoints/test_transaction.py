@@ -44,9 +44,7 @@ class TestTransaction(BaseTest):
 
         # Assert
         assert response.status_code == 200
-        assert response.json() == [
-            self.transaction_db.model_dump(by_alias=True, mode="json")
-        ]
+        assert response.json() == [self.transaction_db.model_dump(by_alias=True, mode="json")]
 
     def test_read_transaction(self):
         # Arrange
@@ -84,9 +82,7 @@ class TestTransaction(BaseTest):
         # Assert
         assert response.status_code == 200
         async with get_db.get_session() as session:
-            transaction_in_db = await crud_transaction.read(
-                session, id=response.json()["id"]
-            )
+            transaction_in_db = await crud_transaction.read(session, id=response.json()["id"])
             assert transaction_in_db is not None
             assert transaction_in_db.type == TransactionType.COMMERCE
             assert transaction_in_db.status == Status.PENDING
@@ -131,9 +127,7 @@ class TestTransaction(BaseTest):
         # Assert
         assert response.status_code == 200
         async with get_db.get_session() as session:
-            transaction_in_db = await crud_transaction.read(
-                session, id=response.json()["id"]
-            )
+            transaction_in_db = await crud_transaction.read(session, id=response.json()["id"])
             assert transaction_in_db is not None
             assert transaction_in_db.type == TransactionType.TRESORERY
             assert transaction_in_db.status == Status.VALIDATED
@@ -158,9 +152,7 @@ class TestTransaction(BaseTest):
         # Assert
         assert response.status_code == 200
         async with get_db.get_session() as session:
-            transaction_in_db = await crud_transaction.read(
-                session, id=response.json()["id"]
-            )
+            transaction_in_db = await crud_transaction.read(session, id=response.json()["id"])
             assert transaction_in_db is not None
             assert transaction_in_db.status == Status.VALIDATED
             assert transaction_in_db.type == TransactionType.COMMERCE
@@ -209,9 +201,7 @@ class TestTransaction(BaseTest):
         # Assert
         assert response.status_code == 200
         async with get_db.get_session() as session:
-            transaction_in_db = await crud_transaction.read(
-                session, id=response.json()["id"]
-            )
+            transaction_in_db = await crud_transaction.read(session, id=response.json()["id"])
             assert transaction_in_db is None
 
     def test_delete_transaction_not_found(self):

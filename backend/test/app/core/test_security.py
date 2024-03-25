@@ -38,14 +38,12 @@ def test_create_access_token():
     subject = "test_subject"
     scopes = ["test_scope1", "test_scope2"]
     access_token = create_access_token(subject=subject, scopes=scopes)
-    decoded_token = jwt.decode(
-        access_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-    )
+    decoded_token = jwt.decode(access_token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
     assert decoded_token["sub"] == subject
     assert decoded_token["scopes"] == scopes
     assert "iat" in decoded_token
     assert "exp" in decoded_token
     assert decoded_token["token_type"] == "access_token"
-    assert datetime.fromtimestamp(decoded_token["exp"]) - datetime.fromtimestamp(
-        decoded_token["iat"]
-    ) == timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    assert datetime.fromtimestamp(decoded_token["exp"]) - datetime.fromtimestamp(decoded_token["iat"]) == timedelta(
+        minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES
+    )

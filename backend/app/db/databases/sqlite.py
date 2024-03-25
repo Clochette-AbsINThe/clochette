@@ -16,17 +16,21 @@ from app.db.databases.database_interface import DatabaseInterface
 
 class SqliteDatabase(DatabaseInterface):
     def setup(
-        self, path: str = settings.DATABASE_URI
+        self,
+        path: str = settings.DATABASE_URI,
     ) -> async_sessionmaker[AsyncSession]:
         """
         Create a new SQLAlchemy engine and sessionmaker.
         """
         if settings.ENVIRONMENT == "production":
-            raise ValueError("Use migrations in production")
+            msg = "Use migrations in production"
+            raise ValueError(msg)
 
         self.async_engine: AsyncEngine = create_async_engine(path)
         self.async_sessionmaker = async_sessionmaker(
-            self.async_engine, class_=AsyncSession, expire_on_commit=False
+            self.async_engine,
+            class_=AsyncSession,
+            expire_on_commit=False,
         )
         return self.async_sessionmaker
 
@@ -35,7 +39,8 @@ class SqliteDatabase(DatabaseInterface):
         Drop the database, by deleting the db file.
         """
         if settings.ENVIRONMENT == "production":
-            raise ValueError("Use migrations in production")
+            msg = "Use migrations in production"
+            raise ValueError(msg)
 
         file_name = path.split("sqlite:///")[-1]
         if os.path.exists(file_name):  # pragma: no cover
@@ -46,7 +51,8 @@ class SqliteDatabase(DatabaseInterface):
         Create all tables, with a drop first if they already exist.
         """
         if settings.ENVIRONMENT == "production":
-            raise ValueError("Use migrations in production")
+            msg = "Use migrations in production"
+            raise ValueError(msg)
 
         def wrapper(session: Session, method: Any) -> Any:
             """
@@ -56,8 +62,7 @@ class SqliteDatabase(DatabaseInterface):
             return method(connection)
 
         metadata = Base.metadata
-        async with self.get_session() as session:
-            async with session.begin():
-                if not no_drop:
-                    await session.run_sync(wrapper, metadata.drop_all)
-                await session.run_sync(wrapper, metadata.create_all)
+        async with self.get_session() as session, session.begin():
+            if not no_drop:
+                await session.run_sync(wrapper, metadata.drop_all)
+            await session.run_sync(wrapper, metadata.create_all)

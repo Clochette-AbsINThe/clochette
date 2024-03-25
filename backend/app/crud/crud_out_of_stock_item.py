@@ -4,9 +4,8 @@ from app.schemas.out_of_stock_item import OutOfStockItemCreate, OutOfStockItemUp
 
 
 class CRUDOutOfStockItem(
-    CRUDBase[OutOfStockItem, OutOfStockItemCreate, OutOfStockItemUpdate]
-):
-    ...
+    CRUDBase[OutOfStockItem, OutOfStockItemCreate, OutOfStockItemUpdate],
+): ...
 
 
 out_of_stock_item = CRUDOutOfStockItem(OutOfStockItem)

@@ -1,10 +1,10 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, Security, status
+from fastapi import APIRouter, HTTPException, Security, status
 
 from app.core.translation import Translator
 from app.crud.crud_consumable import consumable as consumables
-from app.dependencies import get_current_active_account, get_db
+from app.dependencies import DBDependency, get_current_active_account
 from app.models import consumable as consumable_model
 from app.schemas import consumable as consumable_schema
 
@@ -19,11 +19,11 @@ logger = logging.getLogger("app.api.v1.consumable")
     response_model=list[consumable_schema.Consumable],
     dependencies=[Security(get_current_active_account)],
 )
-async def read_consumables(db=Depends(get_db), all: bool = False):
+async def read_consumables(db: DBDependency, all: bool = False):
     """
     Retrieve a list of consumables.
     """
-    logger.debug(f"all: {all}")
+    logger.debug("all: %s", all)
     if all:
         return await consumables.query(db, limit=None)
 
@@ -35,7 +35,7 @@ async def read_consumables(db=Depends(get_db), all: bool = False):
     response_model=list[consumable_schema.Consumable],
     dependencies=[Security(get_current_active_account)],
 )
-async def read_consumables_distincts(db=Depends(get_db)):
+async def read_consumables_distincts(db: DBDependency):
     """
     Retrieve a list of distinct consumables.
     """
@@ -55,15 +55,16 @@ async def read_consumables_distincts(db=Depends(get_db)):
 async def update_consumable(
     consumable_id: int,
     consumable: consumable_schema.ConsumableUpdate,
-    db=Depends(get_db),
+    db: DBDependency,
 ):
     """
     Update a consumable.
     """
     db_consumable = await consumables.read(db, consumable_id)
     if db_consumable is None:
-        logger.debug(f"Consumable {consumable_id} not found")
+        logger.debug("Consumable %s not found", consumable_id)
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=translator.ELEMENT_NOT_FOUND
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=translator.ELEMENT_NOT_FOUND,
         )
     return await consumables.update(db, db_obj=db_consumable, obj_in=consumable)

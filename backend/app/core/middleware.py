@@ -47,14 +47,16 @@ class ExceptionMonitorMiddleware(BaseHTTPMiddleware):
         or a default error response if an exception is raised.
         """
         try:
+            body: bytes = await request.body()
             return await call_next(request)
         # An unhanded exception was raised during the processing of the request
         except Exception as e:
             logger.debug(
-                f"Exception raised during processing of request {request.method} {request.url}: {e}"
+                "Exception raised during processing of request %s %s: %s",
+                request.method,
+                request.url,
+                e,
             )
-            # Get the body of the request as bytes
-            body: bytes = await request.body()
             # Create a background task to call the alert backend function with the exception and request details
             task = BackgroundTask(
                 self.alert_backend,

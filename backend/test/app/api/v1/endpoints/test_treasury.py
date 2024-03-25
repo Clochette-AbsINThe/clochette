@@ -16,9 +16,7 @@ class TreasuryTest(BaseTest):
         )
 
         async with get_db.get_session() as session:
-            self.treasury_db = Treasury.model_validate(
-                await crud_treasury.create(session, obj_in=self.treasury_create)
-            )
+            self.treasury_db = Treasury.model_validate(await crud_treasury.create(session, obj_in=self.treasury_create))
 
     async def read_treasury_from_db(self, id: int) -> Treasury | None:
         async with get_db.get_session() as session:

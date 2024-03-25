@@ -17,9 +17,13 @@ class TestException(Exception):
 
 class Alert(Protocol):  # pragma: no cover
     def __call__(
-        self, exception: Exception, method: str, url: URL, headers: Headers, body: bytes
-    ) -> None:
-        ...
+        self,
+        exception: Exception,
+        method: str,
+        url: URL,
+        headers: Headers,
+        body: bytes,
+    ) -> None: ...
 
 
 def alert_backend() -> Alert:
@@ -29,25 +33,27 @@ def alert_backend() -> Alert:
     if settings.ALERT_BACKEND == "github":
         return alert_to_github_issues
 
-    logger.warning(f"Invalid alert backend: {settings.ALERT_BACKEND}")
+    logger.warning("Invalid alert backend: %s", settings.ALERT_BACKEND)
     logger.warning("Falling back to terminal alert")
     return alert_to_terminal
 
 
 def alert_to_terminal(
-    exception: Exception, method: str, url: URL, headers: Headers, body: bytes
+    exception: Exception,
+    method: str,
+    url: URL,
+    headers: Headers,
+    body: bytes,
 ) -> None:
-    if (
-        isinstance(exception, TestException) and settings.ENVIRONMENT == "production"
-    ):  # pragma: no cover
-        return None
+    if isinstance(exception, TestException) and settings.ENVIRONMENT == "production":  # pragma: no cover
+        return
 
     logger.error("### An exception has been raised! ###")
     logger.error("############## Request ##############")
-    logger.error(f"{method} {url}")
+    logger.error("%s %s", method, url)
     logger.error("########## Request headers ##########")
     for key, value in headers.items():
-        logger.error(f"- **{key}**: {value}")
+        logger.error("- **%s**: %s", key, value)
     logger.error("########### Request body ############")
     logger.error(body.decode())
     logger.error("############# Exception #############")
@@ -56,21 +62,21 @@ def alert_to_terminal(
 
 
 def alert_to_github_issues(
-    exception: Exception, method: str, url: URL, headers: Headers, body: bytes
+    exception: Exception,
+    method: str,
+    url: URL,
+    headers: Headers,
+    body: bytes,
 ) -> None:
     if isinstance(exception, TestException):  # pragma: no cover
         return None
 
-    issue_name = f"{exception.__class__.__name__}: {str(exception)}"
+    issue_name = f"{exception.__class__.__name__}: {exception!s}"
     # Format the exception and request to markdown
     markdown = f"# {issue_name}\n\n"
     markdown += f"{method} {url}\n\n"
     markdown += "## Request headers\n"
-    markdown += "\n".join(
-        f"- **{key}**: {value}"
-        for key, value in headers.items()
-        if key != "Authorization"
-    )
+    markdown += "\n".join(f"- **{key}**: {value}" for key, value in headers.items() if key != "Authorization")
     markdown += "\n\n"
     markdown += "## Request body\n"
     markdown += "```\n"
@@ -80,8 +86,11 @@ def alert_to_github_issues(
     markdown += "```\n"
     markdown += "".join(
         format_exception(
-            type(exception), exception, exception.__traceback__, chain=False
-        )
+            type(exception),
+            exception,
+            exception.__traceback__,
+            chain=False,
+        ),
     )
     markdown += "\n```\n\n"
 
@@ -97,7 +106,7 @@ def alert_to_github_issues(
     response = session.get(github_url)
 
     if response.status_code != 200:
-        logger.error(f"Failed to get issues from github: {response.status_code}")
+        logger.error("Failed to get issues from github: %s", response.status_code)
         logger.error(response.content)
         logger.warning("Falling back to terminal alert")
         return alert_to_terminal(exception, method, url, headers, body)
@@ -108,7 +117,7 @@ def alert_to_github_issues(
     )
 
     if existing_issue:
-        logger.warning(f"Issue already exists on github: {existing_issue['html_url']}")
+        logger.warning("Issue already exists on github: %s", existing_issue["html_url"])
         return None
 
     payload = {
@@ -125,5 +134,5 @@ def alert_to_github_issues(
         logger.warning("Falling back to terminal alert")
         return alert_to_terminal(exception, method, url, headers, body)
 
-    logger.info(f"Issue created on github: {response.json()['html_url']}")
+    logger.info("Issue created on github: %s", response.json()["html_url"])
     return None

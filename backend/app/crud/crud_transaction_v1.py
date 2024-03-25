@@ -1,4 +1,5 @@
 import importlib
+from typing import TYPE_CHECKING
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -9,12 +10,14 @@ from app.crud.base import CRUDBase
 from app.crud.crud_treasury import treasury as treasuries
 from app.models.transaction_v1 import TransactionV1
 from app.schemas.consumable import ConsumableCreatePurchase, ConsumableCreateSale
-from app.schemas.item import Item
 from app.schemas.transaction import (
     TransactionCreate,
     TransactionFrontCreate,
     TransactionUpdate,
 )
+
+if TYPE_CHECKING:  # pragma: no cover
+    from app.schemas.item import Item
 
 translator = Translator()
 
@@ -22,7 +25,10 @@ translator = Translator()
 class CRUDTransactionV1(CRUDBase[TransactionV1, TransactionCreate, TransactionUpdate]):
     @handle_exceptions(translator.INTEGRITY_ERROR, IntegrityError)
     async def create(
-        self, db: AsyncSession, *, obj_in: TransactionFrontCreate
+        self,
+        db: AsyncSession,
+        *,
+        obj_in: TransactionFrontCreate,
     ) -> TransactionV1:
         """
         Create a new transaction in the database.

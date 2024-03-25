@@ -31,10 +31,12 @@ class NonInventoried(Base):
 
     non_inventoried_item_id: Mapped[non_inventoried_item_fk]
     non_inventoried_item: Mapped["NonInventoriedItem"] = relationship(
-        back_populates="non_inventorieds", lazy="selectin"
+        back_populates="non_inventorieds",
+        lazy="selectin",
     )
 
     transaction_id: Mapped[transaction_fk]
     transaction: Mapped["Transaction"] = relationship(
-        back_populates="non_inventorieds", lazy="selectin"
+        back_populates="non_inventorieds",
+        lazy="selectin",
     )

@@ -34,9 +34,7 @@ def test_out_of_stock_computed_field():
     with pytest.raises(KeyError):
         out_of_stock["out_of_stock_item"]
 
-    out_of_stock_item_model = OutOfStockItemModel(
-        id=1, name="Coke", icon=IconName.SOFT, buy_or_sell=True
-    )
+    out_of_stock_item_model = OutOfStockItemModel(id=1, name="Coke", icon=IconName.SOFT, buy_or_sell=True)
     out_of_stock_model = OutOfStockModel(
         id=1,
         item_id=1,

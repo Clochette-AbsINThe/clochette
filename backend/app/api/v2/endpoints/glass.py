@@ -5,7 +5,7 @@ from fastapi import APIRouter, Depends, HTTPException, Security, status
 from app.core.translation import Translator
 from app.core.utils.misc import process_query_parameters, to_query_parameters
 from app.crud.crud_glass import glass as glasses
-from app.dependencies import get_current_active_account, get_db
+from app.dependencies import DBDependency, get_current_active_account
 from app.schemas.v2 import glass as glass_schema
 
 router = APIRouter(tags=["glass"], prefix="/glass")
@@ -20,13 +20,15 @@ logger = logging.getLogger("app.api.v2.glass")
     dependencies=[Security(get_current_active_account)],
 )
 async def read_glasses(
-    db=Depends(get_db), query=Depends(to_query_parameters(glass_schema.Glass))
+    db: DBDependency,
+    query=Depends(to_query_parameters(glass_schema.Glass)),
 ):
     """
     Retrieve a list of glasses that match the given query parameters.
     """
+    logger.debug("Query parameters: %s", query)
     query_parameters = process_query_parameters(query)
-    logger.debug(f"Query parameters: {query_parameters}")
+    logger.debug("Query parameters: %s", query_parameters)
     return await glasses.query(db, limit=None, **query_parameters)
 
 
@@ -35,13 +37,13 @@ async def read_glasses(
     response_model=glass_schema.Glass,
     dependencies=[Security(get_current_active_account)],
 )
-async def read_glass(glass_id: int, db=Depends(get_db)):
+async def read_glass(glass_id: int, db: DBDependency):
     """
     Retrieve a glass.
     """
     glass = await glasses.read(db, id=glass_id)
     if not glass:
-        logger.debug(f"Glass {glass_id} not found")
+        logger.debug("Glass %s not found", glass_id)
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=translator.ELEMENT_NOT_FOUND,
@@ -54,7 +56,7 @@ async def read_glass(glass_id: int, db=Depends(get_db)):
     response_model=glass_schema.Glass,
     dependencies=[Security(get_current_active_account)],
 )
-async def create_glass(glass: glass_schema.GlassCreate, db=Depends(get_db)):
+async def create_glass(glass: glass_schema.GlassCreate, db: DBDependency):
     """
     Create a new glass in the database.
     """

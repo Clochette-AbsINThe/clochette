@@ -55,9 +55,7 @@ class CRUDConsumableTest(BaseTest):
             assert exception.exception.status_code == status.HTTP_404_NOT_FOUND
 
     @patch("app.crud.crud_consumable.crud_transaction.read")
-    async def test_create_v2_transaction_not_pending(
-        self, mock_read_transaction
-    ) -> None:
+    async def test_create_v2_transaction_not_pending(self, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.PURCHASE,
@@ -75,9 +73,7 @@ class CRUDConsumableTest(BaseTest):
             assert exception.exception.status_code == status.HTTP_400_BAD_REQUEST
 
     @patch("app.crud.crud_consumable.crud_transaction.read")
-    async def test_create_v2_transaction_not_purchase(
-        self, mock_read_transaction
-    ) -> None:
+    async def test_create_v2_transaction_not_purchase(self, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.SALE,
@@ -95,9 +91,7 @@ class CRUDConsumableTest(BaseTest):
             assert exception.exception.status_code == status.HTTP_400_BAD_REQUEST
 
     @patch("app.crud.crud_consumable.crud_transaction.read")
-    async def test_create_v2_transaction_not_commerce(
-        self, mock_read_transaction
-    ) -> None:
+    async def test_create_v2_transaction_not_commerce(self, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.PURCHASE,
@@ -154,9 +148,7 @@ class CRUDConsumableTest(BaseTest):
             assert exception.exception.status_code == status.HTTP_404_NOT_FOUND
 
     @patch("app.crud.crud_consumable.crud_transaction.read")
-    async def test_update_v2_transaction_not_pending(
-        self, mock_read_transaction
-    ) -> None:
+    async def test_update_v2_transaction_not_pending(self, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.SALE,
@@ -204,9 +196,7 @@ class CRUDConsumableTest(BaseTest):
             assert exception.exception.status_code == status.HTTP_400_BAD_REQUEST
 
     @patch("app.crud.crud_consumable.crud_transaction.read")
-    async def test_update_v2_transaction_not_commerce(
-        self, mock_read_transaction
-    ) -> None:
+    async def test_update_v2_transaction_not_commerce(self, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.SALE,

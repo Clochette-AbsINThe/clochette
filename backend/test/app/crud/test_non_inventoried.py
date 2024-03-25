@@ -14,9 +14,7 @@ from app.schemas.v2.non_inventoried import NonInventoriedCreate
 
 
 class CRUDNonInventoriedTest(BaseTest):
-    def create_non_inventoried_schema(
-        self, transaction_id: int, buy_price: int | None = None
-    ) -> NonInventoriedCreate:
+    def create_non_inventoried_schema(self, transaction_id: int, buy_price: int | None = None) -> NonInventoriedCreate:
         if buy_price is None:
             return NonInventoriedCreate(
                 non_inventoried_item_id=0,
@@ -30,9 +28,7 @@ class CRUDNonInventoriedTest(BaseTest):
 
     @patch("app.crud.crud_non_inventoried.crud_transaction.read")
     @patch("app.crud.crud_non_inventoried.crud_non_inventoried_item.read")
-    async def test_create_v2_purchase(
-        self, mock_read_non_inventoried_item, mock_read_transaction
-    ) -> None:
+    async def test_create_v2_purchase(self, mock_read_non_inventoried_item, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.PURCHASE,
@@ -54,9 +50,7 @@ class CRUDNonInventoriedTest(BaseTest):
 
     @patch("app.crud.crud_non_inventoried.crud_transaction.read")
     @patch("app.crud.crud_non_inventoried.crud_non_inventoried_item.read")
-    async def test_create_v2_sale(
-        self, mock_read_non_inventoried_item, mock_read_transaction
-    ) -> None:
+    async def test_create_v2_sale(self, mock_read_non_inventoried_item, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.SALE,
@@ -90,9 +84,7 @@ class CRUDNonInventoriedTest(BaseTest):
             assert exception.exception.status_code == status.HTTP_404_NOT_FOUND
 
     @patch("app.crud.crud_non_inventoried.crud_transaction.read")
-    async def test_create_v2_transaction_not_pending(
-        self, mock_read_transaction
-    ) -> None:
+    async def test_create_v2_transaction_not_pending(self, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.SALE,
@@ -110,9 +102,7 @@ class CRUDNonInventoriedTest(BaseTest):
             assert exception.exception.status_code == status.HTTP_400_BAD_REQUEST
 
     @patch("app.crud.crud_non_inventoried.crud_transaction.read")
-    async def test_create_v2_transaction_not_commerce(
-        self, mock_read_transaction
-    ) -> None:
+    async def test_create_v2_transaction_not_commerce(self, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.SALE,

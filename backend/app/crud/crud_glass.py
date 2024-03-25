@@ -24,25 +24,25 @@ class CRUDGlass(CRUDBase[Glass, GlassCreate, GlassUpdate]):
     async def create_v2(self, db, *, obj_in: glass_schemas_v2.GlassCreate) -> Glass:
         transaction = await crud_transaction.read(db, id=obj_in.transaction_id)
         if not transaction:
-            logger.debug(f"Transaction {obj_in.transaction_id} not found")
+            logger.debug("Transaction %s not found", obj_in.transaction_id)
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=transaction_translator.ELEMENT_NOT_FOUND,
             )
         if transaction.status != Status.PENDING:
-            logger.debug(f"Transaction {obj_in.transaction_id} not pending")
+            logger.debug("Transaction %s not pending", obj_in.transaction_id)
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=transaction_translator.TRANSACTION_NOT_PENDING,
             )
         if transaction.trade != TradeType.SALE:
-            logger.debug(f"Transaction {obj_in.transaction_id} not sale")
+            logger.debug("Transaction %s not sale", obj_in.transaction_id)
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=transaction_translator.TRANSACTION_NOT_SALE,
             )
         if transaction.type != TransactionType.COMMERCE:
-            logger.debug(f"Transaction {obj_in.transaction_id} not commerce")
+            logger.debug("Transaction %s not commerce", obj_in.transaction_id)
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=transaction_translator.TRANSACTION_NOT_COMMERCE,
@@ -50,7 +50,7 @@ class CRUDGlass(CRUDBase[Glass, GlassCreate, GlassUpdate]):
 
         barrel = await crud_barrel.read(db, id=obj_in.barrel_id)
         if not barrel:
-            logger.debug(f"Barrel {obj_in.barrel_id} not found")
+            logger.debug("Barrel %s not found", obj_in.barrel_id)
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail=barrel_translator.ELEMENT_NOT_FOUND,

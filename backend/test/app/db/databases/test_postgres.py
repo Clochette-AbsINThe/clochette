@@ -73,6 +73,4 @@ class TestPostgresDatabase(IsolatedAsyncioTestCase):
 
         await db.drop_alembic_version()
 
-        assert await session.execute.called_once_with(
-            text("DROP TABLE IF EXISTS alembic_version")
-        )
+        assert await session.execute.called_once_with(text("DROP TABLE IF EXISTS alembic_version"))

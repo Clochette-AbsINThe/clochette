@@ -25,10 +25,12 @@ class OutOfStock(Base):
 
     item_id: Mapped[outofstockitem_fk]
     item: Mapped["OutOfStockItem"] = relationship(
-        back_populates="outofstocks", lazy="selectin"
+        back_populates="outofstocks",
+        lazy="selectin",
     )
 
     transaction_v1_id: Mapped[transaction_v1_fk]
     transaction_v1: Mapped["TransactionV1"] = relationship(
-        back_populates="out_of_stocks", lazy="selectin"
+        back_populates="out_of_stocks",
+        lazy="selectin",
     )

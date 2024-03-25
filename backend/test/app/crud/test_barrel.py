@@ -56,9 +56,7 @@ class CRUDBarrelTest(BaseTest):
             assert exception.exception.status_code == status.HTTP_404_NOT_FOUND
 
     @patch("app.crud.crud_barrel.crud_transaction.read")
-    async def test_create_v2_transaction_not_pending(
-        self, mock_read_transaction
-    ) -> None:
+    async def test_create_v2_transaction_not_pending(self, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.SALE,
@@ -92,9 +90,7 @@ class CRUDBarrelTest(BaseTest):
             assert exception.exception.status_code == status.HTTP_400_BAD_REQUEST
 
     @patch("app.crud.crud_barrel.crud_transaction.read")
-    async def test_create_v2_transaction_not_commerce(
-        self, mock_read_transaction
-    ) -> None:
+    async def test_create_v2_transaction_not_commerce(self, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.SALE,
@@ -150,9 +146,7 @@ class CRUDBarrelTest(BaseTest):
             assert exception.exception.status_code == status.HTTP_404_NOT_FOUND
 
     @patch("app.crud.crud_barrel.crud_transaction.read")
-    async def test_update_v2_transaction_not_pending(
-        self, mock_read_transaction
-    ) -> None:
+    async def test_update_v2_transaction_not_pending(self, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.SALE,
@@ -196,9 +190,7 @@ class CRUDBarrelTest(BaseTest):
             assert exception.exception.status_code == status.HTTP_400_BAD_REQUEST
 
     @patch("app.crud.crud_barrel.crud_transaction.read")
-    async def test_update_v2_transaction_not_commerce(
-        self, mock_read_transaction
-    ) -> None:
+    async def test_update_v2_transaction_not_commerce(self, mock_read_transaction) -> None:
         mock_read_transaction.return_value = Transaction(
             id=1,
             trade=TradeType.SALE,

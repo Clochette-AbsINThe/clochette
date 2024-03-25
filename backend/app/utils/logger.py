@@ -1,4 +1,4 @@
-""" Logging configuration for the application. """
+"""Logging configuration for the application."""
 
 import logging
 import sys
@@ -32,9 +32,7 @@ class ColoredFormatter(logging.Formatter):
     def format(self, record):  # pragma: no cover
         levelname = record.levelname
         if levelname in COLORS:
-            levelname_color = (
-                COLOR_SEQ % (30 + COLORS[levelname]) + levelname + RESET_SEQ
-            )
+            levelname_color = COLOR_SEQ % (30 + COLORS[levelname]) + levelname + RESET_SEQ
             record.levelname = levelname_color
         return logging.Formatter.format(self, record)
 
@@ -56,9 +54,7 @@ def setup_logs(
     logger.setLevel(settings.LOG_LEVEL)
     if level:
         logger.setLevel(level)
-    format_string = (
-        "%(levelname)-18s | %(asctime)s | $BOLD%(name)-25s$RESET | %(message)s"
-    )
+    format_string = "%(levelname)-18s | %(asctime)s | $BOLD%(name)-25s$RESET | %(message)s"
     color_formatter = ColoredFormatter(format_string)
 
     configure_stdout_logging(

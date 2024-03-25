@@ -27,32 +27,33 @@ def handle_exceptions(
         if sync_func:
 
             @functools.wraps(
-                func
+                func,
             )  # This is needed to preserve the original function name
             def sync_wrapper(*args, **kwargs):
                 try:
                     return func(*args, **kwargs)
                 except exceptions as e:
-                    logger.error(e)
+                    logger.exception(e)
                     raise HTTPException(
-                        status_code=status.HTTP_400_BAD_REQUEST, detail=detail
+                        status_code=status.HTTP_400_BAD_REQUEST,
+                        detail=detail,
                     ) from e
 
             return sync_wrapper
-        else:
 
-            @functools.wraps(
-                func
-            )  # This is needed to preserve the original function name
-            async def async_wrapper(*args, **kwargs):
-                try:
-                    return await func(*args, **kwargs)
-                except exceptions as e:
-                    logger.error(e)
-                    raise HTTPException(
-                        status_code=status.HTTP_400_BAD_REQUEST, detail=detail
-                    ) from e
+        @functools.wraps(
+            func,
+        )  # This is needed to preserve the original function name
+        async def async_wrapper(*args, **kwargs):
+            try:
+                return await func(*args, **kwargs)
+            except exceptions as e:
+                logger.exception(e)
+                raise HTTPException(
+                    status_code=status.HTTP_400_BAD_REQUEST,
+                    detail=detail,
+                ) from e
 
-            return async_wrapper
+        return async_wrapper
 
     return decorator

@@ -34,19 +34,22 @@ class Barrel(Base):
 
     drink_item_id: Mapped[drink_item_fk]
     drink_item: Mapped["DrinkItem"] = relationship(
-        back_populates="barrels", lazy="selectin"
+        back_populates="barrels",
+        lazy="selectin",
     )
 
     transaction_v1_id: Mapped[transaction_v1_fk | None]
     transaction_v1: Mapped["TransactionV1"] = relationship(
-        back_populates="barrels", lazy="selectin"
+        back_populates="barrels",
+        lazy="selectin",
     )
 
     transaction_id_purchase: Mapped[transaction_fk | None]
     transaction_id_sale: Mapped[transaction_fk | None]
 
     glasses: Mapped[List["Glass"]] = relationship(
-        back_populates="barrel", lazy="selectin"
+        back_populates="barrel",
+        lazy="selectin",
     )
 
     @validates("transaction_id_sale")

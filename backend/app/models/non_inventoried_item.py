@@ -27,5 +27,6 @@ class NonInventoriedItem(Base):
     sell_price: Mapped[float | None]
 
     non_inventorieds: Mapped[list["NonInventoried"]] = relationship(
-        back_populates="non_inventoried_item", lazy="selectin"
+        back_populates="non_inventoried_item",
+        lazy="selectin",
     )

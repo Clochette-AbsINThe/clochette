@@ -150,14 +150,8 @@ class ConfigDevelopment(Settings):
     REPOSITORY_NAME: str = "test_repository_name"
     REPOSITORY_OWNER: str = "test_repository_owner"
 
-    POSTGRES_DATABASE_URI: ClassVar[
-        str
-    ] = "postgresql+asyncpg://{user}:{password}@{host}:{port}/{db}".format(
-        user=POSTGRES_USER,
-        password=POSTGRES_PASSWORD,
-        host=POSTGRES_HOST,
-        port=POSTGRES_PORT,
-        db=POSTGRES_DB,
+    POSTGRES_DATABASE_URI: ClassVar[str] = (
+        f"postgresql+asyncpg://{POSTGRES_USER}:{POSTGRES_PASSWORD}@{POSTGRES_HOST}:{POSTGRES_PORT}/{POSTGRES_DB}"
     )
     SQLITE_DATABASE_URI: ClassVar[str] = "sqlite+aiosqlite:///./clochette.db"
 
@@ -209,13 +203,7 @@ class ConfigProduction(Settings):
 
     @property
     def DATABASE_URI(self) -> str:
-        return "postgresql+asyncpg://{user}:{password}@{host}:{port}/{db}".format(
-            user=self.POSTGRES_USER,
-            password=self.POSTGRES_PASSWORD,
-            host=self.POSTGRES_HOST,
-            port=self.POSTGRES_PORT,
-            db=self.POSTGRES_DB,
-        )
+        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
 
 class ConfigTest(Settings):
@@ -258,7 +246,7 @@ class ConfigTest(Settings):
 env = os.getenv("ENVIRONMENT", "development")
 
 
-@lru_cache()
+@lru_cache
 def select_settings(_env: Optional[str] = env):
     """
     Returns the application settings based on the environment specified.
@@ -272,17 +260,18 @@ def select_settings(_env: Optional[str] = env):
     Returns:
         Settings: The application settings.
     """
-    logger.info(f"Loading settings for environment {_env}")
+    logger.info("Loading settings for environment %s", _env)
     if _env == "development":
         return ConfigDevelopment()
 
     if _env == "production":
-        return ConfigProduction()  # type: ignore
+        return ConfigProduction()
 
     if _env == "test":
         return ConfigTest()
 
-    raise ValueError(f"Invalid environment {_env}")
+    msg = f"Invalid environment {_env}"
+    raise ValueError(msg)
 
 
 settings = select_settings()

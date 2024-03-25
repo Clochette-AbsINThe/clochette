@@ -1,6 +1,6 @@
 from datetime import datetime as _datetime
 
-from pydantic import ConfigDict, FieldValidationInfo, computed_field, field_validator
+from pydantic import ConfigDict, ValidationInfo, computed_field, field_validator
 
 from app.core.types import PaymentMethod, TransactionTypeV1
 from app.schemas.barrel import Barrel
@@ -40,10 +40,11 @@ class TransactionFrontCreate(TransactionBase):
 
     @field_validator("items")
     @classmethod
-    def empty_only_if_tresorery_type(cls, v, info: FieldValidationInfo):
+    def empty_only_if_tresorery_type(cls, v, info: ValidationInfo):
         values = info.data
         if v == [] and values["type"] != TransactionTypeV1.TRESORERY:
-            raise ValueError('items must be provided if type is not "tresorery"')
+            msg = 'items must be provided if type is not "tresorery"'
+            raise ValueError(msg)
         return v
 
 

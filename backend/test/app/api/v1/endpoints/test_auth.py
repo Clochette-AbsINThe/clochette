@@ -19,9 +19,7 @@ class TestAccount(BaseTest):
         )
 
         async with get_db.get_session() as session:
-            self.account_db = Account.model_validate(
-                await crud_account.create(session, obj_in=self.account_create)
-            )
+            self.account_db = Account.model_validate(await crud_account.create(session, obj_in=self.account_create))
 
     async def read_account_from_db(self, id: int) -> Account | None:
         async with get_db.get_session() as session:
@@ -34,10 +32,8 @@ class TestAccount(BaseTest):
         async with get_db.get_session() as session:
             account_in_db = await crud_account.read(session, id)
             if account_in_db is None:
-                return None
-            await crud_account.update(
-                session, db_obj=account_in_db, obj_in=AccountUpdate(is_active=True)
-            )
+                return
+            await crud_account.update(session, db_obj=account_in_db, obj_in=AccountUpdate(is_active=True))
 
     def get_access_token(self) -> str:
         return self._client.post(
@@ -168,9 +164,7 @@ class TestAccount(BaseTest):
             password=settings.BASE_ACCOUNT_PASSWORD,
         )
         async with get_db.get_session() as session:
-            new_account = Account.model_validate(
-                await crud_account.create(session, obj_in=new_account_create)
-            )
+            new_account = Account.model_validate(await crud_account.create(session, obj_in=new_account_create))
         modified_account = OwnAccountUpdate(
             username=new_account.username,
         )
