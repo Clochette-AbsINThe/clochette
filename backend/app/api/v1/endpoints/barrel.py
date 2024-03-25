@@ -1,10 +1,10 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, Security, status
+from fastapi import APIRouter, HTTPException, Security, status
 
 from app.core.translation import Translator
 from app.crud.crud_barrel import barrel as barrels
-from app.dependencies import get_current_active_account, get_db
+from app.dependencies import DBDependency, get_current_active_account
 from app.models import barrel as barrel_model
 from app.schemas import barrel as barrel_schema
 
@@ -19,7 +19,7 @@ logger = logging.getLogger("app.api.v1.barrel")
     response_model=list[barrel_schema.Barrel],
     dependencies=[Security(get_current_active_account)],
 )
-async def read_barrels(db=Depends(get_db), all: bool = False, mounted: bool = False):
+async def read_barrels(db: DBDependency, all: bool = False, mounted: bool = False):
     """
     Read barrels from the database.
 
@@ -27,12 +27,15 @@ async def read_barrels(db=Depends(get_db), all: bool = False, mounted: bool = Fa
         - `all`: If True, return all barrels. If False, return only mounted or unmounted barrels.
         - `mounted`: If True, return only mounted barrels. If False, return only unmounted barrels.
     """
-    logger.debug(f"all: {all}, mounted: {mounted}")
+    logger.debug("all: %s, mounted: %s", all, mounted)
     return (
         await barrels.query(db, limit=None)
         if all
         else await barrels.query(
-            db, is_mounted=mounted, empty_or_solded=False, limit=None
+            db,
+            is_mounted=mounted,
+            empty_or_solded=False,
+            limit=None,
         )
     )
 
@@ -42,7 +45,7 @@ async def read_barrels(db=Depends(get_db), all: bool = False, mounted: bool = Fa
     response_model=list[barrel_schema.Barrel],
     dependencies=[Security(get_current_active_account)],
 )
-async def read_distinct_barrels(db=Depends(get_db)):
+async def read_distinct_barrels(db: DBDependency):
     """
     Read distinct barrels from the database.
     """
@@ -56,15 +59,18 @@ async def read_distinct_barrels(db=Depends(get_db)):
     dependencies=[Security(get_current_active_account)],
 )
 async def update_barrel(
-    barrel_id: int, barrel: barrel_schema.BarrelUpdate, db=Depends(get_db)
+    barrel_id: int,
+    barrel: barrel_schema.BarrelUpdate,
+    db: DBDependency,
 ):
     """
     Update a barrel in the database.
     """
     db_barrel = await barrels.read(db, barrel_id)
     if db_barrel is None:
-        logger.debug(f"Barrel {barrel_id} not found")
+        logger.debug("Barrel %s not found", barrel_id)
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=translator.ELEMENT_NOT_FOUND
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=translator.ELEMENT_NOT_FOUND,
         )
     return await barrels.update(db, db_obj=db_barrel, obj_in=barrel)

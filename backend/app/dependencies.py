@@ -1,4 +1,5 @@
 import logging
+from typing import Annotated
 
 from fastapi import Depends, HTTPException, Security, status
 from fastapi.security import SecurityScopes
@@ -20,10 +21,12 @@ logger = logging.getLogger("app.dependencies")
 # Create a database session (dependency injected)
 get_db = select_db()
 
+DBDependency = Annotated[AsyncSession, Depends(get_db)]
+
 
 async def get_current_account(
     security_scopes: SecurityScopes,
-    db: AsyncSession = Depends(get_db),
+    db: DBDependency,
     token: str = Depends(oauth2_scheme),
 ) -> Account:
     """
@@ -47,11 +50,13 @@ async def get_current_account(
     try:
         # Decode the JWT token to get the payload
         payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+            token,
+            settings.SECRET_KEY,
+            algorithms=[settings.ALGORITHM],
         )
         # Get the id from the payload
-        id: str | None = payload.get("sub")
-        if id is None:
+        sub: str | None = payload.get("sub")
+        if sub is None:
             # Raise an exception if the id is not in the payload
             logger.debug("Id not in payload")
             raise credentials_exception
@@ -59,17 +64,16 @@ async def get_current_account(
         # Get the scopes from the payload
         token_scopes = payload.get("scopes", [])
         # Create a `TokenData`` object from the id
-        token_data = token_schema.TokenData(scopes=token_scopes, id=int(id))
+        token_data = token_schema.TokenData(scopes=token_scopes, id=int(sub))
 
     except JWTError as e:
         # Raise an exception if the token cannot be decoded
-        logger.debug(f"Token could not be parsed, {e}")
+        logger.debug("Token could not be parsed, %s", e)
         raise credentials_exception from e
 
     # Get the account associated with the username
-    async with db as session:
-        async with session.begin():
-            account = await accounts.read(session, id=token_data.id)
+    async with db.begin():
+        account = await accounts.read(db, id=token_data.id)
 
     if account is None:
         # Raise an exception if the account does not exist
@@ -92,7 +96,7 @@ async def get_current_account(
 
 
 async def get_current_active_account(
-    current_account: Account = Security(get_current_account, scopes=["staff"])
+    current_account: Account = Security(get_current_account, scopes=["staff"]),
 ) -> Account:
     """
     Get the current active account associated with the JWT token in the authorization header.

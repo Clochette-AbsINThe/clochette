@@ -1,11 +1,11 @@
 import logging
 
-from fastapi import APIRouter, Depends, HTTPException, Security, status
+from fastapi import APIRouter, HTTPException, Security, status
 
 from app.core.translation import Translator
 from app.crud.crud_barrel import barrel as barrels
 from app.crud.crud_drink_item import drink_item as drinks
-from app.dependencies import get_current_active_account, get_db
+from app.dependencies import DBDependency, get_current_active_account
 from app.schemas import drink_item as drink_schema
 
 router = APIRouter(tags=["drink"], prefix="/drink")
@@ -19,15 +19,16 @@ logger = logging.getLogger("app.api.v1.drink")
     response_model=drink_schema.DrinkItem,
     dependencies=[Security(get_current_active_account)],
 )
-async def read_drink(drink_id: int, db=Depends(get_db)):
+async def read_drink(drink_id: int, db: DBDependency):
     """
     Retrieve a drink by ID.
     """
     drink = await drinks.read(db, drink_id)
     if drink is None:
-        logger.debug(f"Drink {drink_id} not found")
+        logger.debug("Drink %s not found", drink_id)
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=translator.ELEMENT_NOT_FOUND
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=translator.ELEMENT_NOT_FOUND,
         )
     return drink
 
@@ -37,7 +38,7 @@ async def read_drink(drink_id: int, db=Depends(get_db)):
     response_model=list[drink_schema.DrinkItem],
     dependencies=[Security(get_current_active_account)],
 )
-async def read_drinks(db=Depends(get_db)):
+async def read_drinks(db: DBDependency):
     """
     Retrieve all drinks.
     """
@@ -49,13 +50,13 @@ async def read_drinks(db=Depends(get_db)):
     response_model=drink_schema.DrinkItem,
     dependencies=[Security(get_current_active_account)],
 )
-async def create_drink(drink: drink_schema.DrinkItemCreate, db=Depends(get_db)):
+async def create_drink(drink: drink_schema.DrinkItemCreate, db: DBDependency):
     """
     Create a new drink.
     """
     # Check if drink already exists
     if await drinks.query(db, name=drink.name, limit=1):
-        logger.debug(f"Drink {drink.name} already exists")
+        logger.debug("Drink %s already exists", drink.name)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=translator.ELEMENT_ALREADY_EXISTS,
@@ -69,20 +70,23 @@ async def create_drink(drink: drink_schema.DrinkItemCreate, db=Depends(get_db)):
     dependencies=[Security(get_current_active_account)],
 )
 async def update_drink(
-    drink_id: int, drink: drink_schema.DrinkItemUpdate, db=Depends(get_db)
+    drink_id: int,
+    drink: drink_schema.DrinkItemUpdate,
+    db: DBDependency,
 ):
     """
     Update a drink by ID.
     """
     old_drink = await drinks.read(db, drink_id)
     if old_drink is None:
-        logger.debug(f"Drink {drink_id} not found")
+        logger.debug("Drink %s not found", drink_id)
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=translator.ELEMENT_NOT_FOUND
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=translator.ELEMENT_NOT_FOUND,
         )
     results = await drinks.query(db, name=drink.name, limit=1)
     if results and results[0].id != old_drink.id:
-        logger.debug(f"Drink {drink.name} already exists")
+        logger.debug("Drink %s already exists", drink.name)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=translator.ELEMENT_ALREADY_EXISTS,
@@ -95,17 +99,18 @@ async def update_drink(
     response_model=drink_schema.DrinkItem,
     dependencies=[Security(get_current_active_account)],
 )
-async def delete_drink(drink_id: int, db=Depends(get_db)):
+async def delete_drink(drink_id: int, db: DBDependency):
     """
     Delete a drink by ID.
     """
     if await drinks.read(db, drink_id) is None:
-        logger.debug(f"Drink {drink_id} not found")
+        logger.debug("Drink %s not found", drink_id)
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=translator.ELEMENT_NOT_FOUND
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=translator.ELEMENT_NOT_FOUND,
         )
     if await barrels.query(db, drink_item_id=drink_id, limit=1):
-        logger.debug(f"Drink {drink_id} is used by a barrel")
+        logger.debug("Drink %s is used by a barrel", drink_id)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=translator.DELETION_OF_USED_ELEMENT,

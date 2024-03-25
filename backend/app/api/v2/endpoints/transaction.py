@@ -6,7 +6,7 @@ from app.core.translation import Translator
 from app.core.types import SecurityScopes
 from app.core.utils.misc import process_query_parameters
 from app.crud.crud_transaction import transaction as transactions
-from app.dependencies import get_current_active_account, get_db
+from app.dependencies import DBDependency, get_current_active_account
 from app.schemas.v2 import transaction as transaction_schema
 
 router = APIRouter(tags=["transaction"], prefix="/transaction")
@@ -21,13 +21,15 @@ logger = logging.getLogger("app.api.v2.transaction")
     dependencies=[Security(get_current_active_account)],
 )
 async def create_transaction(
-    transaction: transaction_schema.TransactionCommerceCreate, db=Depends(get_db)
+    transaction: transaction_schema.TransactionCommerceCreate,
+    db: DBDependency,
 ):
     """
     Create a new transaction in the database.
     """
     pending_transaction = await transactions.query(
-        db, status=transaction_schema.Status.PENDING
+        db,
+        status=transaction_schema.Status.PENDING,
     )
     if pending_transaction:
         raise HTTPException(
@@ -41,11 +43,12 @@ async def create_transaction(
     "/treasury/",
     response_model=transaction_schema.Transaction,
     dependencies=[
-        Security(get_current_active_account, scopes=[SecurityScopes.TREASURER.value])
+        Security(get_current_active_account, scopes=[SecurityScopes.TREASURER.value]),
     ],
 )
 async def create_treasury_transaction(
-    transaction: transaction_schema.TransactionTreasuryCreate, db=Depends(get_db)
+    transaction: transaction_schema.TransactionTreasuryCreate,
+    db: DBDependency,
 ):
     """
     Create a new transaction in the database.
@@ -62,7 +65,7 @@ async def create_treasury_transaction(
 )
 async def validate_transaction(
     transaction_id: int,
-    db=Depends(get_db),
+    db: DBDependency,
 ):
     """
     Validate a transaction.
@@ -89,12 +92,12 @@ async def validate_transaction(
     "/{transaction_id}",
     response_model=transaction_schema.TransactionDetail,
     dependencies=[
-        Security(get_current_active_account, scopes=[SecurityScopes.TREASURER.value])
+        Security(get_current_active_account, scopes=[SecurityScopes.TREASURER.value]),
     ],
 )
 async def delete_transaction(
     transaction_id: int,
-    db=Depends(get_db),
+    db: DBDependency,
 ):
     """
     Delete a transaction.
@@ -116,14 +119,14 @@ async def delete_transaction(
     dependencies=[Security(get_current_active_account)],
 )
 async def read_transactions(
-    db=Depends(get_db),
+    db: DBDependency,
     query=Depends(transaction_schema.TransactionQuery),
 ):
     """
     Retrieve transactions.
     """
     query_parameters = process_query_parameters(query)
-    logger.debug(f"Query parameters: {query_parameters}")
+    logger.debug("Query parameters: %s", query_parameters)
     return await transactions.query(db, limit=None, **query_parameters)
 
 
@@ -134,7 +137,7 @@ async def read_transactions(
 )
 async def read_transaction(
     transaction_id: int,
-    db=Depends(get_db),
+    db: DBDependency,
 ):
     """
     Retrieve a transaction.
