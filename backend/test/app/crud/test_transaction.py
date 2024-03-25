@@ -125,9 +125,7 @@ class TestCRUDTransaction(BaseTest):
 
             self.assertEqual(len(consumables), 1)
             self.assertEqual(consumables[0].transaction_id_sale, transaction_sale.id)
-            self.assertEqual(
-                consumables[0].transaction_id_purchase, transaction_purchase.id
-            )
+            self.assertEqual(consumables[0].transaction_id_purchase, transaction_purchase.id)
             treasury = await crud_treasury.get_last_treasury(session)
             self.assertEqual(treasury.total_amount, 0)
 
@@ -143,12 +141,8 @@ class TestCRUDTransaction(BaseTest):
             consumables = await crud_consumable.query(session)
             self.assertEqual(len(consumables), 1)
             self.assertEqual(consumables[0].transaction_id_sale, None)
-            self.assertEqual(
-                consumables[0].transaction_id_purchase, transaction_purchase.id
-            )
-            transaction_purchase = await crud_transaction.read(
-                session, id=transaction_purchase.id
-            )
+            self.assertEqual(consumables[0].transaction_id_purchase, transaction_purchase.id)
+            transaction_purchase = await crud_transaction.read(session, id=transaction_purchase.id)
             assert transaction_purchase is not None
             self.assertEqual(len(transaction_purchase.consumables_purchase), 1)
             self.assertEqual(consumables[0].solded, False)
@@ -224,9 +218,7 @@ class TestCRUDTransaction(BaseTest):
 
             self.assertEqual(len(barrels), 1)
             self.assertEqual(glasses[0].transaction_id, transaction_sale.id)
-            self.assertEqual(
-                barrels[0].transaction_id_purchase, transaction_purchase.id
-            )
+            self.assertEqual(barrels[0].transaction_id_purchase, transaction_purchase.id)
 
         async with get_db.get_session() as session:
             # Delete the purchase transaction
@@ -241,12 +233,8 @@ class TestCRUDTransaction(BaseTest):
             glasses = await crud_glass.query(session)
             self.assertEqual(len(barrels), 1)
             self.assertEqual(len(glasses), 0)
-            self.assertEqual(
-                barrels[0].transaction_id_purchase, transaction_purchase.id
-            )
-            transaction_purchase = await crud_transaction.read(
-                session, id=transaction_purchase.id
-            )
+            self.assertEqual(barrels[0].transaction_id_purchase, transaction_purchase.id)
+            transaction_purchase = await crud_transaction.read(session, id=transaction_purchase.id)
             assert transaction_purchase is not None
             self.assertEqual(len(transaction_purchase.barrels_purchase), 1)
 
@@ -318,9 +306,7 @@ class TestCRUDTransaction(BaseTest):
 
             self.assertEqual(len(barrels), 1)
             self.assertEqual(barrels[0].transaction_id_sale, transaction_sale.id)
-            self.assertEqual(
-                barrels[0].transaction_id_purchase, transaction_purchase.id
-            )
+            self.assertEqual(barrels[0].transaction_id_purchase, transaction_purchase.id)
 
         async with get_db.get_session() as session:
             # Delete the purchase transaction
@@ -334,12 +320,8 @@ class TestCRUDTransaction(BaseTest):
             barrels = await crud_barrel.query(session)
             self.assertEqual(len(barrels), 1)
             self.assertEqual(barrels[0].transaction_id_sale, None)
-            self.assertEqual(
-                barrels[0].transaction_id_purchase, transaction_purchase.id
-            )
-            transaction_purchase = await crud_transaction.read(
-                session, id=transaction_purchase.id
-            )
+            self.assertEqual(barrels[0].transaction_id_purchase, transaction_purchase.id)
+            transaction_purchase = await crud_transaction.read(session, id=transaction_purchase.id)
             assert transaction_purchase is not None
             self.assertEqual(len(transaction_purchase.barrels_purchase), 1)
             self.assertEqual(barrels[0].empty_or_solded, False)

@@ -14,9 +14,7 @@ class TestDrink(BaseTest):
         self.drink_create = DrinkItemCreate(name="test_name")
 
         async with get_db.get_session() as session:
-            self.drink_db = DrinkItem.model_validate(
-                await crud_drink.create(session, obj_in=self.drink_create)
-            )
+            self.drink_db = DrinkItem.model_validate(await crud_drink.create(session, obj_in=self.drink_create))
 
     async def read_drink_from_db(self, id: int) -> DrinkItem | None:
         async with get_db.get_session() as session:
@@ -119,9 +117,7 @@ class TestDrink(BaseTest):
         new_drink_create = DrinkItemCreate(name="test_name2")
 
         async with get_db.get_session() as session:
-            new_drink_db = DrinkItem.model_validate(
-                await crud_drink.create(session, obj_in=new_drink_create)
-            )
+            new_drink_db = DrinkItem.model_validate(await crud_drink.create(session, obj_in=new_drink_create))
         drink_update = DrinkItemUpdate(name=new_drink_db.name)
 
         # Act

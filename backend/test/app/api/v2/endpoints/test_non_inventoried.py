@@ -22,23 +22,17 @@ class TestNonInventoried(BaseTest):
     async def asyncSetUp(self) -> None:
         await super().asyncSetUp()
 
-        self.non_inventoried_item_create = NonInventoriedItemCreate(
-            name="test_name", icon=IconName.MISC
-        )
+        self.non_inventoried_item_create = NonInventoriedItemCreate(name="test_name", icon=IconName.MISC)
         self.non_inventoried_item_sell_create = NonInventoriedItemCreate(
             name="test_name", icon=IconName.MISC, sell_price=2
         )
 
         async with get_db.get_session() as session:
             self.non_inventoried_item_db = NonInventoriedItem.model_validate(
-                await crud_non_inventoried_item.create(
-                    session, obj_in=self.non_inventoried_item_create
-                )
+                await crud_non_inventoried_item.create(session, obj_in=self.non_inventoried_item_create)
             )
             self.non_inventoried_item_sell_db = NonInventoriedItem.model_validate(
-                await crud_non_inventoried_item.create(
-                    session, obj_in=self.non_inventoried_item_sell_create
-                )
+                await crud_non_inventoried_item.create(session, obj_in=self.non_inventoried_item_sell_create)
             )
             self.non_inventoried_create = NonInventoriedCreate(
                 non_inventoried_item_id=self.non_inventoried_item_db.id,
@@ -46,9 +40,7 @@ class TestNonInventoried(BaseTest):
                 transaction_id=0,
             )
             self.non_inventoried_db = NonInventoried.model_validate(
-                await crud_non_inventoried.create(
-                    session, obj_in=self.non_inventoried_create
-                )
+                await crud_non_inventoried.create(session, obj_in=self.non_inventoried_create)
             )
             await crud_treasury.create(
                 session,
@@ -71,9 +63,7 @@ class TestNonInventoried(BaseTest):
     def test_read_non_inventoried(self):
         # Arrange
         # Act
-        response = self._client.get(
-            f"/api/v2/non_inventoried/{self.non_inventoried_db.id}"
-        )
+        response = self._client.get(f"/api/v2/non_inventoried/{self.non_inventoried_db.id}")
 
         # Assert
         assert response.status_code == 200
@@ -82,9 +72,7 @@ class TestNonInventoried(BaseTest):
     def test_read_non_inventoried_not_found(self):
         # Arrange
         # Act
-        response = self._client.get(
-            f"/api/v2/non_inventoried/{self.non_inventoried_db.id+1}"
-        )
+        response = self._client.get(f"/api/v2/non_inventoried/{self.non_inventoried_db.id+1}")
 
         # Assert
         assert response.status_code == 404
@@ -98,9 +86,7 @@ class TestNonInventoried(BaseTest):
                 payment_method=PaymentMethod.CASH,
                 datetime=datetime.datetime.now(),
             )
-            transaction_db = await crud_transaction.create_v2(
-                session, obj_in=transaction
-            )
+            transaction_db = await crud_transaction.create_v2(session, obj_in=transaction)
 
         non_inventoried_create = NonInventoriedCreate(
             non_inventoried_item_id=self.non_inventoried_item_db.id,
@@ -130,9 +116,7 @@ class TestNonInventoried(BaseTest):
                 payment_method=PaymentMethod.CASH,
                 datetime=datetime.datetime.now(),
             )
-            transaction_db = await crud_transaction.create_v2(
-                session, obj_in=transaction
-            )
+            transaction_db = await crud_transaction.create_v2(session, obj_in=transaction)
 
         non_inventoried_create = NonInventoriedCreate(
             non_inventoried_item_id=self.non_inventoried_item_sell_db.id,

@@ -29,8 +29,7 @@ class UserUpdate(DefaultModel):
     datetime: Optional[_datetime] = None
 
 
-class CRUDUser(CRUDBase[ModelUser, UserCreate, UserUpdate]):
-    ...
+class CRUDUser(CRUDBase[ModelUser, UserCreate, UserUpdate]): ...
 
 
 class TestBaseCRUD(BaseTest):
@@ -125,9 +124,7 @@ class TestBaseCRUD(BaseTest):
             db_obj = await self.crud.read(session, id=1)
             if db_obj is None:
                 raise Exception("db_obj is None")
-            result = await self.crud.update(
-                session, db_obj=db_obj, obj_in={"email": "modified@example.com"}
-            )
+            result = await self.crud.update(session, db_obj=db_obj, obj_in={"email": "modified@example.com"})
 
             # Assert
 

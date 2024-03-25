@@ -17,20 +17,14 @@ def test_env_dev_override_db_type(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("DB_TYPE", "POSTGRES")
     select_settings.cache_clear()
     assert isinstance(select_settings("development"), ConfigDevelopment)
-    assert (
-        select_settings("development").DATABASE_URI
-        == ConfigDevelopment.POSTGRES_DATABASE_URI
-    )
+    assert select_settings("development").DATABASE_URI == ConfigDevelopment.POSTGRES_DATABASE_URI
 
 
 def test_env_dev_override_db_type_sqlite(monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setenv("DB_TYPE", "SQLITE")
     select_settings.cache_clear()
     assert isinstance(select_settings("development"), ConfigDevelopment)
-    assert (
-        select_settings("development").DATABASE_URI
-        == ConfigDevelopment.SQLITE_DATABASE_URI
-    )
+    assert select_settings("development").DATABASE_URI == ConfigDevelopment.SQLITE_DATABASE_URI
 
 
 def test_env_prod(monkeypatch: pytest.MonkeyPatch):
@@ -56,10 +50,7 @@ def test_env_prod(monkeypatch: pytest.MonkeyPatch):
 def test_env_test():
     settings = select_settings("test")
     assert isinstance(settings, ConfigTest)
-    assert (
-        settings.SECRET_KEY
-        == "6a50e3ddeef70fd46da504d8d0a226db7f0b44dcdeb65b97751cf2393b33693e"
-    )
+    assert settings.SECRET_KEY == "6a50e3ddeef70fd46da504d8d0a226db7f0b44dcdeb65b97751cf2393b33693e"
 
 
 def test_env_invalid():

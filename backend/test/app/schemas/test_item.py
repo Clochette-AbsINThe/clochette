@@ -14,9 +14,7 @@ def test_does_this_table_exist():
 
 
 def test_is_there_a_transaction_scheme():
-    with pytest.raises(
-        ValueError, match=r"Table item does not have a transaction scheme"
-    ):
+    with pytest.raises(ValueError, match=r"Table item does not have a transaction scheme"):
         Item(table="item", quantity=1, item={})
 
 
@@ -36,9 +34,7 @@ class TestEachItem:
         assert item.computed_item.buy_price == 1.0
 
     def test_out_of_stock(self):
-        item = Item(
-            table="out_of_stock", quantity=1, item={"fkId": 1, "unitPrice": 1.0}
-        )
+        item = Item(table="out_of_stock", quantity=1, item={"fkId": 1, "unitPrice": 1.0})
         assert isinstance(item.computed_item, OutOfStockCreate)
         assert item.computed_item.unit_price == 1.0
 

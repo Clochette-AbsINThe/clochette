@@ -21,5 +21,6 @@ class ConsumableItem(Base):
     icon: Mapped[IconName]
 
     consumables: Mapped[List["Consumable"]] = relationship(
-        back_populates="consumable_item", lazy="selectin"
+        back_populates="consumable_item",
+        lazy="selectin",
     )

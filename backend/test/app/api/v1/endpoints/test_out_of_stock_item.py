@@ -16,15 +16,11 @@ class TestOutOfStockItem(BaseTest):
     async def asyncSetUp(self) -> None:
         await super().asyncSetUp()
 
-        self.out_of_stock_item_create = OutOfStockItemCreate(
-            name="test_name", icon=IconName.MISC
-        )
+        self.out_of_stock_item_create = OutOfStockItemCreate(name="test_name", icon=IconName.MISC)
 
         async with get_db.get_session() as session:
             self.out_of_stock_item_db = OutOfStockItem.model_validate(
-                await crud_out_of_stock_item.create(
-                    session, obj_in=self.out_of_stock_item_create
-                )
+                await crud_out_of_stock_item.create(session, obj_in=self.out_of_stock_item_create)
             )
 
     async def read_out_of_stock_item_from_db(self, id: int) -> OutOfStockItem | None:
@@ -45,9 +41,7 @@ class TestOutOfStockItem(BaseTest):
 
     async def test_read_out_of_stock_items_sell(self):
         # Arrange
-        create_sell_item = OutOfStockItemCreate(
-            name="test_name_sell", icon=IconName.MISC, sell_price=1
-        )
+        create_sell_item = OutOfStockItemCreate(name="test_name_sell", icon=IconName.MISC, sell_price=1)
         async with get_db.get_session() as session:
             out_of_stock_item_db = OutOfStockItem.model_validate(
                 await crud_out_of_stock_item.create(session, obj_in=create_sell_item)
@@ -62,9 +56,7 @@ class TestOutOfStockItem(BaseTest):
     def test_read_out_of_stock_item(self):
         # Arrange
         # Act
-        response = self._client.get(
-            f"/api/v1/out_of_stock_item/{self.out_of_stock_item_db.id}"
-        )
+        response = self._client.get(f"/api/v1/out_of_stock_item/{self.out_of_stock_item_db.id}")
 
         # Assert
         assert response.status_code == 200
@@ -81,9 +73,7 @@ class TestOutOfStockItem(BaseTest):
 
     async def test_create_out_of_stock_item(self):
         # Arrange
-        out_of_stock_item_create = OutOfStockItemCreate(
-            name="test_name2", icon=IconName.MISC
-        )
+        out_of_stock_item_create = OutOfStockItemCreate(name="test_name2", icon=IconName.MISC)
 
         # Act
         response = self._client.post(
@@ -91,9 +81,7 @@ class TestOutOfStockItem(BaseTest):
             json=out_of_stock_item_create.model_dump(by_alias=True),
         )
 
-        out_of_stock_item_in_db = await self.read_out_of_stock_item_from_db(
-            response.json()["id"]
-        )
+        out_of_stock_item_in_db = await self.read_out_of_stock_item_from_db(response.json()["id"])
 
         # Assert
         assert response.status_code == 200
@@ -123,9 +111,7 @@ class TestOutOfStockItem(BaseTest):
             json=out_of_stock_item_update.model_dump(by_alias=True),
         )
 
-        out_of_stock_item_in_db = await self.read_out_of_stock_item_from_db(
-            self.out_of_stock_item_db.id
-        )
+        out_of_stock_item_in_db = await self.read_out_of_stock_item_from_db(self.out_of_stock_item_db.id)
 
         # Assert
         assert response.status_code == 200
@@ -149,19 +135,13 @@ class TestOutOfStockItem(BaseTest):
 
     async def test_update_out_of_stock_item_duplicate(self):
         # Arrange
-        new_out_of_stock_item_create = OutOfStockItemCreate(
-            name="test_name2", icon=IconName.MISC
-        )
+        new_out_of_stock_item_create = OutOfStockItemCreate(name="test_name2", icon=IconName.MISC)
 
         async with get_db.get_session() as session:
             new_out_of_stock_item_db = OutOfStockItem.model_validate(
-                await crud_out_of_stock_item.create(
-                    session, obj_in=new_out_of_stock_item_create
-                )
+                await crud_out_of_stock_item.create(session, obj_in=new_out_of_stock_item_create)
             )
-        out_of_stock_item_update = OutOfStockItemUpdate(
-            name=new_out_of_stock_item_db.name
-        )
+        out_of_stock_item_update = OutOfStockItemUpdate(name=new_out_of_stock_item_db.name)
 
         # Act
         response = self._client.put(
@@ -176,13 +156,9 @@ class TestOutOfStockItem(BaseTest):
     async def test_delete_out_of_stock_item(self):
         # Arrange
         # Act
-        response = self._client.delete(
-            f"/api/v1/out_of_stock_item/{self.out_of_stock_item_db.id}"
-        )
+        response = self._client.delete(f"/api/v1/out_of_stock_item/{self.out_of_stock_item_db.id}")
 
-        out_of_stock_item_in_db = await self.read_out_of_stock_item_from_db(
-            self.out_of_stock_item_db.id
-        )
+        out_of_stock_item_in_db = await self.read_out_of_stock_item_from_db(self.out_of_stock_item_db.id)
 
         # Assert
         assert response.status_code == 200
@@ -210,17 +186,11 @@ class TestOutOfStockItem(BaseTest):
             )
 
         # Act
-        response = self._client.delete(
-            f"/api/v1/out_of_stock_item/{self.out_of_stock_item_db.id}"
-        )
+        response = self._client.delete(f"/api/v1/out_of_stock_item/{self.out_of_stock_item_db.id}")
 
-        out_of_stock_item_in_db = await self.read_out_of_stock_item_from_db(
-            self.out_of_stock_item_db.id
-        )
+        out_of_stock_item_in_db = await self.read_out_of_stock_item_from_db(self.out_of_stock_item_db.id)
 
         # Assert
         assert response.status_code == 400
-        assert response.json() == {
-            "detail": "Out of stock item is in use and cannot be deleted"
-        }
+        assert response.json() == {"detail": "Out of stock item is in use and cannot be deleted"}
         assert out_of_stock_item_in_db is not None

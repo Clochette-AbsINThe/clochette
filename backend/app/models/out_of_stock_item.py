@@ -25,5 +25,6 @@ class OutOfStockItem(Base):
     sell_price: Mapped[float | None]
 
     outofstocks: Mapped[list["OutOfStock"]] = relationship(
-        back_populates="item", lazy="selectin"
+        back_populates="item",
+        lazy="selectin",
     )

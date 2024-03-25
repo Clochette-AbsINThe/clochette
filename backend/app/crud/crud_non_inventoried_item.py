@@ -7,9 +7,8 @@ from app.schemas.v2.non_inventoried_item import (
 
 
 class CRUDNonInventoriedItem(
-    CRUDBase[NonInventoriedItem, NonInventoriedItemCreate, NonInventoriedItemUpdate]
-):
-    ...
+    CRUDBase[NonInventoriedItem, NonInventoriedItemCreate, NonInventoriedItemUpdate],
+): ...
 
 
 non_inventoried_item = CRUDNonInventoriedItem(NonInventoriedItem)

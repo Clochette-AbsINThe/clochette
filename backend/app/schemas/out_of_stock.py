@@ -50,9 +50,11 @@ class OutOfStock(OutOfStockBase):
         unit_price = model.unit_price
         sell_price = model.sell_price
         if sell_price is not None and unit_price is not None:
-            raise ValueError("Cannot have both sell_price and unit_price")
+            msg = "Cannot have both sell_price and unit_price"
+            raise ValueError(msg)
         if sell_price is None and unit_price is None:
-            raise ValueError("Must have either sell_price or unit_price")
+            msg = "Must have either sell_price or unit_price"
+            raise ValueError(msg)
         return _model
 
     model_config = ConfigDict(from_attributes=True)

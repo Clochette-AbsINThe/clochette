@@ -39,7 +39,10 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
         return await super().create(db, obj_in=obj_in)
 
     async def create_treasury(
-        self, db: AsyncSession, *, obj_in: TransactionTreasuryCreate
+        self,
+        db: AsyncSession,
+        *,
+        obj_in: TransactionTreasuryCreate,
     ) -> Transaction:
         await self.update_treasury(
             db=db,
@@ -62,9 +65,6 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
         """
 
         treasury = await crud_treasury.get_last_treasury(db)
-        print(
-            f"Total amount {treasury.total_amount} - Cash amount {treasury.cash_amount}"
-        )
         # Pre-authorize the transaction
         tresury_update = await crud_treasury.pre_authorize_transaction(
             treasury=treasury,
@@ -101,7 +101,7 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
 
         # Update the transaction
         obj_in.amount = treasury_update[1]
-        logger.debug(f"Price sum: {obj_in.amount}")
+        logger.debug("Price sum: %s", obj_in.amount)
         return await super().update(db, db_obj=db_obj, obj_in=obj_in)
 
     async def delete(self, db: AsyncSession, *, id: int) -> Transaction | None:
@@ -114,7 +114,7 @@ class CRUDTransaction(CRUDBase[Transaction, TransactionCreate, TransactionUpdate
                 amount=transaction_db.amount,
                 payment_method=transaction_db.payment_method,
             )
-            logger.debug(f"Treasury amount: {tresury_update.total_amount}")
+            logger.debug("Treasury amount: %s", tresury_update.total_amount)
             await crud_treasury.update(db, db_obj=treasury, obj_in=tresury_update)
 
         return transaction_db

@@ -30,10 +30,12 @@ class Glass(Base):
 
     transaction_id: Mapped[transaction_fk | None]
     transaction: Mapped["Transaction"] = relationship(
-        back_populates="glasses", lazy="selectin"
+        back_populates="glasses",
+        lazy="selectin",
     )
 
     transaction_v1_id: Mapped[transaction_v1_fk | None]
     transaction_v1: Mapped["TransactionV1"] = relationship(
-        back_populates="glasses", lazy="selectin"
+        back_populates="glasses",
+        lazy="selectin",
     )

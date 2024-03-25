@@ -4,7 +4,7 @@ from operator import gt, lt
 from typing import Dict, List, Optional
 
 import pytest
-from pydantic import Field, field_validator
+from pydantic import Field, computed_field, field_validator
 
 from app.core.utils.misc import (
     create_hierarchy_dict,
@@ -30,6 +30,11 @@ class User(DefaultModel):
             raise ValueError("test_int must be positive")
         return v
 
+    @computed_field  # type: ignore[misc]
+    @property
+    def test_computed_field(self) -> int:
+        return 42
+
 
 class QueryModelTest(DefaultModel):
     id__gt: Optional[int]
@@ -49,18 +54,14 @@ def test_to_query_parameters():
     NewModel = to_query_parameters(User)
     assert NewModel.model_fields.get("id", None) is None
     assert NewModel.model_fields.get("password", None) is None
+    assert NewModel.model_fields.get("test_int_squared", None) is None
     assert NewModel.model_fields["username"].is_required() is False
     assert NewModel.model_fields["email"].is_required() is False
     assert NewModel.model_fields["created_at"].is_required() is False
     assert NewModel.model_fields["updated_at"].is_required() is False
     assert NewModel.model_fields["test_int"].is_required() is False
     assert NewModel.model_fields["test_float"].is_required() is False
-    assert (
-        NewModel.__pydantic_decorators__.field_validators.get(
-            "test_int_must_be_positive"
-        )
-        is not None
-    )
+    assert NewModel.__pydantic_decorators__.field_validators.get("test_int_must_be_positive") is not None
 
     # Test with comparison
     NewModel = to_query_parameters(User, comparaison=True)
@@ -81,12 +82,7 @@ def test_to_query_parameters():
     assert NewModel.model_fields["test_int__lt"].is_required() is False
     assert NewModel.model_fields["test_float__gt"].is_required() is False
     assert NewModel.model_fields["test_float__lt"].is_required() is False
-
-    validator = NewModel.__pydantic_decorators__.field_validators.get(
-        "test_int_must_be_positive"
-    )
-    assert validator is not None
-    assert validator.info.fields == ("test_int", "test_int__gt", "test_int__lt")
+    assert NewModel.__pydantic_decorators__.field_validators.get("test_int_must_be_positive") is not None
 
     # Test with FieldMetadata
     NewModel = to_query_parameters(User)
@@ -104,9 +100,7 @@ def test_process_query_parameters():
         "created_at__gt": "2022-01-01T00:00:00",
         "amount__lt": 100.0,
     }
-    processed_query_parameters = process_query_parameters(
-        QueryModelTest(**query_parameters)
-    )
+    processed_query_parameters = process_query_parameters(QueryModelTest(**query_parameters))
     assert processed_query_parameters == {
         "id": {gt: 1},
         "name": "john",

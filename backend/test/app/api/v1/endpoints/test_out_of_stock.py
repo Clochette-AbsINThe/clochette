@@ -12,15 +12,11 @@ class TestOutOfStock(BaseTest):
     async def asyncSetUp(self) -> None:
         await super().asyncSetUp()
 
-        self.out_of_stock_item_create = OutOfStockItemCreate(
-            name="test_name", icon=IconName.MISC
-        )
+        self.out_of_stock_item_create = OutOfStockItemCreate(name="test_name", icon=IconName.MISC)
 
         async with get_db.get_session() as session:
             self.out_of_stock_item_db = OutOfStockItem.model_validate(
-                await crud_out_of_stock_item.create(
-                    session, obj_in=self.out_of_stock_item_create
-                )
+                await crud_out_of_stock_item.create(session, obj_in=self.out_of_stock_item_create)
             )
             self.out_of_stock_create = OutOfStockCreate(
                 fkId=self.out_of_stock_item_db.id,

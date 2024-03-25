@@ -35,9 +35,7 @@ def get_url() -> str:
 
 
 if get_url().startswith("sqlite"):
-    raise ValueError(
-        "SQLite is not supported by this migration script, use app/command.py migrate instead."
-    )
+    raise ValueError("SQLite is not supported by this migration script, use app/command.py migrate instead.")
 
 if get_url().startswith("postgresql"):
     logging.getLogger("alembic.ddl.postgresql").setLevel(logging.WARNING)

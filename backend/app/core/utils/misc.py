@@ -59,9 +59,7 @@ def to_query_parameters(
             continue
 
         _type = value.annotation
-        field: FieldInfo = Field(
-            default=None, alias=key, alias_priority=1, validate_default=None
-        )
+        field: FieldInfo = Field(default=None, alias=key, alias_priority=1, validate_default=None)
 
         field.metadata = value.metadata
         field.rebuild_annotation()
@@ -97,9 +95,7 @@ def to_query_parameters(
         _fields_to_adds: tuple[str, ...] = ()
         for _field in validator_fields:
             if _field in fields_extended_with_comparison:
-                _fields_to_adds += tuple(
-                    f"{_field}{suffix}" for suffix in ComparaisonSuffix
-                )
+                _fields_to_adds += tuple(f"{_field}{suffix}" for suffix in ComparaisonSuffix)
 
         # We add the comparison fields to the validator
         validator.info.fields += _fields_to_adds
@@ -149,7 +145,7 @@ def process_query_parameters(query_model: DefaultModel) -> dict[str, Any]:
                     processed_query_parameters[key][lt] = value
                 # Add default case
                 case _:  # pragma: no cover
-                    logger.warning(f"Unknown operator {operator} for key {key}")
+                    logger.warning("Unknown operator %s for key %s", operator, key)
         else:
             processed_query_parameters[key] = value
     return processed_query_parameters
@@ -163,11 +159,9 @@ def create_hierarchy_dict(enum: Type[Enum]) -> Dict[str, List[str]]:
     :return: The dictionary mapping Enum values to lists of their ancestors in the Enum hierarchy
     """
     hierarchy_dict = {}
-    for e in enum:
+    for e in list(enum):
         # Get the list of ancestors for the current Enum value
-        ancestors = [
-            ancestor.name for ancestor in e.__class__ if ancestor.value < e.value
-        ]
+        ancestors = [ancestor.name for ancestor in e.__class__ if ancestor.value < e.value]
         # Add the current Enum value to the list of ancestors
         ancestors.append(e.name)
         # Add the list of ancestors to the hierarchy dictionary
